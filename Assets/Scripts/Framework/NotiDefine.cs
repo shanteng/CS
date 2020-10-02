@@ -11,7 +11,7 @@
 
     public const string OPEN_ = "OPEN_";
     public const string CLOSE_ = "CLOSE_";
-    public const string CLOSE2_ = "CLOSE_2";
+    
     public const string LOAD_MAIN_SCENE_FINISH = "LOAD_MAIN_SCENE_FINISH";
     public const string START_LOAD_MAIN_SCENE = "START_LOAD_MAIN_SCENE";
 }
