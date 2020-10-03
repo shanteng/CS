@@ -1,0 +1,5 @@
+package com.unity3d.playeridentity;
+
+public interface SignInWithAppleCallbacks {
+    void loginCallback(SignInWithAppleResult result);
+}

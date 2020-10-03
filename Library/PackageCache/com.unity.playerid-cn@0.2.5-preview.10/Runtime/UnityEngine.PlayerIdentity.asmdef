@@ -1,0 +1,18 @@
+{
+    "name": "UnityEngine.PlayerIdentity",
+    "references": [
+        "Unity.Subsystem.Registration",
+
+
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+    ],
+    "versionDefines": []
+}

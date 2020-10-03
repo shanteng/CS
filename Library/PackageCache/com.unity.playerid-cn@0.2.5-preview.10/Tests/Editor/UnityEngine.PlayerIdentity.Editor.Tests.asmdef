@@ -1,0 +1,14 @@
+{
+    "name": "UnityEngine.PlayerIdentity.Editor.Tests",
+    "references": [
+        "UnityEngine.PlayerIdentity.Editor",
+        "UnityEngine.PlayerIdentity"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

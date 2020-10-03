@@ -1,0 +1,45 @@
+package com.unity3d.playeridentity;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+
+import androidx.browser.customtabs.CustomTabsIntent;
+
+public class SignInWithApple {
+
+    public static SignInWithAppleCallbacks mCallbacks;
+    public static String mState;
+    public static CustomTabsIntent mCustomTabsIntent;
+
+    public static void login(final Activity activity, final String appID, final String customSchemeUri, final String redirectUri, final SignInWithAppleCallbacks callbacks) {
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String state = customSchemeUri;
+                String scope = "name email";
+
+                mCallbacks = callbacks;
+                mState = state;
+
+                // Assemble the request
+                String authorizationURL = "https://appleid.apple.com/auth/authorize?";
+                authorizationURL += "response_type=code";
+                authorizationURL += "&response_mode=form_post";
+                authorizationURL += "&v=1.1.6";
+                authorizationURL += "&state=" + Uri.encode(state, "UTF-8");
+                authorizationURL += "&client_id=" + Uri.encode(appID, "UTF-8");
+                authorizationURL += "&redirect_uri=" + Uri.encode(redirectUri, "UTF-8");
+                authorizationURL += "&scope=" + Uri.encode(scope, "UTF-8");
+
+                // Create the Custom Chrome Tab and load the URL in it.
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                mCustomTabsIntent = builder.build();
+                mCustomTabsIntent.intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                mCustomTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mCustomTabsIntent.launchUrl(activity, Uri.parse(authorizationURL));
+            }
+        });
+    }
+}

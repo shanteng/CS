@@ -1,0 +1,55 @@
+//
+//  CustomAppController.m
+//  Unity-iPhone
+//
+//  Created by playerid on 12/5/19.
+// Auto generated callback file
+
+#import "UnityAppController.h"
+#import "WXApi.h"
+#import "WXAPIUtils.h"
+
+@interface CustomAppController : UnityAppController<WXApiDelegate>
+
+@end
+
+// swith from unityAppController to CustomAppController
+IMPL_APP_CONTROLLER_SUBCLASS (CustomAppController)
+
+@implementation CustomAppController
+
+- (BOOL)application:(UIApplication*)app openURL:(NSURL*)url options:(NSDictionary<NSString*, id>*)options
+{
+    return [WXApi handleOpenURL:url delegate:self];
+}
+
+- (void) onResp:(BaseResp *) resp {
+    if ([resp isKindOfClass:[SendAuthResp class]]) {
+        SendAuthResp *sendAuthResp = (SendAuthResp *) resp;
+        OnGetCodeFromWeChat cb = [WXAPIUtils getCallBack];
+        if (nullptr == cb) {
+            return;
+        }
+        CodeInfo codeInfo =
+        {
+            .code = nullptr,
+            .errCode = 0,
+            .errMsg = nullptr,
+        };
+        if (sendAuthResp.errCode != WXSuccess) {
+            codeInfo.errCode = sendAuthResp.errCode;
+            codeInfo.errMsg = "WeChat login error: check error code from wx doc!";
+        } else {
+            bool isStateValid = [[WXAPIUtils getWxLoginState] isEqualToString:sendAuthResp.state];
+            if (isStateValid) {
+                codeInfo.code = [sendAuthResp.code UTF8String];
+            } else {
+                codeInfo.errCode = -404;
+                codeInfo.errMsg = "LibError: Code does not match!";
+            }
+        }
+        cb(codeInfo);
+    }
+}
+
+@end

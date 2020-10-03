@@ -1,0 +1,48 @@
+/*
+  Auto generated callback file
+ */
+package com.unity.EndlessRunnerSampleGame.TkeDemo.wxapi;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+
+import com.tencent.mm.opensdk.modelbase.BaseReq;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+import com.unity3d.playerididentity.WxAPIUtils;
+
+public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
+    private static final String TAG = "PLAYERID.WX.ENTRY";
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        WxAPIUtils.getIwxapi().handleIntent(getIntent(), this);
+        finish();
+    }
+
+    @Override
+    public void onReq(BaseReq baseReq) {
+    }
+
+    @Override
+    public void onResp(BaseResp baseResp) {
+        Log.d(TAG, "onResp: get resp");
+        if (baseResp instanceof SendAuth.Resp) {
+            SendAuth.Resp resp = (SendAuth.Resp) baseResp;
+            if (baseResp.errCode != BaseResp.ErrCode.ERR_OK) {
+                WxAPIUtils.invokeErrorCallback(baseResp.errCode, baseResp.errStr);
+            } else if (!WxAPIUtils.getReqState().equals(resp.state)) {
+                WxAPIUtils.invokeErrorCallback(BaseResp.ErrCode.ERR_COMM, "resp state does not match request state for wechat login");
+            } else {
+                WxAPIUtils.invokeSuccessCallback(resp.code);
+            }
+        } else {
+            WxAPIUtils.invokeErrorCallback(baseResp.errCode, baseResp.errStr);
+        }
+        finish();
+    }
+}

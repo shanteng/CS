@@ -1,0 +1,9 @@
+package com.unity3d.playeridentity;
+
+public class SignInWithAppleResult {
+    public String accountName;
+    public String email;
+    public String displayName;
+    public String code;
+    public String error;
+}

@@ -14,4 +14,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TDGame/Level1.unity
     guid: 4de270a59b5c61741b93eb205a1e768c
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.playerid.apple_loader: {fileID: 11400000, guid: 268fdcebf64e9b849819c7700eaec7f3,
+      type: 2}
+    com.unity.playerid.management.loader_settings: {fileID: 11400000, guid: 3632e3b35fa35104a9fdca27897bcae7,
+      type: 2}
+    com.unity.playerid.unity_userauth_loader: {fileID: 11400000, guid: 083ea7eb81527e5479ad74d8b7afad06,
+      type: 2}
+    com.unity.playerid.wechat_loader: {fileID: 11400000, guid: 503cfa310b7fbc649a4c3571be5c0e99,
+      type: 2}

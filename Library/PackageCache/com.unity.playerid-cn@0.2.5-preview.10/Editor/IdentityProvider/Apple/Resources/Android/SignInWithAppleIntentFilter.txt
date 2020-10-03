@@ -1,0 +1,50 @@
+package com.unity3d.playeridentity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+import android.content.Intent;
+
+public class SignInWithAppleIntentFilter extends Activity {
+
+    @Override
+    protected void onCreate (Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        String code = data.getQueryParameter("code");
+        String email = data.getQueryParameter("email");
+        String name = data.getQueryParameter("name");
+
+        if (SignInWithApple.mCallbacks != null) {
+            SignInWithAppleResult result = new SignInWithAppleResult();
+
+            if (code != null) {
+                result.code = code;
+            }
+
+            if (email != null) {
+                result.email = email;
+            }
+
+            if (name != null) {
+                result.displayName = name;
+            }
+
+            // Call the callbacks
+            SignInWithApple.mCallbacks.loginCallback(result);
+
+            // Bring the Unity activity back to the front, closing the Chrome tab
+            Context context = getApplicationContext();
+
+            Intent i = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
+
+            // Close the filter intent
+            finish();
+        }
+    }
+}

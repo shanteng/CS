@@ -1,0 +1,24 @@
+{
+  "name": "com.unity.playerid-cn",
+  "displayName": "Player Identity (CN)",
+  "version": "0.2.5-preview.10",
+  "unity": "2019.2",
+  "description": "It is a Unity Package that facilitates user authentication and authorization with an arbitrary Identity Backend and a supported set of Identity Providers.",
+  "dependencies": {
+    "com.unity.subsystemregistration": "1.0.5",
+    "com.unity.textmeshpro": "2.0.1",
+    "com.unity.editorcoroutines": "0.0.2-preview.1"
+  },
+  "samples": [
+    {
+      "displayName": "AntiAddiction Sample",
+      "description": "Sample For AntiAddictionApi Usage",
+      "path": "Samples~/AntiAddictionSample"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.cds.internal.unity3d.com:unity/com.unity.playerid-cn.git",
+    "revision": "ee7ce279b2c702fbf7041e1c57e79c1ea230a821"
+  }
+}

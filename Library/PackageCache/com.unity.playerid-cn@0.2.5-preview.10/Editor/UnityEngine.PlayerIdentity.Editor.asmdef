@@ -1,0 +1,19 @@
+{
+    "name": "UnityEngine.PlayerIdentity.Editor",
+    "references": [
+        "UnityEngine.PlayerIdentity",
+        "Unity.EditorCoroutines.Editor"
+
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+    ]
+}
