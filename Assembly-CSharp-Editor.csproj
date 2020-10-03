@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{912AD226-CEB7-B002-A06C-B9371B386A5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -63,11 +64,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\MOBA and Tower Defense\Standard Assets\Editor\Water (Pro Only)\Water4\GerstnerDisplaceEditor.cs" />
-    <Compile Include="Assets\MOBA and Tower Defense\Standard Assets\Editor\Water (Pro Only)\Water4\PlanarReflectionEditor.cs" />
-    <Compile Include="Assets\MOBA and Tower Defense\Standard Assets\Editor\Water (Pro Only)\Water4\SpecularLightingEditor.cs" />
-    <Compile Include="Assets\MOBA and Tower Defense\Standard Assets\Editor\Water (Pro Only)\Water4\WaterBaseEditor.cs" />
-    <Compile Include="Assets\MOBA and Tower Defense\Standard Assets\Editor\Water (Pro Only)\Water4\WaterEditorUtility.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -272,8 +268,20 @@
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>D:/CS/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>D:/CS/Library/PackageCache/com.unity.purchasing@2.0.6/UnityEngine.Purchasing.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>D:/CS/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="Excel">
+      <HintPath>D:/CS/Assets/Plugins/Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>D:/CS/Assets/Plugins/ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:/CS/Assets/UnityPackages/JsonNet/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>D:/CS/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
@@ -644,6 +652,9 @@
     <Reference Include="UnityEngine.Monetization">
       <HintPath>D:/CS/Library/ScriptAssemblies/UnityEngine.Monetization.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Subsystem.Registration">
+      <HintPath>D:/CS/Library/ScriptAssemblies/Unity.Subsystem.Registration.dll</HintPath>
+    </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Editor">
       <HintPath>D:/CS/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Editor.dll</HintPath>
     </Reference>
@@ -653,8 +664,14 @@
     <Reference Include="UnityEngine.Advertisements">
       <HintPath>D:/CS/Library/ScriptAssemblies/UnityEngine.Advertisements.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.PlayerIdentity">
+      <HintPath>D:/CS/Library/ScriptAssemblies/UnityEngine.PlayerIdentity.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/CS/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.EditorCoroutines.Editor">
+      <HintPath>D:/CS/Library/ScriptAssemblies/Unity.EditorCoroutines.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>D:/CS/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
@@ -664,6 +681,9 @@
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
       <HintPath>D:/CS/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PlayerIdentity.Editor">
+      <HintPath>D:/CS/Library/ScriptAssemblies/UnityEngine.PlayerIdentity.Editor.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-weaver.Editor">
       <HintPath>D:/CS/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
@@ -700,18 +720,6 @@
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Runtime">
       <HintPath>D:/CS/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Subsystem.Registration">
-      <HintPath>D:/CS/Library/ScriptAssemblies/Unity.Subsystem.Registration.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PlayerIdentity">
-      <HintPath>D:/CS/Library/ScriptAssemblies/UnityEngine.PlayerIdentity.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.EditorCoroutines.Editor">
-      <HintPath>D:/CS/Library/ScriptAssemblies/Unity.EditorCoroutines.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PlayerIdentity.Editor">
-      <HintPath>D:/CS/Library/ScriptAssemblies/UnityEngine.PlayerIdentity.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
