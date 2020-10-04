@@ -18,7 +18,7 @@ public class ExcelToJsonToolEditor : Editor
     {
         base.OnInspectorGUI();
 
-        _excelName = EditorGUILayout.TextField("Excel名(不填全打):", _excelName);
+        _excelName = EditorGUILayout.TextField("Excel名(不填全转):", _excelName);
         if (GUILayout.Button("Excel表转Json"))
         {
             this._curFinishText = "";
