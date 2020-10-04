@@ -12,19 +12,13 @@ using UnityEngine;
 public class ExcelConfig
 {
     public string name;
-    public List<ExcelSheetClass> sheets;
+    public List<string> sheets;
 }
 
 [Serializable]
-public class ExcelSheetClass
-{
-    public string sheet;
-    public string classname;
-}
-
 public class ExcelToJsonTool : MonoBehaviour
 {
-    public List<ExcelConfig> _jsonConfigs;
+    public List<ExcelConfig> _Excels;
 }
 
 

@@ -146,7 +146,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1454971349}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 494.07703, y: 363.1002, z: -71.07347}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -164,10 +164,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 270be47a218817440948aea959753e68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jsonConfigs:
+  _Excels:
   - name: Language
     sheets:
-    - sheet: Main
-      classname: LanguageConfig
-    - sheet: Item
-      classname: LanguageItem
+    - Main
+    - Item
+  - name: Building
+    sheets:
+    - Building

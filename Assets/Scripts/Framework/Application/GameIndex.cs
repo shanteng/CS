@@ -1,10 +1,12 @@
 ﻿
+
 using UnityEngine;
 using SMVC.Interfaces;
 using SMVC.Patterns;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Collections.Generic;
 
 public class GameIndex : MonoBehaviour
 {
@@ -22,6 +24,7 @@ public class GameIndex : MonoBehaviour
         yield return 0;
     }
 
+   
     private  void ShowLogin()
     {
         MediatorUtil.showMediator(MediatorDefine.LOGIN);
