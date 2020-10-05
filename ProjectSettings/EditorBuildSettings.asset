@@ -9,11 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/GameIndex.unity
     guid: b7ee47889aea1c44ba3804aa5c53f714
   - enabled: 1
-    path: Assets/Scenes/Main.unity
-    guid: c838cd5d41eef344f96a16667c04931a
-  - enabled: 1
     path: Assets/Scenes/TDGame/Level1.unity
     guid: 4de270a59b5c61741b93eb205a1e768c
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: 8fcefd966cc7f354a99ee24aa9e1f07c
   m_configObjects:
     com.unity.playerid.apple_loader: {fileID: 11400000, guid: 268fdcebf64e9b849819c7700eaec7f3,
       type: 2}
