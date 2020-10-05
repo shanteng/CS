@@ -15,7 +15,7 @@ public class ViewController : MonoBehaviour
     public Transform topBorder;
     public Transform bottomBorder;
 
-    public Transform andioCube;
+   
 
 
     public float _maxSize = 21f;
@@ -130,9 +130,9 @@ public class ViewController : MonoBehaviour
 
             this.JudgeBorder();
         }
-        andioCube.gameObject.SetActive(false);
+        
 #else
-    andioCube.gameObject.SetActive(true);
+    
      if (Input.touchCount <= 0)
             return;
         if (Input.touchCount == 1)
