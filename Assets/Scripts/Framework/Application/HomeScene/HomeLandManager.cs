@@ -3,24 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeManager : MonoBehaviour
+public class HomeLandManager : MonoBehaviour
 {
     public int COL_COUNT = 50;
     public int ROW_COUNT = 50;
-    public SpotCube _prefab;
+    public List<SpotCube> _spotPrefabs;
+    public Building _BuildPrefab;
 
     private Dictionary<string, SpotCube> _allSpotDic;//key格式x|y,存储当前所有的地块
-    //private static CubeManager instance;
-    // Start is called before the first frame update
+    private static HomeLandManager instance;
 
- //   public static CubeManager GetInstance()
- //   {
- //       return instance;
- //   }
+    public static HomeLandManager GetInstance()
+    {
+        return instance;
+    }
 
     void Awake()
     {
-        //instance = this;
+        instance = this;
+    }
+
+    void Start()
+    {
+       // this.InitScene();
+    }
+
+    public void Build(int x, int z)
+    {
+        Building baseSpot = GameObject.Instantiate<Building>(this._BuildPrefab, new Vector3(x, 1, z), Quaternion.identity, this.transform);
+        string key = UtilTools.combine("build",x, "|", z);
+        baseSpot.name = key;
     }
 
     public void InitScene()
@@ -34,12 +46,14 @@ public class CubeManager : MonoBehaviour
         for (int row = 0; row < this.ROW_COUNT; ++row)
         {
             int corX = row;
+            int start = row % 2;
             for (int col = 0; col < this.COL_COUNT; ++col)
             {
+                int curIndex = (start + 1 +col) % 2;
+                SpotCube prefab = this._spotPrefabs[curIndex];
                 int corZ = col;
-                SpotCube baseSpot = GameObject.Instantiate<SpotCube>(this._prefab, new Vector3(corX, 0, corZ), Quaternion.identity, this.transform);
-                baseSpot.transform.localPosition = new Vector3(corX, 0, corZ);
-                baseSpot.transform.localRotation = Quaternion.identity;
+                SpotCube baseSpot = GameObject.Instantiate<SpotCube>(prefab, new Vector3(corX, 0, corZ), Quaternion.identity, this.transform);
+                baseSpot.SetCordinate(corX, corZ);
                 string key = UtilTools.combine(corX, "|", corZ);
                 baseSpot.name = key;
                 this._allSpotDic[key] = baseSpot;

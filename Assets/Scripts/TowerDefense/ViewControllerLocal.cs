@@ -39,8 +39,20 @@ public class ViewControllerLocal : MonoBehaviour
     private Vector2 oldPosition2;
 
     private int isForward;
+    private bool _isScreenEnable = true;//是否屏蔽屏幕操作
+    private string _SelectSpotName = "";
 
-   
+    private static ViewControllerLocal instance;
+
+    public static ViewControllerLocal GetInstance()
+    {
+        return instance;
+    }
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -55,10 +67,24 @@ public class ViewControllerLocal : MonoBehaviour
         Input.multiTouchEnabled = true;//开启多点触碰
     }
 
+    public void SetEnable(bool enable)
+    {
+        this._isScreenEnable = enable;
+    }
+
+    public void SetSelectSpot(string name)
+    {
+        this._SelectSpotName = name;
+    }
+
+    public void PressSpot(string name)
+    {
+        this._isScreenEnable = !this._SelectSpotName.Equals(name);
+    }
+
     //左右最大位移量
     private float _xMin = 0;
     private float _xMax = 0;
-
     //前后最大位移量
     private float _yMin = 0;
     private float _yMax = 0;
@@ -97,14 +123,16 @@ public class ViewControllerLocal : MonoBehaviour
             this._DoUpdateDrag = false;
         }
 #endif
-        this.JudgeScaleMap();
+        if (this._isScreenEnable)
+            this.JudgeScaleMap();
     }
 
     
 
     void LateUpdate()
     {
-        this.JudgeDragMap();
+        if (this._isScreenEnable)
+            this.JudgeDragMap();
     }
 
     void JudgeScaleMap()

@@ -33,22 +33,6 @@ public class SceneLoaderMediator : BaseFullScreenWindowMediator<SceneLoaderView>
                 }
             case NotiDefine.LOAD_SCENE_FINISH:
                 {
-                    GameObject[] allObj = SceneManager.GetActiveScene().GetRootGameObjects();
-                    CubeManager sCubeManager = null;
-                    foreach (GameObject obj in allObj)
-                    {
-                        if (obj.name.Equals("CubeManager"))
-                        {
-                            sCubeManager = obj.GetComponent<CubeManager>();
-                            break;
-                        }
-                    }
-
-                    if (sCubeManager != null)
-                    {
-                        sCubeManager.InitScene();
-                    }
-
                     MediatorUtil.HideMediator(MediatorDefine.SCENE_LOADER);
                     break;
                 }
