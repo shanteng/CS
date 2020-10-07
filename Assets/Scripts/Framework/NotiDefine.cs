@@ -11,19 +11,23 @@
 
     public const string OPEN_ = "OPEN_";
     public const string CLOSE_ = "CLOSE_";
-    
-    public const string LOAD_MAIN_SCENE_FINISH = "LOAD_MAIN_SCENE_FINISH";
-    public const string START_LOAD_MAIN_SCENE = "START_LOAD_MAIN_SCENE";
+
+    public const string DO_LOAD_SCENE = "DO_LOAD_SCENE";
+    public const string START_LOAD_SCENE = "START_LOAD_SCENE";
+    public const string LOAD_SCENE_FINISH = "LOADE_SCENE_FINISH";
+
 }
 
 public class MediatorDefine
 {
     public const string DATA_CENTER = "DATA_CENTER";
     public const string LOGIN = "LOGIN";
+    public const string HOME_SCENE = "HOME_SCENE";
+    public const string SCENE_LOADER = "SCENE_LOADER";
 }
 
 public class SceneDefine
 {
-    public const string Main = "Main";
+    public const string Home = "Home";
     public const string GameIndex = "GameIndex";
 }

@@ -22,9 +22,11 @@ public abstract class BaseWindowMediator<T> : Mediator
     protected WindowLayer m_eWindowLayer;
     protected WindowState m_eWindowState;
     protected List<string> m_lInterestNotifications;
+    protected List<string> m_HideNoHandleNotifations;
+
     protected string m_sShowNoity;
     protected string m_sHideNoity;
-    protected bool DestroyWhenHide = false;
+    protected bool DestroyWhenHide = true;//默认关闭就销毁
     protected GameObject _viewObj;
     protected T m_view;
     protected string _prefabName = "";
@@ -52,6 +54,7 @@ public abstract class BaseWindowMediator<T> : Mediator
             {
                 InitListNotificationInterests();
             }
+
             return m_lInterestNotifications;
         }
     }
@@ -59,16 +62,17 @@ public abstract class BaseWindowMediator<T> : Mediator
     
     public void InitListNotificationInterests()
     {
+        this.m_HideNoHandleNotifations = new List<string>();
         m_lInterestNotifications = new List<string>();
         m_lInterestNotifications.Add(m_sShowNoity);
         m_lInterestNotifications.Add(m_sHideNoity);
         m_lInterestNotifications.Add(NotiDefine.FULLSCREEN_WINDOW_SHOW);
         InitListNotificationInterestsInner();
+        m_lInterestNotifications.AddRange(this.m_HideNoHandleNotifations);
     }
 
     public override void HandleNotification(INotification notification)
     {
-       
         if (notification.Name.Equals(m_sShowNoity))
         {
             ShowData = notification.Body;
@@ -91,7 +95,12 @@ public abstract class BaseWindowMediator<T> : Mediator
                     break;
             }
         }//end else
+
+
+        if (this.m_HideNoHandleNotifations.Contains(notification.Name) && !this.windowVisible)
+            return;
         this.HandheldNotificationInner(notification);
+
     }
 
     protected  virtual void HideWindow()

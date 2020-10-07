@@ -11,13 +11,7 @@ public class ViewControllerLocal : MonoBehaviour
     public float _speed = 100f;
     [Range(1, 5)]
     public float _speedMobile = 2f;
-
     private float _realDragSpeed = 100;
-
-    public float _CameraY = 25;
-    public float _CameraRotateX = 45;
-    public float _ConstY = 30;
-
 
     public Transform rightBorder;
     public Transform topBorder;
@@ -46,6 +40,8 @@ public class ViewControllerLocal : MonoBehaviour
 
     private int isForward;
 
+   
+
     void Start()
     {
         this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
@@ -53,8 +49,7 @@ public class ViewControllerLocal : MonoBehaviour
 
         this._xLeftBorder = Camera.main.transform.InverseTransformPoint(leftBorder.position).x;
         this._yBottomBorder = Camera.main.transform.InverseTransformPoint(bottomBorder.position).y;
-
-
+        this._curSize = this._maxSize;
         this.ComputeBorder();
 
         Input.multiTouchEnabled = true;//开启多点触碰
@@ -102,17 +97,17 @@ public class ViewControllerLocal : MonoBehaviour
             this._DoUpdateDrag = false;
         }
 #endif
-        this.ScaleMap();
+        this.JudgeScaleMap();
     }
 
     
 
     void LateUpdate()
     {
-        this.DragMap();
+        this.JudgeDragMap();
     }
 
-    void ScaleMap()
+    void JudgeScaleMap()
     {
 #if UNITY_EDITOR
         // 缩放
@@ -120,6 +115,22 @@ public class ViewControllerLocal : MonoBehaviour
         {
             //获取鼠标滚轮的滑动量
             float wheel = Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * _WheelSpeed;
+            this.DoScale(wheel);
+        }
+#else
+        if (Input.touchCount > 1 && Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved)//多点触碰
+        {
+            //前两只手指触摸类型都为移动触摸
+            //计算出当前两点触摸点的位置
+            var tempPosition1 = Input.GetTouch(0).position;
+            var tempPosition2 = Input.GetTouch(1).position;
+            //函数返回真为放大，返回假为缩小
+            this.isForward = isEnlarge(oldPosition1, oldPosition2, tempPosition1, tempPosition2) ? -1 : 1;
+            //备份上一次触摸点的位置，用于对比
+            oldPosition1 = tempPosition1;
+            oldPosition2 = tempPosition2;
+            //获取滑动量
+            float wheel = isForward * Time.deltaTime * this._WheelSpeed;
             this.DoScale(wheel);
         }
 #endif
@@ -172,7 +183,7 @@ public class ViewControllerLocal : MonoBehaviour
     }
     private float _translateX = 0;
     private float _translateY = 0;
-    void DragMap()
+    void JudgeDragMap()
     {
 #if UNITY_EDITOR
         if (this._DoUpdateDrag)
@@ -182,43 +193,14 @@ public class ViewControllerLocal : MonoBehaviour
             this.DoDrag(xMove, yMove);
         }
 #else
-    
-     if (Input.touchCount <= 0)
-            return;
         if (Input.touchCount == 1)
         {
             // 单点触碰移动摄像机
             if (Input.touches[0].phase == TouchPhase.Moved) //手指在屏幕上移动，移动摄像机
             {
                 float xMove = -Input.touches[0].deltaPosition.x * Time.deltaTime * _realDragSpeed;
-                float zMove = -Input.touches[0].deltaPosition.y * Time.deltaTime * _realDragSpeed;
+                float yMove = -Input.touches[0].deltaPosition.y * Time.deltaTime * _realDragSpeed;
                 this.DoDrag(xMove, yMove);
-            }
-        }
-        else if (Input.touchCount > 1)//多点触碰
-        {
-            //前两只手指触摸类型都为移动触摸
-            if (Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved)
-            {
-                //计算出当前两点触摸点的位置
-                var tempPosition1 = Input.GetTouch(0).position;
-                var tempPosition2 = Input.GetTouch(1).position;
-                //函数返回真为放大，返回假为缩小
-                if (isEnlarge(oldPosition1, oldPosition2, tempPosition1, tempPosition2))
-                {
-                    this.isForward = -1;
-                }
-                else
-                {
-                    this.isForward = 1;
-                }
-                //备份上一次触摸点的位置，用于对比
-                oldPosition1 = tempPosition1;
-                oldPosition2 = tempPosition2;
-
-                //获取鼠标滚轮的滑动量
-                float wheel = isForward * Time.deltaTime * this._WheelSpeed;
-                this.DoScale(wheel);
             }
         }
 #endif

@@ -10,30 +10,36 @@ public class LoginMediator : BaseFullScreenWindowMediator<LoginView>
     public LoginMediator() : base(MediatorDefine.LOGIN)
     {
         this._prefabName = "LoginPF";
-        this.DestroyWhenHide = true;
     }
 
-    protected override void InitViewComponent(GameObject view)
-    {
-
-    }
+   
 
     protected override void InitListNotificationInterestsInner()
     {
-        m_lInterestNotifications.Add(NotiDefine.LOAD_MAIN_SCENE_FINISH);
+        //m_HideNoHandleNotifations.Add(NotiDefine.LOAD_HOME_SCENE_FINISH);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.LOAD_MAIN_SCENE_FINISH:
+           /*( case NotiDefine.LOAD_HOME_SCENE_FINISH:
                 {
-                    if (this.windowVisible == false)
-                        return;
                     MediatorUtil.hideMediator(MediatorDefine.LOGIN);
                     break;
                 }
+           */
         }
     }//end func
+
+    protected override void InitViewComponent(GameObject view)
+    {
+
+    }
+
+    protected override void DoInitializeInner()
+    {
+
+    }
+
 }//end class

@@ -10,33 +10,30 @@ public class CubeManager : MonoBehaviour
     public SpotCube _prefab;
 
     private Dictionary<string, SpotCube> _allSpotDic;//key格式x|y,存储当前所有的地块
-    private static CubeManager instance;
+    //private static CubeManager instance;
     // Start is called before the first frame update
 
-    public static CubeManager GetInstance()
-    {
-        return instance;
-    }
+ //   public static CubeManager GetInstance()
+ //   {
+ //       return instance;
+ //   }
 
     void Awake()
     {
-        instance = this;
+        //instance = this;
     }
 
-    void Start()
+    public void InitScene()
     {
-        if (this._allSpotDic == null)
-        {
-            this._allSpotDic = new Dictionary<string, SpotCube>();
-            this.GenerateAllBaseSpot();
-        }
+        this._allSpotDic = new Dictionary<string, SpotCube>();
+        this.GenerateAllBaseSpot();
     }
 
     private void GenerateAllBaseSpot()
     {
         for (int row = 0; row < this.ROW_COUNT; ++row)
         {
-            int corX = -row;
+            int corX = row;
             for (int col = 0; col < this.COL_COUNT; ++col)
             {
                 int corZ = col;

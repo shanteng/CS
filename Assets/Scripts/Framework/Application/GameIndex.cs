@@ -27,7 +27,7 @@ public class GameIndex : MonoBehaviour
    
     private  void ShowLogin()
     {
-        MediatorUtil.showMediator(MediatorDefine.LOGIN);
+        MediatorUtil.ShowMediator(MediatorDefine.LOGIN);
     }
 
     private void InitMvc()

@@ -7,13 +7,13 @@ using System.IO;
 
 public class MediatorUtil
 {
-    public static void showMediator(string mediatorName)
+    public static void ShowMediator(string mediatorName)
     {
         var noti = $"{NotiDefine.WINDOW_DO_SHOW}_{mediatorName}";
         SendNotification(noti);
     }
 
-    public static void hideMediator(string mediatorName)
+    public static void HideMediator(string mediatorName)
     {
         var noti = $"{NotiDefine.WINDOW_DO_HIDE}_{mediatorName}";
         SendNotification(noti);

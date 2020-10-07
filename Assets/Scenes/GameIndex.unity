@@ -500,7 +500,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 1
+  m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -604,6 +604,7 @@ GameObject:
   - component: {fileID: 1552263080}
   - component: {fileID: 1552263081}
   - component: {fileID: 1552263083}
+  - component: {fileID: 1552263084}
   m_Layer: 5
   m_Name: UICamera
   m_TagString: Untagged
@@ -689,6 +690,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6346de9b67ed58249a41dfd3b9b5deaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1552263084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552263079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 880526755961d1a45bbc602290ba09b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ProgressText: {fileID: 0}
+  _SceneSlider: {fileID: 0}
 --- !u!1 &1809345056
 GameObject:
   m_ObjectHideFlags: 0

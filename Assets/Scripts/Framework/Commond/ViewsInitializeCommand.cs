@@ -9,5 +9,6 @@ public class ViewsInitializeCommand : SimpleCommand
     {
         Facade.RegisterMediator(new DataCenterMediator());
         Facade.RegisterMediator(new LoginMediator());
+        Facade.RegisterMediator(new SceneLoaderMediator());
     }
 }

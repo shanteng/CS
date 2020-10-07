@@ -6,6 +6,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System;
 
 public class UtilTools 
 {
@@ -72,5 +73,25 @@ public class UtilTools
             value = value.Replace(combine("{", i, "}"), paramStrs[i].ToString());
         }
         return value;
+    }
+
+    public static string GetLanguage(string key, params object[] paramName)
+    {
+        LanguageConfig config = LanguageConfig.Instance.GetData(key);
+        if (config == null)
+            return "";
+        string valuestr = config.Value;
+        try
+        {
+            valuestr = string.Format(config.Value, paramName);
+        }
+        catch (Exception ex)
+        {
+#if UNITY_EDITOR
+            UnityEngine.Debug.LogError(string.Format("LanguageConfig Key: {0} 参数数量不匹配", key));
+#endif
+        }
+
+        return valuestr;
     }
 }

@@ -66,7 +66,9 @@
     <Compile Include="Assets\Scripts\Config\ExcelToJsonTool.cs" />
     <Compile Include="Assets\Scripts\Config\ExcelToJsonToolEditor.cs" />
     <Compile Include="Assets\Scripts\Config\JsonDefineClass.cs" />
+    <Compile Include="Assets\Scripts\Config\LanMainDefine.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeSceneMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Login\LoginMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Login\LoginView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Main\CubeManager.cs" />
@@ -74,6 +76,8 @@
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\DataCenterMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\MediatorUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\ResourcesManager.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SingletonFactory.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\UIRoot.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\UtilTools.cs" />
