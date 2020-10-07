@@ -3,3 +3,7 @@ Library
 obj
 .vs
 Temp
+Assembly-CSharp-firstpass.csproj
+Assembly-CSharp.csproj
+Assembly-CSharp.csproj
+Assets/Scripts/Editor.meta
