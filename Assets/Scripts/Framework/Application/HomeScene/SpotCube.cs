@@ -28,8 +28,8 @@ public class SpotCube : MonoBehaviour
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        HomeLandManager.GetInstance().Build(this._cordinate.x,this._cordinate.z);
-        this.gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+        //测试代码
+        HomeLandManager.GetInstance().Build(1,this._cordinate.x,this._cordinate.z);
     }
 
 

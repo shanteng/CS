@@ -13,25 +13,22 @@ public class Building : MonoBehaviour
     public string _key = "";
     public Vector3Int _cordinate = Vector3Int.zero;//左下角的坐标
     public List<Vector2Int> _occupyCordinates;//占领的全部地块坐标
+    public PlaneBase _basePlane;
 
+    [HideInInspector]
+    public BuildingConfig _config;
 
     private float CosDegreeValue;
-    private List<MeshRenderer> _allRenders;
-    private BuildingConfig _config;
     private bool _isSelect = false;
-   
+    private ColorFlash _flash;
+    private bool _isDrag = false;
+ 
 
     void Start()
     {
-        _allRenders = new List<MeshRenderer>();
-        int count = this.transform.childCount;
-        for (int i = 0; i < count; ++i)
-        {
-            MeshRenderer render = this.transform.GetChild(i).GetComponent<MeshRenderer>();
-            if (render == null)
-                continue;
-            _allRenders.Add(render);
-        }
+        this._flash = this.GetComponent<ColorFlash>();
+        this._flash.Stop();
+        _basePlane.gameObject.SetActive(false);
         CosDegreeValue = Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad);
     }
 
@@ -64,10 +61,14 @@ public class Building : MonoBehaviour
     {
         if (this._isSelect == false)
             return;
-        ViewControllerLocal.GetInstance().PressSpot(this.gameObject.name);
+        this._isDrag = true;
+        ViewControllerLocal.GetInstance().PressSpot(this._key);
         _screenSpace = Camera.main.WorldToScreenPoint(this.transform.position);
         _beginPos = this.transform.position;
+        this._basePlane.gameObject.SetActive(true);
+        this._basePlane.SetColorIndex(1);//正常颜色
     }
+
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -81,10 +82,7 @@ public class Building : MonoBehaviour
     
         curPosition.x -= yoffset;
         curPosition.z += yoffset;
-        curPosition.y = 1;
-
       
-
 
         curPosition.x = Mathf.RoundToInt(curPosition.x);
         curPosition.z = Mathf.RoundToInt(curPosition.z);
@@ -96,41 +94,49 @@ public class Building : MonoBehaviour
         int newX = Mathf.Clamp((int)curPosition.x, 0, maxX);
         int newZ = Mathf.Clamp((int)curPosition.z, 0, maxZ);
 
-        Debug.LogError("newX--------:" + newX);
-        Debug.LogError("newZ--------:" + newZ);
+        this.transform.position = new Vector3(newX,1.02f, newZ);
+        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._key, newX, newZ,this._config.RowCount,this._config.ColCount);
+        int index = canBuildHere ? 1 : 0;
+        this._basePlane.SetColorIndex(index);
 
-
-        this.transform.position = new Vector3(newX,1, newZ);
-    
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         if (this._isSelect == false)
             return;
-        //结束拖拽，重新设置位置
-        this.SetSelect(false);
-        ViewControllerLocal.GetInstance().PressSpot("");
-        ViewControllerLocal.GetInstance().SetSelectSpot("");
-        this.SetCordinate((int)this.transform.position.x, (int)this.transform.position.z);
-        //通知LandManager
-        MediatorUtil.SendNotification(NotiDefine.BUILDING_POSTION_CHANGE, this);
+
+        this._isDrag = false;
+        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._key, (int)this.transform.position.x, (int)this.transform.position.z, this._config.RowCount, this._config.ColCount);
+        if (canBuildHere)
+        {
+            //结束拖拽，重新设置位置
+            HomeLandManager.GetInstance().UnSelectOtherBuilding(this._key);//拖拽结束，取消勾选
+            this.SetSelect(false);
+            this._basePlane.gameObject.SetActive(false);
+            ViewControllerLocal.GetInstance().PressSpot("");
+            ViewControllerLocal.GetInstance().SetSelectSpot("");
+            this.transform.position = new Vector3(this.transform.position.x, 1, this.transform.position.z);//恢复层级
+            this.SetCordinate((int)this.transform.position.x, (int)this.transform.position.z);
+            //通知LandManager
+            HomeLandManager.GetInstance().RecordBuildOccupy(this._key,this._occupyCordinates);
+            //MediatorUtil.SendNotification(NotiDefine.BUILDING_POSTION_CHANGE, this);
+        }
     }
 
     //监听点击
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.LogError("OnPointerClick" + this.gameObject.name);
-        ViewControllerLocal.GetInstance().SetSelectSpot(this.gameObject.name);
-        this.SetSelect(true);
+        if (this._isDrag)
+            return;
+        HomeLandManager.GetInstance().UnSelectOtherBuilding(this._key);
+        this.SetSelect(!this._isSelect);
+        ViewControllerLocal.GetInstance().SetSelectSpot(this._key);
     }
 
-    private void SetSelect(bool isSelect)
+    public void SetSelect(bool isSelect)
     {
         this._isSelect = isSelect;
-        foreach (MeshRenderer render in this._allRenders)
-        {
-            render.material.color = isSelect ? Color.yellow : Color.white;
-        }
+        this._flash.DoFlash(this._isSelect);
     }
 }
