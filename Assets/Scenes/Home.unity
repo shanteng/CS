@@ -336,6 +336,8 @@ MonoBehaviour:
   _spotPrefabs:
   - {fileID: 8761927430687766076, guid: 3d608ac5f5a60d44195879daa51b5607, type: 3}
   - {fileID: 8761927430687766076, guid: d53f688633c04874f96cf756058c0520, type: 3}
+  _AllBuildings: []
+  _SpotHasOccupys: []
   _BuildPrefab: {fileID: 4615079088832247934, guid: 0ec0984f5e9353f4daae85f0b51bea5f,
     type: 3}
 --- !u!4 &437401185
@@ -572,6 +574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _WheelSpeed: 1000
+  _WheelMobile: 20
   _speed: 200
   _speedMobile: 2
   rightBorder: {fileID: 53471150}

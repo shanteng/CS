@@ -6,6 +6,7 @@ public class ViewControllerLocal : MonoBehaviour
 {
     
     public float _WheelSpeed = 1000f;
+    public float _WheelMobile = 100f;
 
     [Range(100, 500)]
     public float _speed = 100f;
@@ -48,7 +49,7 @@ public class ViewControllerLocal : MonoBehaviour
     {
         return instance;
     }
-
+    
     void Awake()
     {
         instance = this;
@@ -65,6 +66,12 @@ public class ViewControllerLocal : MonoBehaviour
         this.ComputeBorder();
 
         Input.multiTouchEnabled = true;//开启多点触碰
+
+#if UNITY_EDITOR
+        //
+#else
+        this._WheelSpeed = this._WheelMobile;
+#endif
     }
 
     public void SetEnable(bool enable)
