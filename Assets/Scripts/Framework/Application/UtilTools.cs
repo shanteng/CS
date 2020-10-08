@@ -10,6 +10,10 @@ using System;
 
 public class UtilTools 
 {
+    public const float FloatPrecision = 0.0001f;
+    public const float NFloatPrecision = -1 * FloatPrecision;
+    public const float V3Precision = 0.0001f;
+
     private static object m_builderLock = new object();
     private static StringBuilder m_builder = new StringBuilder();
 
@@ -93,5 +97,19 @@ public class UtilTools
         }
 
         return valuestr;
+    }
+
+    public static bool IsFloatZero(float v)
+    {
+        if (v > 0)
+        {
+            return v < V3Precision;
+        }
+        return v > NFloatPrecision;
+    }
+
+    public static bool IsFloatSimilar(float a, float b)
+    {
+        return IsFloatZero(a - b);
     }
 }

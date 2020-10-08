@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Config\ExcelToJsonToolEditor.cs" />
     <Compile Include="Assets\Scripts\Config\JsonDefineClass.cs" />
     <Compile Include="Assets\Scripts\Config\LanMainDefine.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\Building.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\ColorFlash.cs" />
@@ -95,6 +96,9 @@
     <Compile Include="Assets\Scripts\Framework\Mediator\BaseWindowMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\NotiDefine.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\BaseProxy.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\DataGrid\DataGrid.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\DataGrid\DataTestItemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\DataGrid\ItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\UIBase.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\UIButton.cs" />
     <Compile Include="Assets\Scripts\TinyMVC\Core\Controller.cs" />
@@ -667,12 +671,6 @@
     </Reference>
     <Reference Include="System.Xml.Serialization">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.Compression">
-      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/NetStandard/compat/2.0.0/shims/netstandard/System.IO.Compression.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.Compression.FileSystem">
-      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.IO.Compression.FileSystem.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/CS/CS/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
