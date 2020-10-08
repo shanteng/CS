@@ -16,6 +16,8 @@
     public const string START_LOAD_SCENE = "START_LOAD_SCENE";
     public const string LOAD_SCENE_FINISH = "LOADE_SCENE_FINISH";
 
+    public const string BUILDING_POSTION_CHANGE = "BUILDING_POSTION_CHANGE";
+
 }
 
 public class MediatorDefine

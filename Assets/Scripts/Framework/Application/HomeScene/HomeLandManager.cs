@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class HomeLandManager : MonoBehaviour
 {
-    public int COL_COUNT = 50;
-    public int ROW_COUNT = 50;
+    public static float Degree = 45;
+
+    public static int COL_COUNT = 50;
+    public static int ROW_COUNT = 50;
     public List<SpotCube> _spotPrefabs;
     public Building _BuildPrefab;
 
@@ -33,6 +35,8 @@ public class HomeLandManager : MonoBehaviour
         Building baseSpot = GameObject.Instantiate<Building>(this._BuildPrefab, new Vector3(x, 1, z), Quaternion.identity, this.transform);
         string key = UtilTools.combine("build",x, "|", z);
         baseSpot.name = key;
+        baseSpot.Init();
+        baseSpot.SetCordinate(x, z);
     }
 
     public void InitScene()
@@ -43,11 +47,11 @@ public class HomeLandManager : MonoBehaviour
 
     private void GenerateAllBaseSpot()
     {
-        for (int row = 0; row < this.ROW_COUNT; ++row)
+        for (int row = 0; row < ROW_COUNT; ++row)
         {
             int corX = row;
             int start = row % 2;
-            for (int col = 0; col < this.COL_COUNT; ++col)
+            for (int col = 0; col < COL_COUNT; ++col)
             {
                 int curIndex = (start + 1 +col) % 2;
                 SpotCube prefab = this._spotPrefabs[curIndex];

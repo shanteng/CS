@@ -46,7 +46,11 @@ public class LanguageItemConfig : Config<LanguageItemConfig>
 
 public class BuildingConfig : Config<BuildingConfig>
 {
-    public string Value;
+    public string Name;
+    public string Desc;
+    public int RowCount;
+    public int ColCount;
+
     public BuildingConfig() : base(JsonNameDefine.Building) { }
 }
 #endregion

@@ -1,1 +1,1 @@
-[{"ID":1,"Value":"仓库"},{"ID":2,"Value":"民居"}]
+[{"ID":1,"Name":"仓库","Desc":"仓库的描述","RowCount":2,"ColCount":2},{"ID":2,"Name":"城墙","Desc":"城区的功能","RowCount":1,"ColCount":1}]

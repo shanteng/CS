@@ -25,6 +25,16 @@ public class ExcelToJsonToolEditor : Editor
             this.DoAllXlsxToJson(this._excelName);
             this._curFinishText += "转表结束...";
         }
+        else if (GUILayout.Button("打开Excel文件夹"))
+        {
+            string path = System.Environment.CurrentDirectory + "/Excel/init.txt";
+            EditorUtility.RevealInFinder(path);
+        }
+        else if (GUILayout.Button("打开Json文件夹"))
+        {
+            string path = System.Environment.CurrentDirectory + "/Assets/Resources/Config/Main.json";
+            EditorUtility.RevealInFinder(path);
+        }
 
 
         EditorGUILayout.BeginHorizontal();

@@ -333,8 +333,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 049fa6a3952486e45b297de16eba2306, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  COL_COUNT: 50
-  ROW_COUNT: 50
   _spotPrefabs:
   - {fileID: 8761927430687766076, guid: 3d608ac5f5a60d44195879daa51b5607, type: 3}
   - {fileID: 8761927430687766076, guid: d53f688633c04874f96cf756058c0520, type: 3}
