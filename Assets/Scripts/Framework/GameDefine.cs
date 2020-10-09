@@ -25,6 +25,7 @@
     public const string CreateOneBuildingResp = "CreateOneBuildingResp";
 
     public const string BuildingExpireReachedNoti = "BuildingExpireReachedNoti";
+    public const string BuildingStatusChanged = "BuildingStatusChanged";
 
     public const string BuildingRelocateDo = "BuildingRelocateDo";
     public const string BuildingRelocateResp = "BuildingRelocateResp";

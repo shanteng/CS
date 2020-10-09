@@ -10,15 +10,17 @@ public class HomeLandManager : MonoBehaviour
     public static int COL_COUNT = 50;
     public static int ROW_COUNT = 50;
     public List<SpotCube> _spotPrefabs;
-    public Dictionary<string, List<Vector2Int>> _BuildingDic;
-    public Dictionary<string,Building> _AllBuildings;
-    public List<string> _SpotHasOccupys;//key x|z,bool value
+    public CountDownCanvas _coundPrefabs;
+
+
+
+    private Dictionary<string, List<Vector2Int>> _BuildingDic;
+    private Dictionary<string,Building> _AllBuildings;
+    private List<string> _SpotHasOccupys;//key x|z,bool value
     public Building _BuildPrefab;
-
     private Dictionary<string, SpotCube> _allSpotDic;//key格式x|y,存储当前所有的地块
-    private static HomeLandManager instance;
-    
 
+    private static HomeLandManager instance;
     public static HomeLandManager GetInstance()
     {
         return instance;
@@ -72,11 +74,18 @@ public class HomeLandManager : MonoBehaviour
         return false;
     }
 
+    public void OnBuildingStateChanged(string key)
+    {
+        Building curBuild = this.GetBuilding(key);
+        if (curBuild != null)
+            curBuild.SetCurrentState();
+    }
+
     public void OnRelocateResp(string key)
     {
         Building curBuild = this.GetBuilding(key);
         if (curBuild != null)
-            curBuild.OnRelocateResp();
+            curBuild.EndRelocate();
     }
 
     private Building GetBuilding(string key)
@@ -93,8 +102,16 @@ public class HomeLandManager : MonoBehaviour
         Building building = GameObject.Instantiate<Building>(this._BuildPrefab, new Vector3(data._cordinate.x, 1, data._cordinate.y), Quaternion.identity, this.transform);
         building._data = data;
         building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
+        building.CreateCountDownUI(this._coundPrefabs);
+        building.SetCurrentState();
         this._AllBuildings.Add(data._key,building);
         this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
+    }
+
+    public void OnClickSpotCube(int x,int z)
+    {
+        HomeLandManager.GetInstance().UnSelectOtherBuilding("");
+        this.Build(1, x, z);//测试
     }
 
     public void Build(int configid,int x, int z)
@@ -122,7 +139,7 @@ public class HomeLandManager : MonoBehaviour
         {
             bool isKey = key.Equals(bd._data._key);
             if(isKey ==false)
-                bd.SetSelect(false);
+                bd.EndRelocate();
         }
     }
 

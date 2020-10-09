@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using SMVC.Patterns;
@@ -26,7 +27,7 @@ public class BuildingData
 
     public int _level;
     public BuildingStatus _status;//建筑的状态
-    public float _expireTime;//建造或者升级的到期时间
+    public long _expireTime;//建造或者升级的到期时间
     public int _durability;//耐久度
 
     public void Create(int id,int x,int z)
@@ -86,7 +87,16 @@ public class BuildingProxy : BaseRemoteProxy
         
     }
 
- 
+    public BuildingData GetBuilding(string key)
+    {
+        BuildingData data = null;
+        if (this._datas.TryGetValue(key, out data))
+        {
+            return data;
+        }
+        return null;
+    }
+
     public void Create(Dictionary<string, object> vo)
     {
         int id = (int)vo["configid"];
@@ -111,12 +121,26 @@ public class BuildingProxy : BaseRemoteProxy
         string key = (string)vo["key"];
         int x = (int)vo["x"];
         int z = (int)vo["z"];
-        BuildingData data = null;
-        if (this._datas.TryGetValue(key, out data))
+        BuildingData data = this.GetBuilding(key);
+        if (data != null)
         {
             data.SetCordinate(x, z);
             MediatorUtil.SendNotification(NotiDefine.BuildingRelocateResp, key);
         }
+    }
+
+    public void OnExpireFinsih(string key)
+    {
+        BuildingData data = this.GetBuilding(key);
+        if (data == null)
+            return;
+        if (data._status == BuildingData.BuildingStatus.UPGRADE)
+        {
+            data.SetLevel(data._level + 1);//升级完成
+        }
+        
+        data.SetStatus(BuildingData.BuildingStatus.NORMAL);
+        this.SendNotification(NotiDefine.BuildingStatusChanged, key);
     }
 
 

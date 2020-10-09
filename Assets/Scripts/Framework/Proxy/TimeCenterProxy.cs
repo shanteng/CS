@@ -13,7 +13,7 @@ public class TimeCallData
 
     public bool _isTimeStep = true;
     public int _needSecs;//
-    public float TimeStep;//通知到达的时间戳 TimeCenterProxy 根据当前系统时间自动赋值
+    public long TimeStep;//通知到达的时间戳 TimeCenterProxy 根据当前系统时间自动赋值
 }
 
 //时间戳回调管理
@@ -32,7 +32,7 @@ public class TimeCenterProxy : BaseRemoteProxy
 
     private int  Compare(TimeCallData x, TimeCallData y)
     {
-        return Mathf.CeilToInt(y.TimeStep - x.TimeStep);
+        return (int)(y.TimeStep - x.TimeStep);
     }
 
     public void AddCallBack(TimeCallData data)
@@ -63,11 +63,10 @@ public class TimeCenterProxy : BaseRemoteProxy
         WaitForSeconds waitYield = new WaitForSeconds(1f);
         while (this._isOver == false)
         {
-            TimeSpan nowStep = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            long now = Convert.ToInt64(nowStep.TotalSeconds);
-            if (now < this._latestCallData.TimeStep)
+            if (this._latestCallData.TimeStep > GameIndex.ServerTime)
             {
-                yield return waitYield;//等待下一秒
+                //还未到期，等待下一秒
+                yield return waitYield;
             }
             else
             {
@@ -81,6 +80,7 @@ public class TimeCenterProxy : BaseRemoteProxy
 
     private void CallBack()
     {
+        Debug.LogWarning("TimeCenter CallBack:" + this._latestCallData._notifaction+"--param:"+ this._latestCallData._param);
         MediatorUtil.SendNotification(this._latestCallData._notifaction, this._latestCallData._param);
         _sortCallList.Remove(this._latestCallData);
         this._latestCallData = null;

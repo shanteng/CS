@@ -142,7 +142,7 @@ public class BuildingManager : MonoBehaviour
     void Update()
     {
         //射线检测Cube是否被点击
-        if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() == false)
+        if (Input.GetMouseButtonDown(0))
         {
             this.OnClickCube();
         }

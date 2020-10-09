@@ -12,6 +12,7 @@ public class Building : MonoBehaviour
     public BuildingData _data;//从Proxy取到的引用
     public PlaneBase _basePlane;
     private ColorFlash _flash;
+    private CountDownCanvas _cdUI;
 
     private float CosDegreeValue;
     private bool _isSelect = false;
@@ -27,6 +28,33 @@ public class Building : MonoBehaviour
         CosDegreeValue = Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad);
     }
 
+    public void CreateCountDownUI(CountDownCanvas cdPrefabs)
+    {
+        _cdUI = GameObject.Instantiate<CountDownCanvas>(cdPrefabs, Vector3.zero, Quaternion.identity, this.transform);
+        _cdUI.transform.localPosition = Vector3.zero;
+        _cdUI.Hide();
+    }
+
+    public void SetCurrentState()
+    {
+        if (this._data._status == BuildingData.BuildingStatus.BUILD)
+        {
+            this.DoCountDown(_data._expireTime);
+        }
+        else if (this._data._status == BuildingData.BuildingStatus.UPGRADE)
+        {
+            this.DoCountDown(_data._expireTime);
+        }
+        else if (this._data._status == BuildingData.BuildingStatus.NORMAL)
+        {
+            this._cdUI.Hide();
+        }
+    }
+
+    private void DoCountDown(long expire)
+    {
+        this._cdUI.DoCountDown(expire);
+    }
 
     public void RelocateToProxy(int x, int z)
     {
@@ -97,15 +125,14 @@ public class Building : MonoBehaviour
         }
     }
 
-    public void OnRelocateResp()
+    public void EndRelocate()
     {
         //结束拖拽，重新设置位置
-        HomeLandManager.GetInstance().UnSelectOtherBuilding(this._data._key);//拖拽结束，取消勾选
         this.SetSelect(false);
         this._basePlane.gameObject.SetActive(false);
         ViewControllerLocal.GetInstance().PressSpot("");
         ViewControllerLocal.GetInstance().SetSelectSpot("");
-        this.transform.position = new Vector3(this.transform.position.x, 1, this.transform.position.z);//恢复层级
+        this.transform.position = new Vector3(this._data._cordinate.x, 1, this._data._cordinate.y);//恢复层级
         //通知LandManager
         HomeLandManager.GetInstance().RecordBuildOccupy(this._data._key, this._data._occupyCordinates);
     }
@@ -113,11 +140,36 @@ public class Building : MonoBehaviour
     //监听点击
     public void OnPointerClick(PointerEventData eventData)
     {
+        //拖拽或者当前正在建造升级中不允许点击
         if (this._isDrag)
             return;
-        HomeLandManager.GetInstance().UnSelectOtherBuilding(this._data._key);
-        this.SetSelect(!this._isSelect);
-        ViewControllerLocal.GetInstance().SetSelectSpot(this._data._key);
+
+        if (this._isSelect)
+        {
+            //取消选中，并且返回初始位置
+            this.EndRelocate();
+        }
+        else
+        {
+            //选中当前地块
+            HomeLandManager.GetInstance().UnSelectOtherBuilding(this._data._key);//拖拽结束，取消勾选
+            this.SetSelect(true);
+            ViewControllerLocal.GetInstance().SetSelectSpot(this._data._key);
+        }
+
+        if (this._data._status == BuildingData.BuildingStatus.NORMAL)
+        {
+            Debug.LogWarning("BuildingData.BuildingStatus.NORMAL");
+        }
+        else if (this._data._status == BuildingData.BuildingStatus.BUILD)
+        {
+            Debug.LogWarning("BuildingData.BuildingStatus.BUILD");
+        }
+        else if (this._data._status == BuildingData.BuildingStatus.UPGRADE)
+        {
+            Debug.LogWarning("BuildingData.BuildingStatus.UPGRADE");
+        }
+
     }
 
     public void SetSelect(bool isSelect)

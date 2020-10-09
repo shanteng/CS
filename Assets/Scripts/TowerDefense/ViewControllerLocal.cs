@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ViewControllerLocal : MonoBehaviour
 {
@@ -123,6 +124,7 @@ public class ViewControllerLocal : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
+            bool isOverUI = UtilTools.isFingerOverUI();
             this._DoUpdateDrag = true;
         }
         else if (Input.GetMouseButtonUp(0))
@@ -144,16 +146,18 @@ public class ViewControllerLocal : MonoBehaviour
 
     void JudgeScaleMap()
     {
+        
 #if UNITY_EDITOR
         // 缩放
-        if (Input.GetAxis("Mouse ScrollWheel") != 0)
+        if (Input.GetAxis("Mouse ScrollWheel") != 0 && UtilTools.isFingerOverUI() == false)
         {
             //获取鼠标滚轮的滑动量
             float wheel = Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * _WheelSpeed;
             this.DoScale(wheel);
         }
 #else
-        if (Input.touchCount > 1 && Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved)//多点触碰
+        if (Input.touchCount > 1 && Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved 
+        &&  UtilTools.isFingerOverUI() == false)//多点触碰
         {
             //前两只手指触摸类型都为移动触摸
             //计算出当前两点触摸点的位置
@@ -228,7 +232,7 @@ public class ViewControllerLocal : MonoBehaviour
             this.DoDrag(xMove, yMove);
         }
 #else
-        if (Input.touchCount == 1)
+        if (Input.touchCount == 1 &&  UtilTools.isFingerOverUI() == false)
         {
             // 单点触碰移动摄像机
             if (Input.touches[0].phase == TouchPhase.Moved) //手指在屏幕上移动，移动摄像机

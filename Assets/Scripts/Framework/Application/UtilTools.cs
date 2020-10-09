@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System;
+using UnityEngine.EventSystems;
 
 public class UtilTools 
 {
@@ -119,9 +120,41 @@ public class UtilTools
         return BitConverter.ToInt64(buffer, 0).ToString();
     }
 
-    public static long GetExpireTime(int neddSecs)
+    public static long GetExpireTime(int passSecsFromNow)
     {
-        TimeSpan nowStep = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-         return Convert.ToInt64(nowStep.TotalSeconds + neddSecs);
+        return GameIndex.ServerTime + passSecsFromNow;
     }
+
+    public static string GetCdStringExpire(long expire)
+    {
+        long leftSecs = expire - GameIndex.ServerTime;
+        return GetCdString(leftSecs);
+
+    }
+    public static string GetCdString(long leftsecs)
+    {
+        if (leftsecs < 0)
+            leftsecs = 0;
+
+        var hour = leftsecs / 3600;
+        var min = leftsecs % 3600 / 60;
+        var sec = leftsecs % 60;
+        return $"{hour:D2}:{min:D2}:{sec:D2}";
+    }
+
+    public static  bool isFingerOverUI()
+    {
+        bool isOverObj = false;
+        string LayerName = "";
+#if UNITY_EDITOR
+        isOverObj =  EventSystem.current.IsPointerOverGameObject();
+#else
+        isOverObj =  EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+#endif
+        if (isOverObj)
+            LayerName = LayerMask.LayerToName(EventSystem.current.gameObject.layer);
+
+        return LayerName.Equals("UI");
+    }
+
 }

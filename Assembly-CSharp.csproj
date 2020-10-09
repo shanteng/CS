@@ -72,7 +72,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\Building.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\ColorFlash.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeLandManager.cs" />
-    <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeSceneMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeLandMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PlaneBase.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\SpotCube.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Login\LoginMediator.cs" />
@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\Framework\UI\DataGrid\DataGrid.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\DataGrid\DataTestItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\DataGrid\ItemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\SceneUI\CountDownCanvas.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\UIBase.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\UIButton.cs" />
     <Compile Include="Assets\Scripts\TinyMVC\Core\Controller.cs" />
