@@ -18,6 +18,8 @@ public class JsonNameDefine
     public static string Main = "Main";
     public static string Item = "Item";
     public static string Building = "Building";
+    public static string BuildingUpgrade = "BuildingUpgrade";
+
     public static JArray JsonRead(string name)
     {
         string json = "";
@@ -48,10 +50,27 @@ public class BuildingConfig : Config<BuildingConfig>
 {
     public string Name;
     public string Desc;
+    public int MaxLevel;
     public int RowCount;
     public int ColCount;
 
     public BuildingConfig() : base(JsonNameDefine.Building) { }
+}
+
+public class BuildingUpgradeConfig : Config<BuildingUpgradeConfig>
+{
+    public int BuildingID;//Id
+    public int Level;//
+    public int NeedTime;//升级所需时间
+    public int Durability;//耐久度
+
+    public BuildingUpgradeConfig() : base(JsonNameDefine.BuildingUpgrade) { }
+
+    public static BuildingUpgradeConfig GetConfig(int id, int level)
+    {
+        int levelid = id * 100 + level;
+        return BuildingUpgradeConfig.Instance.GetData(levelid);
+    }
 }
 #endregion
 

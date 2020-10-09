@@ -112,4 +112,16 @@ public class UtilTools
     {
         return IsFloatZero(a - b);
     }
+
+    public static string GenerateUId()
+    {
+        byte[] buffer = Guid.NewGuid().ToByteArray();
+        return BitConverter.ToInt64(buffer, 0).ToString();
+    }
+
+    public static long GetExpireTime(int neddSecs)
+    {
+        TimeSpan nowStep = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+         return Convert.ToInt64(nowStep.TotalSeconds + neddSecs);
+    }
 }

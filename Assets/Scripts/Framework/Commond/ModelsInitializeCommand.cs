@@ -7,6 +7,7 @@ public class ModelsInitializeCommand : SimpleCommand
 {
     public override void Execute(INotification notification)
     {
-        //Facade.RegisterProxy(new SdkProxy());
+        Facade.RegisterProxy(new TimeCenterProxy());
+        Facade.RegisterProxy(new BuildingProxy());
     }
 }

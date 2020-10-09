@@ -17,21 +17,21 @@ public class SceneLoaderMediator : BaseFullScreenWindowMediator<SceneLoaderView>
    
     protected override void InitListNotificationInterestsInner()
     {
-        m_lInterestNotifications.Add(NotiDefine.DO_LOAD_SCENE);
-        m_HideNoHandleNotifations.Add(NotiDefine.LOAD_SCENE_FINISH);
+        m_lInterestNotifications.Add(NotiDefine.DoLoadScene);
+        m_HideNoHandleNotifations.Add(NotiDefine.LoadSceneFinish);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.DO_LOAD_SCENE:
+            case NotiDefine.DoLoadScene:
                 {
                     this._name = (string)notification.Body;
                     MediatorUtil.ShowMediator(MediatorDefine.SCENE_LOADER);
                     break;
                 }
-            case NotiDefine.LOAD_SCENE_FINISH:
+            case NotiDefine.LoadSceneFinish:
                 {
                     MediatorUtil.HideMediator(MediatorDefine.SCENE_LOADER);
                     break;

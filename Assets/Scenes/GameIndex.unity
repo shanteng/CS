@@ -434,6 +434,7 @@ GameObject:
   - component: {fileID: 1487272970}
   - component: {fileID: 1487272968}
   - component: {fileID: 1487272969}
+  - component: {fileID: 1487272972}
   m_Layer: 5
   m_Name: UIRoot
   m_TagString: Untagged
@@ -539,6 +540,18 @@ Canvas:
   m_SortingLayerID: 747392593
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1487272972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487272966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d415f13026a2bfd4a9a8959d100cbd8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1545113557
 GameObject:
   m_ObjectHideFlags: 0

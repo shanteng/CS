@@ -172,3 +172,4 @@ MonoBehaviour:
   - name: Building
     sheets:
     - Building
+    - BuildingUpgrade

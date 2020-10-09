@@ -16,6 +16,16 @@ public class LoginView : MonoBehaviour
 
     private void OnClickStart(UIButton btn)
     {
+      /*  for (int i = 0; i < 10; ++i)
+        {
+            TimeCallData data = new TimeCallData();
+            data._notifaction = NotiDefine.TEST_CALLBACK_NOTI;
+            data._needSecs = Random.Range(1, 10);
+            data._params = new Dictionary<string, object>();
+            data._params["key"] = data._needSecs;
+            MediatorUtil.SendNotification(NotiDefine.ADD_TIMESTEP_CALLBACK, data);
+        }
+      */
        /* _showList.Clear();
         for (int i = 0; i < 50; ++i)
         {
@@ -28,6 +38,6 @@ public class LoginView : MonoBehaviour
         _hGrid.initCount(_showList);
        */
 
-        MediatorUtil.SendNotification(NotiDefine.DO_LOAD_SCENE, SceneDefine.Home);
+        MediatorUtil.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);
     }
 }

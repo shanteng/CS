@@ -53,7 +53,7 @@ public class SceneLoaderView : MonoBehaviour
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        MediatorUtil.SendNotification(NotiDefine.LOAD_SCENE_FINISH,this._loadName);
+        MediatorUtil.SendNotification(NotiDefine.LoadSceneFinish, this._loadName);
     }
 
     private void SetProgress(float progress)

@@ -6,24 +6,26 @@ using System.Collections;
 using System.IO;
 using UnityEngine.SceneManagement;
 
-public class HomeSceneMediator : BaseNoWindowMediator
+public class HomeLandMediator : BaseNoWindowMediator
 {
     HomeLandManager _LandManager;
     private bool _isHomeLoaded = false;
-    public HomeSceneMediator() : base(MediatorDefine.HOME_SCENE)
+    public HomeLandMediator() : base(MediatorDefine.HOME_LAND)
     {
     }
 
     protected override void InitListNotificationInterestsInner()
     {
-        m_lInterestNotifications.Add(NotiDefine.LOAD_SCENE_FINISH);
+        m_lInterestNotifications.Add(NotiDefine.LoadSceneFinish);
+        m_lInterestNotifications.Add(NotiDefine.CreateOneBuildingResp);
+        m_lInterestNotifications.Add(NotiDefine.BuildingRelocateResp);
     }
 
     public override void HandleNotification(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.LOAD_SCENE_FINISH:
+            case NotiDefine.LoadSceneFinish:
                 {
                     string name = (string)notification.Body;
                     if (name.Equals(SceneDefine.Home))
@@ -33,8 +35,22 @@ public class HomeSceneMediator : BaseNoWindowMediator
                     }
                     break;
                 }
+            case NotiDefine.CreateOneBuildingResp:
+                {
+                    BuildingData data = (BuildingData)notification.Body;
+                    this._LandManager.OnCreateResp(data);
+                    break;
+                }
+            case NotiDefine.BuildingRelocateResp:
+                {
+                    string key = (string)notification.Body;
+                    this._LandManager.OnRelocateResp(key);
+                    break;
+                }
         }
     }//end 
+
+    
 
     void InitScene()
     {

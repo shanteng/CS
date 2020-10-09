@@ -5,24 +5,19 @@ using UnityEngine.EventSystems;
 
 public class Building : MonoBehaviour
     , IPointerClickHandler
-    ,IDragHandler
-    ,IBeginDragHandler
-    ,IEndDragHandler
+    , IDragHandler
+    , IBeginDragHandler
+    , IEndDragHandler
 {
-    public int _configid;//建筑对应的配置文件
-    public string _key = "";
-    public Vector3Int _cordinate = Vector3Int.zero;//左下角的坐标
-    public List<Vector2Int> _occupyCordinates;//占领的全部地块坐标
+    public BuildingData _data;//从Proxy取到的引用
     public PlaneBase _basePlane;
-
-    [HideInInspector]
-    public BuildingConfig _config;
+    private ColorFlash _flash;
 
     private float CosDegreeValue;
     private bool _isSelect = false;
-    private ColorFlash _flash;
     private bool _isDrag = false;
- 
+
+    private Dictionary<string, object> vo = new Dictionary<string, object>();
 
     void Start()
     {
@@ -32,27 +27,14 @@ public class Building : MonoBehaviour
         CosDegreeValue = Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad);
     }
 
-    public void Init()
+
+    public void RelocateToProxy(int x, int z)
     {
-        this._config = BuildingConfig.Instance.GetData(this._configid);
-        this._occupyCordinates = new List<Vector2Int>();
-    }
-    
-    public void SetCordinate(int x, int z)
-    {
-        this._cordinate.x = x;
-        this._cordinate.z = z;
-        this._occupyCordinates.Clear();
-        for (int row = 0; row < this._config.RowCount; ++row)
-        {
-            int curX = this._cordinate.x + row;
-            for (int col = 0; col < this._config.ColCount; ++col)
-            {
-                int curZ = this._cordinate.z + col;
-                Vector2Int corNow = new Vector2Int(curX, curZ);
-                this._occupyCordinates.Add(corNow);
-            }
-        }
+        vo.Clear();
+        vo["key"] = this._data._key;
+        vo["x"] = x;
+        vo["z"] = z;
+        MediatorUtil.SendNotification(NotiDefine.BuildingRelocateDo, vo);
     }
 
     private Vector3 _beginPos;
@@ -62,7 +44,7 @@ public class Building : MonoBehaviour
         if (this._isSelect == false)
             return;
         this._isDrag = true;
-        ViewControllerLocal.GetInstance().PressSpot(this._key);
+        ViewControllerLocal.GetInstance().PressSpot(this._data._key);
         _screenSpace = Camera.main.WorldToScreenPoint(this.transform.position);
         _beginPos = this.transform.position;
         this._basePlane.gameObject.SetActive(true);
@@ -77,25 +59,25 @@ public class Building : MonoBehaviour
         Vector3 curScreenSpace = new Vector3(eventData.position.x, eventData.position.y, _screenSpace.z);
         var curPosition = Camera.main.ScreenToWorldPoint(curScreenSpace);
         Vector3 offset = curPosition - _beginPos;
- 
+
         float yoffset = offset.y * this.CosDegreeValue;
-    
+
         curPosition.x -= yoffset;
         curPosition.z += yoffset;
-      
+
 
         curPosition.x = Mathf.RoundToInt(curPosition.x);
         curPosition.z = Mathf.RoundToInt(curPosition.z);
 
 
-        int maxX = HomeLandManager.ROW_COUNT - this._config.RowCount;
-        int maxZ = HomeLandManager.COL_COUNT - this._config.ColCount;
+        int maxX = HomeLandManager.ROW_COUNT - this._data._config.RowCount;
+        int maxZ = HomeLandManager.COL_COUNT - this._data._config.ColCount;
 
         int newX = Mathf.Clamp((int)curPosition.x, 0, maxX);
         int newZ = Mathf.Clamp((int)curPosition.z, 0, maxZ);
 
-        this.transform.position = new Vector3(newX,1.02f, newZ);
-        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._key, newX, newZ,this._config.RowCount,this._config.ColCount);
+        this.transform.position = new Vector3(newX, 1.02f, newZ);
+        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, newX, newZ, this._data._config.RowCount, this._data._config.ColCount);
         int index = canBuildHere ? 1 : 0;
         this._basePlane.SetColorIndex(index);
 
@@ -107,21 +89,25 @@ public class Building : MonoBehaviour
             return;
 
         this._isDrag = false;
-        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._key, (int)this.transform.position.x, (int)this.transform.position.z, this._config.RowCount, this._config.ColCount);
+        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, (int)this.transform.position.x, (int)this.transform.position.z, this._data._config.RowCount, this._data._config.ColCount);
         if (canBuildHere)
         {
-            //结束拖拽，重新设置位置
-            HomeLandManager.GetInstance().UnSelectOtherBuilding(this._key);//拖拽结束，取消勾选
-            this.SetSelect(false);
-            this._basePlane.gameObject.SetActive(false);
-            ViewControllerLocal.GetInstance().PressSpot("");
-            ViewControllerLocal.GetInstance().SetSelectSpot("");
-            this.transform.position = new Vector3(this.transform.position.x, 1, this.transform.position.z);//恢复层级
-            this.SetCordinate((int)this.transform.position.x, (int)this.transform.position.z);
-            //通知LandManager
-            HomeLandManager.GetInstance().RecordBuildOccupy(this._key,this._occupyCordinates);
-            //MediatorUtil.SendNotification(NotiDefine.BUILDING_POSTION_CHANGE, this);
+            //通知Proxy改变位置
+            this.RelocateToProxy((int)this.transform.position.x, (int)this.transform.position.z);
         }
+    }
+
+    public void OnRelocateResp()
+    {
+        //结束拖拽，重新设置位置
+        HomeLandManager.GetInstance().UnSelectOtherBuilding(this._data._key);//拖拽结束，取消勾选
+        this.SetSelect(false);
+        this._basePlane.gameObject.SetActive(false);
+        ViewControllerLocal.GetInstance().PressSpot("");
+        ViewControllerLocal.GetInstance().SetSelectSpot("");
+        this.transform.position = new Vector3(this.transform.position.x, 1, this.transform.position.z);//恢复层级
+        //通知LandManager
+        HomeLandManager.GetInstance().RecordBuildOccupy(this._data._key, this._data._occupyCordinates);
     }
 
     //监听点击
@@ -129,9 +115,9 @@ public class Building : MonoBehaviour
     {
         if (this._isDrag)
             return;
-        HomeLandManager.GetInstance().UnSelectOtherBuilding(this._key);
+        HomeLandManager.GetInstance().UnSelectOtherBuilding(this._data._key);
         this.SetSelect(!this._isSelect);
-        ViewControllerLocal.GetInstance().SetSelectSpot(this._key);
+        ViewControllerLocal.GetInstance().SetSelectSpot(this._data._key);
     }
 
     public void SetSelect(bool isSelect)

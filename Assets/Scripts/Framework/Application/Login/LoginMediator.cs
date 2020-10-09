@@ -4,6 +4,7 @@ using SMVC.Interfaces;
 using SMVC.Patterns;
 using System.Collections;
 using System.IO;
+using System.Collections.Generic;
 
 public class LoginMediator : BaseFullScreenWindowMediator<LoginView>
 {
@@ -13,22 +14,19 @@ public class LoginMediator : BaseFullScreenWindowMediator<LoginView>
     }
 
    
-
     protected override void InitListNotificationInterestsInner()
     {
-        //m_HideNoHandleNotifations.Add(NotiDefine.LOAD_HOME_SCENE_FINISH);
+        m_HideNoHandleNotifations.Add(NotiDefine.TEST_CALLBACK_NOTI);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
     {
         switch (notification.Name)
         {
-           /*( case NotiDefine.LOAD_HOME_SCENE_FINISH:
+            case NotiDefine.TEST_CALLBACK_NOTI:
                 {
-                    MediatorUtil.hideMediator(MediatorDefine.LOGIN);
                     break;
                 }
-           */
         }
     }//end func
 

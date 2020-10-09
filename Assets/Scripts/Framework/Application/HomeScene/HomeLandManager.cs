@@ -11,7 +11,7 @@ public class HomeLandManager : MonoBehaviour
     public static int ROW_COUNT = 50;
     public List<SpotCube> _spotPrefabs;
     public Dictionary<string, List<Vector2Int>> _BuildingDic;
-    public List<Building> _AllBuildings;
+    public Dictionary<string,Building> _AllBuildings;
     public List<string> _SpotHasOccupys;//key x|z,bool value
     public Building _BuildPrefab;
 
@@ -31,7 +31,7 @@ public class HomeLandManager : MonoBehaviour
 
     void Start()
     {
-        this._AllBuildings = new List<Building>();
+        this._AllBuildings = new Dictionary<string, Building>();
         this._SpotHasOccupys = new List<string>();
         this._BuildingDic = new Dictionary<string, List<Vector2Int>>();
         this._allSpotDic = new Dictionary<string, SpotCube>();
@@ -72,33 +72,55 @@ public class HomeLandManager : MonoBehaviour
         return false;
     }
 
+    public void OnRelocateResp(string key)
+    {
+        Building curBuild = this.GetBuilding(key);
+        if (curBuild != null)
+            curBuild.OnRelocateResp();
+    }
+
+    private Building GetBuilding(string key)
+    {
+        Building building;
+        if (this._AllBuildings.TryGetValue(key, out building))
+            return building;
+        return null;
+    }
+
+    public void OnCreateResp(BuildingData data)
+    {
+        //创建一个
+        Building building = GameObject.Instantiate<Building>(this._BuildPrefab, new Vector3(data._cordinate.x, 1, data._cordinate.y), Quaternion.identity, this.transform);
+        building._data = data;
+        building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
+        this._AllBuildings.Add(data._key,building);
+        this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
+    }
+
     public void Build(int configid,int x, int z)
     {
-        string key = UtilTools.combine("build", x, "|", z);
         BuildingConfig config = BuildingConfig.Instance.GetData(configid);
         if (config == null)
             return;
 
-        bool canBuild = this.canBuildInSpot(key, x, z,config.RowCount,config.ColCount);
+        bool canBuild = this.canBuildInSpot("", x, z,config.RowCount,config.ColCount);
         if (canBuild == false)
             return;
 
+        //通知Proxy建造一个Building
+        Dictionary<string, object> vo = new Dictionary<string, object>();
+        vo["configid"] = configid;
+        vo["x"] = x;
+        vo["z"] = z;
 
-        Building building = GameObject.Instantiate<Building>(this._BuildPrefab, new Vector3(x, 1, z), Quaternion.identity, this.transform);
-      
-        building.name = key;
-        building._key = key;
-        building.Init();
-        building.SetCordinate(x, z);
-        this._AllBuildings.Add(building);
-        this.RecordBuildOccupy(key, building._occupyCordinates);
+        MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingDo, vo);
     }
 
     public void UnSelectOtherBuilding(string key)
     {
-        foreach (Building bd in this._AllBuildings)
+        foreach (Building bd in this._AllBuildings.Values)
         {
-            bool isKey = key.Equals(bd._key);
+            bool isKey = key.Equals(bd._data._key);
             if(isKey ==false)
                 bd.SetSelect(false);
         }
@@ -125,7 +147,6 @@ public class HomeLandManager : MonoBehaviour
             string curKey = UtilTools.combine(pos.x, "|", pos.y);
             this._SpotHasOccupys.Add(curKey);
         }
-
     }
 
     public void InitScene()
