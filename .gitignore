@@ -3,6 +3,7 @@ Library
 obj
 .vs
 Temp
+Apk
 Assembly-CSharp-firstpass.csproj
 Assembly-CSharp.csproj
 Assembly-CSharp.csproj
