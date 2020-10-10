@@ -21,6 +21,8 @@ public class InfoCanvas : UIBase
     {
         _btnInfo.AddEvent(this.OnClickInfo);
         _btnUpgrade.AddEvent(this.OnClickUpgrade);
+        _btnCancel.AddEvent(this.OnCancel);
+
         foreach (UIButton btn in this._btnFunList)
         {
             btn.AddEvent(this.OnClickFun);
@@ -81,6 +83,11 @@ public class InfoCanvas : UIBase
     }
 
     private void OnClickFun(UIButton btn)
+    {
+
+    }
+
+    private void OnCancel(UIButton btn)
     {
 
     }
