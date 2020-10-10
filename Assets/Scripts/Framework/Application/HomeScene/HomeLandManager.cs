@@ -86,6 +86,7 @@ public class HomeLandManager : MonoBehaviour
         Building curBuild = this.GetBuilding(key);
         if (curBuild != null)
             curBuild.EndRelocate();
+        this._currentSelectKey = "";
     }
 
     private Building GetBuilding(string key)
@@ -110,7 +111,7 @@ public class HomeLandManager : MonoBehaviour
 
     public void OnClickSpotCube(int x,int z)
     {
-        HomeLandManager.GetInstance().UnSelectOtherBuilding("");
+        HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
         this.Build(1, x, z);//测试
     }
 
@@ -133,15 +134,27 @@ public class HomeLandManager : MonoBehaviour
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingDo, vo);
     }
 
-    public void UnSelectOtherBuilding(string key)
+
+    private string _currentSelectKey = "";
+    public void SetCurrentSelectBuilding(string key)
     {
+        _currentSelectKey = key;
         foreach (Building bd in this._AllBuildings.Values)
         {
-            bool isKey = key.Equals(bd._data._key);
-            if(isKey ==false)
+            if(key.Equals(bd._data._key) == false)
                 bd.EndRelocate();
+            else
+                bd.SetSelect(true);
         }
     }
+
+    private bool _isDraging;
+    public void SetDraging(bool isd)
+    {
+        this._isDraging = isd;
+    }
+
+    public  bool IsDraging => _isDraging;
 
     public void RecordBuildOccupy(string key, List<Vector2Int> occs)
     {

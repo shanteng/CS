@@ -29,7 +29,7 @@ public class SpotCube : MonoBehaviour
     public void OnPointerClick(PointerEventData eventData)
     {
         //测试代码
-        if( EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId) == false)
+        if( UtilTools.isFingerOverUI() == false)
         HomeLandManager.GetInstance().OnClickSpotCube(this._cordinate.x,this._cordinate.z);
     }
 

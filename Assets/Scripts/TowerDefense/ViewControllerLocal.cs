@@ -41,9 +41,7 @@ public class ViewControllerLocal : MonoBehaviour
     private Vector2 oldPosition2;
 
     private int isForward;
-    private bool _isScreenEnable = true;//是否屏蔽屏幕操作
-    private string _SelectSpotName = "";
-
+    
     private static ViewControllerLocal instance;
 
     public static ViewControllerLocal GetInstance()
@@ -73,21 +71,6 @@ public class ViewControllerLocal : MonoBehaviour
 #else
         this._WheelSpeed = this._WheelMobile;
 #endif
-    }
-
-    public void SetEnable(bool enable)
-    {
-        this._isScreenEnable = enable;
-    }
-
-    public void SetSelectSpot(string name)
-    {
-        this._SelectSpotName = name;
-    }
-
-    public void PressSpot(string name)
-    {
-        this._isScreenEnable = !this._SelectSpotName.Equals(name);
     }
 
     //左右最大位移量
@@ -124,7 +107,6 @@ public class ViewControllerLocal : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
-            bool isOverUI = UtilTools.isFingerOverUI();
             this._DoUpdateDrag = true;
         }
         else if (Input.GetMouseButtonUp(0))
@@ -132,7 +114,7 @@ public class ViewControllerLocal : MonoBehaviour
             this._DoUpdateDrag = false;
         }
 #endif
-        if (this._isScreenEnable)
+        if (HomeLandManager.GetInstance().IsDraging == false)
             this.JudgeScaleMap();
     }
 
@@ -140,7 +122,7 @@ public class ViewControllerLocal : MonoBehaviour
 
     void LateUpdate()
     {
-        if (this._isScreenEnable)
+        if (HomeLandManager.GetInstance().IsDraging == false)
             this.JudgeDragMap();
     }
 
@@ -225,7 +207,7 @@ public class ViewControllerLocal : MonoBehaviour
     void JudgeDragMap()
     {
 #if UNITY_EDITOR
-        if (this._DoUpdateDrag)
+        if (this._DoUpdateDrag && UtilTools.isFingerOverUI() == false)
         {
             float xMove = -Input.GetAxisRaw("Mouse X") * Time.deltaTime * _realDragSpeed;
             float yMove = -Input.GetAxisRaw("Mouse Y") * Time.deltaTime * _realDragSpeed;

@@ -72,7 +72,7 @@ public class Building : MonoBehaviour
         if (this._isSelect == false)
             return;
         this._isDrag = true;
-        ViewControllerLocal.GetInstance().PressSpot(this._data._key);
+        HomeLandManager.GetInstance().SetDraging(true);
         _screenSpace = Camera.main.WorldToScreenPoint(this.transform.position);
         _beginPos = this.transform.position;
         this._basePlane.gameObject.SetActive(true);
@@ -117,6 +117,7 @@ public class Building : MonoBehaviour
             return;
 
         this._isDrag = false;
+        HomeLandManager.GetInstance().SetDraging(false);
         bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, (int)this.transform.position.x, (int)this.transform.position.z, this._data._config.RowCount, this._data._config.ColCount);
         if (canBuildHere)
         {
@@ -130,8 +131,6 @@ public class Building : MonoBehaviour
         //结束拖拽，重新设置位置
         this.SetSelect(false);
         this._basePlane.gameObject.SetActive(false);
-        ViewControllerLocal.GetInstance().PressSpot("");
-        ViewControllerLocal.GetInstance().SetSelectSpot("");
         this.transform.position = new Vector3(this._data._cordinate.x, 1, this._data._cordinate.y);//恢复层级
         //通知LandManager
         HomeLandManager.GetInstance().RecordBuildOccupy(this._data._key, this._data._occupyCordinates);
@@ -147,14 +146,12 @@ public class Building : MonoBehaviour
         if (this._isSelect)
         {
             //取消选中，并且返回初始位置
-            this.EndRelocate();
+            HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
         }
         else
         {
             //选中当前地块
-            HomeLandManager.GetInstance().UnSelectOtherBuilding(this._data._key);//拖拽结束，取消勾选
-            this.SetSelect(true);
-            ViewControllerLocal.GetInstance().SetSelectSpot(this._data._key);
+            HomeLandManager.GetInstance().SetCurrentSelectBuilding(this._data._key);
         }
 
         if (this._data._status == BuildingData.BuildingStatus.NORMAL)

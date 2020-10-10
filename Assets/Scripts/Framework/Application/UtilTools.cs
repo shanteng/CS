@@ -8,6 +8,8 @@ using System.IO;
 using System.Text;
 using System;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class UtilTools 
 {
@@ -144,17 +146,22 @@ public class UtilTools
 
     public static  bool isFingerOverUI()
     {
-        bool isOverObj = false;
-        string LayerName = "";
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
 #if UNITY_EDITOR
-        isOverObj =  EventSystem.current.IsPointerOverGameObject();
+        pointerEventData.position = Input.mousePosition;
 #else
-        isOverObj =  EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+        if (Input.touchCount > 0)
+            pointerEventData.position = Input.GetTouch(0).position;
 #endif
-        if (isOverObj)
-            LayerName = LayerMask.LayerToName(EventSystem.current.gameObject.layer);
-
-        return LayerName.Equals("UI");
+        List<RaycastResult> results = new List<RaycastResult>();
+        for (WindowLayer layer = WindowLayer.FullScreen; layer <= WindowLayer.Mask; ++layer)
+        {
+            GraphicRaycaster graphicRaycaster = UIRoot.Intance.GetLayer(layer).gameObject.GetComponent<GraphicRaycaster>();
+            graphicRaycaster.Raycast(pointerEventData, results);
+            if (results.Count > 0)
+                return true;
+        }
+        return false;
     }
 
 }
