@@ -11,6 +11,9 @@ public class HomeLandManager : MonoBehaviour
     public static int ROW_COUNT = 50;
     public List<SpotCube> _spotPrefabs;
     public CountDownCanvas _coundPrefabs;
+    public BuildCanvas _buildPrefabs;
+
+
     public List<Building> _BuildPrefabs;
     private Dictionary<string, Building> _BuildPrefabDic;
 
@@ -21,6 +24,7 @@ public class HomeLandManager : MonoBehaviour
     private Dictionary<string, SpotCube> _allSpotDic;//key格式x|y,存储当前所有的地块
     public bool isTryBuild => this._TryBuildScript != null;
     private Building _TryBuildScript;
+    private BuildCanvas _BuildCanvas;
 
     private static HomeLandManager instance;
     public static HomeLandManager GetInstance()
@@ -120,6 +124,8 @@ public class HomeLandManager : MonoBehaviour
 
     public void OnClickSpotCube(int x,int z)
     {
+        if (this.isTryBuild)
+            return;
         HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
         this.TryBuild(1, x, z);//测试
     }
@@ -138,12 +144,28 @@ public class HomeLandManager : MonoBehaviour
         building.SetCurrentState();
         building.SetSelect(true);
         building._basePlane.gameObject.SetActive(true);
-        building._basePlane.SetColorIndex(1);//正常颜色
+        
+        if (this._BuildCanvas == null)
+        {
+            this._BuildCanvas = GameObject.Instantiate<BuildCanvas>(this._buildPrefabs, Vector3.zero, Quaternion.identity, this.transform);
+        }
+
+        _BuildCanvas.transform.SetParent(building.transform);
+        _BuildCanvas.transform.localPosition = Vector3.zero;
+        _BuildCanvas.Show();
         _TryBuildScript = building;
+        _TryBuildScript.SetCanDoState(x, z);
+    }
+
+    public void SetBuildCanvasState(bool canBuild)
+    {
+        this._BuildCanvas.SetState(canBuild);
     }
 
     public void ConfirmBuild(bool isBuild)
     {
+        this._BuildCanvas.Hide();
+        _BuildCanvas.transform.SetParent(this.transform);
         if (isBuild == false)
         {
             GameObject.Destroy(this._TryBuildScript.gameObject);

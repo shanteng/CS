@@ -17,6 +17,9 @@ public class UIButton : UIBase
         this._btn.onClick.AddListener(this.DoClick);
     }
 
+   
+   
+
     public void DoClick()
     {
         if (this._listener != null)

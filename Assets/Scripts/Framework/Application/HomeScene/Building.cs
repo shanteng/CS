@@ -13,7 +13,7 @@ public class Building : MonoBehaviour
     public PlaneBase _basePlane;
     private ColorFlash _flash;
     private CountDownCanvas _cdUI;
-
+    
     private float CosDegreeValue;
     private bool _isSelect = false;
     private bool _isDrag = false;
@@ -82,9 +82,18 @@ public class Building : MonoBehaviour
         _screenSpace = Camera.main.WorldToScreenPoint(this.transform.position);
         _beginPos = this.transform.position;
         this._basePlane.gameObject.SetActive(true);
-        this._basePlane.SetColorIndex(1);//正常颜色
+        this.SetCanDoState((int)this.transform.position.x, (int)this.transform.position.z);
     }
 
+    public void SetCanDoState(int newX, int newZ)
+    {
+        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, newX, newZ, this._data._config.RowCount, this._data._config.ColCount);
+        int index = canBuildHere ? 1 : 0;
+        this._basePlane.SetColorIndex(index);
+
+        if (this._data._status == BuildingData.BuildingStatus.INIT)
+            HomeLandManager.GetInstance().SetBuildCanvasState(canBuildHere);
+    }
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -104,10 +113,7 @@ public class Building : MonoBehaviour
         int newZ = Mathf.Clamp((int)curPosition.z, 0, maxZ);
 
         this.transform.position = new Vector3(newX, 1.02f, newZ);
-        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, newX, newZ, this._data._config.RowCount, this._data._config.ColCount);
-        int index = canBuildHere ? 1 : 0;
-        this._basePlane.SetColorIndex(index);
-
+        this.SetCanDoState(newX, newZ);
     }
 
     public void OnEndDrag(PointerEventData eventData)

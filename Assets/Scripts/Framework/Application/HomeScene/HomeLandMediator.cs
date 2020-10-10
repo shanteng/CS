@@ -20,6 +20,7 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.CreateOneBuildingResp);
         m_lInterestNotifications.Add(NotiDefine.BuildingRelocateResp);
         m_lInterestNotifications.Add(NotiDefine.BuildingStatusChanged);
+        m_lInterestNotifications.Add(NotiDefine.ConfirmBuild);
     }
 
     public override void HandleNotification(INotification notification)
@@ -52,6 +53,12 @@ public class HomeLandMediator : BaseNoWindowMediator
                 {
                     string key = (string)notification.Body;
                     this._LandManager.OnBuildingStateChanged(key);
+                    break;
+                }
+            case NotiDefine.ConfirmBuild:
+                {
+                    bool isconfirm = (bool)notification.Body;
+                    this._LandManager.ConfirmBuild(isconfirm);
                     break;
                 }
         }

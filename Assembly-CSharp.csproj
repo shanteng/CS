@@ -114,6 +114,7 @@
     <Compile Include="Assets\Scripts\Framework\UI\DataGrid\DataGrid.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\DataGrid\DataTestItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\DataGrid\ItemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\SceneUI\BuildCanvas.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\SceneUI\CountDownCanvas.cs" />
     <Compile Include="Assets\Scripts\TinyMVC\Core\Controller.cs" />
     <Compile Include="Assets\Scripts\TinyMVC\Core\Model.cs" />

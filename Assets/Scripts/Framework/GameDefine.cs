@@ -30,6 +30,8 @@
     public const string BuildingRelocateDo = "BuildingRelocateDo";
     public const string BuildingRelocateResp = "BuildingRelocateResp";
 
+    public const string ConfirmBuild = "ConfirmBuild";
+
 }
 
 public enum MediatorDefine
