@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 ///所有滑动列表单项数据的基类
 public class ScrollData
@@ -12,11 +13,14 @@ public class ScrollData
 }
 
 //所有滑动列表单项的基类
+[RequireComponent(typeof(NonDrawingGraphic))]
+[RequireComponent(typeof(LayoutElement))]
 public class ItemRender : UIBase,IPointerClickHandler
 {
-    [HideInInspector]
-    public DataGrid _view;
+    
     public ScrollData m_renderData;
+    public IScollItemClickListener _listener;
+
     public void SetData(ScrollData data)
     {
         m_renderData = data;
@@ -37,7 +41,12 @@ public class ItemRender : UIBase,IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        this._view.CallBackClick(this.gameObject);
+        if (this._listener != null)
+        {
+            Debug.LogError(this.m_renderData);
+            this._listener.onClickScrollItem(this.m_renderData);
+        }
+            
     }
 }
 

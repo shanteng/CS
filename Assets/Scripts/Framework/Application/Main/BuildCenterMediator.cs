@@ -6,9 +6,9 @@ using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 
-public class LoginMediator : BaseFullScreenWindowMediator<LoginView>
+public class BuildCenterMediator : BaseWindowMediator<BuildCenterView>
 {
-    public LoginMediator() : base(MediatorDefine.LOGIN)
+    public BuildCenterMediator() : base(MediatorDefine.BUILD_CENTER, WindowLayer.Window)
     {
         
     }
@@ -16,7 +16,7 @@ public class LoginMediator : BaseFullScreenWindowMediator<LoginView>
    
     protected override void InitListNotificationInterestsInner()
     {
-        m_HideNoHandleNotifations.Add(NotiDefine.TEST_CALLBACK_NOTI);
+        //m_HideNoHandleNotifations.Add(NotiDefine.TEST_CALLBACK_NOTI);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
@@ -37,7 +37,7 @@ public class LoginMediator : BaseFullScreenWindowMediator<LoginView>
 
     protected override void DoInitializeInner()
     {
-
+        this.m_view.SetList();
     }
 
 }//end class

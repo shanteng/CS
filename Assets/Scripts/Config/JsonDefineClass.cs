@@ -48,6 +48,7 @@ public class LanguageItemConfig : Config<LanguageItemConfig>
 
 public class BuildingConfig : Config<BuildingConfig>
 {
+    public string Prefab;
     public string Name;
     public string Desc;
     public int MaxLevel;

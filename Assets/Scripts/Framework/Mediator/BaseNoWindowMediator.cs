@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 public abstract class BaseNoWindowMediator : Mediator
 {
-    protected BaseNoWindowMediator(string mediatorName) : base(mediatorName)
+    protected BaseNoWindowMediator(MediatorDefine mediatorName)
     {
-
+        this.m_mediatorName = MediatorUtil.GetName(mediatorName);
     }
 
     protected List<string> m_lInterestNotifications;

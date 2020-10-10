@@ -4,18 +4,21 @@ using SMVC.Interfaces;
 using SMVC.Patterns;
 using System.Collections;
 using System.IO;
+using System;
 
 public class MediatorUtil
 {
-    public static void ShowMediator(string mediatorName)
+    public static void ShowMediator(MediatorDefine mediatorName)
     {
-        var noti = $"{NotiDefine.WINDOW_DO_SHOW}_{mediatorName}";
+        string name = MediatorUtil.GetName(mediatorName);
+        var noti = $"{NotiDefine.WINDOW_DO_SHOW}_{name}";
         SendNotification(noti);
     }
 
-    public static void HideMediator(string mediatorName)
+    public static void HideMediator(MediatorDefine mediatorName)
     {
-        var noti = $"{NotiDefine.WINDOW_DO_HIDE}_{mediatorName}";
+        string name = MediatorUtil.GetName(mediatorName);
+        var noti = $"{NotiDefine.WINDOW_DO_HIDE}_{name}";
         SendNotification(noti);
     }
 
@@ -23,4 +26,10 @@ public class MediatorUtil
     {
         ApplicationFacade.instance.SendNotification(notify, obj);
     }
+
+    public static string GetName(MediatorDefine me)
+    {
+       return System.Enum.GetName(typeof(MediatorDefine), me);
+    }
+    
 }

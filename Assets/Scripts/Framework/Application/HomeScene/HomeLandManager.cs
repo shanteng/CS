@@ -11,14 +11,16 @@ public class HomeLandManager : MonoBehaviour
     public static int ROW_COUNT = 50;
     public List<SpotCube> _spotPrefabs;
     public CountDownCanvas _coundPrefabs;
-
+    public List<Building> _BuildPrefabs;
+    private Dictionary<string, Building> _BuildPrefabDic;
 
 
     private Dictionary<string, List<Vector2Int>> _BuildingDic;
     private Dictionary<string,Building> _AllBuildings;
     private List<string> _SpotHasOccupys;//key x|z,bool value
-    public Building _BuildPrefab;
     private Dictionary<string, SpotCube> _allSpotDic;//key格式x|y,存储当前所有的地块
+    public bool isTryBuild => this._TryBuildScript != null;
+    private Building _TryBuildScript;
 
     private static HomeLandManager instance;
     public static HomeLandManager GetInstance()
@@ -29,6 +31,11 @@ public class HomeLandManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+        this._BuildPrefabDic = new Dictionary<string, Building>();
+        foreach (Building bd in this._BuildPrefabs)
+        {
+            this._BuildPrefabDic[bd.name] = bd;
+        }
     }
 
     void Start()
@@ -86,7 +93,6 @@ public class HomeLandManager : MonoBehaviour
         Building curBuild = this.GetBuilding(key);
         if (curBuild != null)
             curBuild.EndRelocate();
-        this._currentSelectKey = "";
     }
 
     private Building GetBuilding(string key)
@@ -99,20 +105,65 @@ public class HomeLandManager : MonoBehaviour
 
     public void OnCreateResp(BuildingData data)
     {
+        if (this._TryBuildScript == null)
+            return;
         //创建一个
-        Building building = GameObject.Instantiate<Building>(this._BuildPrefab, new Vector3(data._cordinate.x, 1, data._cordinate.y), Quaternion.identity, this.transform);
+        Building building = _TryBuildScript;
         building._data = data;
         building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
-        building.CreateCountDownUI(this._coundPrefabs);
+        building.CreateUI(this._coundPrefabs);
         building.SetCurrentState();
         this._AllBuildings.Add(data._key,building);
         this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
+        this._TryBuildScript = null;
     }
 
     public void OnClickSpotCube(int x,int z)
     {
         HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
-        this.Build(1, x, z);//测试
+        this.TryBuild(1, x, z);//测试
+    }
+
+  
+    public void TryBuild(int configid, int x, int z)
+    {
+        SetCurrentSelectBuilding("");
+        BuildingConfig config = BuildingConfig.Instance.GetData(configid);
+        Building prefab;
+        if (config == null || this._BuildPrefabDic.TryGetValue(config.Prefab, out prefab) == false)
+            return;
+        Building building = GameObject.Instantiate<Building>(prefab, new Vector3(x, 1, z), Quaternion.identity, this.transform);
+        building._data = new BuildingData();
+        building._data.Create(configid, x, z);
+        building.SetCurrentState();
+        building.SetSelect(true);
+        building._basePlane.gameObject.SetActive(true);
+        building._basePlane.SetColorIndex(1);//正常颜色
+        _TryBuildScript = building;
+    }
+
+    public void ConfirmBuild(bool isBuild)
+    {
+        if (isBuild == false)
+        {
+            GameObject.Destroy(this._TryBuildScript.gameObject);
+            this._TryBuildScript = null;
+            return;
+        }
+
+        //通知Proxy建造一个Building
+        int x = (int)_TryBuildScript.transform.position.x;
+        int z = (int)_TryBuildScript.transform.position.z;
+
+        bool canBuild = this.canBuildInSpot("", x, z, _TryBuildScript._data._config.RowCount, _TryBuildScript._data._config.ColCount);
+        if (canBuild == false)
+            return;
+
+        Dictionary<string, object> vo = new Dictionary<string, object>();
+        vo["configid"] = _TryBuildScript._data._id;
+        vo["x"] = x;
+        vo["z"] = z;
+        MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingDo, vo);
     }
 
     public void Build(int configid,int x, int z)
@@ -134,11 +185,8 @@ public class HomeLandManager : MonoBehaviour
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingDo, vo);
     }
 
-
-    private string _currentSelectKey = "";
     public void SetCurrentSelectBuilding(string key)
     {
-        _currentSelectKey = key;
         foreach (Building bd in this._AllBuildings.Values)
         {
             if(key.Equals(bd._data._key) == false)
@@ -204,9 +252,5 @@ public class HomeLandManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

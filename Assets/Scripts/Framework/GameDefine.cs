@@ -32,13 +32,15 @@
 
 }
 
-
-public class MediatorDefine
+public enum MediatorDefine
 {
-    public const string DATA_CENTER = "DATA_CENTER";
-    public const string LOGIN = "LOGIN";
-    public const string HOME_LAND = "HOME_LAND";
-    public const string SCENE_LOADER = "SCENE_LOADER";
+    NONE,
+    DATA_CENTER,
+    LOGIN,
+    HOME_LAND,
+    SCENE_LOADER,
+    MAIN,
+    BUILD_CENTER
 }
 
 class ProxyNameDefine

@@ -13,7 +13,8 @@ public class BuildingData
 {
     public enum BuildingStatus
     {
-        NORMAL=0,
+        INIT = 0,//等待创建的状态
+        NORMAL,
         BUILD,
         UPGRADE,
     }
@@ -26,7 +27,7 @@ public class BuildingData
     public List<Vector2Int> _occupyCordinates;//占领的全部地块坐标
 
     public int _level;
-    public BuildingStatus _status;//建筑的状态
+    public BuildingStatus _status = BuildingStatus.INIT;//建筑的状态
     public long _expireTime;//建造或者升级的到期时间
     public int _durability;//耐久度
 
@@ -36,15 +37,13 @@ public class BuildingData
         this._id = id;
         this._config = BuildingConfig.Instance.GetData(id);
         this._occupyCordinates = new List<Vector2Int>();
-        this.SetLevel(1);
         this.SetCordinate(x, z);
-        this.SetStatus(BuildingStatus.BUILD);
     }
 
     public void SetStatus(BuildingStatus state)
     {
         this._status = state;
-        if (state != BuildingStatus.NORMAL)
+        if (state > BuildingStatus.NORMAL)
             this._expireTime = UtilTools.GetExpireTime(this._configUpgrade.NeedTime);
         else
             this._expireTime = 0;
@@ -54,8 +53,6 @@ public class BuildingData
     {
         this._level = newLevel;
         _configUpgrade = BuildingUpgradeConfig.GetConfig(this._id, this._level);
-        this._expireTime =0;
-        this._status = BuildingStatus.NORMAL;
         this._durability = _configUpgrade.Durability;
     }
 
@@ -105,6 +102,8 @@ public class BuildingProxy : BaseRemoteProxy
 
         BuildingData data = new BuildingData();
         data.Create(id, x, z);
+        data.SetLevel(1);
+        data.SetStatus(BuildingData.BuildingStatus.BUILD);
         this._datas.Add(data._key, data);
         //通知时间中心添加一个监听
         TimeCallData dataTime = new TimeCallData();

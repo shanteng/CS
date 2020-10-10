@@ -18,17 +18,19 @@ public class Building : MonoBehaviour
     private bool _isSelect = false;
     private bool _isDrag = false;
 
+
     private Dictionary<string, object> vo = new Dictionary<string, object>();
 
-    void Start()
+    void Awake()
     {
         this._flash = this.GetComponent<ColorFlash>();
         this._flash.Stop();
         _basePlane.gameObject.SetActive(false);
         CosDegreeValue = Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad);
     }
+  
 
-    public void CreateCountDownUI(CountDownCanvas cdPrefabs)
+    public void CreateUI(CountDownCanvas cdPrefabs)
     {
         _cdUI = GameObject.Instantiate<CountDownCanvas>(cdPrefabs, Vector3.zero, Quaternion.identity, this.transform);
         _cdUI.transform.localPosition = Vector3.zero;
@@ -37,7 +39,11 @@ public class Building : MonoBehaviour
 
     public void SetCurrentState()
     {
-        if (this._data._status == BuildingData.BuildingStatus.BUILD)
+        if (this._data._status == BuildingData.BuildingStatus.INIT)
+        {
+            
+        }
+        else if (this._data._status == BuildingData.BuildingStatus.BUILD)
         {
             this.DoCountDown(_data._expireTime);
         }
@@ -87,20 +93,13 @@ public class Building : MonoBehaviour
         Vector3 curScreenSpace = new Vector3(eventData.position.x, eventData.position.y, _screenSpace.z);
         var curPosition = Camera.main.ScreenToWorldPoint(curScreenSpace);
         Vector3 offset = curPosition - _beginPos;
-
         float yoffset = offset.y * this.CosDegreeValue;
-
         curPosition.x -= yoffset;
         curPosition.z += yoffset;
-
-
         curPosition.x = Mathf.RoundToInt(curPosition.x);
         curPosition.z = Mathf.RoundToInt(curPosition.z);
-
-
         int maxX = HomeLandManager.ROW_COUNT - this._data._config.RowCount;
         int maxZ = HomeLandManager.COL_COUNT - this._data._config.ColCount;
-
         int newX = Mathf.Clamp((int)curPosition.x, 0, maxX);
         int newZ = Mathf.Clamp((int)curPosition.z, 0, maxZ);
 
@@ -119,7 +118,7 @@ public class Building : MonoBehaviour
         this._isDrag = false;
         HomeLandManager.GetInstance().SetDraging(false);
         bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, (int)this.transform.position.x, (int)this.transform.position.z, this._data._config.RowCount, this._data._config.ColCount);
-        if (canBuildHere)
+        if (canBuildHere && this._data._status != BuildingData.BuildingStatus.INIT)
         {
             //通知Proxy改变位置
             this.RelocateToProxy((int)this.transform.position.x, (int)this.transform.position.z);
@@ -140,7 +139,10 @@ public class Building : MonoBehaviour
     public void OnPointerClick(PointerEventData eventData)
     {
         //拖拽或者当前正在建造升级中不允许点击
-        if (this._isDrag)
+        if (this._isDrag || this._data._status == BuildingData.BuildingStatus.INIT)
+            return;
+
+        if (HomeLandManager.GetInstance().isTryBuild)
             return;
 
         if (this._isSelect)

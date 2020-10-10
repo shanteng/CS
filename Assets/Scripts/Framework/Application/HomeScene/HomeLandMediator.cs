@@ -74,5 +74,6 @@ public class HomeLandMediator : BaseNoWindowMediator
 
         if (this._LandManager != null)
             this._LandManager.InitScene();
+        MediatorUtil.ShowMediator(MediatorDefine.MAIN);
     }
 }//end class

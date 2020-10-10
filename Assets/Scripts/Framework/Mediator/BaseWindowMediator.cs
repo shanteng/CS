@@ -32,8 +32,10 @@ public abstract class BaseWindowMediator<T> : Mediator
     protected string _prefabName = "";
     public bool windowVisible => (this.m_eWindowState == WindowState.SHOW);
 
-    protected BaseWindowMediator(string mediatorName, WindowLayer layer) : base(mediatorName)
+    protected BaseWindowMediator(MediatorDefine mediatorName, WindowLayer layer)
     {
+        this.m_mediatorName = MediatorUtil.GetName(mediatorName);
+        this._prefabName = typeof(T).ToString();
         m_eWindowLayer = layer;
         m_eWindowState = WindowState.UNINIT;
        
@@ -194,7 +196,7 @@ public abstract class BaseWindowMediator<T> : Mediator
 
     protected virtual void OnFullScreenWindowShow(object windownMediator)
     {
-        if (WindowLayer.FullScreen != this.m_eWindowLayer)
+        if (WindowLayer.Window == this.m_eWindowLayer)
         {
             //全屏界面打开时关闭所有已经打开过的窗口
             HideWindow();

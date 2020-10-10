@@ -338,8 +338,9 @@ MonoBehaviour:
   - {fileID: 8761927430687766076, guid: d53f688633c04874f96cf756058c0520, type: 3}
   _coundPrefabs: {fileID: 4429027760729040443, guid: 9f6c2bf74ba294d43aaf83fc844c4233,
     type: 3}
-  _BuildPrefab: {fileID: 4615079088832247934, guid: 0ec0984f5e9353f4daae85f0b51bea5f,
-    type: 3}
+  _BuildPrefabs:
+  - {fileID: 4615079088832247934, guid: 0ec0984f5e9353f4daae85f0b51bea5f, type: 3}
+  - {fileID: 4615079088832247934, guid: b50b370174ffbe845a01bbda66b8b374, type: 3}
 --- !u!4 &437401185
 Transform:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public abstract class BaseFullScreenWindowMediator<T> : BaseWindowMediator<T>
 {
     
-    protected BaseFullScreenWindowMediator(string mediatorName) : base(mediatorName, WindowLayer.FullScreen)
+    protected BaseFullScreenWindowMediator(MediatorDefine mediatorName) : base(mediatorName, WindowLayer.FullScreen)
     {
 
     }

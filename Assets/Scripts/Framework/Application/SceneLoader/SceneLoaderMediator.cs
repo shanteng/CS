@@ -11,7 +11,7 @@ public class SceneLoaderMediator : BaseFullScreenWindowMediator<SceneLoaderView>
     private string _name;
     public SceneLoaderMediator() : base(MediatorDefine.SCENE_LOADER)
     {
-        this._prefabName = "SceneLoaderPF";
+       
     }
 
    

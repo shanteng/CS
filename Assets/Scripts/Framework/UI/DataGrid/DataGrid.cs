@@ -21,7 +21,7 @@ public class DataGrid : UIBase
     public bool isAbsolute = true;
 
     private RectTransform m_content;
-    private List<ScrollData> m_data;
+    private List<ScrollData> m_data = new List<ScrollData>();
     
     private readonly List<ItemRender> m_items = new List<ItemRender>();
     private readonly List<ItemRender> m_caches = new List<ItemRender>();
@@ -46,12 +46,8 @@ public class DataGrid : UIBase
         this._onClickListnerer = listener;
     }
 
-    public void RemoveClickEvent()
-    {
-        this._onClickListnerer = null;
-    }
 
-    private void Start()
+    private void Awake()
     {
         this.m_scrollRect = this.GetComponent<ScrollRect>();
        
@@ -72,8 +68,16 @@ public class DataGrid : UIBase
         }
         else
         {
-            this.sizeDelta.x = Screen.width + rt.sizeDelta.x;
-            this.sizeDelta.y = Screen.height + rt.sizeDelta.y;
+            if (this.m_isVertical)
+            {
+                this.sizeDelta.y = Screen.height + rt.sizeDelta.y;
+                this.sizeDelta.x = rt.sizeDelta.x;
+            }
+            else
+            {
+                this.sizeDelta.x = Screen.width + rt.sizeDelta.x;
+                this.sizeDelta.y = rt.sizeDelta.y;
+            }
         }
        
         this.m_goItemRender.SetActive(false);
@@ -155,7 +159,7 @@ public class DataGrid : UIBase
         if (index < 0 || index >= this.m_data.Count)
             return;
         if (m_data.Count > index && NotifySelect)
-            SelectItem((ScrollData)m_data[index]);
+            NotifyClickItem((ScrollData)m_data[index]);
         ResetScrollPosition(index);
     }
 
@@ -333,28 +337,14 @@ public class DataGrid : UIBase
             go.SetActive(true);
 
             ItemRender script = (ItemRender)go.GetComponent<ItemRender>();
-            script._view = this;
+            script._listener = this._onClickListnerer;
             script.SetData(curData);
             m_items.Add(script);
         }//end for
     }//end func
 
-    public void CallBackClick(GameObject target)
-    {
-        if (this._onClickListnerer == null)
-            return;
-        int count = this.ItemRenders.Count;
-        for (int i = 0; i < count; ++i)
-        {
-            if (this.ItemRenders[i].gameObject.GetHashCode() == target.GetHashCode())
-            {
-                SelectItem(ItemRenders[i].m_renderData);
-                break;
-            }
-        }
-    }
 
-    private void SelectItem(object renderData)
+    private void NotifyClickItem(object renderData)
     {
         m_selectedData = (ScrollData)renderData;
         if (this._onClickListnerer != null)
@@ -376,7 +366,7 @@ public class DataGrid : UIBase
             return;
 
         if (m_data[index] != m_selectedData)
-            SelectItem((ScrollData)m_data[index]);
+            NotifyClickItem((ScrollData)m_data[index]);
         UpdateView();
     }
 
@@ -514,9 +504,9 @@ public class DataGrid : UIBase
         }
     }
 
-    public void initCount(List<ScrollData> datas, int topIndex = -1, bool notifySelect = false, float scroll = 1)//默认置顶显示
+    public void ShowGrid(IScollItemClickListener listner = null,int topIndex = -1, bool notifySelect = false, float scroll = 1)//默认置顶显示
     {
-        this.Data = datas;
+        this.AddClickEvent(listner);
         this.ResetScrollPosition();
         int viewItemCount = this.viewItemCount;
         int itemLine = this.itemLineCount;

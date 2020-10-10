@@ -30,7 +30,7 @@ public class SpotCube : MonoBehaviour
     {
         //测试代码
         if( UtilTools.isFingerOverUI() == false)
-        HomeLandManager.GetInstance().OnClickSpotCube(this._cordinate.x,this._cordinate.z);
+            HomeLandManager.GetInstance().OnClickSpotCube(this._cordinate.x,this._cordinate.z);
     }
 
 

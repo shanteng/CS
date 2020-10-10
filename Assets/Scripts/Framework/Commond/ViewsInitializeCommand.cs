@@ -11,5 +11,7 @@ public class ViewsInitializeCommand : SimpleCommand
         Facade.RegisterMediator(new LoginMediator());
         Facade.RegisterMediator(new SceneLoaderMediator());
         Facade.RegisterMediator(new HomeLandMediator());
+        Facade.RegisterMediator(new BuildCenterMediator());
+        Facade.RegisterMediator(new MainMediator());
     }
 }

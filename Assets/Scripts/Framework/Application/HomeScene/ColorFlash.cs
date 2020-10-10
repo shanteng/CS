@@ -13,9 +13,16 @@ public class ColorFlash : MonoBehaviour
     private Color _curColor;
     private bool _isStart = false;
     private float _delatTime = 0;
-   
-    void Awake()
+
+    private void Awake()
     {
+        this.Init();
+    }
+
+    private void Init()
+    {
+        if (this._allRenders != null)
+            return;
         _allRenders = new List<MeshRenderer>();
         int count = this.transform.childCount;
         for (int i = 0; i < count; ++i)
@@ -31,6 +38,7 @@ public class ColorFlash : MonoBehaviour
 
     public void DoFlash(bool start)
     {
+        this.Init();
         _delatTime = 0;
         this._isStart = start;
         if (start == false)
@@ -39,6 +47,7 @@ public class ColorFlash : MonoBehaviour
 
     public void Stop()
     {
+        this.Init();
         this._isStart = false;
         _curColor = Color.white;
         this.SetColor();
@@ -46,7 +55,7 @@ public class ColorFlash : MonoBehaviour
 
     void Update()
     {
-        if (this._isStart)
+        if (this._isStart && this._allRenders != null)
         {
             this._delatTime += Time.deltaTime * this._Speed;
             _curColor = Color.Lerp(Color.white, this._EndColor, Mathf.PingPong(this._delatTime, 1));
