@@ -12,7 +12,7 @@ public class HomeLandManager : MonoBehaviour
     public List<SpotCube> _spotPrefabs;
     public CountDownCanvas _coundPrefabs;
     public BuildCanvas _buildPrefabs;
-
+    public InfoCanvas _infoPrefabs;
 
     public List<Building> _BuildPrefabs;
     private Dictionary<string, Building> _BuildPrefabDic;
@@ -25,6 +25,7 @@ public class HomeLandManager : MonoBehaviour
     public bool isTryBuild => this._TryBuildScript != null;
     private Building _TryBuildScript;
     private BuildCanvas _BuildCanvas;
+    private InfoCanvas _infoCanvas;
 
     private static HomeLandManager instance;
     public static HomeLandManager GetInstance()
@@ -119,6 +120,7 @@ public class HomeLandManager : MonoBehaviour
         building.SetCurrentState();
         this._AllBuildings.Add(data._key,building);
         this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
+        this.SetCurrentSelectBuilding("");
         this._TryBuildScript = null;
     }
 
@@ -126,14 +128,14 @@ public class HomeLandManager : MonoBehaviour
     {
         if (this.isTryBuild)
             return;
-        HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
+        this.SetCurrentSelectBuilding("");
         this.TryBuild(1, x, z);//测试
     }
 
   
     public void TryBuild(int configid, int x, int z)
     {
-        SetCurrentSelectBuilding("");
+        this.SetCurrentSelectBuilding("");
         BuildingConfig config = BuildingConfig.Instance.GetData(configid);
         Building prefab;
         if (config == null || this._BuildPrefabDic.TryGetValue(config.Prefab, out prefab) == false)
@@ -146,9 +148,8 @@ public class HomeLandManager : MonoBehaviour
         building._basePlane.gameObject.SetActive(true);
         
         if (this._BuildCanvas == null)
-        {
             this._BuildCanvas = GameObject.Instantiate<BuildCanvas>(this._buildPrefabs, Vector3.zero, Quaternion.identity, this.transform);
-        }
+        
 
         _BuildCanvas.transform.SetParent(building.transform);
         _BuildCanvas.transform.localPosition = Vector3.zero;
@@ -162,6 +163,7 @@ public class HomeLandManager : MonoBehaviour
         this._BuildCanvas.SetState(canBuild);
     }
 
+ 
     public void ConfirmBuild(bool isBuild)
     {
         this._BuildCanvas.Hide();
@@ -186,6 +188,25 @@ public class HomeLandManager : MonoBehaviour
         vo["x"] = x;
         vo["z"] = z;
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingDo, vo);
+    }
+
+    public void HideInfoCanvas()
+    {
+        if (this._infoCanvas != null)
+        {
+            _infoCanvas.Hide();
+            _infoCanvas.transform.SetParent(this.transform);
+        }
+    }
+
+    public void ShowBuildingInfoCanvas(Building bd)
+    {
+        if (this._infoCanvas == null)
+            this._infoCanvas = GameObject.Instantiate<InfoCanvas>(this._infoPrefabs, Vector3.zero, Quaternion.identity, this.transform);
+        _infoCanvas.Show();
+        _infoCanvas.transform.SetParent(bd.transform);
+        _infoCanvas.transform.localPosition = Vector3.zero;
+        _infoCanvas.SetBuildState(bd._data);
     }
 
     public void Build(int configid,int x, int z)
@@ -215,6 +236,11 @@ public class HomeLandManager : MonoBehaviour
                 bd.EndRelocate();
             else
                 bd.SetSelect(true);
+        }
+
+        if (key.Equals(""))
+        {
+            this.HideInfoCanvas();
         }
     }
 

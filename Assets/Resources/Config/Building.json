@@ -1,1 +1,1 @@
-[{"ID":1,"Prefab":"House","Name":"仓库","Desc":"仓库的描述","MaxLevel":4,"RowCount":2,"ColCount":2},{"ID":2,"Prefab":"Wall","Name":"城墙","Desc":"城区的功能","MaxLevel":4,"RowCount":1,"ColCount":1}]
+[{"ID":1,"Prefab":"House","Name":"仓库","Desc":"仓库的描述","MaxLevel":4,"RowCount":2,"ColCount":2,"ExtraFuns":[1,2]},{"ID":2,"Prefab":"Wall","Name":"城墙","Desc":"城区的功能","MaxLevel":4,"RowCount":1,"ColCount":1,"ExtraFuns":[]}]

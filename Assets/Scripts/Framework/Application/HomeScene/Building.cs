@@ -45,11 +45,11 @@ public class Building : MonoBehaviour
         }
         else if (this._data._status == BuildingData.BuildingStatus.BUILD)
         {
-            this.DoCountDown(_data._expireTime);
+            this.DoCountDown(_data._expireTime, this._data._UpgradeSecs);
         }
         else if (this._data._status == BuildingData.BuildingStatus.UPGRADE)
         {
-            this.DoCountDown(_data._expireTime);
+            this.DoCountDown(_data._expireTime,this._data._UpgradeSecs);
         }
         else if (this._data._status == BuildingData.BuildingStatus.NORMAL)
         {
@@ -57,9 +57,9 @@ public class Building : MonoBehaviour
         }
     }
 
-    private void DoCountDown(long expire)
+    private void DoCountDown(long expire,int totle)
     {
-        this._cdUI.DoCountDown(expire);
+        this._cdUI.DoCountDown(expire, totle);
     }
 
     public void RelocateToProxy(int x, int z)
@@ -155,26 +155,12 @@ public class Building : MonoBehaviour
         {
             //取消选中，并且返回初始位置
             HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
-        }
-        else
-        {
-            //选中当前地块
-            HomeLandManager.GetInstance().SetCurrentSelectBuilding(this._data._key);
+            return;
         }
 
-        if (this._data._status == BuildingData.BuildingStatus.NORMAL)
-        {
-            Debug.LogWarning("BuildingData.BuildingStatus.NORMAL");
-        }
-        else if (this._data._status == BuildingData.BuildingStatus.BUILD)
-        {
-            Debug.LogWarning("BuildingData.BuildingStatus.BUILD");
-        }
-        else if (this._data._status == BuildingData.BuildingStatus.UPGRADE)
-        {
-            Debug.LogWarning("BuildingData.BuildingStatus.UPGRADE");
-        }
-
+        //选中当前地块
+        HomeLandManager.GetInstance().SetCurrentSelectBuilding(this._data._key);
+        HomeLandManager.GetInstance().ShowBuildingInfoCanvas(this);
     }
 
     public void SetSelect(bool isSelect)

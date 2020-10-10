@@ -54,6 +54,7 @@ public class BuildingConfig : Config<BuildingConfig>
     public int MaxLevel;
     public int RowCount;
     public int ColCount;
+    public int[] ExtraFuns;
 
     public BuildingConfig() : base(JsonNameDefine.Building) { }
 }

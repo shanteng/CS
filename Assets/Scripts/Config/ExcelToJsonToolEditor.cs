@@ -127,17 +127,31 @@ public class ExcelToJsonToolEditor : Editor
                         break;
                     case "ArrayInt":
                         string str = collect[i][j].ToString();
-                        string[] strs = str.Split(',');
-                        int[] ints = new int[strs.Length];
-                        for (int k = 0; k < strs.Length; k++)
+                        if (str.Length > 0)
                         {
-                            ints[k] = int.Parse(strs[k]);
+                            string[] strs = str.Split(',');
+                            int[] ints = new int[strs.Length];
+                            for (int k = 0; k < strs.Length; k++)
+                            {
+                                ints[k] = int.Parse(strs[k]);
+                            }
+                            value = ints;
                         }
-                        value = ints;
+                        else
+                        {
+                            value = new int[0];
+                        }
                         break;
                     case "ArrayString":
                         string strString = collect[i][j].ToString();
-                        value = strString.Split(',');
+                        if (strString.Length > 0)
+                        {
+                            value = strString.Split(',');
+                        }
+                        else
+                        {
+                            value = new string[0];
+                        }
                         break;
                     default:
                         Convert.ChangeType(collect[i][j], typeof(string));

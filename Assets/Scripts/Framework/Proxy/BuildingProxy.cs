@@ -22,14 +22,15 @@ public class BuildingData
     public int _id;
     public string _key;
     public BuildingConfig _config;
-    public BuildingUpgradeConfig _configUpgrade;
+    public BuildingUpgradeConfig _configLevel;//当前等级配置
+    public int _UpgradeSecs = 0;//下一个等级所需时间
     public Vector2Int _cordinate = Vector2Int.zero;//左下角的坐标
     public List<Vector2Int> _occupyCordinates;//占领的全部地块坐标
 
-    public int _level;
+    public int _level = 0;
     public BuildingStatus _status = BuildingStatus.INIT;//建筑的状态
     public long _expireTime;//建造或者升级的到期时间
-    public int _durability;//耐久度
+    public int _durability;//当前耐久度
 
     public void Create(int id,int x,int z)
     {
@@ -43,17 +44,22 @@ public class BuildingData
     public void SetStatus(BuildingStatus state)
     {
         this._status = state;
-        if (state > BuildingStatus.NORMAL)
-            this._expireTime = UtilTools.GetExpireTime(this._configUpgrade.NeedTime);
-        else
-            this._expireTime = 0;
+        this._expireTime = 0;
+        _UpgradeSecs = 0;
+        if (state == BuildingStatus.BUILD || state == BuildingStatus.UPGRADE)
+        {
+            BuildingUpgradeConfig nextConfig = BuildingUpgradeConfig.GetConfig(this._id, this._level + 1);
+            _UpgradeSecs = nextConfig == null ? 0 : nextConfig.NeedTime;
+            this._expireTime = UtilTools.GetExpireTime(_UpgradeSecs);
+        }
     }
 
     public void SetLevel(int newLevel)
     {
         this._level = newLevel;
-        _configUpgrade = BuildingUpgradeConfig.GetConfig(this._id, this._level);
-        this._durability = _configUpgrade.Durability;
+        _configLevel = BuildingUpgradeConfig.GetConfig(this._id, this._level);
+        if (this._configLevel != null)
+            this._durability = _configLevel.Durability;
     }
 
     public void SetCordinate(int x, int z)
@@ -102,7 +108,7 @@ public class BuildingProxy : BaseRemoteProxy
 
         BuildingData data = new BuildingData();
         data.Create(id, x, z);
-        data.SetLevel(1);
+        data.SetLevel(0);
         data.SetStatus(BuildingData.BuildingStatus.BUILD);
         this._datas.Add(data._key, data);
         //通知时间中心添加一个监听
@@ -133,7 +139,8 @@ public class BuildingProxy : BaseRemoteProxy
         BuildingData data = this.GetBuilding(key);
         if (data == null)
             return;
-        if (data._status == BuildingData.BuildingStatus.UPGRADE)
+        if (data._status == BuildingData.BuildingStatus.UPGRADE ||
+            data._status == BuildingData.BuildingStatus.BUILD)
         {
             data.SetLevel(data._level + 1);//升级完成
         }

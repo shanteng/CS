@@ -20,11 +20,11 @@ public class CountDownCanvas : UIBase
         this._progress.minValue = 0;
     }
 
-    public void DoCountDown(long expire)
+    public void DoCountDown(long expire,int totleSecs)
     {
         this.Show();
         this._expire = expire;
-        this._totleSces = this._expire - GameIndex.ServerTime;
+        this._totleSces = totleSecs;
         this._progress.maxValue = this._totleSces;
         this._progress.value = 0;
         if (this._curCor != null)

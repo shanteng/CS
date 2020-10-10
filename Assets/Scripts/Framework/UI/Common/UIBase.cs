@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class CustomizedData
 {
     public string _key;
-    public object _object;
+    public object _value;
 }
 
 public class UIBase : MonoBehaviour
