@@ -43,6 +43,7 @@ public class HomeLandManager : MonoBehaviour
         }
     }
 
+
     void Start()
     {
         this._AllBuildings = new Dictionary<string, Building>();
@@ -52,6 +53,7 @@ public class HomeLandManager : MonoBehaviour
         this.GenerateAllBaseSpot();
     }
 
+
     public bool canBuildInSpot(string key, int posX, int posZ,int rowCount,int colCount)
     {
         for (int row = 0; row < rowCount; ++row)
@@ -60,6 +62,10 @@ public class HomeLandManager : MonoBehaviour
             for (int col = 0; col < colCount; ++col)
             {
                 int curZ = posZ + col;
+                bool isMy = this.IsMyLand(curX, curZ);
+                if (isMy == false)
+                    return false;
+
                 string spotKey = UtilTools.combine(curX, "|", curZ);
                 bool inOther = _SpotHasOccupys.Contains(spotKey);//是否占领了别人的格子
                 bool isInMySpot = this.isInMyOldRange(curX, curZ, key);//占领的是不本身我自己的格子
@@ -69,6 +75,12 @@ public class HomeLandManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    public bool IsMyLand(int x, int z)
+    {
+        string key = UtilTools.combine(x, "|", z);
+        return this._allSpotDic.ContainsKey(key);
     }
 
     private bool isInMyOldRange(int x, int z, string key)
@@ -327,12 +339,16 @@ public class HomeLandManager : MonoBehaviour
                 int corZ = col;
                 SpotCube baseSpot = GameObject.Instantiate<SpotCube>(prefab, new Vector3(corX, 0, corZ), Quaternion.identity, this.transform);
                 baseSpot.SetCordinate(corX, corZ);
+                baseSpot.transform.localPosition = new Vector3(corX, 0, corZ);
                 string key = UtilTools.combine(corX, "|", corZ);
                 baseSpot.name = key;
                 this._allSpotDic[key] = baseSpot;
             }
         }
     }
+
+
+
 
 
 }

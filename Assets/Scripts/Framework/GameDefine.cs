@@ -63,6 +63,7 @@ class ProxyNameDefine
 
 public class SceneDefine
 {
+    public const string World = "World";
     public const string Home = "Home";
     public const string GameIndex = "GameIndex";
 }

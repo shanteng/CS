@@ -30,7 +30,7 @@ public class SceneLoaderView : MonoBehaviour
     IEnumerator LoadScene()
     {
         yield return null;
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneDefine.Home);
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(this._loadName);
         //不激活场景
         asyncOperation.allowSceneActivation = true;
         //当加载正在进行时，加载Text和进度条

@@ -108,13 +108,13 @@ public class Building : MonoBehaviour
         curPosition.z += yoffset;
         curPosition.x = Mathf.RoundToInt(curPosition.x);
         curPosition.z = Mathf.RoundToInt(curPosition.z);
-        int maxX = HomeLandManager.ROW_COUNT - this._data._config.RowCount;
-        int maxZ = HomeLandManager.COL_COUNT - this._data._config.ColCount;
-        int newX = Mathf.Clamp((int)curPosition.x, 0, maxX);
-        int newZ = Mathf.Clamp((int)curPosition.z, 0, maxZ);
+       // int maxX = HomeLandManager.ROW_COUNT - this._data._config.RowCount;
+      //  int maxZ = HomeLandManager.COL_COUNT - this._data._config.ColCount;
+       // maxX = Mathf.Clamp((int)curPosition.x, 0, maxX);
+       // maxZ = Mathf.Clamp((int)curPosition.z, 0, maxZ);
 
-        this.transform.position = new Vector3(newX, 1.02f, newZ);
-        this.SetCanDoState(newX, newZ);
+        this.transform.position = new Vector3(curPosition.x, 1.02f, curPosition.z);
+        this.SetCanDoState((int)curPosition.x, (int)curPosition.z);
     }
 
     public void OnEndDrag(PointerEventData eventData)
