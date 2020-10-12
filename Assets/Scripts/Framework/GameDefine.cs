@@ -36,6 +36,8 @@
     public const string BuildingRelocateDo = "BuildingRelocateDo";
     public const string BuildingRelocateResp = "BuildingRelocateResp";
 
+    public const string TryBuildBuilding = "TryBuildBuilding";
+
     public const string BuildingCancelDo = "BuildingCancelDo";
     public const string BuildingCancelUpgradeNoti = "BuildingCancelUpgradeNoti";
     public const string BuildingRemoveNoti = "BuildingRemoveNoti";

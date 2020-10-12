@@ -29,7 +29,12 @@ public class BuildCenterView : MonoBehaviour
 
     public void onClickScrollItem(ScrollData data)
     {
-        
+        if (data._Key.Equals("BuidItemRender"))
+        {
+            BuidItemData curdata = (BuidItemData)data;
+            MediatorUtil.SendNotification(NotiDefine.TryBuildBuilding, curdata._config.ID);
+            MediatorUtil.HideMediator(MediatorDefine.BUILD_CENTER);
+        }
     }
 
 }

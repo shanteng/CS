@@ -9,7 +9,6 @@ public class ScrollData
 {
     public string _Key = "";
     public object _Param;
-
 }
 
 //所有滑动列表单项的基类
@@ -17,9 +16,9 @@ public class ScrollData
 [RequireComponent(typeof(LayoutElement))]
 public class ItemRender : UIBase,IPointerClickHandler
 {
-    
-    public ScrollData m_renderData;
     public IScollItemClickListener _listener;
+    public ScrollData m_renderData;
+    
 
     public void SetData(ScrollData data)
     {
@@ -41,9 +40,8 @@ public class ItemRender : UIBase,IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (this._listener != null)
+        if (this.m_renderData != null && this._listener != null)
         {
-            Debug.LogError(this.m_renderData);
             this._listener.onClickScrollItem(this.m_renderData);
         }
             

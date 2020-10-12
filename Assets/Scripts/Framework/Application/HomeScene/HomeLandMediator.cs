@@ -22,6 +22,7 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.BuildingStatusChanged);
         m_lInterestNotifications.Add(NotiDefine.ConfirmBuild);
         m_lInterestNotifications.Add(NotiDefine.BuildingRemoveNoti);
+        m_lInterestNotifications.Add(NotiDefine.TryBuildBuilding);
     }
 
     public override void HandleNotification(INotification notification)
@@ -66,6 +67,12 @@ public class HomeLandMediator : BaseNoWindowMediator
                 {
                     string key = (string)notification.Body;
                     this._LandManager.OnRemoveBuild(key);
+                    break;
+                }
+            case NotiDefine.TryBuildBuilding:
+                {
+                    int id = (int)notification.Body;
+                    this._LandManager.BuildInScreenCenterPos(id);
                     break;
                 }
         }

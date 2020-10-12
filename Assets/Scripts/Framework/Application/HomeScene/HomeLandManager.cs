@@ -158,6 +158,18 @@ public class HomeLandManager : MonoBehaviour
         return null;
     }
 
+    public void BuildInScreenCenterPos(int id)
+    {
+        Vector3 screenSpace = Camera.main.WorldToScreenPoint(this._allSpotDic["0|0"].transform.position);
+        Vector3 posScreen = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f, screenSpace.z));
+        Vector3 posScreenWorld = Camera.main.ScreenToWorldPoint(posScreen);
+
+
+        Vector3 pos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, screenSpace.z));
+        int xCenter = Mathf.RoundToInt(pos.x);
+        int zCenter = Mathf.RoundToInt(pos.z);
+        this.TryBuild(id, xCenter, zCenter);//测试
+    }
    
 
     public void OnClickSpotCube(int x,int z)
@@ -165,7 +177,6 @@ public class HomeLandManager : MonoBehaviour
         if (this.isTryBuild)
             return;
         this.SetCurrentSelectBuilding("");
-        this.TryBuild(1, x, z);//测试
     }
 
   
