@@ -19,16 +19,26 @@
 
    
     public const string AddTimestepCallback = "AddTimestepCallback";
+    public const string RemoveTimestepCallback = "RemoveTimestepCallback";//key，动态生成的唯一标识
+
     public const string TEST_CALLBACK_NOTI = "TEST_CALLBACK_NOTI";
 
     public const string CreateOneBuildingDo = "CreateOneBuildingDo";
     public const string CreateOneBuildingResp = "CreateOneBuildingResp";
+
+    public const string UpgradeOneBuildingDo = "UpgradeOneBuildingDo";
+    public const string UpgradeOneBuildingResp = "UpgradeOneBuildingResp";
+
 
     public const string BuildingExpireReachedNoti = "BuildingExpireReachedNoti";
     public const string BuildingStatusChanged = "BuildingStatusChanged";
 
     public const string BuildingRelocateDo = "BuildingRelocateDo";
     public const string BuildingRelocateResp = "BuildingRelocateResp";
+
+    public const string BuildingCancelDo = "BuildingCancelDo";
+    public const string BuildingCancelUpgradeNoti = "BuildingCancelUpgradeNoti";
+    public const string BuildingRemoveNoti = "BuildingRemoveNoti";
 
     public const string ConfirmBuild = "ConfirmBuild";
 

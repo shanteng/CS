@@ -100,6 +100,16 @@ public class BuildingProxy : BaseRemoteProxy
         return null;
     }
 
+    private void AddOneTimeListener(BuildingData data)
+    {
+        TimeCallData dataTime = new TimeCallData();
+        dataTime._key = data._key;
+        dataTime._notifaction = NotiDefine.BuildingExpireReachedNoti;
+        dataTime.TimeStep = data._expireTime;
+        dataTime._param = data._key;
+        MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
+    }
+
     public void Create(Dictionary<string, object> vo)
     {
         int id = (int)vo["configid"];
@@ -111,14 +121,45 @@ public class BuildingProxy : BaseRemoteProxy
         data.SetLevel(0);
         data.SetStatus(BuildingData.BuildingStatus.BUILD);
         this._datas.Add(data._key, data);
-        //通知时间中心添加一个监听
-        TimeCallData dataTime = new TimeCallData();
-        dataTime._notifaction = NotiDefine.BuildingExpireReachedNoti;
-        dataTime.TimeStep = data._expireTime;
-        dataTime._param = data._key;
-        MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
 
+        //通知时间中心添加一个监听
+        this.AddOneTimeListener(data);
+       
+        //通知Land创建完成
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingResp, data);
+    }
+
+    public void Upgrade(string key)
+    {
+        BuildingData data = this.GetBuilding(key);
+        if (data == null || data._status != BuildingData.BuildingStatus.NORMAL || data._level >= data._config.MaxLevel)
+            return;
+        data.SetStatus(BuildingData.BuildingStatus.UPGRADE);
+        //通知时间中心添加一个监听
+        this.AddOneTimeListener(data);
+        MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
+    }
+
+    public void CancelUpgrade(string key)
+    {
+        BuildingData data = this.GetBuilding(key);
+        if (data == null || data._status == BuildingData.BuildingStatus.NORMAL)
+            return;
+        //时间中心去掉
+        MediatorUtil.SendNotification(NotiDefine.RemoveTimestepCallback, key);
+
+        if (data._status == BuildingData.BuildingStatus.BUILD)
+        {
+            //删除取消
+            this._datas.Remove(key);
+            MediatorUtil.SendNotification(NotiDefine.BuildingRemoveNoti, key);
+        }
+        else if (data._status == BuildingData.BuildingStatus.UPGRADE)
+        {
+            //删除取消
+            data.SetStatus(BuildingData.BuildingStatus.NORMAL);
+            MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
+        }
     }
 
     public void Relocate(Dictionary<string, object> vo)
@@ -134,7 +175,7 @@ public class BuildingProxy : BaseRemoteProxy
         }
     }
 
-    public void OnExpireFinsih(string key)
+    public void OnBuildExpireFinsih(string key)
     {
         BuildingData data = this.GetBuilding(key);
         if (data == null)

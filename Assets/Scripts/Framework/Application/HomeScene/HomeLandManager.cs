@@ -86,27 +86,6 @@ public class HomeLandManager : MonoBehaviour
         return false;
     }
 
-    public void OnBuildingStateChanged(string key)
-    {
-        Building curBuild = this.GetBuilding(key);
-        if (curBuild != null)
-            curBuild.SetCurrentState();
-    }
-
-    public void OnRelocateResp(string key)
-    {
-        Building curBuild = this.GetBuilding(key);
-        if (curBuild != null)
-            curBuild.EndRelocate();
-    }
-
-    private Building GetBuilding(string key)
-    {
-        Building building;
-        if (this._AllBuildings.TryGetValue(key, out building))
-            return building;
-        return null;
-    }
 
     public void OnCreateResp(BuildingData data)
     {
@@ -118,11 +97,56 @@ public class HomeLandManager : MonoBehaviour
         building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
         building.CreateUI(this._coundPrefabs);
         building.SetCurrentState();
-        this._AllBuildings.Add(data._key,building);
+        this._AllBuildings.Add(data._key, building);
         this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
-        this.SetCurrentSelectBuilding("");
+        this.SetCurrentSelectBuilding(data._key);
         this._TryBuildScript = null;
     }
+
+    public void OnRelocateResp(string key)
+    {
+        Building curBuild = this.GetBuilding(key);
+        if (curBuild != null)
+        {
+            this.RecordBuildOccupy(curBuild._data._key, curBuild._data._occupyCordinates);
+            this.ShowBuildingInfoCanvas(curBuild);
+        }
+    }
+
+    public void OnBuildingStateChanged(string key)
+    {
+        Building curBuild = this.GetBuilding(key);
+        if (curBuild != null)
+        {
+            curBuild.SetCurrentState();
+            if (key.Equals(this._currentBuildKey))
+                this.ShowBuildingInfoCanvas(curBuild);
+        }
+    }
+
+    public void OnRemoveBuild(string key)
+    {
+        this.HideInfoCanvas();
+        Building curBuild = this.GetBuilding(key);
+        if (curBuild != null)
+        {
+            this.ClearBuildOccupy(key);
+            _AllBuildings.Remove(key);
+            GameObject.Destroy(curBuild.gameObject);
+            curBuild = null;
+        }
+    }
+
+
+    private Building GetBuilding(string key)
+    {
+        Building building;
+        if (this._AllBuildings.TryGetValue(key, out building))
+            return building;
+        return null;
+    }
+
+   
 
     public void OnClickSpotCube(int x,int z)
     {
@@ -201,6 +225,12 @@ public class HomeLandManager : MonoBehaviour
 
     public void ShowBuildingInfoCanvas(Building bd)
     {
+        if (bd == null)
+        {
+            this.HideInfoCanvas();
+            return;
+        }
+
         if (this._infoCanvas == null)
             this._infoCanvas = GameObject.Instantiate<InfoCanvas>(this._infoPrefabs, Vector3.zero, Quaternion.identity, this.transform);
         _infoCanvas.Show();
@@ -228,20 +258,20 @@ public class HomeLandManager : MonoBehaviour
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingDo, vo);
     }
 
+    private string _currentBuildKey = "";
     public void SetCurrentSelectBuilding(string key)
     {
+        this._currentBuildKey = key;
+        Building showBd = null;
         foreach (Building bd in this._AllBuildings.Values)
         {
-            if(key.Equals(bd._data._key) == false)
-                bd.EndRelocate();
-            else
-                bd.SetSelect(true);
+            bool isCur = key.Equals(bd._data._key);
+            bd.SetSelect(isCur);
+            if(isCur)
+                showBd = bd;
         }
 
-        if (key.Equals(""))
-        {
-            this.HideInfoCanvas();
-        }
+        this.ShowBuildingInfoCanvas(showBd);
     }
 
     private bool _isDraging;
@@ -252,20 +282,24 @@ public class HomeLandManager : MonoBehaviour
 
     public  bool IsDraging => _isDraging;
 
-    public void RecordBuildOccupy(string key, List<Vector2Int> occs)
+    public void ClearBuildOccupy(string key)
     {
         List<Vector2Int> buildOccupy = null;
         if (this._BuildingDic.TryGetValue(key, out buildOccupy))
         {
-            //先清楚之前的占地信息
             foreach (Vector2Int pos in buildOccupy)
             {
                 string oldKey = UtilTools.combine(pos.x, "|", pos.y);
                 this._SpotHasOccupys.Remove(oldKey);
             }
         }
+    }
 
-        buildOccupy = new List<Vector2Int>();
+    public void RecordBuildOccupy(string key, List<Vector2Int> occs)
+    {
+        this.ClearBuildOccupy(key);
+ 
+        List<Vector2Int> buildOccupy = new List<Vector2Int>();
         buildOccupy.AddRange(occs);
         this._BuildingDic[key] = buildOccupy;
         foreach (Vector2Int pos in buildOccupy)

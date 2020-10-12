@@ -77,6 +77,7 @@ public class Building : MonoBehaviour
     {
         if (this._isSelect == false)
             return;
+        HomeLandManager.GetInstance().HideInfoCanvas();
         this._isDrag = true;
         HomeLandManager.GetInstance().SetDraging(true);
         _screenSpace = Camera.main.WorldToScreenPoint(this.transform.position);
@@ -131,14 +132,19 @@ public class Building : MonoBehaviour
         }
     }
 
-    public void EndRelocate()
+    private void EndRelocate()
     {
         //结束拖拽，重新设置位置
-        this.SetSelect(false);
         this._basePlane.gameObject.SetActive(false);
         this.transform.position = new Vector3(this._data._cordinate.x, 1, this._data._cordinate.y);//恢复层级
-        //通知LandManager
-        HomeLandManager.GetInstance().RecordBuildOccupy(this._data._key, this._data._occupyCordinates);
+    }
+
+    public void SetSelect(bool isSelect)
+    {
+        this._isSelect = isSelect;
+        this._flash.DoFlash(this._isSelect);
+        if (isSelect == false)
+            this.EndRelocate();
     }
 
     //监听点击
@@ -160,12 +166,8 @@ public class Building : MonoBehaviour
 
         //选中当前地块
         HomeLandManager.GetInstance().SetCurrentSelectBuilding(this._data._key);
-        HomeLandManager.GetInstance().ShowBuildingInfoCanvas(this);
+       
     }
 
-    public void SetSelect(bool isSelect)
-    {
-        this._isSelect = isSelect;
-        this._flash.DoFlash(this._isSelect);
-    }
+   
 }

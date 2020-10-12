@@ -19,9 +19,19 @@ public class BuildingCommand : SimpleCommand
                     proxy.Relocate(notification.Body as Dictionary<string, object>);
                     break;
                 }
+            case NotiDefine.UpgradeOneBuildingDo:
+                {
+                    proxy.Upgrade(notification.Body as string);
+                    break;
+                }
+            case NotiDefine.BuildingCancelDo:
+                {
+                    proxy.CancelUpgrade(notification.Body as string);
+                    break;
+                }
             case NotiDefine.BuildingExpireReachedNoti:
                 {
-                    proxy.OnExpireFinsih(notification.Body as string);
+                    proxy.OnBuildExpireFinsih(notification.Body as string);
                     break;
                 }
         }

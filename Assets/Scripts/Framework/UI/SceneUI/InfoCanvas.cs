@@ -79,7 +79,7 @@ public class InfoCanvas : UIBase
 
     private void OnClickUpgrade(UIButton btn)
     {
-
+        MediatorUtil.SendNotification(NotiDefine.UpgradeOneBuildingDo, this._data._key);
     }
 
     private void OnClickFun(UIButton btn)
@@ -89,7 +89,7 @@ public class InfoCanvas : UIBase
 
     private void OnCancel(UIButton btn)
     {
-
+        MediatorUtil.SendNotification(NotiDefine.BuildingCancelDo, this._data._key);
     }
 
 }

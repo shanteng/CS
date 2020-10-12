@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class TimeCallData
 {
+    public string _key;//唯一标识
     public string _notifaction;//完成后回调的noti
     public object _param;
 
@@ -35,6 +36,26 @@ public class TimeCenterProxy : BaseRemoteProxy
         return (int)(y.TimeStep - x.TimeStep);
     }
 
+    public void RemoveCallBack(string key)
+    {
+        int rmIndex = -1;
+        int count = this._sortCallList.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            if (this._sortCallList[i]._key.Equals(key))
+            {
+                rmIndex = i;
+                break;
+            }
+        }
+
+        if (rmIndex >= 0)
+        {
+            this._sortCallList.RemoveAt(rmIndex);
+            this.DoLatestTimeCallBack();
+        }
+    }
+
     public void AddCallBack(TimeCallData data)
     {
         if (data._isTimeStep == false)
@@ -55,6 +76,11 @@ public class TimeCenterProxy : BaseRemoteProxy
             this._latestCallData = this._sortCallList[latestindex];
             this._isOver = false;
             _curCor = TimeCenterMono.GetInstance().StartCoroutine(DoTimeStepCallBack());
+        }
+        else
+        {
+            this._isOver = true;
+            this._latestCallData = null;
         }
     }
 

@@ -14,6 +14,11 @@ public class TimeCenterCommand : SimpleCommand
                     proxy.AddCallBack(notification.Body as TimeCallData);
                     break;
                 }
+            case NotiDefine.RemoveTimestepCallback:
+                {
+                    proxy.RemoveCallBack(notification.Body as string);
+                    break;
+                }
         }
     }//end func
 }
