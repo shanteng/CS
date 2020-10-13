@@ -63,7 +63,6 @@ public class ViewControllerLocal : MonoBehaviour
         this._yBottomBorder = Camera.main.transform.InverseTransformPoint(bottomBorder.position).y;
         this._curSize = this._maxSize;
         this.ComputeBorder();
-
         Input.multiTouchEnabled = true;//开启多点触碰
 
 #if UNITY_EDITOR
@@ -73,13 +72,33 @@ public class ViewControllerLocal : MonoBehaviour
 #endif
     }
 
+    public void InitBorder(int row,int col)
+    {
+        float halfRow = row / 2 + 5;//多显示5个范围
+        float halfCol = col / 2 + 5;//多显示5个范围
+
+        this.rightBorder.transform.position = new Vector3(halfRow, 1, halfCol);
+        this.topBorder.transform.position = new Vector3(-halfRow, 1, halfCol);
+        this.leftBorder.transform.position = new Vector3(-halfRow, 1, -halfCol);
+        this.bottomBorder.transform.position = new Vector3(halfRow, 1, -halfCol);
+
+
+        this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
+        this._yTopBorder = Camera.main.transform.InverseTransformPoint(topBorder.position).y;
+
+        this._xLeftBorder = Camera.main.transform.InverseTransformPoint(leftBorder.position).x;
+        this._yBottomBorder = Camera.main.transform.InverseTransformPoint(bottomBorder.position).y;
+        this._curSize = this._maxSize;
+        this.ComputeBorder();
+    }
+
     //左右最大位移量
     private float _xMin = 0;
     private float _xMax = 0;
     //前后最大位移量
     private float _yMin = 0;
     private float _yMax = 0;
-    private void ComputeBorder()
+    public void ComputeBorder()
     {
         //视口宽高
         float halfHeight = Camera.main.orthographicSize;//正交相机高度的一半

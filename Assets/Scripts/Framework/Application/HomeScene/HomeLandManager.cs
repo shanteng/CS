@@ -6,10 +6,11 @@ using static BuildingData;
 
 public class HomeLandManager : MonoBehaviour
 {
-    public int World = 1;
     public static float Degree = 45;
-    public static int COL_COUNT = 50;
-    public static int ROW_COUNT = 50;
+
+    private WorldConfig _config;
+    public int World = 1;
+    public Transform _HomePlane;
     public List<SpotCube> _spotPrefabs;
     public CountDownCanvas _coundPrefabs;
     public BuildCanvas _buildPrefabs;
@@ -343,6 +344,10 @@ public class HomeLandManager : MonoBehaviour
 
     public void InitScene()
     {
+        this._config = WorldConfig.Instance.GetData(this.World);
+        float row = (float)this._config.RowCount / 10f + 0.1f;
+        float col = (float)this._config.ColCount / 10f + 0.1f;
+        this._HomePlane.localScale = new Vector3(row, 1, col);
         MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo,this.World);
         MediatorUtil.SendNotification(NotiDefine.GenerateMyBuildingDo,this.World);
     }

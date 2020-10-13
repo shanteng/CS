@@ -127,10 +127,12 @@ public class WorldProxy : BaseRemoteProxy
         }
         else
         {
-            for (int row = 0; row < WorldProxy._config.RowCount; ++row)
+            int halfRow = WorldProxy._config.RowCount / 2;
+            int halfCol = WorldProxy._config.ColCount / 2;
+            for (int row = -halfRow; row <= halfRow; ++row)
             {
                 int corX = row;
-                for (int col = 0; col < WorldProxy._config.ColCount; ++col)
+                for (int col = -halfCol; col <= halfCol; ++col)
                 {
                     int corZ = col;
                     string key = UtilTools.combine(corX, "|", corZ);

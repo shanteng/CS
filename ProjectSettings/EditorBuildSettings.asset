@@ -11,9 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Home.unity
     guid: d16718f445052d84e95a9bfb1a77ef5a
-  - enabled: 1
-    path: Assets/Scenes/World.unity
-    guid: 33d3cff79b1967140a4b4e7d5fc42ba7
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects:
     com.unity.playerid.apple_loader: {fileID: 11400000, guid: 268fdcebf64e9b849819c7700eaec7f3,
       type: 2}
