@@ -57,8 +57,9 @@ public class InfoCanvas : UIBase
 
     private void SetNormal()
     {
+        BuildingConfig _config = BuildingConfig.Instance.GetData(_data._id);
         int count = this._btnFunList.Count;
-        int extraCount = _data._config.ExtraFuns.Length;
+        int extraCount = _config.ExtraFuns.Length;
         for (int i = 0; i < count; ++i)
         {
             if (i >= extraCount)
@@ -67,8 +68,8 @@ public class InfoCanvas : UIBase
                 continue;
             }
             this._btnFunList[i].Show();
-            this._btnFunList[i].Label.text = _data._config.ExtraFuns[i].ToString();
-            this._btnFunList[i]._param._value = _data._config.ExtraFuns[i];
+            this._btnFunList[i].Label.text = _config.ExtraFuns[i].ToString();
+            this._btnFunList[i]._param._value = _config.ExtraFuns[i];
         }
     }
 

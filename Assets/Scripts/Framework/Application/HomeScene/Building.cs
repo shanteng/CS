@@ -57,6 +57,14 @@ public class Building : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+       // if (this._cdUI != null)
+        {
+           // this._cdUI.transform.LookAt(Camera.main.transform);
+        }
+    }
+
     private void DoCountDown(long expire,int totle)
     {
         this._cdUI.DoCountDown(expire, totle);
@@ -88,7 +96,8 @@ public class Building : MonoBehaviour
 
     public void SetCanDoState(int newX, int newZ)
     {
-        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, newX, newZ, this._data._config.RowCount, this._data._config.ColCount);
+        BuildingConfig _config = BuildingConfig.Instance.GetData(this._data._id);
+        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, newX, newZ, _config.RowCount, _config.ColCount);
         int index = canBuildHere ? 1 : 0;
         this._basePlane.SetColorIndex(index);
 
@@ -124,7 +133,8 @@ public class Building : MonoBehaviour
 
         this._isDrag = false;
         HomeLandManager.GetInstance().SetDraging(false);
-        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, (int)this.transform.position.x, (int)this.transform.position.z, this._data._config.RowCount, this._data._config.ColCount);
+        BuildingConfig _config = BuildingConfig.Instance.GetData(this._data._id);
+        bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, (int)this.transform.position.x, (int)this.transform.position.z, _config.RowCount, _config.ColCount);
         if (canBuildHere && this._data._status != BuildingData.BuildingStatus.INIT)
         {
             //通知Proxy改变位置

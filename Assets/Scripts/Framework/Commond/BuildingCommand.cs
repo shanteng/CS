@@ -6,9 +6,19 @@ public class BuildingCommand : SimpleCommand
 {
     public override void Execute(INotification notification)
     {
-        BuildingProxy proxy = Facade.RetrieveProxy(ProxyNameDefine.BUILDING) as BuildingProxy;
+        WorldProxy proxy = Facade.RetrieveProxy(ProxyNameDefine.WORLD) as WorldProxy;
         switch (notification.Name)
         {
+            case NotiDefine.GenerateMySpotDo:
+                {
+                    proxy.GenerateAllBaseSpot((int)notification.Body);
+                    break;
+                }
+            case NotiDefine.GenerateMyBuildingDo:
+                {
+                    proxy.GenerateAllBuilding((int)notification.Body);
+                    break;
+                }
             case NotiDefine.CreateOneBuildingDo:
                 {
                     proxy.Create(notification.Body as Dictionary<string,object>);

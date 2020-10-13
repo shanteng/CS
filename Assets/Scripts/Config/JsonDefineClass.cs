@@ -19,6 +19,7 @@ public class JsonNameDefine
     public static string Item = "Item";
     public static string Building = "Building";
     public static string BuildingUpgrade = "BuildingUpgrade";
+    public static string World = "World";
 
     public static JArray JsonRead(string name)
     {
@@ -73,6 +74,21 @@ public class BuildingUpgradeConfig : Config<BuildingUpgradeConfig>
         int levelid = id * 100 + level;
         return BuildingUpgradeConfig.Instance.GetData(levelid);
     }
+}
+
+public class WorldConfig : Config<WorldConfig>
+{
+    public string Scene;
+    public string Name;
+    public string Desc;
+ 
+    public int RowCount;
+    public int ColCount;
+    public int MaxRowCount;
+    public int MaxColCount;
+
+
+    public WorldConfig() : base(JsonNameDefine.World) { }
 }
 #endregion
 

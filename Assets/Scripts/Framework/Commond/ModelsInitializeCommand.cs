@@ -8,6 +8,6 @@ public class ModelsInitializeCommand : SimpleCommand
     public override void Execute(INotification notification)
     {
         Facade.RegisterProxy(new TimeCenterProxy());
-        Facade.RegisterProxy(new BuildingProxy());
+        Facade.RegisterProxy(new WorldProxy());
     }
 }

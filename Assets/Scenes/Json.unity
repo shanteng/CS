@@ -173,3 +173,6 @@ MonoBehaviour:
     sheets:
     - Building
     - BuildingUpgrade
+  - name: World
+    sheets:
+    - World

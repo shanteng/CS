@@ -7,6 +7,7 @@ public class SpotCube : MonoBehaviour
     , IPointerClickHandler
 {
     private Vector3Int _cordinate = Vector3Int.zero;
+    public bool _isMy = false;
     // Start is called before the first frame update
     void Start()
     {

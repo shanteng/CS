@@ -12,6 +12,9 @@ public class ControllersInitializeCommand : SimpleCommand
         Facade.RegisterCommand(NotiDefine.RemoveTimestepCallback, typeof(TimeCenterCommand));
 
         //BuildingCommand
+        Facade.RegisterCommand(NotiDefine.GenerateMySpotDo, typeof(BuildingCommand));
+        Facade.RegisterCommand(NotiDefine.GenerateMyBuildingDo, typeof(BuildingCommand));
+
         Facade.RegisterCommand(NotiDefine.CreateOneBuildingDo, typeof(BuildingCommand));
         Facade.RegisterCommand(NotiDefine.BuildingRelocateDo, typeof(BuildingCommand));
         Facade.RegisterCommand(NotiDefine.BuildingCancelDo, typeof(BuildingCommand));

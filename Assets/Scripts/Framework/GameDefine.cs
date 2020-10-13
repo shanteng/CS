@@ -16,8 +16,6 @@
     public const string LoadSceneFinish = "LoadSceneFinish";
 
    
-
-   
     public const string AddTimestepCallback = "AddTimestepCallback";
     public const string RemoveTimestepCallback = "RemoveTimestepCallback";//key，动态生成的唯一标识
 
@@ -44,6 +42,12 @@
 
     public const string ConfirmBuild = "ConfirmBuild";
 
+    public const string GenerateMySpotDo = "GenerateMySpotDo";
+    public const string GenerateMySpotResp = "GenerateMySpotResp";
+
+    public const string GenerateMyBuildingDo = "GenerateMyBuildingDo";
+    public const string GenerateMyBuildingResp = "GenerateMyBuildingResp";
+
 }
 
 public enum MediatorDefine
@@ -60,7 +64,7 @@ public enum MediatorDefine
 class ProxyNameDefine
 {
     public const string TIME_CENTER = "TIME_CENTER";
-    public const string BUILDING = "BUILDING";
+    public const string WORLD = "WORLD";
 }
 
 public class SceneDefine

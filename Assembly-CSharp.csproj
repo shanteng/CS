@@ -104,8 +104,9 @@
     <Compile Include="Assets\Scripts\Framework\Mediator\BaseNoWindowMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Mediator\BaseWindowMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\BaseProxy.cs" />
-    <Compile Include="Assets\Scripts\Framework\Proxy\BuildingProxy.cs" />
+    <Compile Include="Assets\Scripts\Framework\Proxy\CloudData\CloudDataTool.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\TimeCenterProxy.cs" />
+    <Compile Include="Assets\Scripts\Framework\Proxy\WorldProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NonDrawingGraphic.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIBase.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIButton.cs" />

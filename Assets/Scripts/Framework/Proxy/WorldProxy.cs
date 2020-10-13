@@ -19,14 +19,29 @@ public class BuildingData
         UPGRADE,
     }
 
+    public class VInt2
+    {
+        public int x;
+        public int y;
+        public VInt2()
+        {
+            this.x = 0;
+            this.y = 0;
+        }
+        public VInt2(int xx, int yy)
+        {
+            this.x = xx;
+            this.y = yy;
+        }
+    }
+
     public int _id;
     public string _key;
-    public BuildingConfig _config;
-    public BuildingUpgradeConfig _configLevel;//当前等级配置
+      
     public int _UpgradeSecs = 0;//下一个等级所需时间
-    public Vector2Int _cordinate = Vector2Int.zero;//左下角的坐标
-    public List<Vector2Int> _occupyCordinates;//占领的全部地块坐标
-
+    public VInt2 _cordinate = new VInt2();//左下角的坐标
+    public List<VInt2> _occupyCordinates;//占领的全部地块坐标
+  
     public int _level = 0;
     public BuildingStatus _status = BuildingStatus.INIT;//建筑的状态
     public long _expireTime;//建造或者升级的到期时间
@@ -36,8 +51,7 @@ public class BuildingData
     {
         this._key =  UtilTools.GenerateUId();
         this._id = id;
-        this._config = BuildingConfig.Instance.GetData(id);
-        this._occupyCordinates = new List<Vector2Int>();
+        this._occupyCordinates = new List<VInt2>();
         this.SetCordinate(x, z);
     }
 
@@ -57,9 +71,9 @@ public class BuildingData
     public void SetLevel(int newLevel)
     {
         this._level = newLevel;
-        _configLevel = BuildingUpgradeConfig.GetConfig(this._id, this._level);
-        if (this._configLevel != null)
-            this._durability = _configLevel.Durability;
+        BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(this._id, this._level);
+        if (configLevel != null)
+            this._durability = configLevel.Durability;
     }
 
     public void SetCordinate(int x, int z)
@@ -67,13 +81,15 @@ public class BuildingData
         this._cordinate.x = x;
         this._cordinate.y = z;
         this._occupyCordinates.Clear();
-        for (int row = 0; row < this._config.RowCount; ++row)
+        BuildingConfig _config = BuildingConfig.Instance.GetData(this._id);
+
+        for (int row = 0; row < _config.RowCount; ++row)
         {
             int curX = this._cordinate.x + row;
-            for (int col = 0; col < this._config.ColCount; ++col)
+            for (int col = 0; col < _config.ColCount; ++col)
             {
                 int curZ = this._cordinate.y + col;
-                Vector2Int corNow = new Vector2Int(curX, curZ);
+                VInt2 corNow = new VInt2(curX, curZ);
                 this._occupyCordinates.Add(corNow);
             }
         }
@@ -81,13 +97,94 @@ public class BuildingData
 }//end class
 
 //时间戳回调管理
-public class BuildingProxy : BaseRemoteProxy
+public class WorldProxy : BaseRemoteProxy
 {
+    public static WorldConfig _config;
+    private  int _World;
     private Dictionary<string, BuildingData> _datas = new Dictionary<string, BuildingData>();
-
-    public BuildingProxy() : base(ProxyNameDefine.BUILDING)
+    private List<string> _canOperateSpots = new List<string>();//我可以操作的地块
+    
+    public WorldProxy() : base(ProxyNameDefine.WORLD)
     {
         
+    }
+
+    public void GenerateAllBaseSpot(int world)
+    {
+        //从数据库取出数据
+        this._World = world;
+        this._canOperateSpots.Clear();
+        WorldProxy._config = WorldConfig.Instance.GetData(this._World);
+
+        string fileName = UtilTools.combine(SaveFileDefine.WorldSpot, world);
+        string json = CloudDataTool.LoadFile(fileName);
+        WorldCanOprateSpot spots = new WorldCanOprateSpot();
+        spots.World = world;
+        spots.Dpots = new List<string>();
+        if (json.Equals(string.Empty) == false)
+        {
+            spots = Newtonsoft.Json.JsonConvert.DeserializeObject<WorldCanOprateSpot>(json);
+        }
+        else
+        {
+            for (int row = 0; row < WorldProxy._config.RowCount; ++row)
+            {
+                int corX = row;
+                for (int col = 0; col < WorldProxy._config.ColCount; ++col)
+                {
+                    int corZ = col;
+                    string key = UtilTools.combine(corX, "|", corZ);
+                    spots.Dpots.Add(key);
+                }
+            }//end for
+            this.DoSaveLocalSpots(spots);
+        }//end else
+        this._canOperateSpots.AddRange(spots.Dpots);
+        this.SendNotification(NotiDefine.GenerateMySpotResp, this._canOperateSpots);
+    }//end func
+
+    public void DoSaveLocalSpots(WorldCanOprateSpot script)
+    {
+        //存储
+        string fileName = UtilTools.combine(SaveFileDefine.WorldSpot, this._World);
+        CloudDataTool.SaveFile(fileName, script);
+    }
+
+    public void GenerateAllBuilding(int world)
+    {
+        this._datas.Clear();
+        string fileName = UtilTools.combine(SaveFileDefine.WorldBuiding, world);
+        string json = CloudDataTool.LoadFile(fileName);
+        WorldBuildings builds = new WorldBuildings();
+        builds.World = world;
+        if (json.Equals(string.Empty) == false)
+        {
+            builds = Newtonsoft.Json.JsonConvert.DeserializeObject<WorldBuildings>(json);
+            foreach (BuildingData data in builds.Datas)
+            {
+                this._datas[data._key] = data;
+                if (data._status == BuildingData.BuildingStatus.BUILD ||
+                    data._status == BuildingData.BuildingStatus.UPGRADE)
+                {
+                    this.AddOneTimeListener(data);
+                }
+            }
+        }
+        this.SendNotification(NotiDefine.GenerateMyBuildingResp, this._datas);
+    }
+
+    public void DoSaveLocalBuildings()
+    {
+        //存储
+        WorldBuildings script = new WorldBuildings();
+        script.World = this._World;
+        script.Datas = new List<BuildingData>();
+        foreach (BuildingData data in this._datas.Values)
+        {
+            script.Datas.Add(data);
+        }
+        string fileName = UtilTools.combine(SaveFileDefine.WorldBuiding, this._World);
+        CloudDataTool.SaveFile(fileName, script);
     }
 
     public BuildingData GetBuilding(string key)
@@ -127,17 +224,20 @@ public class BuildingProxy : BaseRemoteProxy
        
         //通知Land创建完成
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingResp, data);
+        this.DoSaveLocalBuildings();
     }
 
     public void Upgrade(string key)
     {
         BuildingData data = this.GetBuilding(key);
-        if (data == null || data._status != BuildingData.BuildingStatus.NORMAL || data._level >= data._config.MaxLevel)
+        BuildingConfig _config = BuildingConfig.Instance.GetData(data._id);
+        if (data == null || data._status != BuildingData.BuildingStatus.NORMAL || data._level >= _config.MaxLevel)
             return;
         data.SetStatus(BuildingData.BuildingStatus.UPGRADE);
         //通知时间中心添加一个监听
         this.AddOneTimeListener(data);
         MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
+        this.DoSaveLocalBuildings();
     }
 
     public void CancelUpgrade(string key)
@@ -160,6 +260,7 @@ public class BuildingProxy : BaseRemoteProxy
             data.SetStatus(BuildingData.BuildingStatus.NORMAL);
             MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
         }
+        this.DoSaveLocalBuildings();
     }
 
     public void Relocate(Dictionary<string, object> vo)
@@ -173,6 +274,7 @@ public class BuildingProxy : BaseRemoteProxy
             data.SetCordinate(x, z);
             MediatorUtil.SendNotification(NotiDefine.BuildingRelocateResp, key);
         }
+        this.DoSaveLocalBuildings();
     }
 
     public void OnBuildExpireFinsih(string key)
@@ -188,6 +290,7 @@ public class BuildingProxy : BaseRemoteProxy
         
         data.SetStatus(BuildingData.BuildingStatus.NORMAL);
         this.SendNotification(NotiDefine.BuildingStatusChanged, key);
+        this.DoSaveLocalBuildings();
     }
 
 
