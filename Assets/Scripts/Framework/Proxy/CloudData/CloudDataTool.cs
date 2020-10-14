@@ -26,7 +26,7 @@ public class CloudDataTool
         string jsonPath = Application.persistentDataPath + "/" + filename + ".json";
         string content = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
 
-        StreamWriter streamWriter;
+     /*   StreamWriter streamWriter;
         FileStream fileStream;
         if (File.Exists(jsonPath))
             File.Delete(jsonPath);
@@ -34,11 +34,20 @@ public class CloudDataTool
         streamWriter = new StreamWriter(fileStream);
         streamWriter.Write(content);
         streamWriter.Close();
+     */
+        //同步云端
+        UIRoot.Intance.SaveToCloud(filename, content);
     }
 
     public static string LoadFile(string filename)
     {
-        string path = Application.persistentDataPath + "/" + filename + ".json";
+        //直接从云端读取
+
+        string str = UIRoot.Intance.LoadCloudData(filename);
+        if (str == null)
+            return string.Empty;
+        return str;
+        /*string path = Application.persistentDataPath + "/" + filename + ".json";
         if (!File.Exists(path))
             return string.Empty;
 
@@ -47,6 +56,7 @@ public class CloudDataTool
         reader.Close();
         reader.Dispose();
         return jsonData;
+        */
     }
 }
 

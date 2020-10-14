@@ -280,6 +280,9 @@
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>E:/CS/CS/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Data.Sqlite">
+      <HintPath>E:/CS/CS/Library/PackageCache/com.unity.cloudsave@1.0.0-preview.2/Plugins/Mono.Data.Sqlite.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>E:/CS/CS/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
@@ -723,6 +726,9 @@
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>E:/CS/CS/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CloudSave">
+      <HintPath>E:/CS/CS/Library/ScriptAssemblies/UnityEngine.CloudSave.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

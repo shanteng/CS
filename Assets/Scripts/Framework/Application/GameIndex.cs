@@ -11,6 +11,7 @@ using System;
 
 public class GameIndex : MonoBehaviour
 {
+    public static string UID = "";
     private static long _serverTime;
     private static long _serverTimeOnSync;
     private static float _gameTimeOnServertime;
@@ -46,7 +47,7 @@ public class GameIndex : MonoBehaviour
 
     private  void ShowLogin()
     {
-        MediatorUtil.ShowMediator(MediatorDefine.LOGIN);
+        //MediatorUtil.ShowMediator(MediatorDefine.LOGIN);
     }
 
     private void InitMvc()

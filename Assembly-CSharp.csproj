@@ -63,6 +63,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Samples\Cloud Save\1.0.0-preview.2\CloudSave Sample\Assets\Scripts\CloudSaveSample.cs" />
+    <Compile Include="Assets\Samples\Cloud Save\1.0.0-preview.2\CloudSave Sample\Assets\Scripts\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Config\ExcelToJsonTool.cs" />
     <Compile Include="Assets\Scripts\Config\ExcelToJsonToolEditor.cs" />
     <Compile Include="Assets\Scripts\Config\JsonDefineClass.cs" />
@@ -361,6 +363,9 @@
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>E:/CS/CS/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.Sqlite">
+      <HintPath>E:/CS/CS/Library/PackageCache/com.unity.cloudsave@1.0.0-preview.2/Plugins/Mono.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -796,6 +801,9 @@
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>E:/CS/CS/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CloudSave">
+      <HintPath>E:/CS/CS/Library/ScriptAssemblies/UnityEngine.CloudSave.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
