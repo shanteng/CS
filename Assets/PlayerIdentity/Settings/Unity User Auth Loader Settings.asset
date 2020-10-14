@@ -16,7 +16,7 @@ MonoBehaviour:
   m_oauthClientId: 2ae77088-8202-4f67-9177-9b7d8b90f019
   m_oauthScopes: openid offline identity.user
   m_apiBaseUrl: https://identity-api.unity.cn
-  m_autoCreateAnonymousUser: 1
+  m_autoCreateAnonymousUser: 0
   m_persistRefreshToken: 1
   m_refreshTokenPersistKey: UnityPlayerIdentity.refreshToken
   m_anonymousTokenPersistKey: UnityPlayerIdentity.anonymousToken

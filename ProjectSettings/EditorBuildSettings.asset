@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: 
     guid: 00000000000000000000000000000000
   m_configObjects:
-    com.unity.playerid.apple_loader: {fileID: 11400000, guid: 268fdcebf64e9b849819c7700eaec7f3,
+    com.unity.playerid.apple_loader: {fileID: 11400000, guid: 2f38897a78a12ed41a074872e3941bf6,
       type: 2}
     com.unity.playerid.management.loader_settings: {fileID: 11400000, guid: 428f01227ed4e1f4fb1ae192ff7b769f,
       type: 2}
