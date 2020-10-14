@@ -88,6 +88,7 @@ public class Building : MonoBehaviour
         HomeLandManager.GetInstance().HideInfoCanvas();
         this._isDrag = true;
         HomeLandManager.GetInstance().SetDraging(true);
+        HomeLandManager.GetInstance().SetQuadVisible(true);
         _screenSpace = Camera.main.WorldToScreenPoint(this.transform.position);
         _beginPos = this.transform.position;
         this._basePlane.gameObject.SetActive(true);
@@ -139,6 +140,7 @@ public class Building : MonoBehaviour
         {
             //通知Proxy改变位置
             this.RelocateToProxy((int)this.transform.position.x, (int)this.transform.position.z);
+            HomeLandManager.GetInstance().SetQuadVisible(false);
         }
     }
 
@@ -147,6 +149,7 @@ public class Building : MonoBehaviour
         //结束拖拽，重新设置位置
         this._basePlane.gameObject.SetActive(false);
         this.transform.position = new Vector3(this._data._cordinate.x, 1, this._data._cordinate.y);//恢复层级
+        HomeLandManager.GetInstance().SetQuadVisible(false);
     }
 
     public void SetSelect(bool isSelect)

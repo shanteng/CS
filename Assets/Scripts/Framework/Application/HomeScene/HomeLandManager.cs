@@ -11,6 +11,8 @@ public class HomeLandManager : MonoBehaviour
     private WorldConfig _config;
     public int World = 1;
     public Transform _HomePlane;
+    public GameObject _Quad;
+    private MeshRenderer _QuadRender;
     public List<SpotCube> _spotPrefabs;
     public CountDownCanvas _coundPrefabs;
     public BuildCanvas _buildPrefabs;
@@ -45,6 +47,8 @@ public class HomeLandManager : MonoBehaviour
         {
             this._BuildPrefabDic[bd.name] = bd;
         }
+        this._QuadRender = this._Quad.GetComponent<MeshRenderer>();
+        this._Quad.SetActive(false);
     }
 
 
@@ -311,6 +315,12 @@ public class HomeLandManager : MonoBehaviour
     public void SetDraging(bool isd)
     {
         this._isDraging = isd;
+        
+    }
+
+    public void SetQuadVisible(bool show)
+    {
+        this._Quad.SetActive(show);
     }
 
     public  bool IsDraging => _isDraging;
@@ -348,8 +358,16 @@ public class HomeLandManager : MonoBehaviour
         float row = (float)this._config.RowCount / 10f + 0.1f;
         float col = (float)this._config.ColCount / 10f + 0.1f;
         this._HomePlane.localScale = new Vector3(row, 1, col);
+
+        int quadx = this._config.RowCount + 1;
+        int quady = this._config.ColCount + 1;
+
+        this._Quad.transform.localScale = new Vector3(quadx, quady, 1);
+        this._QuadRender.material.SetVector("_MainTex_ST", new Vector4(quadx, quady, 0, 0));
         MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo,this.World);
         MediatorUtil.SendNotification(NotiDefine.GenerateMyBuildingDo,this.World);
+
+        ViewControllerLocal.GetInstance().InitBorder(this._config.RowCount, this._config.ColCount);
     }
 
     private void CreateOneBuilding(BuildingData data)

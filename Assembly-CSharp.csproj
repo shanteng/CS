@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeLandManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeLandMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PlaneBase.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PlaneBuilder.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\SpotCube.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Login\LoginMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Login\LoginView.cs" />

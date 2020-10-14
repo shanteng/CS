@@ -164,4 +164,20 @@ public class UtilTools
         return false;
     }
 
+    public static bool IsFingerOverBuilding()
+    {
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+#if UNITY_EDITOR
+        pointerEventData.position = Input.mousePosition;
+#else
+        if (Input.touchCount > 0)
+            pointerEventData.position = Input.GetTouch(0).position;
+#endif
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        PhysicsRaycaster graphicRaycaster =Camera.main.gameObject.GetComponent<PhysicsRaycaster>();
+        graphicRaycaster.Raycast(pointerEventData, results);
+        return results.Count > 0;
+    }
+
 }

@@ -34,6 +34,7 @@ public class ViewControllerLocal : MonoBehaviour
 
 
     private bool _DoUpdateDrag = false;
+    private float CosDegreeValue;
 
     //记录两个手指的旧位置
     //记录上一次手机触摸位置判断用户是在左放大还是缩小手势
@@ -52,6 +53,7 @@ public class ViewControllerLocal : MonoBehaviour
     void Awake()
     {
         instance = this;
+        CosDegreeValue =(1+ Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad));
     }
 
     void Start()
@@ -74,20 +76,20 @@ public class ViewControllerLocal : MonoBehaviour
 
     public void InitBorder(int row,int col)
     {
-        float halfRow = row / 2 + 5;//多显示5个范围
-        float halfCol = col / 2 + 5;//多显示5个范围
+        float halfRow = row / 2 + 50;//多显示5个范围
+        float halfCol = col / 2 + 50;//多显示5个范围
 
         this.rightBorder.transform.position = new Vector3(halfRow, 1, halfCol);
         this.topBorder.transform.position = new Vector3(-halfRow, 1, halfCol);
         this.leftBorder.transform.position = new Vector3(-halfRow, 1, -halfCol);
         this.bottomBorder.transform.position = new Vector3(halfRow, 1, -halfCol);
 
-
         this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
         this._yTopBorder = Camera.main.transform.InverseTransformPoint(topBorder.position).y;
 
         this._xLeftBorder = Camera.main.transform.InverseTransformPoint(leftBorder.position).x;
         this._yBottomBorder = Camera.main.transform.InverseTransformPoint(bottomBorder.position).y;
+
         this._curSize = this._maxSize;
         this.ComputeBorder();
     }
@@ -110,9 +112,12 @@ public class ViewControllerLocal : MonoBehaviour
         this._xMax = localMoveOffset > 0 ? localMoveOffset : 0;
         this._xMin = this._xLeftBorder + halfWidth < 0 ? this._xLeftBorder + halfWidth : 0;
 
-        localMoveOffset = this._yTopBorder - halfHeight;
-        this._yMax = localMoveOffset > 0 ? localMoveOffset : 0;
-        this._yMin = this._yBottomBorder + halfHeight < 0 ? this._yBottomBorder + halfHeight : 0;
+        localMoveOffset = this._yTopBorder - this._yBottomBorder / 2;
+        //localMoveOffset = (this._yTopBorder  - halfHeight);
+        this._yMax = (localMoveOffset > 0 ? localMoveOffset : 0)/ (this._curSize/this._maxSize);
+        this._yMin = -_yMax;
+        //localMoveOffset = (this._yBottomBorder + halfHeight);
+        //this._yMin = localMoveOffset < 0 ? localMoveOffset : 0;
 
 #if UNITY_EDITOR
         this._realDragSpeed = this._speed * (this._curSize / this._maxSize);
@@ -121,16 +126,22 @@ public class ViewControllerLocal : MonoBehaviour
 #endif
     }
 
+    private bool _isOverBuilding = false;
     void Update()
     {
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
             this._DoUpdateDrag = true;
+            _isOverBuilding = UtilTools.IsFingerOverBuilding();
         }
         else if (Input.GetMouseButtonUp(0))
         {
             this._DoUpdateDrag = false;
+            if (HomeLandManager.GetInstance().IsDraging == false && _isOverBuilding == false)
+            {
+                HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
+            }
         }
 #endif
         if (HomeLandManager.GetInstance().IsDraging == false)
@@ -197,6 +208,7 @@ public class ViewControllerLocal : MonoBehaviour
 
     private void DoDrag(float xMove, float yMove)
     {
+        yMove = yMove;
         float endX = this._translateX + xMove;
         if (endX > this._xMax)
         {
@@ -220,6 +232,9 @@ public class ViewControllerLocal : MonoBehaviour
         this._translateX += xMove;
         this._translateY += yMove;
         transform.Translate(new Vector3(xMove, yMove, 0));
+        Vector3 pos = this.transform.position;
+        pos.y = 36;
+        this.transform.position = pos;
     }
     private float _translateX = 0;
     private float _translateY = 0;
