@@ -8,6 +8,7 @@
     public const string WINDOW_DO_DESTROY = "WINDOW_DO_DESTROY";
     public const string WINDOW_HAS_SHOW = "WINDOW_HAS_SHOW";
     public const string FULLSCREEN_WINDOW_SHOW = "FULLSCREEN_WINDOW_SHOW";
+    public const string GAME_RESET = "GAME_RESET";
 
     public const string OPEN_ = "OPEN_";
     public const string CLOSE_ = "CLOSE_";

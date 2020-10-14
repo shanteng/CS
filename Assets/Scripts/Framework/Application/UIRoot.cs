@@ -12,6 +12,7 @@ using UnityEngine.PlayerIdentity.UI;
 using UnityEngine.PlayerIdentity.Management;
 using UnityEngine.CloudSave;
 using Debug = UnityEngine.Debug;
+using UnityEngine.SceneManagement;
 
 public enum WindowLayer
 {
@@ -89,12 +90,10 @@ public class UIRoot : MonoBehaviour, ISyncCallback
 
     public void OnLogout()
     {
-        return;
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        //返回登录
+        MediatorUtil.SendNotification(NotiDefine.GAME_RESET);
+        GameObject.Destroy(this.camera.gameObject);
+        SceneManager.LoadScene(SceneDefine.GameIndex);
     }
 
 

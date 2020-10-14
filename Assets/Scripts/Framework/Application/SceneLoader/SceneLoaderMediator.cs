@@ -39,6 +39,7 @@ public class SceneLoaderMediator : BaseFullScreenWindowMediator<SceneLoaderView>
         }
     }//end func
 
+
     protected override void InitViewComponent(GameObject view)
     {
 

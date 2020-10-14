@@ -69,6 +69,7 @@ public abstract class BaseWindowMediator<T> : Mediator
         m_lInterestNotifications.Add(m_sShowNoity);
         m_lInterestNotifications.Add(m_sHideNoity);
         m_lInterestNotifications.Add(NotiDefine.FULLSCREEN_WINDOW_SHOW);
+        m_lInterestNotifications.Add(NotiDefine.GAME_RESET);
         InitListNotificationInterestsInner();
         m_lInterestNotifications.AddRange(this.m_HideNoHandleNotifations);
     }
@@ -93,6 +94,11 @@ public abstract class BaseWindowMediator<T> : Mediator
                 case NotiDefine.FULLSCREEN_WINDOW_SHOW:
                     {
                         OnFullScreenWindowShow(notification.Body);
+                    }
+                    break;
+                case NotiDefine.GAME_RESET:
+                    {
+                        this.DestroyWindow();
                     }
                     break;
             }

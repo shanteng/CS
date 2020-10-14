@@ -8,7 +8,9 @@ public delegate void ScreenClickHideDelegate();
 public class UIScreenHideHandler : UIBase
     ,IPointerClickHandler
 {
+    public GameObject _hideobj;
     private ScreenClickHideDelegate _listener;
+
 
     public void AddListener(ScreenClickHideDelegate ls)
     {
@@ -19,7 +21,7 @@ public class UIScreenHideHandler : UIBase
         if (this._listener != null)
             this._listener.Invoke();
         else
-            this.Hide();
+            this._hideobj.SetActive(false);
     }
 }
 

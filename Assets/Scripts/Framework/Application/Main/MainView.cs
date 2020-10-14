@@ -8,14 +8,19 @@ using UnityEngine.UI;
 public class MainView : MonoBehaviour
 {
     public UIButton _BtnBuild;
-    public Text _name;
-    public Text _Uid;
+    public UIButton _BtnSdk;
+
  
     void Start()
     {
         _BtnBuild.AddEvent(this.OnClickBuild);
-        this._name.text = PlayerIdentityManager.Current.userInfo.displayName;
-        this._Uid.text = PlayerIdentityManager.Current.userInfo.userId;
+        _BtnSdk.AddEvent(this.OnSdk);
+
+    }
+
+    private void OnSdk(UIButton btn)
+    {
+        UIRoot.Intance._SdkView.SetActive(true);
     }
 
     private void OnClickBuild(UIButton btn)

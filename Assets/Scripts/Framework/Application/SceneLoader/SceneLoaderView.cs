@@ -17,7 +17,7 @@ public class SceneLoaderView : MonoBehaviour
     
     void Awake()
     {
-        
+       // SceneManager.UnloadSceneAsync(scene);
     }
 
     public void LoadScene(string name)
