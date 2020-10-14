@@ -676,6 +676,24 @@
     <Reference Include="com.unity.multiplayer-hlapi.Runtime">
       <HintPath>E:/CS/CS/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Subsystem.Registration">
+      <HintPath>E:/CS/CS/Library/ScriptAssemblies/Unity.Subsystem.Registration.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PlayerIdentity">
+      <HintPath>E:/CS/CS/Library/ScriptAssemblies/UnityEngine.PlayerIdentity.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro.Editor">
+      <HintPath>E:/CS/CS/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.EditorCoroutines.Editor">
+      <HintPath>E:/CS/CS/Library/ScriptAssemblies/Unity.EditorCoroutines.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PlayerIdentity.Editor">
+      <HintPath>E:/CS/CS/Library/ScriptAssemblies/UnityEngine.PlayerIdentity.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>E:/CS/CS/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

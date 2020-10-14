@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.PlayerIdentity;
+using UnityEngine.PlayerIdentity.UI;
 
 public enum WindowLayer
 {
@@ -15,7 +17,7 @@ public enum WindowLayer
     Window,
     Popup,
     Tips,
-    Mask
+    Sdk
 
 }
 public class UIRoot : MonoBehaviour
@@ -26,6 +28,10 @@ public class UIRoot : MonoBehaviour
     private AudioSource _audioSource;
     public static string CurFullWindow = string.Empty;
 
+    public GameObject _SdkView;
+    public PlayerIdentityCore _sdkCore;
+    public MainController _sdkController;
+   
     public static UIRoot Intance { get; private set; }
     void Awake()
     {

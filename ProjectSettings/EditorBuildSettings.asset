@@ -17,9 +17,9 @@ EditorBuildSettings:
   m_configObjects:
     com.unity.playerid.apple_loader: {fileID: 11400000, guid: 268fdcebf64e9b849819c7700eaec7f3,
       type: 2}
-    com.unity.playerid.management.loader_settings: {fileID: 11400000, guid: 3632e3b35fa35104a9fdca27897bcae7,
+    com.unity.playerid.management.loader_settings: {fileID: 11400000, guid: 428f01227ed4e1f4fb1ae192ff7b769f,
       type: 2}
-    com.unity.playerid.unity_userauth_loader: {fileID: 11400000, guid: 083ea7eb81527e5479ad74d8b7afad06,
+    com.unity.playerid.unity_userauth_loader: {fileID: 11400000, guid: 89d9add55227a4547ac127a51869ec4e,
       type: 2}
     com.unity.playerid.wechat_loader: {fileID: 11400000, guid: 503cfa310b7fbc649a4c3571be5c0e99,
       type: 2}

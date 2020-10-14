@@ -154,7 +154,7 @@ public class UtilTools
             pointerEventData.position = Input.GetTouch(0).position;
 #endif
         List<RaycastResult> results = new List<RaycastResult>();
-        for (WindowLayer layer = WindowLayer.FullScreen; layer <= WindowLayer.Mask; ++layer)
+        for (WindowLayer layer = WindowLayer.FullScreen; layer <= WindowLayer.Sdk; ++layer)
         {
             GraphicRaycaster graphicRaycaster = UIRoot.Intance.GetLayer(layer).gameObject.GetComponent<GraphicRaycaster>();
             graphicRaycaster.Raycast(pointerEventData, results);
