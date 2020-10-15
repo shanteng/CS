@@ -17,21 +17,19 @@ public class ViewControllerLocal : MonoBehaviour
 
     public Transform rightBorder;
     public Transform topBorder;
-    public Transform leftBorder;
-    public Transform bottomBorder;
-
+  
 
     public float _maxSize = 21f;
     public float _minSize = 5f;
     private float _curSize = 21f;
+    public int _overShowCount = 50;
+    public float _constY = 36;
 
     //相机局部坐标系下Translate的范围
     private float _xRightBorder = 0;
     private float _yTopBorder = 0;
 
-    private float _xLeftBorder = 0;
-    private float _yBottomBorder = 0;
-
+  
 
     private bool _DoUpdateDrag = false;
     private float CosDegreeValue;
@@ -61,8 +59,6 @@ public class ViewControllerLocal : MonoBehaviour
         this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
         this._yTopBorder = Camera.main.transform.InverseTransformPoint(topBorder.position).y;
 
-        this._xLeftBorder = Camera.main.transform.InverseTransformPoint(leftBorder.position).x;
-        this._yBottomBorder = Camera.main.transform.InverseTransformPoint(bottomBorder.position).y;
         this._curSize = this._maxSize;
         this.ComputeBorder();
         Input.multiTouchEnabled = true;//开启多点触碰
@@ -74,23 +70,20 @@ public class ViewControllerLocal : MonoBehaviour
 #endif
     }
 
+   
     public void InitBorder(int row,int col)
     {
-        float halfRow = row / 2 + 50;//多显示5个范围
-        float halfCol = col / 2 + 50;//多显示5个范围
+        float halfRow = row / 2 + _overShowCount;//多显示5个范围
+        float halfCol = col / 2 + _overShowCount;//多显示5个范围
 
         this.rightBorder.transform.position = new Vector3(halfRow, 1, halfCol);
         this.topBorder.transform.position = new Vector3(-halfRow, 1, halfCol);
-        this.leftBorder.transform.position = new Vector3(-halfRow, 1, -halfCol);
-        this.bottomBorder.transform.position = new Vector3(halfRow, 1, -halfCol);
+     //   this.leftBorder.transform.position = new Vector3(-halfRow, 1, -halfCol);
+     //   this.bottomBorder.transform.position = new Vector3(halfRow, 1, -halfCol);
 
         this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
         this._yTopBorder = Camera.main.transform.InverseTransformPoint(topBorder.position).y;
 
-        this._xLeftBorder = Camera.main.transform.InverseTransformPoint(leftBorder.position).x;
-        this._yBottomBorder = Camera.main.transform.InverseTransformPoint(bottomBorder.position).y;
-
-        this._curSize = this._maxSize;
         this.ComputeBorder();
     }
 
@@ -110,11 +103,11 @@ public class ViewControllerLocal : MonoBehaviour
         //左右边界相机空间局部坐标
         float localMoveOffset = this._xRightBorder - halfWidth;
         this._xMax = localMoveOffset > 0 ? localMoveOffset : 0;
-        this._xMin = this._xLeftBorder + halfWidth < 0 ? this._xLeftBorder + halfWidth : 0;
+        this._xMin = -this._xMax;// this._xLeftBorder + halfWidth < 0 ? this._xLeftBorder + halfWidth : 0;
 
-        localMoveOffset = this._yTopBorder - this._yBottomBorder / 2;
-        //localMoveOffset = (this._yTopBorder  - halfHeight);
-        this._yMax = (localMoveOffset > 0 ? localMoveOffset : 0)/ (this._curSize/this._maxSize);
+
+        localMoveOffset = (this._yTopBorder - halfHeight) + _overShowCount + (this._maxSize - this._curSize);
+        this._yMax = localMoveOffset > 0 ? localMoveOffset : 0;
         this._yMin = -_yMax;
         //localMoveOffset = (this._yBottomBorder + halfHeight);
         //this._yMin = localMoveOffset < 0 ? localMoveOffset : 0;
@@ -208,7 +201,7 @@ public class ViewControllerLocal : MonoBehaviour
 
     private void DoDrag(float xMove, float yMove)
     {
-        yMove = yMove;
+        yMove = yMove * CosDegreeValue;
         float endX = this._translateX + xMove;
         if (endX > this._xMax)
         {
@@ -233,7 +226,7 @@ public class ViewControllerLocal : MonoBehaviour
         this._translateY += yMove;
         transform.Translate(new Vector3(xMove, yMove, 0));
         Vector3 pos = this.transform.position;
-        pos.y = 36;
+        pos.y = _constY;
         this.transform.position = pos;
     }
     private float _translateX = 0;
