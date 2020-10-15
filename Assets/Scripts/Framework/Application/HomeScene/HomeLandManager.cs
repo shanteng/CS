@@ -189,7 +189,7 @@ public class HomeLandManager : MonoBehaviour
         Building prefab;
         if (config == null || this._BuildPrefabDic.TryGetValue(config.Prefab, out prefab) == false)
             return null;
-        Building building = GameObject.Instantiate<Building>(prefab, new Vector3(x, 1.02f, z), Quaternion.identity, this.transform);
+        Building building = GameObject.Instantiate<Building>(prefab, new Vector3(x, Building.drag_offsety, z), Quaternion.identity, this.transform);
         building.SetRowCol(config.RowCount, config.ColCount);
         return building;
     }

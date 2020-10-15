@@ -10,7 +10,7 @@ public class CountDownCanvas : UIBase
     public Slider _progress;
     public Text _CDTxt;
 
-    private long _expire =0;
+    private long _expire = 0;
     private long _totleSces = 0;
     private Coroutine _curCor;
 
@@ -18,6 +18,13 @@ public class CountDownCanvas : UIBase
     {
         this._progress.wholeNumbers = true;
         this._progress.minValue = 0;
+    }
+
+    public void Stop()
+    {
+        this._expire = 0;
+        if (this._curCor != null)
+            this.StopCoroutine(_curCor);
     }
 
     public void DoCountDown(long expire,int totleSecs)

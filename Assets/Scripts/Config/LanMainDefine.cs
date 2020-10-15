@@ -7,5 +7,11 @@
     public const string BuildCD = "BuildCD";
     public const string HasBuild = "HasBuild";
     public const string BuildOpenCondition = "BuildOpenCondition";
+    public const string NameLv = "NameLv";
+
+    public const string OpEnter = "OpEnter";
+    public const string OpInfo = "OpInfo";
+    public const string OpUpgrade = "OpUpgrade";
+    public const string OpCancel = "OpCancel";
 }
 

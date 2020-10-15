@@ -10,6 +10,7 @@ public class Building : MonoBehaviour
     , IBeginDragHandler
     , IEndDragHandler
 {
+    public static float drag_offsety = 0.02f;
     public BuildingData _data;//从Proxy取到的引用
     [HideInInspector]
     public PlaneBase _flashBase;
@@ -43,6 +44,12 @@ public class Building : MonoBehaviour
     {
         this._flashBase.SetSize(row, col);
         this._occupyBase.localScale = new Vector3(row, col, 1);
+        float x = (float)(row - 1) / 2f;
+        float z = (float)(col - 1) / 2f;
+        Vector3 pos = new Vector3(x, 0.505f, z);
+        Vector3 pos2 = new Vector3(x, 0.51f, z);
+        this._occupyBase.transform.localPosition = pos;
+        this._flashBase.transform.localPosition = pos2;
     }
   
 
@@ -143,7 +150,7 @@ public class Building : MonoBehaviour
        // maxX = Mathf.Clamp((int)curPosition.x, 0, maxX);
        // maxZ = Mathf.Clamp((int)curPosition.z, 0, maxZ);
 
-        this.transform.position = new Vector3(curPosition.x, 1.02f, curPosition.z);
+        this.transform.position = new Vector3(curPosition.x, drag_offsety, curPosition.z);
         this.SetCanDoState((int)curPosition.x, (int)curPosition.z);
     }
 
@@ -168,7 +175,7 @@ public class Building : MonoBehaviour
     {
         //结束拖拽，重新设置位置
         this._flashBase.gameObject.SetActive(false);
-        this.transform.position = new Vector3(this._data._cordinate.x, 1, this._data._cordinate.y);//恢复层级
+        this.transform.position = new Vector3(this._data._cordinate.x, 0, this._data._cordinate.y);//恢复层级
         HomeLandManager.GetInstance().SetQuadVisible(false);
     }
 

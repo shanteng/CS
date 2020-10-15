@@ -4,49 +4,87 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+public enum OpType
+{
+    Enter=1,
+    Info,
+    Upgrade,
+    Cancel,
+}
+
+public class IntStrPair
+{
+    public OpType OpType;
+    public string BtnName;
+    public IntStrPair(OpType key, string value)
+    {
+        this.OpType = key;
+        this.BtnName = value;
+    }
+}
+
 
 public class InfoCanvas : UIBase
 {
-    public GameObject _Normal;
-    public UIButton _btnInfo;
-    public UIButton _btnUpgrade;
+    public Text _nameLv;
     public List<UIButton> _btnFunList;
-    private BuildingData _data;
-
-    public GameObject _BuildUpgrade;
     public CountDownCanvas _countDown;
-    public UIButton _btnCancel;
-
+    private BuildingData _data;
     private void Start()
     {
-        _btnInfo.AddEvent(this.OnClickInfo);
-        _btnUpgrade.AddEvent(this.OnClickUpgrade);
-        _btnCancel.AddEvent(this.OnCancel);
-
         foreach (UIButton btn in this._btnFunList)
         {
             btn.AddEvent(this.OnClickFun);
         }
-      
+    }
+
+    private void GetBtnList( out List<IntStrPair> btnTypeList)
+    {
+        btnTypeList = new List<IntStrPair>();
+        IntStrPair data = new IntStrPair(OpType.Info,LanguageConfig.GetLanguage(LanMainDefine.OpInfo));
+        btnTypeList.Add(data);
+
+        bool isBuildUp = this._data._status == BuildingData.BuildingStatus.BUILD ||
+           this._data._status == BuildingData.BuildingStatus.UPGRADE;
+        if (this._data._status == BuildingData.BuildingStatus.BUILD || this._data._status == BuildingData.BuildingStatus.UPGRADE)
+        {
+            data = new IntStrPair(OpType.Info, LanguageConfig.GetLanguage(LanMainDefine.OpCancel));
+            btnTypeList.Add(data);
+        }
+        else if(this._data._status == BuildingData.BuildingStatus.NORMAL)
+        {
+            data = new IntStrPair(OpType.Info, LanguageConfig.GetLanguage(LanMainDefine.OpUpgrade));
+            btnTypeList.Add(data);
+        }
     }
 
     public void SetBuildState(BuildingData data)
     {
         this._data = data;
-
-        bool isBuildUp = this._data._status == BuildingData.BuildingStatus.BUILD ||
-           this._data._status == BuildingData.BuildingStatus.UPGRADE;
-
-        this._Normal.SetActive(data._status == BuildingData.BuildingStatus.NORMAL);
-        this._BuildUpgrade.SetActive(isBuildUp);
-
-        if (this._data._status == BuildingData.BuildingStatus.NORMAL)
+        BuildingConfig config = BuildingConfig.Instance.GetData(this._data._id);
+        if (this._data._status == BuildingData.BuildingStatus.BUILD)
         {
-            this.SetNormal();
+            this._nameLv.text = config.Name;
         }
-        else if (isBuildUp)
+        else
+        {
+            this._nameLv.text = LanguageConfig.GetLanguage(LanMainDefine.NameLv, config.Name, this._data._level);
+        }
+
+
+        List<IntStrPair> btnTypeList;
+        this.GetBtnList(out btnTypeList);
+
+
+        bool isBuildUp = this._data._status == BuildingData.BuildingStatus.BUILD ||this._data._status == BuildingData.BuildingStatus.UPGRADE;
+        this._countDown.gameObject.SetActive(isBuildUp);
+        if (isBuildUp)
         {
             this.SetBuildUpgrade();
+        }
+        else
+        {
+            this._countDown.Stop();
         }
     }
 
@@ -55,15 +93,7 @@ public class InfoCanvas : UIBase
         this._countDown.DoCountDown(this._data._expireTime,this._data._UpgradeSecs);
     }
 
-    private void SetNormal()
-    {
-        
-    }
-
-    private void OnClickInfo(UIButton btn)
-    {
-      
-    }
+  
 
     private void OnClickUpgrade(UIButton btn)
     {
