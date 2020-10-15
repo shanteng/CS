@@ -10,7 +10,10 @@ public class Building : MonoBehaviour
     , IEndDragHandler
 {
     public BuildingData _data;//从Proxy取到的引用
-    public PlaneBase _basePlane;
+    public PlaneBase _flashBase;
+    public Transform _occupyBase;
+
+
     private ColorFlash _flash;
     private CountDownCanvas _cdUI;
     
@@ -25,8 +28,14 @@ public class Building : MonoBehaviour
     {
         this._flash = this.GetComponent<ColorFlash>();
         this._flash.Stop();
-        _basePlane.gameObject.SetActive(false);
+        _flashBase.gameObject.SetActive(false);
         CosDegreeValue = Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad);
+    }
+
+    public void SetRowCol(int row, int col)
+    {
+        this._flashBase.SetSize(row, col);
+        this._occupyBase.localScale = new Vector3(row, col, 1);
     }
   
 
@@ -57,14 +66,7 @@ public class Building : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-       // if (this._cdUI != null)
-        {
-           // this._cdUI.transform.LookAt(Camera.main.transform);
-        }
-    }
-
+ 
     private void DoCountDown(long expire,int totle)
     {
         this._cdUI.DoCountDown(expire, totle);
@@ -91,7 +93,7 @@ public class Building : MonoBehaviour
         HomeLandManager.GetInstance().SetQuadVisible(true);
         _screenSpace = Camera.main.WorldToScreenPoint(this.transform.position);
         _beginPos = this.transform.position;
-        this._basePlane.gameObject.SetActive(true);
+        this._flashBase.gameObject.SetActive(true);
         this.SetCanDoState((int)this.transform.position.x, (int)this.transform.position.z);
     }
 
@@ -100,7 +102,7 @@ public class Building : MonoBehaviour
         BuildingConfig _config = BuildingConfig.Instance.GetData(this._data._id);
         bool canBuildHere = HomeLandManager.GetInstance().canBuildInSpot(this._data._key, newX, newZ, _config.RowCount, _config.ColCount);
         int index = canBuildHere ? 1 : 0;
-        this._basePlane.SetColorIndex(index);
+        this._flashBase.SetColorIndex(index);
 
         if (this._data._status == BuildingData.BuildingStatus.INIT)
             HomeLandManager.GetInstance().SetBuildCanvasState(canBuildHere);
@@ -147,7 +149,7 @@ public class Building : MonoBehaviour
     private void EndRelocate()
     {
         //结束拖拽，重新设置位置
-        this._basePlane.gameObject.SetActive(false);
+        this._flashBase.gameObject.SetActive(false);
         this.transform.position = new Vector3(this._data._cordinate.x, 1, this._data._cordinate.y);//恢复层级
         HomeLandManager.GetInstance().SetQuadVisible(false);
     }

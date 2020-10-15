@@ -190,6 +190,7 @@ public class HomeLandManager : MonoBehaviour
         if (config == null || this._BuildPrefabDic.TryGetValue(config.Prefab, out prefab) == false)
             return null;
         Building building = GameObject.Instantiate<Building>(prefab, new Vector3(x, 1.02f, z), Quaternion.identity, this.transform);
+        building.SetRowCol(config.RowCount, config.ColCount);
         return building;
     }
   
@@ -205,7 +206,7 @@ public class HomeLandManager : MonoBehaviour
         building._data.Create(configid, x, z);
         building.SetCurrentState();
         building.SetSelect(true);
-        building._basePlane.gameObject.SetActive(true);
+        building._flashBase.gameObject.SetActive(true);
         
         if (this._BuildCanvas == null)
             this._BuildCanvas = GameObject.Instantiate<BuildCanvas>(this._buildPrefabs, Vector3.zero, Quaternion.identity, this.transform);
@@ -364,6 +365,8 @@ public class HomeLandManager : MonoBehaviour
 
         this._Quad.transform.localScale = new Vector3(quadx, quady, 1);
         this._QuadRender.material.SetVector("_MainTex_ST", new Vector4(quadx, quady, 0, 0));
+
+
         MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo,this.World);
         MediatorUtil.SendNotification(NotiDefine.GenerateMyBuildingDo,this.World);
 

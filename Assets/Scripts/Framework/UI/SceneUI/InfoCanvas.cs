@@ -57,20 +57,7 @@ public class InfoCanvas : UIBase
 
     private void SetNormal()
     {
-        BuildingConfig _config = BuildingConfig.Instance.GetData(_data._id);
-        int count = this._btnFunList.Count;
-        int extraCount = _config.ExtraFuns.Length;
-        for (int i = 0; i < count; ++i)
-        {
-            if (i >= extraCount)
-            {
-                this._btnFunList[i].Hide();
-                continue;
-            }
-            this._btnFunList[i].Show();
-            this._btnFunList[i].Label.text = _config.ExtraFuns[i].ToString();
-            this._btnFunList[i]._param._value = _config.ExtraFuns[i];
-        }
+        
     }
 
     private void OnClickInfo(UIButton btn)

@@ -16,7 +16,7 @@ public enum JsonKeyType
 public class JsonNameDefine
 {
     public static string Main = "Main";
-    public static string Item = "Item";
+    public static string ItemInfo = "ItemInfo";
     public static string Building = "Building";
     public static string BuildingUpgrade = "BuildingUpgrade";
     public static string World = "World";
@@ -39,23 +39,19 @@ public class LanguageConfig : Config<LanguageConfig>
     public LanguageConfig() : base(JsonNameDefine.Main, JsonKeyType.STRING) { }
 }
 
-public class LanguageItemConfig : Config<LanguageItemConfig>
-{
-    public string Name;
-    public string[] StringLists;
-    public int[] IntLists;
-    public LanguageItemConfig() : base(JsonNameDefine.Item) { }
-}
 
 public class BuildingConfig : Config<BuildingConfig>
 {
     public string Prefab;
+    public string AddType;
     public string Name;
     public string Desc;
+    public int[] Condition;
     public int MaxLevel;
     public int RowCount;
     public int ColCount;
-    public int[] ExtraFuns;
+    public int BuildMax;
+    public int CanBuildOutSide;
 
     public BuildingConfig() : base(JsonNameDefine.Building) { }
 }
@@ -66,7 +62,9 @@ public class BuildingUpgradeConfig : Config<BuildingUpgradeConfig>
     public int Level;//
     public int NeedTime;//升级所需时间
     public int Durability;//耐久度
-
+    public string[] Cost;
+    public int Power;//
+    public string[] AddValues;
     public BuildingUpgradeConfig() : base(JsonNameDefine.BuildingUpgrade) { }
 
     public static BuildingUpgradeConfig GetConfig(int id, int level)
@@ -89,6 +87,17 @@ public class WorldConfig : Config<WorldConfig>
 
 
     public WorldConfig() : base(JsonNameDefine.World) { }
+}
+
+public class ItemInfoConfig : Config<ItemInfoConfig>
+{
+    public string Name;//Id
+    public string Desc;//
+    public int Type;//升级所需时间
+    public int Quality;//耐久度
+    public string[] Values;
+    public ItemInfoConfig() : base(JsonNameDefine.ItemInfo) { }
+
 }
 #endregion
 

@@ -5,29 +5,24 @@ using UnityEngine.EventSystems;
 
 public class PlaneBase : MonoBehaviour
 {
-    private List<MeshRenderer> _allRenders;
+    private MeshRenderer _render;
     public List<Color> _colors;
   
 
     void Awake()
     {
-        _allRenders = new List<MeshRenderer>();
-        int count = this.transform.childCount;
-        for (int i = 0; i < count; ++i)
-        {
-            MeshRenderer render = this.transform.GetChild(i).GetComponent<MeshRenderer>();
-            if (render == null)
-                continue;
-            _allRenders.Add(render);
-        }
+        _render = this.transform.GetComponent<MeshRenderer>();
     }
 
+    public void SetSize(int row, int col)
+    {
+        this.transform.localScale = new Vector3(row, col, 1);
+        this._render.material.SetVector("_MainTex_ST", new Vector4(row, col, 0, 0));
+
+    }
 
     public void SetColorIndex(int index)
     {
-        foreach (MeshRenderer render in this._allRenders)
-        {
-            render.material.color = this._colors[index];
-        }
+        _render.material.color = this._colors[index];
     }
 }

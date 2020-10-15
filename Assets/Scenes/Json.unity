@@ -168,7 +168,6 @@ MonoBehaviour:
   - name: Language
     sheets:
     - Main
-    - Item
   - name: Building
     sheets:
     - Building
@@ -176,3 +175,6 @@ MonoBehaviour:
   - name: World
     sheets:
     - World
+  - name: ItemInfo
+    sheets:
+    - ItemInfo
