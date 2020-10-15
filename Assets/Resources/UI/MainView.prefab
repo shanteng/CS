@@ -331,8 +331,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _param:
     _key: 
-  _btnFunList: []
-  _countDown: {fileID: 0}
+  _nameLv: {fileID: 3343517070770306267}
+  _btnFunList:
+  - {fileID: 2573699205426311939}
+  - {fileID: 3931193565719697498}
+  - {fileID: 8911935471673583911}
+  - {fileID: 5841126566570937795}
+  - {fileID: 1641156092047316337}
+  _countDown: {fileID: 1394622630180166885}
 --- !u!222 &811280725115473006
 CanvasRenderer:
   m_ObjectHideFlags: 0

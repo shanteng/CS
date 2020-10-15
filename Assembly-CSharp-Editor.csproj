@@ -283,6 +283,21 @@
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>E:/CS/CS/Library/PackageCache/com.unity.cloudsave@1.0.0-preview.2/Plugins/Mono.Data.Sqlite.dll</HintPath>
     </Reference>
+    <Reference Include="DOTween43">
+      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween43.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTweenEditor">
+      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/Editor/DOTweenEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween50">
+      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween50.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween46">
+      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween46.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>E:/CS/CS/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
