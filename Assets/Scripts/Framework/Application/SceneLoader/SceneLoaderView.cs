@@ -60,7 +60,7 @@ public class SceneLoaderView : MonoBehaviour
     {
         this._SceneSlider.value = progress;
         float showValue = this._SceneSlider.value * 100f;
-        string strProgress = UtilTools.GetLanguage(LanMainDefine.Percent,showValue);
+        string strProgress = LanguageConfig.GetLanguage(LanMainDefine.Percent,showValue);
         _ProgressText.text = strProgress;
     }
 

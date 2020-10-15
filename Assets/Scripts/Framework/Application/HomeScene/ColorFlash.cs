@@ -6,8 +6,6 @@ using UnityEngine.EventSystems;
 public class ColorFlash : MonoBehaviour
 {
     private List<MeshRenderer> _allRenders;
-    public List<MeshRenderer> _ignorls;
-
     public Color _EndColor;
     public float _Speed = 1f;
     private Color _curColor;
@@ -29,8 +27,6 @@ public class ColorFlash : MonoBehaviour
         {
             MeshRenderer render = this.transform.GetChild(i).GetComponent<MeshRenderer>();
             if (render == null)
-                continue;
-            if (this._ignorls.Contains(render))
                 continue;
             _allRenders.Add(render);
         }

@@ -96,6 +96,17 @@ public class UIRoot : MonoBehaviour, ISyncCallback
         SceneManager.LoadScene(SceneDefine.GameIndex);
     }
 
+    public void WipeOut()
+    {
+       // CloudSave.WipeOut();
+       List<Record> list = (List<Record>)this.characterInfo.GetAllRecords();
+        int count = list.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            characterInfo.Put(list[i].Key, "");
+        }
+        characterInfo.SynchronizeOnConnectivityAsync(this);
+    }
 
     public void SaveToCloud(string jsonName,string jsonStr)
     {

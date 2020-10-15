@@ -21,6 +21,8 @@ public class BuildCenterView : MonoBehaviour
 
         foreach (BuildingConfig config in dic.Values)
         {
+            if (config.BuildMax == 0)
+                continue;
             BuidItemData data = new BuidItemData(config);
             this._hGrid.Data.Add(data);
         }

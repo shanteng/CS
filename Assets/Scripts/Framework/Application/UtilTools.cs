@@ -71,6 +71,31 @@ public class UtilTools
         }
     }
 
+    public static int ParseInt(string data)
+    {
+        if (data.Length == 0)
+            return 0;
+        int val = 0;
+        if (int.TryParse(data, out val) == false)
+        {
+            return 0;
+        }
+        return val;
+    }
+
+    public static float ParseFloat(string data)
+    {
+        if (data.Length == 0)
+            return 0;
+
+        float val = 0;
+        if (float.TryParse(data, out val) == false)
+        {
+            return 0;
+        }
+        return val;
+    }
+
     public static string format(string template, params object[] paramStrs)
     {
         string value = template;
@@ -82,25 +107,26 @@ public class UtilTools
         return value;
     }
 
-    public static string GetLanguage(string key, params object[] paramName)
+    public static string NumberFormat(float nNum)
     {
-        LanguageConfig config = LanguageConfig.Instance.GetData(key);
-        if (config == null)
-            return "";
-        string valuestr = config.Value;
-        try
+        var sText = "";
+        if (nNum < 100000)
+            sText = nNum.ToString();
+        else if (nNum >= 100000 && nNum < 100000000)
         {
-            valuestr = string.Format(config.Value, paramName);
+            var wanNum = nNum / 10000;
+            var wanFloorStr = (float)Math.Round(wanNum, 1);
+            sText = LanguageConfig.GetLanguage(LanMainDefine.Wan, wanFloorStr);
         }
-        catch (Exception ex)
+        else if (nNum >= 100000000)
         {
-#if UNITY_EDITOR
-            UnityEngine.Debug.LogError(string.Format("LanguageConfig Key: {0} 参数数量不匹配", key));
-#endif
+            var yiNum = nNum / 100000000;
+            var yiFloor = (float)Math.Round(yiNum, 1);
+            sText = LanguageConfig.GetLanguage(LanMainDefine.Yi, yiFloor);
         }
-
-        return valuestr;
+        return sText;
     }
+
 
     public static bool IsFloatZero(float v)
     {
@@ -141,8 +167,12 @@ public class UtilTools
         var hour = leftsecs / 3600;
         var min = leftsecs % 3600 / 60;
         var sec = leftsecs % 60;
-        return $"{hour:D2}:{min:D2}:{sec:D2}";
+        if(hour > 0)
+            return $"{hour:D2}:{min:D2}:{sec:D2}";
+        return $"{min:D2}:{sec:D2}";
     }
+
+   
 
     public static  bool isFingerOverUI()
     {
@@ -180,4 +210,21 @@ public class UtilTools
         return results.Count > 0;
     }
 
+
+    public static void SetCostList(List<CostItem> items, string[] Costs)
+    {
+        int len = Costs.Length;
+        int count = items.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            if (i >= len)
+            {
+                items[i].Hide();
+                continue;
+            }
+            CostData data = new CostData(Costs[i]);
+            items[i].SetData(data);
+            items[i].Show();
+        }//end for
+    }//end func
 }

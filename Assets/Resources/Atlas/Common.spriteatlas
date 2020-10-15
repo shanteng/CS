@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Common
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 47
+      m_TextureCompression: 1
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 2
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    - serializedVersion: 3
+      m_BuildTarget: Standalone
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
+    totalSpriteSurfaceArea: 12516
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: c0498ec27046a984e829b5e1b3622200, type: 3}
+  - {fileID: 21300000, guid: a0f904930cbab7b41ad99da185e09f1f, type: 3}
+  - {fileID: 21300000, guid: 88da0326d6d9a2d49b27d82e8d3ad4fa, type: 3}
+  - {fileID: 21300000, guid: d1b8dfb6c60a1674c80a6bb2b045b449, type: 3}
+  - {fileID: 21300000, guid: 14734a38a783a894286fd5572a961253, type: 3}
+  - {fileID: 21300000, guid: 30c5988a6a4f4ec4da9dd7431c002265, type: 3}
+  - {fileID: 21300000, guid: eb243e7cc414d9d48a974d41a66bb77f, type: 3}
+  - {fileID: 21300000, guid: 3d28104f82469ae4cacc760fdefbba0a, type: 3}
+  - {fileID: 21300000, guid: e0a52d6fa30868f4db961e9a82b8f714, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - aps
+  - attack
+  - metal
+  - brute
+  - food
+  - gold
+  - stone
+  - defense
+  - wood
+  m_Tag: Common
+  m_IsVariant: 0

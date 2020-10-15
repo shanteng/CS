@@ -37,6 +37,25 @@ public class LanguageConfig : Config<LanguageConfig>
 {
     public string Value;
     public LanguageConfig() : base(JsonNameDefine.Main, JsonKeyType.STRING) { }
+    public static string GetLanguage(string key, params object[] paramName)
+    {
+        LanguageConfig config = LanguageConfig.Instance.GetData(key);
+        if (config == null)
+            return "";
+        string valuestr = config.Value;
+        try
+        {
+            valuestr = string.Format(config.Value, paramName);
+        }
+        catch (Exception ex)
+        {
+#if UNITY_EDITOR
+            UnityEngine.Debug.LogError(string.Format("LanguageConfig Key: {0} 参数数量不匹配", key));
+#endif
+        }
+
+        return valuestr;
+    }
 }
 
 
@@ -65,6 +84,7 @@ public class BuildingUpgradeConfig : Config<BuildingUpgradeConfig>
     public string[] Cost;
     public int Power;//
     public string[] AddValues;
+    public int[] Parts;
     public BuildingUpgradeConfig() : base(JsonNameDefine.BuildingUpgrade) { }
 
     public static BuildingUpgradeConfig GetConfig(int id, int level)

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,10 +11,11 @@ public class Building : MonoBehaviour
     , IEndDragHandler
 {
     public BuildingData _data;//从Proxy取到的引用
+    [HideInInspector]
     public PlaneBase _flashBase;
-    public Transform _occupyBase;
+    private Transform _occupyBase;
 
-
+    private Transform _BuildingTran; 
     private ColorFlash _flash;
     private CountDownCanvas _cdUI;
     
@@ -21,12 +23,17 @@ public class Building : MonoBehaviour
     private bool _isSelect = false;
     private bool _isDrag = false;
 
+    public List<GameObject> _levelParts;
+
 
     private Dictionary<string, object> vo = new Dictionary<string, object>();
 
     void Awake()
     {
-        this._flash = this.GetComponent<ColorFlash>();
+        _flashBase = this.transform.Find("FlashBase").GetComponent<PlaneBase>();
+        _occupyBase = this.transform.Find("OccupyBase");
+        _BuildingTran = this.transform.Find("Building");
+        this._flash = _BuildingTran.GetComponent<ColorFlash>();
         this._flash.Stop();
         _flashBase.gameObject.SetActive(false);
         CosDegreeValue = Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad);
@@ -64,9 +71,20 @@ public class Building : MonoBehaviour
         {
             this._cdUI.Hide();
         }
+
+        //设置显示parts
+        int level = this._data._level > 0 ? this._data._level : 1;
+        BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(this._data._id, level);
+        int length = configLevel.Parts.Length;
+        int count = this._levelParts.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            int partname = int.Parse(this._levelParts[i].name);
+            bool isshow = configLevel.Parts.Contains(partname);
+            this._levelParts[i].SetActive(isshow);
+        }
     }
 
- 
     private void DoCountDown(long expire,int totle)
     {
         this._cdUI.DoCountDown(expire, totle);

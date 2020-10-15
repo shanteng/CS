@@ -99,6 +99,8 @@ public class BuildingData
 //时间戳回调管理
 public class WorldProxy : BaseRemoteProxy
 {
+    public static WorldProxy _instance;
+
     public static WorldConfig _config;
     private  int _World;
     private Dictionary<string, BuildingData> _datas = new Dictionary<string, BuildingData>();
@@ -106,7 +108,19 @@ public class WorldProxy : BaseRemoteProxy
     
     public WorldProxy() : base(ProxyNameDefine.WORLD)
     {
-        
+        _instance = this;
+    }
+
+  
+
+    public bool IsBuildingOpen(int id)
+    {
+        return true;
+    }
+
+    public int GetBuildingCount(int id)
+    {
+        return 0;
     }
 
     public void GenerateAllBaseSpot(int world)
