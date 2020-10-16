@@ -19,7 +19,8 @@ public class Building : MonoBehaviour
     private Transform _BuildingTran; 
     private ColorFlash _flash;
     private CountDownCanvas _cdUI;
-    
+    private BuildingUI _Ui;
+
     private float CosDegreeValue;
     private bool _isSelect = false;
     private bool _isDrag = false;
@@ -53,11 +54,17 @@ public class Building : MonoBehaviour
     }
   
 
-    public void CreateUI(CountDownCanvas cdPrefabs)
+    public void CreateUI(BuildingUI prefabs,int id)
     {
-        _cdUI = GameObject.Instantiate<CountDownCanvas>(cdPrefabs, Vector3.zero, Quaternion.identity, this.transform);
-        _cdUI.transform.localPosition = Vector3.zero;
-        _cdUI.Hide();
+        this._Ui = GameObject.Instantiate<BuildingUI>(prefabs, Vector3.zero, Quaternion.identity, this.transform);
+        _Ui._CdUi.Hide();
+
+        BuildingConfig config = BuildingConfig.Instance.GetData(id);
+
+        int offset = config.RowCount - 2;
+        _Ui.transform.localPosition = new Vector3(0, 0, offset);
+        _Ui._CdUi.transform.Translate(new Vector3(0, -offset, 0), Space.Self);
+        this._Ui._NameTxt.text = config.Name;
     }
 
     public void SetCurrentState()
@@ -76,9 +83,10 @@ public class Building : MonoBehaviour
         }
         else if (this._data._status == BuildingData.BuildingStatus.NORMAL)
         {
-            this._cdUI.Hide();
+            this._Ui._CdUi.Hide();
         }
 
+        
         //设置显示parts
         int level = this._data._level > 0 ? this._data._level : 1;
         BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(this._data._id, level);
@@ -94,7 +102,8 @@ public class Building : MonoBehaviour
 
     private void DoCountDown(long expire,int totle)
     {
-        this._cdUI.DoCountDown(expire, totle);
+        this._Ui._CdUi.Show();
+        this._Ui._CdUi.DoCountDown(expire, totle);
     }
 
     public void RelocateToProxy(int x, int z)

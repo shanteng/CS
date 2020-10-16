@@ -10,13 +10,13 @@ public class HomeLandManager : MonoBehaviour
 
     private WorldConfig _config;
     public int World = 1;
-    public Transform _HomePlane;
-    public GameObject _Quad;
-    private MeshRenderer _QuadRender;
+    public MeshRenderer _HomePlane;
+    public MeshRenderer _QuadCanBuild;
+
     public List<SpotCube> _spotPrefabs;
-    public CountDownCanvas _coundPrefabs;
-    public BuildCanvas _buildPrefabs;
-   
+    public BuildingUI _uiPrefabs;
+    public BuildCanvas _BuildCanvas;
+
     public List<Building> _BuildPrefabs;
     private Dictionary<string, Building> _BuildPrefabDic;
 
@@ -29,7 +29,6 @@ public class HomeLandManager : MonoBehaviour
    // private Dictionary<string, SpotCube> _allSpotDic;//key格式x|y,存储当前所有的地块
     public bool isTryBuild => this._TryBuildScript != null;
     private Building _TryBuildScript;
-    private BuildCanvas _BuildCanvas;
     private InfoCanvas _infoCanvas;
 
     private static HomeLandManager instance;
@@ -46,14 +45,14 @@ public class HomeLandManager : MonoBehaviour
         {
             this._BuildPrefabDic[bd.name] = bd;
         }
-        this._QuadRender = this._Quad.GetComponent<MeshRenderer>();
-        this._Quad.SetActive(false);
+        
     }
 
 
     void Start()
     {
-    
+        this._BuildCanvas.Hide();
+      //  this._QuadCanBuild.gameObject.SetActive(false);
     }
 
 
@@ -110,7 +109,6 @@ public class HomeLandManager : MonoBehaviour
         Building building = _TryBuildScript;
         building._data = data;
         building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
-        building.CreateUI(this._coundPrefabs);
         building.SetCurrentState();
         this._AllBuildings.Add(data._key, building);
         this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
@@ -189,6 +187,7 @@ public class HomeLandManager : MonoBehaviour
         if (config == null || this._BuildPrefabDic.TryGetValue(config.Prefab, out prefab) == false)
             return null;
         Building building = GameObject.Instantiate<Building>(prefab, new Vector3(x, Building.drag_offsety, z), Quaternion.identity, this.transform);
+        building.CreateUI(this._uiPrefabs,configid);
         building.SetRowCol(config.RowCount, config.ColCount);
         return building;
     }
@@ -207,12 +206,10 @@ public class HomeLandManager : MonoBehaviour
         building.SetSelect(true);
         building._flashBase.gameObject.SetActive(true);
         
-        if (this._BuildCanvas == null)
-            this._BuildCanvas = GameObject.Instantiate<BuildCanvas>(this._buildPrefabs, Vector3.zero, Quaternion.identity, this.transform);
-        
 
         _BuildCanvas.transform.SetParent(building.transform);
-        _BuildCanvas.transform.localPosition = Vector3.zero;
+        int zOff = config.RowCount - 2;
+        _BuildCanvas.transform.localPosition = new Vector3(0, 0, zOff);
         _BuildCanvas.Show();
         _TryBuildScript = building;
         _TryBuildScript.SetCanDoState(x, z);
@@ -223,9 +220,12 @@ public class HomeLandManager : MonoBehaviour
         this._BuildCanvas.SetState(canBuild);
     }
 
- 
+
+
     public void ConfirmBuild(bool isBuild)
     {
+        if (this._TryBuildScript == null)
+            return;
         this._BuildCanvas.Hide();
         _BuildCanvas.transform.SetParent(this.transform);
         if (isBuild == false)
@@ -321,7 +321,7 @@ public class HomeLandManager : MonoBehaviour
 
     public void SetQuadVisible(bool show)
     {
-        this._Quad.SetActive(show);
+        //this._QuadCanBuild.gameObject.SetActive(show);
     }
 
     public  bool IsDraging => _isDraging;
@@ -356,15 +356,16 @@ public class HomeLandManager : MonoBehaviour
     public void InitScene()
     {
         this._config = WorldConfig.Instance.GetData(this.World);
-        float row = (float)this._config.RowCount / 10f + 0.1f;
-        float col = (float)this._config.ColCount / 10f + 0.1f;
-        this._HomePlane.localScale = new Vector3(row, 1, col);
+        int row = this._config.MaxRowCount + 1;
+        int col = this._config.MaxColCount + 1;
+        this._HomePlane.transform.localScale = new Vector3(row, col, 1);
+        this._HomePlane.material.SetVector("_MainTex_ST", new Vector4(row, col, 0, 0));
 
-        int quadx = this._config.RowCount + 1;
-        int quady = this._config.ColCount + 1;
 
-        this._Quad.transform.localScale = new Vector3(quadx, quady, 1);
-        this._QuadRender.material.SetVector("_MainTex_ST", new Vector4(quadx, quady, 0, 0));
+        row = this._config.RowCount + 1;
+        col = this._config.ColCount + 1;
+        this._QuadCanBuild.transform.localScale = new Vector3(row, col, 1);
+        this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(row, col, 0, 0));
 
 
         MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo,this.World);
@@ -379,7 +380,6 @@ public class HomeLandManager : MonoBehaviour
         Building building   = this.InitOneBuild(data._id, data._cordinate.x, data._cordinate.y);
         building._data = data;
         building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
-        building.CreateUI(this._coundPrefabs);
         building.SetCurrentState();
         this._AllBuildings.Add(data._key, building);
         this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);

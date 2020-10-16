@@ -1,1 +1,1 @@
-[{"ID":1,"Scene":"Home","Name":"初始世界","Desc":"描述","RowCount":50,"ColCount":50,"MaxRowCount":200,"MaxColCount":200}]
+[{"ID":1,"Scene":"Home","Name":"初始世界","Desc":"描述","RowCount":100,"ColCount":100,"MaxRowCount":1000,"MaxColCount":1000}]

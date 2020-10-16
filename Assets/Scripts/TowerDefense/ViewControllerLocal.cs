@@ -59,7 +59,7 @@ public class ViewControllerLocal : MonoBehaviour
         this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
         this._yTopBorder = Camera.main.transform.InverseTransformPoint(topBorder.position).y;
 
-        this._curSize = this._maxSize;
+        this._curSize = this._maxSize/2f;
         this.ComputeBorder();
         Input.multiTouchEnabled = true;//开启多点触碰
 
@@ -71,10 +71,10 @@ public class ViewControllerLocal : MonoBehaviour
     }
 
    
-    public void InitBorder(int row,int col)
+    public void InitBorder(int showRow,int showCol)
     {
-        float halfRow = row / 2 + _overShowCount;//多显示5个范围
-        float halfCol = col / 2 + _overShowCount;//多显示5个范围
+        float halfRow = showRow / 2 - _overShowCount;//多显示5个范围
+        float halfCol = showCol / 2 - _overShowCount;//多显示5个范围
 
         this.rightBorder.transform.position = new Vector3(halfRow, 1, halfCol);
         this.topBorder.transform.position = new Vector3(-halfRow, 1, halfCol);

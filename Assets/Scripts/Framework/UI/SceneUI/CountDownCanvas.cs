@@ -29,7 +29,6 @@ public class CountDownCanvas : UIBase
 
     public void DoCountDown(long expire,int totleSecs)
     {
-        this.Show();
         this._expire = expire;
         this._totleSces = totleSecs;
         this._progress.maxValue = this._totleSces;

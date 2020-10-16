@@ -25,6 +25,7 @@ public class MainView : MonoBehaviour
 
     private void OnClickBuild(UIButton btn)
     {
+        HomeLandManager.GetInstance().ConfirmBuild(false);
         MediatorUtil.ShowMediator(MediatorDefine.BUILD_CENTER);
     }
 }
