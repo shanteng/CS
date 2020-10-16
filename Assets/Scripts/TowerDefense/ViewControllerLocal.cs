@@ -21,7 +21,7 @@ public class ViewControllerLocal : MonoBehaviour
 
     public float _maxSize = 21f;
     public float _minSize = 5f;
-    private float _curSize = 21f;
+   
     public int _overShowCount = 50;
     public float _constY = 36;
 
@@ -33,7 +33,7 @@ public class ViewControllerLocal : MonoBehaviour
 
     private bool _DoUpdateDrag = false;
     private float CosDegreeValue;
-
+    private float SinDegreeValue;
     //记录两个手指的旧位置
     //记录上一次手机触摸位置判断用户是在左放大还是缩小手势
     private Vector2 oldPosition1;
@@ -47,20 +47,21 @@ public class ViewControllerLocal : MonoBehaviour
     {
         return instance;
     }
-    
+
+    float maxDesc;
+    float maxxiebian;
     void Awake()
     {
         instance = this;
         CosDegreeValue =(1+ Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad));
+        SinDegreeValue = Mathf.Sin(HomeLandManager.Degree * Mathf.Deg2Rad);
+
+        maxDesc = this._maxSize - this._minSize;
+        maxxiebian = maxDesc / SinDegreeValue;
     }
 
     void Start()
     {
-        this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
-        this._yTopBorder = Camera.main.transform.InverseTransformPoint(topBorder.position).y;
-
-        this._curSize = this._maxSize/2f;
-        this.ComputeBorder();
         Input.multiTouchEnabled = true;//开启多点触碰
 
 #if UNITY_EDITOR
@@ -73,6 +74,9 @@ public class ViewControllerLocal : MonoBehaviour
    
     public void InitBorder(int showRow,int showCol)
     {
+
+        Camera.main.orthographicSize = this._maxSize / 2f;
+
         float halfRow = showRow / 2 - _overShowCount;//多显示5个范围
         float halfCol = showCol / 2 - _overShowCount;//多显示5个范围
 
@@ -106,16 +110,20 @@ public class ViewControllerLocal : MonoBehaviour
         this._xMin = -this._xMax;// this._xLeftBorder + halfWidth < 0 ? this._xLeftBorder + halfWidth : 0;
 
 
-        localMoveOffset = (this._yTopBorder - halfHeight) + _overShowCount + (this._maxSize - this._curSize);
+        float desc = (this._maxSize - Camera.main.orthographicSize) / maxDesc * maxxiebian;
+        float xiebian = desc / SinDegreeValue;
+        float offset = halfHeight * SinDegreeValue + this._constY+ desc;
+        //Debug.LogError(offset);
+        localMoveOffset = (this._yTopBorder - halfHeight) + offset;// + (this._maxSize - Camera.main.orthographicSize);
         this._yMax = localMoveOffset > 0 ? localMoveOffset : 0;
         this._yMin = -_yMax;
         //localMoveOffset = (this._yBottomBorder + halfHeight);
         //this._yMin = localMoveOffset < 0 ? localMoveOffset : 0;
 
 #if UNITY_EDITOR
-        this._realDragSpeed = this._speed * (this._curSize / this._maxSize);
+        this._realDragSpeed = this._speed * (Camera.main.orthographicSize / this._maxSize);
 #else
-        this._realDragSpeed = this._speedMobile * (this._curSize / this._maxSize);
+        this._realDragSpeed = this._speedMobile * (Camera.main.orthographicSize / this._maxSize);
 #endif
     }
 
@@ -192,7 +200,6 @@ public class ViewControllerLocal : MonoBehaviour
             else if (aftersize < this._minSize)
                 aftersize = this._minSize;
             Camera.main.orthographicSize = aftersize;
-            this._curSize = aftersize;
             this.ComputeBorder();
             this.DoDrag(0, 0);
         }

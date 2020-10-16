@@ -98,6 +98,7 @@
     <Compile Include="Assets\Scripts\Framework\Commond\BuildingCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\ControllersInitializeCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\ModelsInitializeCommand.cs" />
+    <Compile Include="Assets\Scripts\Framework\Commond\RoleCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\StartupCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\TimeCenterCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\ViewsInitializeCommand.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Assets\Scripts\Framework\Mediator\BaseWindowMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\BaseProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\CloudData\CloudDataTool.cs" />
+    <Compile Include="Assets\Scripts\Framework\Proxy\RoleProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\TimeCenterProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\WorldProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\CostItem.cs" />

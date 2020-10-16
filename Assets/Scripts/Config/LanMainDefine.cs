@@ -15,3 +15,10 @@
     public const string OpCancel = "OpCancel";
 }
 
+public class ConstDefine
+{
+    public const string InitRes = "InitRes";
+    public const string InitOutCome = "InitOutCome";
+
+}
+

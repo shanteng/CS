@@ -117,16 +117,17 @@ public class ExcelToJsonToolEditor : Editor
                 string memberName = jsonFileds[j];
                 object value = null;
                 string classType = jclassTypes[j];
+                string str = collect[i][j].ToString();
                 switch (classType)
                 {
                     case "String":
                         value = Convert.ChangeType(collect[i][j], typeof(string));
                         break;
                     case "Int":
-                        value = Convert.ChangeType(collect[i][j], typeof(int));
+                        int valueint = UtilTools.ParseInt(str);
+                        value = Convert.ChangeType(valueint, typeof(int));
                         break;
                     case "ArrayInt":
-                        string str = collect[i][j].ToString();
                         if (str.Length > 0)
                         {
                             string[] strs = str.Split(',');
@@ -143,10 +144,9 @@ public class ExcelToJsonToolEditor : Editor
                         }
                         break;
                     case "ArrayString":
-                        string strString = collect[i][j].ToString();
-                        if (strString.Length > 0)
+                        if (str.Length > 0)
                         {
-                            value = strString.Split(',');
+                            value = str.Split(',');
                         }
                         else
                         {

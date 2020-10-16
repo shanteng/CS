@@ -178,3 +178,6 @@ MonoBehaviour:
   - name: ItemInfo
     sheets:
     - ItemInfo
+  - name: Const
+    sheets:
+    - Const

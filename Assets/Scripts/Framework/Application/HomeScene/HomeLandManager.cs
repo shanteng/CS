@@ -161,15 +161,22 @@ public class HomeLandManager : MonoBehaviour
 
     public void BuildInScreenCenterPos(int id)
     {
-        Vector3 screenSpace = Camera.main.WorldToScreenPoint(new Vector3(0, 1, 0));
-        Vector3 posScreen = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f, screenSpace.z));
-        Vector3 posScreenWorld = Camera.main.ScreenToWorldPoint(posScreen);
+       // Vector3 screenSpace = Camera.main.WorldToScreenPoint(new Vector3(0, 0, 0));
+        Vector3 posScreen = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(posScreen);//摄像机发射射线到屏幕点。
+        if (Physics.Raycast(ray, out hit))//射线发出并碰撞到外壳，那么手臂就应该朝向碰撞点
+        {
+            
+            int xCenter = Mathf.RoundToInt(hit.point.x);
+            int zCenter = Mathf.RoundToInt(hit.point.z);
+            this.TryBuild(id, xCenter, zCenter);//测试
+        }
+
+        // Vector3 posScreenWorld = Camera.main.ScreenToWorldPoint(posScreen);
 
 
-        Vector3 pos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, screenSpace.z));
-        int xCenter = Mathf.RoundToInt(pos.x);
-        int zCenter = Mathf.RoundToInt(pos.z);
-        this.TryBuild(id, xCenter, zCenter);//测试
+       
     }
    
 

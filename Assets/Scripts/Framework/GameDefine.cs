@@ -53,6 +53,9 @@
 
     public const string ShowBuildingInfo = "ShowBuildingInfo";
 
+    public const string LoadRoleDo = "LoadRoleDo";
+    public const string LoadRoleResp = "LoadRoleResp";
+
 }
 
 public enum MediatorDefine
@@ -70,6 +73,7 @@ class ProxyNameDefine
 {
     public const string TIME_CENTER = "TIME_CENTER";
     public const string WORLD = "WORLD";
+    public const string ROLE = "ROLE";
 }
 
 public class SceneDefine

@@ -8,7 +8,7 @@ public class CostData
     public string id;
     public int count;
 
-    public CostData(string keyValueStr)
+    public void Init(string keyValueStr)
     {
         string[] list = keyValueStr.Split(':');
         this.id = list[0];

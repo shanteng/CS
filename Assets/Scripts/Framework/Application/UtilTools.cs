@@ -222,7 +222,8 @@ public class UtilTools
                 items[i].Hide();
                 continue;
             }
-            CostData data = new CostData(Costs[i]);
+            CostData data = new CostData();
+            data.Init(Costs[i]);
             items[i].SetData(data);
             items[i].Show();
         }//end for

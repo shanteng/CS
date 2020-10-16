@@ -379,6 +379,7 @@ GameObject:
   - component: {fileID: 439608560}
   - component: {fileID: 439608559}
   - component: {fileID: 439608558}
+  - component: {fileID: 439608557}
   m_Layer: 0
   m_Name: QuadCanDo
   m_TagString: Untagged
@@ -386,6 +387,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &439608557
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439608556}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &439608558
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -441,8 +456,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 439608556}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.501, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.505, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -579,9 +594,9 @@ MonoBehaviour:
   _speedMobile: 2
   rightBorder: {fileID: 53471150}
   topBorder: {fileID: 1723419651}
-  _maxSize: 12
-  _minSize: 4
-  _overShowCount: 20
+  _maxSize: 10
+  _minSize: 3
+  _overShowCount: 0
   _constY: 36
 --- !u!114 &789876082
 MonoBehaviour:

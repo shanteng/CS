@@ -16,11 +16,8 @@ public class LoginView : MonoBehaviour
 
     private void OnClickStart(UIButton btn)
     {
-    //    string json = CloudDataTool.LoadFile("BuildingUpgrade");
-     //   List<BuildingUpgradeConfig> list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BuildingUpgradeConfig>>(json);
-    //    CloudDataTool.SaveFile("1231", list);
-   //     return;
-        MediatorUtil.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);
+        MediatorUtil.SendNotification(NotiDefine.LoadRoleDo);
+        //MediatorUtil.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);
     }
 
     private void OnClear(UIButton btn)

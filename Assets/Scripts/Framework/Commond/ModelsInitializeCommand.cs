@@ -9,5 +9,6 @@ public class ModelsInitializeCommand : SimpleCommand
     {
         Facade.RegisterProxy(new TimeCenterProxy());
         Facade.RegisterProxy(new WorldProxy());
+        Facade.RegisterProxy(new RoleProxy());
     }
 }

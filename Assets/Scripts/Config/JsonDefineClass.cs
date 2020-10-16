@@ -20,7 +20,7 @@ public class JsonNameDefine
     public static string Building = "Building";
     public static string BuildingUpgrade = "BuildingUpgrade";
     public static string World = "World";
-
+    public static string Const = "Const";
     public static JArray JsonRead(string name)
     {
         string json = "";
@@ -58,6 +58,15 @@ public class LanguageConfig : Config<LanguageConfig>
     }
 }
 
+public class ConstConfig : Config<ConstConfig>
+{
+    public string ValueString;
+    public int ValueInt;
+    public string[] StringValues;
+    public int[] IntValues;
+
+    public ConstConfig() : base(JsonNameDefine.Const, JsonKeyType.STRING) { }
+}
 
 public class BuildingConfig : Config<BuildingConfig>
 {
