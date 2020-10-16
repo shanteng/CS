@@ -19,6 +19,7 @@ public class ControllersInitializeCommand : SimpleCommand
         Facade.RegisterCommand(NotiDefine.BuildingRelocateDo, typeof(BuildingCommand));
         Facade.RegisterCommand(NotiDefine.BuildingCancelDo, typeof(BuildingCommand));
         Facade.RegisterCommand(NotiDefine.UpgradeOneBuildingDo, typeof(BuildingCommand));
+        Facade.RegisterCommand(NotiDefine.BuildingSpeedUpDo, typeof(BuildingCommand));
 
         Facade.RegisterCommand(NotiDefine.BuildingExpireReachedNoti, typeof(BuildingCommand));
     }

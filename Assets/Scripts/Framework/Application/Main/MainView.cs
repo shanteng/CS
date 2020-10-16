@@ -9,13 +9,13 @@ public class MainView : MonoBehaviour
 {
     public UIButton _BtnBuild;
     public UIButton _BtnSdk;
-
+    public InfoCanvas _InfoUI;
  
     void Start()
     {
         _BtnBuild.AddEvent(this.OnClickBuild);
         _BtnSdk.AddEvent(this.OnSdk);
-
+        this._InfoUI.gameObject.SetActive(false);
     }
 
     private void OnSdk(UIButton btn)

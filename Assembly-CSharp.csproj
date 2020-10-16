@@ -354,6 +354,18 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>E:/CS/CS/Assets/Plugins/ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="DOTween">
+      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween43">
+      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween43.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween46">
+      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween46.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween50">
+      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween50.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>E:/CS/CS/Assets/Plugins/Json/JsonNet/Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -368,18 +380,6 @@
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>E:/CS/CS/Library/PackageCache/com.unity.cloudsave@1.0.0-preview.2/Plugins/Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween43">
-      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween43.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween50">
-      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween50.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween46">
-      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween46.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween">
-      <HintPath>E:/CS/CS/Assets/Plugins/DOTween/DOTween.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

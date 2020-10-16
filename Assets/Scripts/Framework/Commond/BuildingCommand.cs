@@ -39,6 +39,11 @@ public class BuildingCommand : SimpleCommand
                     proxy.CancelUpgrade(notification.Body as string);
                     break;
                 }
+            case NotiDefine.BuildingSpeedUpDo:
+                {
+                    proxy.SpeedUpUpgrade(notification.Body as string);
+                    break;
+                }
             case NotiDefine.BuildingExpireReachedNoti:
                 {
                     proxy.OnBuildExpireFinsih(notification.Body as string);

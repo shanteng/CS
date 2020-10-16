@@ -160,6 +160,11 @@ public abstract class BaseWindowMediator<T> : Mediator
         this.SendNotification(NotiDefine.WINDOW_HAS_SHOW, this.MediatorName);
     }
 
+    public T GetView()
+    {
+        return this.m_view;
+    }
+
     protected void LoadViewComponent()
     {
         GameObject obj = ResourcesManager.Instance.LoadUIRes(viewResource());

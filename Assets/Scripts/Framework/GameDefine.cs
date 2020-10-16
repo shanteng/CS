@@ -38,6 +38,8 @@
     public const string TryBuildBuilding = "TryBuildBuilding";
 
     public const string BuildingCancelDo = "BuildingCancelDo";
+    public const string BuildingSpeedUpDo = "BuildingSpeedUpDo";
+
     public const string BuildingCancelUpgradeNoti = "BuildingCancelUpgradeNoti";
     public const string BuildingRemoveNoti = "BuildingRemoveNoti";
 
@@ -48,6 +50,8 @@
 
     public const string GenerateMyBuildingDo = "GenerateMyBuildingDo";
     public const string GenerateMyBuildingResp = "GenerateMyBuildingResp";
+
+    public const string ShowBuildingInfo = "ShowBuildingInfo";
 
 }
 

@@ -256,6 +256,19 @@ public class WorldProxy : BaseRemoteProxy
         this.DoSaveLocalBuildings();
     }
 
+    public void SpeedUpUpgrade(string key)
+    {
+        BuildingData data = this.GetBuilding(key);
+        if (data == null || data._status == BuildingData.BuildingStatus.NORMAL || data._status == BuildingData.BuildingStatus.BUILD)
+            return;
+        //时间中心去掉
+        MediatorUtil.SendNotification(NotiDefine.RemoveTimestepCallback, key);
+
+        data.SetStatus(BuildingData.BuildingStatus.NORMAL);
+        data.SetLevel(data._level + 1);
+        this.DoSaveLocalBuildings();
+        MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
+    }
     public void CancelUpgrade(string key)
     {
         BuildingData data = this.GetBuilding(key);

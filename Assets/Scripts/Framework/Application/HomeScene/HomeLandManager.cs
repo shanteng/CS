@@ -16,8 +16,7 @@ public class HomeLandManager : MonoBehaviour
     public List<SpotCube> _spotPrefabs;
     public CountDownCanvas _coundPrefabs;
     public BuildCanvas _buildPrefabs;
-    public InfoCanvas _infoPrefabs;
-
+   
     public List<Building> _BuildPrefabs;
     private Dictionary<string, Building> _BuildPrefabDic;
 
@@ -157,7 +156,7 @@ public class HomeLandManager : MonoBehaviour
     private Building GetBuilding(string key)
     {
         Building building;
-        if (this._AllBuildings.TryGetValue(key, out building))
+        if (this._AllBuildings != null && this._AllBuildings.TryGetValue(key, out building))
             return building;
         return null;
     }
@@ -257,7 +256,6 @@ public class HomeLandManager : MonoBehaviour
         if (this._infoCanvas != null)
         {
             _infoCanvas.Hide();
-            _infoCanvas.transform.SetParent(this.transform);
         }
     }
 
@@ -270,10 +268,12 @@ public class HomeLandManager : MonoBehaviour
         }
 
         if (this._infoCanvas == null)
-            this._infoCanvas = GameObject.Instantiate<InfoCanvas>(this._infoPrefabs, Vector3.zero, Quaternion.identity, this.transform);
+        {
+            string name = MediatorUtil.GetName(MediatorDefine.MAIN);
+            MainMediator mediator = ApplicationFacade.instance.RetrieveMediator(name) as MainMediator;
+            this._infoCanvas = mediator.GetView()._InfoUI;
+        }
         _infoCanvas.Show();
-        _infoCanvas.transform.SetParent(bd.transform);
-        _infoCanvas.transform.localPosition = Vector3.zero;
         _infoCanvas.SetBuildState(bd._data);
     }
 
