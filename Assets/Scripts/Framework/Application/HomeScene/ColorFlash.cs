@@ -5,12 +5,15 @@ using UnityEngine.EventSystems;
 
 public class ColorFlash : MonoBehaviour
 {
+    public Color _orignColor = Color.white;
+
     private List<MeshRenderer> _allRenders;
     public Color _EndColor;
     public float _Speed = 1f;
     private Color _curColor;
     private bool _isStart = false;
     private float _delatTime = 0;
+    
 
     private void Awake()
     {
@@ -21,6 +24,7 @@ public class ColorFlash : MonoBehaviour
     {
         if (this._allRenders != null)
             return;
+        _curColor = this._orignColor;
         _allRenders = new List<MeshRenderer>();
         int count = this.transform.childCount;
         for (int i = 0; i < count; ++i)
@@ -28,6 +32,7 @@ public class ColorFlash : MonoBehaviour
             MeshRenderer render = this.transform.GetChild(i).GetComponent<MeshRenderer>();
             if (render == null)
                 continue;
+            render.material.color = this._curColor;
             _allRenders.Add(render);
         }
     }
@@ -45,7 +50,7 @@ public class ColorFlash : MonoBehaviour
     {
         this.Init();
         this._isStart = false;
-        _curColor = Color.white;
+        _curColor = this._orignColor;
         this.SetColor();
     }
 
@@ -54,7 +59,7 @@ public class ColorFlash : MonoBehaviour
         if (this._isStart && this._allRenders != null)
         {
             this._delatTime += Time.deltaTime * this._Speed;
-            _curColor = Color.Lerp(Color.white, this._EndColor, Mathf.PingPong(this._delatTime, 1));
+            _curColor = Color.Lerp(this._orignColor, this._EndColor, Mathf.PingPong(this._delatTime, 1));
             this.SetColor();
         }
     }

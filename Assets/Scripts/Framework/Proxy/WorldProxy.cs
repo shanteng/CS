@@ -11,28 +11,13 @@ using UnityEngine;
 [Serializable]
 public class BuildingData
 {
+    public static int MainCityID = 1;
     public enum BuildingStatus
     {
         INIT = 0,//等待创建的状态
         NORMAL,
         BUILD,
         UPGRADE,
-    }
-
-    public class VInt2
-    {
-        public int x;
-        public int y;
-        public VInt2()
-        {
-            this.x = 0;
-            this.y = 0;
-        }
-        public VInt2(int xx, int yy)
-        {
-            this.x = xx;
-            this.y = yy;
-        }
     }
 
     public int _id;
@@ -102,25 +87,45 @@ public class WorldProxy : BaseRemoteProxy
     public static WorldProxy _instance;
 
     public static WorldConfig _config;
-    private  int _World;
+    private int _World;
     private Dictionary<string, BuildingData> _datas = new Dictionary<string, BuildingData>();
     private List<string> _canOperateSpots = new List<string>();//我可以操作的地块
-    
+
     public WorldProxy() : base(ProxyNameDefine.WORLD)
     {
         _instance = this;
     }
 
-  
+
+    public bool IsBuildingByOverLevel(int id, int level)
+    {
+        foreach (BuildingData data in this._datas.Values)
+        {
+            if (data._id == id && data._level >= level)
+                return true;
+        }
+        return false;
+    }
 
     public bool IsBuildingOpen(int id)
     {
-        return true;
+        BuildingConfig config = BuildingConfig.Instance.GetData(id);
+        if (config.Condition == null || config.Condition.Length == 0)
+            return true;
+
+        bool isOverLevel = this.IsBuildingByOverLevel(config.Condition[0], config.Condition[1]);
+        return isOverLevel;
     }
 
     public int GetBuildingCount(int id)
     {
-        return 0;
+        int count = 0;
+        foreach (BuildingData data in this._datas.Values)
+        {
+            if (data._id == id)
+                count++;
+        }
+        return count;
     }
 
     public void GenerateAllBaseSpot(int world)
@@ -129,6 +134,9 @@ public class WorldProxy : BaseRemoteProxy
         this._World = world;
         this._canOperateSpots.Clear();
         WorldProxy._config = WorldConfig.Instance.GetData(this._World);
+        GameIndex.ROW = WorldProxy._config.MaxRowCount;
+        GameIndex.COL = WorldProxy._config.MaxColCount;
+
 
         string fileName = UtilTools.combine(SaveFileDefine.WorldSpot, world);
         string json = CloudDataTool.LoadFile(fileName);
@@ -173,7 +181,20 @@ public class WorldProxy : BaseRemoteProxy
         string json = CloudDataTool.LoadFile(fileName);
         WorldBuildings builds = new WorldBuildings();
         builds.World = world;
-        if (json.Equals(string.Empty) == false)
+        if (json.Equals(string.Empty))
+        {
+            //构造一个主城
+            BuildingData mainCity = new BuildingData();
+            BuildingConfig config = BuildingConfig.Instance.GetData(BuildingData.MainCityID);
+            int posx = (config.RowCount - 1) / 2;
+            int posz = (config.ColCount - 1) / 2;
+            mainCity.Create(BuildingData.MainCityID, -posx, -posz);
+            mainCity.SetLevel(1);
+            mainCity.SetStatus(BuildingData.BuildingStatus.NORMAL);
+            this._datas.Add(mainCity._key, mainCity);
+            this.DoSaveLocalBuildings();
+        }
+        else
         {
             builds = Newtonsoft.Json.JsonConvert.DeserializeObject<WorldBuildings>(json);
             foreach (BuildingData data in builds.Datas)
@@ -187,6 +208,7 @@ public class WorldProxy : BaseRemoteProxy
             }
         }
         this.SendNotification(NotiDefine.GenerateMyBuildingResp, this._datas);
+        this.SendNotification(NotiDefine.InitOutComeDo);
     }
 
     public void DoSaveLocalBuildings()
@@ -201,6 +223,12 @@ public class WorldProxy : BaseRemoteProxy
         }
         string fileName = UtilTools.combine(SaveFileDefine.WorldBuiding, this._World);
         CloudDataTool.SaveFile(fileName, script);
+    }
+
+
+    public Dictionary<string, BuildingData> GetAllBuilding()
+    {
+        return this._datas;
     }
 
     public BuildingData GetBuilding(string key)

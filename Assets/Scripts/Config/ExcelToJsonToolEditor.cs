@@ -75,6 +75,7 @@ public class ExcelToJsonToolEditor : Editor
         catch (IOException e)
         {
             this._curFinishText = "请关闭Excel后再进行";
+            stream.Close();
             return false;
         }
 
@@ -89,6 +90,8 @@ public class ExcelToJsonToolEditor : Editor
             ReadSingleSheet(result.Tables[exSheet], savePath+exSheet+".json");
             this._curFinishText += "----转表:" + exSheet + ".json完成\n";
         }
+
+        stream.Close();
         return true;
     }
 

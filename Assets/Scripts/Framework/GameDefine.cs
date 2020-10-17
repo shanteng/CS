@@ -40,7 +40,7 @@
     public const string BuildingCancelDo = "BuildingCancelDo";
     public const string BuildingSpeedUpDo = "BuildingSpeedUpDo";
 
-    public const string BuildingCancelUpgradeNoti = "BuildingCancelUpgradeNoti";
+    
     public const string BuildingRemoveNoti = "BuildingRemoveNoti";
 
     public const string ConfirmBuild = "ConfirmBuild";
@@ -56,6 +56,17 @@
     public const string LoadRoleDo = "LoadRoleDo";
     public const string LoadRoleResp = "LoadRoleResp";
 
+    public const string InitOutComeDo = "InitOutComeDo";
+    public const string AcceptHourAwardDo = "AcceptHourAwardDo";
+    public const string IncomeHasUpdated = "IncomeHasUpdated";
+    public const string NumberValueHasUpdated = "NumberValueHasUpdated";
+
+}
+
+public enum ItemTypeDefine
+{
+    RES = 1,
+    DROP_BAG = 2,
 }
 
 public enum MediatorDefine
@@ -67,6 +78,22 @@ public enum MediatorDefine
     SCENE_LOADER,
     MAIN,
     BUILD_CENTER
+}
+
+public class VInt2
+{
+    public int x;
+    public int y;
+    public VInt2()
+    {
+        this.x = 0;
+        this.y = 0;
+    }
+    public VInt2(int xx, int yy)
+    {
+        this.x = xx;
+        this.y = yy;
+    }
 }
 
 class ProxyNameDefine
@@ -81,4 +108,21 @@ public class SceneDefine
     public const string World = "World";
     public const string Home = "Home";
     public const string GameIndex = "GameIndex";
+}
+
+public class ValueAddType
+{
+    public const string DayTax = "DayTax";
+    public const string StoreLimit = "StoreLimit";
+    public const string HourTax = "HourTax";
+    public const string World = "World";
+    public const string TroopAdd = "TroopAdd";
+    public const string ReserverLimit = "ReserverLimit";
+    public const string TroopCount = "TroopCount";
+    public const string RecruitSecs = "RecruitSecs";
+    public const string ElementAdd = "ElementAdd";
+    public const string AttributeAdd = "AttributeAdd";
+    public const string MarchSpeed = "MarchSpeed";
+    public const string Defense = "Defense";
+    public const string DeployCount = "DeployCount";
 }

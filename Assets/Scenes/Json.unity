@@ -167,7 +167,7 @@ MonoBehaviour:
   _Excels:
   - name: Language
     sheets:
-    - Main
+    - Language
   - name: Building
     sheets:
     - Building

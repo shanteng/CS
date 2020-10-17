@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\Main\BuidItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Main\BuildCenterMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Main\BuildCenterView.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Main\IncomeItem.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Main\MainMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Main\MainView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\DataCenterMediator.cs" />

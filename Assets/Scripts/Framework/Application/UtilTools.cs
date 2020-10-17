@@ -11,7 +11,7 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class UtilTools 
+public class UtilTools
 {
     public const float FloatPrecision = 0.0001f;
     public const float NFloatPrecision = -1 * FloatPrecision;
@@ -167,14 +167,14 @@ public class UtilTools
         var hour = leftsecs / 3600;
         var min = leftsecs % 3600 / 60;
         var sec = leftsecs % 60;
-        if(hour > 0)
+        if (hour > 0)
             return $"{hour:D2}:{min:D2}:{sec:D2}";
         return $"{min:D2}:{sec:D2}";
     }
 
-   
 
-    public static  bool isFingerOverUI()
+
+    public static bool isFingerOverUI()
     {
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
 #if UNITY_EDITOR
@@ -205,7 +205,7 @@ public class UtilTools
 #endif
 
         List<RaycastResult> results = new List<RaycastResult>();
-        PhysicsRaycaster graphicRaycaster =Camera.main.gameObject.GetComponent<PhysicsRaycaster>();
+        PhysicsRaycaster graphicRaycaster = Camera.main.gameObject.GetComponent<PhysicsRaycaster>();
         graphicRaycaster.Raycast(pointerEventData, results);
         return results.Count > 0;
     }
@@ -228,4 +228,21 @@ public class UtilTools
             items[i].Show();
         }//end for
     }//end func
+
+
+    public static VInt2 WorldToGameCordinate(int x, int z)
+    {
+        VInt2 kv = new VInt2();
+        kv.x = x + GameIndex.ROW / 2;
+        kv.y = z + GameIndex.COL / 2;
+        return kv;
+    }
+
+    public static VInt2 GameToWorldCordinate(int x, int z)
+    {
+        VInt2 kv = new VInt2();
+        kv.x = x - GameIndex.ROW / 2;
+        kv.y = z - GameIndex.COL / 2;
+        return kv;
+    }
 }

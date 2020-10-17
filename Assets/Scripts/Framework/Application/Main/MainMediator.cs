@@ -16,15 +16,18 @@ public class MainMediator : BaseWindowMediator<MainView>
 
     protected override void InitListNotificationInterestsInner()
     {
-        //_HideNoHandleNotifations.Add(NotiDefine.TEST_CALLBACK_NOTI);
+        this.m_HideNoHandleNotifations.Add(NotiDefine.NumberValueHasUpdated);
+        this.m_HideNoHandleNotifations.Add(NotiDefine.IncomeHasUpdated);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.TEST_CALLBACK_NOTI:
+            case NotiDefine.NumberValueHasUpdated:
+            case NotiDefine.IncomeHasUpdated:
                 {
+                    this.m_view.UpdateIncome();
                     break;
                 }
         }
@@ -37,7 +40,8 @@ public class MainMediator : BaseWindowMediator<MainView>
 
     protected override void DoInitializeInner()
     {
-
+        this.m_view.UpdateIncome();
+        this.m_view.SetName();
     }
 
 }//end class

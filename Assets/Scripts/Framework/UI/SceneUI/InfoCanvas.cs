@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-
+using TMPro;
 public enum OpType
 {
     Enter=1,
@@ -26,7 +26,8 @@ public class IntStrPair
 
 public class InfoCanvas : UIBase
 {
-    public Text _nameLv;
+    public Text _spotNameTxt;
+    public TextMeshProUGUI _cordinateTxt;
     public List<UIButton> _btnFunList;
 
     public GameObject _cdCon;
@@ -68,15 +69,20 @@ public class InfoCanvas : UIBase
     {
         this._data = data;
         BuildingConfig config = BuildingConfig.Instance.GetData(this._data._id);
+        string showName = "";
         if (this._data._status == BuildingData.BuildingStatus.BUILD)
         {
-            this._nameLv.text = config.Name;
+            showName = config.Name;
         }
         else
         {
-            this._nameLv.text = LanguageConfig.GetLanguage(LanMainDefine.NameLv, config.Name, this._data._level);
+            showName = LanguageConfig.GetLanguage(LanMainDefine.NameLv, config.Name, this._data._level);
         }
 
+        this._spotNameTxt.text = showName;
+
+        VInt2 kv = UtilTools.WorldToGameCordinate(this._data._cordinate.x, this._data._cordinate.y);
+        this._cordinateTxt.text = LanguageConfig.GetLanguage(LanMainDefine.SpotCordinate,kv.x,kv.y);
 
         List<IntStrPair> btnTypeList;
         this.GetBtnList(out btnTypeList);

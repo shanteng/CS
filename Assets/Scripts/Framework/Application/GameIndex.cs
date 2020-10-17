@@ -16,6 +16,9 @@ public class GameIndex : MonoBehaviour
     private static long _serverTimeOnSync;
     private static float _gameTimeOnServertime;
     public static long ServerTime => _serverTime;
+    public static int COL = 1000;
+    public static int ROW = 1000;
+
 
     void Awake()
     {

@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public class ItemKey
+{
+    public const string gold = "gold";
+    public const string food = "food";
+    public const string wood = "wood";
+    public const string metal = "metal";
+    public const string stone = "stone";
+};
+
 public class CostData
 {
     public string id;
@@ -14,6 +23,15 @@ public class CostData
         this.id = list[0];
         this.count = UtilTools.ParseInt(list[1]);
     }
+
+}
+
+public class HourAwardData
+{
+    public string id;
+    public int add_up_value;//当前已经累计量
+    public float base_secs_value;//每秒可产出的量
+    public long generate_time;//开始计算的时间
 }
 
 

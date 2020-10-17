@@ -33,8 +33,16 @@ public class BuildCenterView : MonoBehaviour
     {
         if (data._Key.Equals("BuidItemRender"))
         {
-            BuidItemData curdata = (BuidItemData)data;
-            MediatorUtil.SendNotification(NotiDefine.TryBuildBuilding, curdata._config.ID);
+            BuidItemData curData = (BuidItemData)data;
+            bool isOpen = WorldProxy._instance.IsBuildingOpen(curData._config.ID);
+            if (isOpen == false)
+                return;
+            
+            int count = WorldProxy._instance.GetBuildingCount(curData._config.ID);
+            if (count >= curData._config.BuildMax)
+                return;
+
+            MediatorUtil.SendNotification(NotiDefine.TryBuildBuilding, curData._config.ID);
             MediatorUtil.HideMediator(MediatorDefine.BUILD_CENTER);
         }
     }

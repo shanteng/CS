@@ -15,7 +15,7 @@ public enum JsonKeyType
 
 public class JsonNameDefine
 {
-    public static string Main = "Main";
+    public static string Language = "Language";
     public static string ItemInfo = "ItemInfo";
     public static string Building = "Building";
     public static string BuildingUpgrade = "BuildingUpgrade";
@@ -36,7 +36,7 @@ public class JsonNameDefine
 public class LanguageConfig : Config<LanguageConfig>
 {
     public string Value;
-    public LanguageConfig() : base(JsonNameDefine.Main, JsonKeyType.STRING) { }
+    public LanguageConfig() : base(JsonNameDefine.Language, JsonKeyType.STRING) { }
     public static string GetLanguage(string key, params object[] paramName)
     {
         LanguageConfig config = LanguageConfig.Instance.GetData(key);
@@ -60,12 +60,30 @@ public class LanguageConfig : Config<LanguageConfig>
 
 public class ConstConfig : Config<ConstConfig>
 {
-    public string ValueString;
-    public int ValueInt;
     public string[] StringValues;
     public int[] IntValues;
 
     public ConstConfig() : base(JsonNameDefine.Const, JsonKeyType.STRING) { }
+    public int ValueInt
+    {
+        get
+        {
+            if (this.IntValues.Length > 0)
+                return this.IntValues[0];
+            return 0;
+        }
+    }
+
+    public string ValueStr
+    {
+        get
+        {
+            if (this.StringValues.Length > 0)
+                return this.StringValues[0];
+            return "";
+        }
+    }
+
 }
 
 public class BuildingConfig : Config<BuildingConfig>
@@ -124,8 +142,9 @@ public class ItemInfoConfig : Config<ItemInfoConfig>
     public string Desc;//
     public int Type;//升级所需时间
     public int Quality;//耐久度
+    public int isMaxLimit;//
     public string[] Values;
-    public ItemInfoConfig() : base(JsonNameDefine.ItemInfo) { }
+    public ItemInfoConfig() : base(JsonNameDefine.ItemInfo,JsonKeyType.STRING) { }
 
 }
 #endregion

@@ -1,1 +1,1 @@
-[{"IDs":"InitRes","ValueString":"","ValueInt":0,"StringValues":["gold:1000","food:1000","stone:1000","wood:1000","metal:1000"],"IntValues":[]},{"IDs":"InitOutCome","ValueString":"","ValueInt":0,"StringValues":["gold:100","food:100","stone:100","wood:100","metal:100"],"IntValues":[]}]
+[{"IDs":"InitRes","StringValues":["gold:1000","food:1000","stone:1000","wood:1000","metal:1000"],"IntValues":[]},{"IDs":"InitLimit","StringValues":[],"IntValues":[10000]}]

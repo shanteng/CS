@@ -14,6 +14,21 @@ public class RoleCommand : SimpleCommand
                     proxy.LoadOrGenerateRole();
                     break;
                 }
+            case NotiDefine.InitOutComeDo:
+                {
+                    proxy.InitInCome();
+                    break;
+                }
+            case NotiDefine.BuildingStatusChanged:
+                {
+                    proxy.UpdateInComeBy((string)notification.Body);
+                    break;
+                }
+            case NotiDefine.AcceptHourAwardDo:
+                {
+                    proxy.AcceptHourAward((string)notification.Body);
+                    break;
+                }
         }
     }//end func
 }
