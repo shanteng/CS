@@ -49,11 +49,13 @@ public class UIRoot : MonoBehaviour, ISyncCallback
             }
             return _cloudSave;
         }
+       
     }
 
     public static UIRoot Intance { get; private set; }
     void Awake()
     {
+        
         this.camera = this.transform.parent.GetComponent<Camera>();
         Intance = this;
         this._audioSource = this.gameObject.AddComponent<AudioSource>();

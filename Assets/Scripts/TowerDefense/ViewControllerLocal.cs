@@ -130,7 +130,6 @@ public class ViewControllerLocal : MonoBehaviour
     private bool _isOverBuilding = false;
     void Update()
     {
-#if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
             this._DoUpdateDrag = true;
@@ -144,7 +143,6 @@ public class ViewControllerLocal : MonoBehaviour
                 HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
             }
         }
-#endif
         if (HomeLandManager.GetInstance().IsDraging == false)
             this.JudgeScaleMap();
     }
