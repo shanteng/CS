@@ -3549,6 +3549,7 @@ MonoBehaviour:
   _SdkView: {fileID: 247231324}
   _sdkCore: {fileID: 486868657}
   _sdkController: {fileID: 486868656}
+  _UIGray: {fileID: 2100000, guid: f6a8c4fc0e237644d9b810104acaba93, type: 2}
 --- !u!114 &1487272969
 MonoBehaviour:
   m_ObjectHideFlags: 0

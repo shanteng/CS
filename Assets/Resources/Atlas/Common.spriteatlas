@@ -67,15 +67,17 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 12912
+    totalSpriteSurfaceArea: 17128
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 3c63c101e028329479a0826e3dc7bf33, type: 3}
   - {fileID: 21300000, guid: c0498ec27046a984e829b5e1b3622200, type: 3}
   - {fileID: 21300000, guid: a0f904930cbab7b41ad99da185e09f1f, type: 3}
+  - {fileID: 21300000, guid: c41d82e3400ec804ba0a733868584473, type: 3}
   - {fileID: 21300000, guid: 88da0326d6d9a2d49b27d82e8d3ad4fa, type: 3}
   - {fileID: 21300000, guid: d1b8dfb6c60a1674c80a6bb2b045b449, type: 3}
+  - {fileID: 21300000, guid: 72d160a71e26ebd479d602b0072fde56, type: 3}
   - {fileID: 21300000, guid: 14734a38a783a894286fd5572a961253, type: 3}
   - {fileID: 21300000, guid: 30c5988a6a4f4ec4da9dd7431c002265, type: 3}
   - {fileID: 21300000, guid: e5083ada032c6c848a6e7adf943355e7, type: 3}
@@ -86,8 +88,10 @@ SpriteAtlas:
   - power02
   - aps
   - attack
+  - img_lock
   - metal
   - brute
+  - bg_frame
   - food
   - gold
   - power01

@@ -217,6 +217,7 @@ public class HomeLandManager : MonoBehaviour
         _BuildCanvas.transform.SetParent(building.transform);
         int zOff = config.RowCount - 2;
         _BuildCanvas.transform.localPosition = new Vector3(0, 0, zOff);
+
         _BuildCanvas.Show();
         _TryBuildScript = building;
         _TryBuildScript.SetCanDoState(x, z);

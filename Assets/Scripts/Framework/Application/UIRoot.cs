@@ -35,6 +35,7 @@ public class UIRoot : MonoBehaviour, ISyncCallback
     public GameObject _SdkView;
     public PlayerIdentityCore _sdkCore;
     public MainController _sdkController;
+    public Material _UIGray;
 
     //云存储
     public IDataset characterInfo { get; private set; }
@@ -77,6 +78,17 @@ public class UIRoot : MonoBehaviour, ISyncCallback
     public Transform GetLayer(WindowLayer layer)
     {
         return this._windowLayers[(int)layer];
+    }
+
+    public void SetImageGray(Image img,bool isGray)
+    {
+        if (isGray == false)
+            img.material = null;
+        else
+        {
+            Material me = new Material(this._UIGray);
+            img.material = me;
+        }
     }
 
     public void OnLogin()

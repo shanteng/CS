@@ -17,6 +17,7 @@ public class BuidItemData : ScrollData
 
 public class BuidItemRender : ItemRender
 {
+    public Image _Bg;
     public Text _nameTxt;
     public Text _descTxt;
 
@@ -40,6 +41,7 @@ public class BuidItemRender : ItemRender
         bool isOpen =WorldProxy._instance.IsBuildingOpen(curData._config.ID);
         this._open.SetActive(isOpen);
         this._notOpen.SetActive(!isOpen);
+        bool canClick = false;
         if (isOpen)
         {
             BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(curData._config.ID, 1);
@@ -48,12 +50,15 @@ public class BuidItemRender : ItemRender
             this._timeTxt.text = LanguageConfig.GetLanguage(LanMainDefine.BuildCD, cdStr);
             int count = WorldProxy._instance.GetBuildingCount(curData._config.ID);
             this._countTxt.text = LanguageConfig.GetLanguage(LanMainDefine.HasBuild, count,curData._config.BuildMax);
+            canClick = count < curData._config.BuildMax;
         }
         else
         {
             BuildingConfig configNeed = BuildingConfig.Instance.GetData(curData._config.Condition[0]);
             this._conditionTxt.text = LanguageConfig.GetLanguage(LanMainDefine.BuildOpenCondition, configNeed.Name, curData._config.Condition[1]);
         }
+
+        UIRoot.Intance.SetImageGray(this._Bg, !canClick);
     }
 
     
