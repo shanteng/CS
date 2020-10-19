@@ -117,10 +117,7 @@
         ],
         "Power": 1,
         "AddValues": [
-            "food:1000",
-            "stone:1000",
-            "wood:1000",
-            "metal:1000"
+            "10000"
         ],
         "Parts": [
             1
@@ -139,10 +136,7 @@
         ],
         "Power": 2,
         "AddValues": [
-            "food:5000",
-            "stone:5000",
-            "wood:5000",
-            "metal:5000"
+            "50000"
         ],
         "Parts": [
             1,
@@ -162,10 +156,7 @@
         ],
         "Power": 3,
         "AddValues": [
-            "food:20000",
-            "stone:20000",
-            "wood:20000",
-            "metal:20000"
+            "100000"
         ],
         "Parts": [
             1,
@@ -186,10 +177,7 @@
         ],
         "Power": 4,
         "AddValues": [
-            "food:50000",
-            "stone:50000",
-            "wood:50000",
-            "metal:50000"
+            "200000"
         ],
         "Parts": [
             1,

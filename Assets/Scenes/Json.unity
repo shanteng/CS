@@ -181,3 +181,6 @@ MonoBehaviour:
   - name: Const
     sheets:
     - Const
+  - name: RoleLevel
+    sheets:
+    - RoleLevel

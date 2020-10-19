@@ -16,12 +16,12 @@ public class RoleCommand : SimpleCommand
                 }
             case NotiDefine.InitOutComeDo:
                 {
-                    proxy.InitInCome();
+                    proxy.InitBuildingEffect();
                     break;
                 }
             case NotiDefine.BuildingStatusChanged:
                 {
-                    proxy.UpdateInComeBy((string)notification.Body);
+                    proxy.UpdateBuildingEffectComeBy((string)notification.Body);
                     break;
                 }
             case NotiDefine.AcceptHourAwardDo:

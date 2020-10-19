@@ -32,7 +32,7 @@ public class ExcelToJsonToolEditor : Editor
         }
         else if (GUILayout.Button("打开Json文件夹"))
         {
-            string path = System.Environment.CurrentDirectory + "/Assets/Resources/Config/Main.json";
+            string path = System.Environment.CurrentDirectory + "/Assets/Resources/Config/Language.json";
             EditorUtility.RevealInFinder(path);
         }
 

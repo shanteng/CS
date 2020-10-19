@@ -12,7 +12,7 @@ public class RoleInfo
     public string Name;
     public int Level;//
     public int Exp;//
-    public int ValueLimit;//上限
+    
     public List<CostData> ItemList;//属性道具
     public List<HourAwardData> AddUpAwards;//当前可以领取的数值
 }
@@ -21,6 +21,7 @@ public class RoleInfo
 //时间戳回调管理
 public class RoleProxy : BaseRemoteProxy
 {
+    private int _ResValueLimit;//上限
     private Dictionary<string, int> _IncomeDic = new Dictionary<string, int>();
     private List<string> _LimitValueKeys = new List<string>();
     private RoleInfo _role;
@@ -31,37 +32,49 @@ public class RoleProxy : BaseRemoteProxy
     }
 
     public RoleInfo Role => this._role;
+    public int ResValueLimit => this._ResValueLimit;
 
-
-    public void InitInCome()
+    public void InitBuildingEffect()
     {
         //重新计算收益和可领取的收益
         this._IncomeDic.Clear();
         Dictionary<string, BuildingData> datas = WorldProxy._instance.GetAllBuilding();
         foreach (string key in datas.Keys)
         {
-            this.UpdateInComeBy(key,false);
+            this.UpdateBuildingEffectComeBy(key,false);
         }
         this.DoSaveRole();
     }
 
-    public void UpdateInComeBy(string buildingkey,bool needSave = true)
+
+
+    public void UpdateBuildingEffectComeBy(string buildingkey,bool needSave = true)
     {
         BuildingData data = WorldProxy._instance.GetBuilding(buildingkey);
         if (data == null)
             return;
         BuildingConfig config = BuildingConfig.Instance.GetData(data._id);
-        if (config == null || config.AddType.Equals(ValueAddType.HourTax) == false)
-            return;
         BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(data._id, data._level);
-        if (configLv == null || configLv.AddValues==null || configLv.AddValues.Length == 0)
+        if (configLv == null || configLv.AddValues == null || configLv.AddValues.Length == 0)
             return;
-        CostData add = new CostData();
-        add.Init(configLv.AddValues[0]);
-        this._IncomeDic[add.id] = add.count;
-        this.UpdateHourAward(needSave);
-        if (needSave)
-            this.SendNotification(NotiDefine.IncomeHasUpdated);
+
+        if (config.AddType.Equals(ValueAddType.HourTax))
+        {
+            //税收
+            CostData add = new CostData();
+            add.Init(configLv.AddValues[0]);
+            this._IncomeDic[add.id] = add.count;
+            this.UpdateHourAward(needSave);
+            if (needSave)
+                this.SendNotification(NotiDefine.IncomeHasUpdated);
+        }
+        else if (config.AddType.Equals(ValueAddType.StoreLimit))
+        {
+            ConstConfig configCst = ConstConfig.Instance.GetData(ConstDefine.InitLimit);
+            this._ResValueLimit = UtilTools.ParseInt(configLv.AddValues[0]) + configCst.ValueInt;
+            if (needSave)
+                this.SendNotification(NotiDefine.ResLimitHasUpdated);
+        }
     }
 
     private void UpdateHourAward(bool needSave)
@@ -139,8 +152,9 @@ public class RoleProxy : BaseRemoteProxy
             }
 
             data.count += addDatas[i].count;
-            if (this._LimitValueKeys.Contains(key) && data.count > this._role.ValueLimit)
-                data.count = this._role.ValueLimit;//超过上限了
+            int limit = RoleProxy._instance.ResValueLimit;
+            if (this._LimitValueKeys.Contains(key) && data.count > limit)
+                data.count = limit;//超过上限了
 
             if (addDatas[i].count > 0)
             {
@@ -243,9 +257,6 @@ public class RoleProxy : BaseRemoteProxy
                 hourAward.generate_time = 0;
                 this._role.AddUpAwards.Add(hourAward);
             }
-
-            config = ConstConfig.Instance.GetData(ConstDefine.InitLimit);
-            this._role.ValueLimit = config.ValueInt;
         }
 
         Dictionary<string, ItemInfoConfig> dic = ItemInfoConfig.Instance.getStrDataArray();

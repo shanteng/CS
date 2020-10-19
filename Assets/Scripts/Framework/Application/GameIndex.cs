@@ -11,6 +11,7 @@ using System;
 
 public class GameIndex : MonoBehaviour
 {
+    public static bool InGame = false;
     public static string UID = "";
     private static long _serverTime;
     private static long _serverTimeOnSync;
@@ -33,6 +34,7 @@ public class GameIndex : MonoBehaviour
         TimeSpan nowStep = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
         _serverTimeOnSync =  Convert.ToInt64(nowStep.TotalSeconds);
         _gameTimeOnServertime = Time.realtimeSinceStartup;
+
 
         ShowLogin();
         yield return 0;

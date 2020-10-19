@@ -33,6 +33,8 @@ public class UIRoot : MonoBehaviour, ISyncCallback
     public static string CurFullWindow = string.Empty;
 
     public GameObject _SdkView;
+    public UIScreenHideHandler _SdkClickHandler;
+
     public PlayerIdentityCore _sdkCore;
     public MainController _sdkController;
     public Material _UIGray;
@@ -56,7 +58,6 @@ public class UIRoot : MonoBehaviour, ISyncCallback
     public static UIRoot Intance { get; private set; }
     void Awake()
     {
-        
         this.camera = this.transform.parent.GetComponent<Camera>();
         Intance = this;
         this._audioSource = this.gameObject.AddComponent<AudioSource>();
@@ -72,7 +73,14 @@ public class UIRoot : MonoBehaviour, ISyncCallback
 
     private void Start()
     {
-        this._SdkView.gameObject.SetActive(true);
+        this._SdkView.SetActive(true);
+        this._SdkClickHandler.AddListener(OnClickSdkBg);
+    }
+
+    private void OnClickSdkBg()
+    {
+        if (GameIndex.InGame)
+            this._SdkView.SetActive(false);
     }
 
     public Transform GetLayer(WindowLayer layer)

@@ -68,6 +68,7 @@ public class Building : MonoBehaviour
         _Ui.transform.localPosition = new Vector3(0, 0, offset);
         //_Ui._CdUi.transform.Translate(new Vector3(0, -offset, 0), Space.Self);
         this._Ui._NameTxt.text = config.Name;
+       
     }
 
     public void UpdateIncome()

@@ -21,6 +21,7 @@ public class JsonNameDefine
     public static string BuildingUpgrade = "BuildingUpgrade";
     public static string World = "World";
     public static string Const = "Const";
+    public static string RoleLevel = "Const";
     public static JArray JsonRead(string name)
     {
         string json = "";
@@ -84,6 +85,14 @@ public class ConstConfig : Config<ConstConfig>
         }
     }
 
+}
+
+public class RoleLevelConfig : Config<RoleLevelConfig>
+{
+    public int Exp;
+    public int Power;
+
+    public RoleLevelConfig() : base(JsonNameDefine.RoleLevel) { }
 }
 
 public class BuildingConfig : Config<BuildingConfig>

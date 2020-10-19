@@ -40,6 +40,7 @@ public class HomeLandMediator : BaseNoWindowMediator
             case NotiDefine.GAME_RESET:
                 {
                     this._isHomeLoaded = false;
+                    GameIndex.InGame = false;
                     break;
                 }
             case NotiDefine.LoadSceneFinish:
@@ -129,5 +130,6 @@ public class HomeLandMediator : BaseNoWindowMediator
             this._LandManager.InitScene();
         MediatorUtil.ShowMediator(MediatorDefine.MAIN);
         this._isHomeLoaded = true;
+        GameIndex.InGame = true;
     }
 }//end class

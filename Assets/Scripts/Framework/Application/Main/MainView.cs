@@ -19,8 +19,13 @@ public class MainView : MonoBehaviour
     public List<IncomeItem> _incomeList;
     public Text _goldTxt;
     public Text _goldHourAddTxt;
+    public Text _goldAddTxt;
 
     private int _dianLiangCount = 60;
+    private void Awake()
+    {
+        _goldAddTxt.gameObject.SetActive(false);
+    }
     void Start()
     {
         _dianLiangCount = 60;
@@ -80,7 +85,19 @@ public class MainView : MonoBehaviour
         this._goldHourAddTxt.text = LanguageConfig.GetLanguage(LanMainDefine.HourAdd, hourAdd);
         if (_oldValue > 0 && _oldValue != curValue)
         {
-            this._goldTxt.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 4, 0);
+            int add = curValue - this._oldValue;
+            if (add > 0)
+                this._goldAddTxt.text = UtilTools.combine("+", add);
+            else
+                this._goldAddTxt.text = add.ToString();
+            this._goldAddTxt.gameObject.SetActive(true);
+
+            this._goldTxt.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 4, 0).onComplete = () =>
+            {
+                this._goldAddTxt.gameObject.SetActive(false);
+            };
+
+
         }
         _oldValue = curValue;
     }

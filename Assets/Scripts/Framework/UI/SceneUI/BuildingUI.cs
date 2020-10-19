@@ -35,13 +35,15 @@ public class BuildingUI : UIBase
         if (desc > 0)
             desc--;
         Vector2 pos = this._NameTxt.rectTransform.anchoredPosition;
-        pos.y += desc * 5;
+        pos.y += desc * 4;
         this._NameTxt.rectTransform.anchoredPosition = pos;
 
         pos = this._CdUi.GetComponent<RectTransform>().anchoredPosition;
         pos.y -= desc * 25;
         this._CdUi.GetComponent<RectTransform>().anchoredPosition = pos;
-   
+
+        this._CdUi.GetComponent<RectTransform>().sizeDelta = new Vector2(20 * config.RowCount, 4);
+
         //税收
         this._AddCon.SetActive(false);
         if (config.AddType.Equals(ValueAddType.HourTax) == false)

@@ -62,7 +62,7 @@
 
     public const string IncomeHasUpdated = "IncomeHasUpdated";
     public const string NumberValueHasUpdated = "NumberValueHasUpdated";
-
+    public const string ResLimitHasUpdated = "ResLimitHasUpdated";
 }
 
 public enum ItemTypeDefine
