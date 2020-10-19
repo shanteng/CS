@@ -97,7 +97,7 @@ public class RoleProxy : BaseRemoteProxy
             if (AddUpAwards[i].id.Equals(key) || isAll)
             {
                 long passSecs = GameIndex.ServerTime - AddUpAwards[i].generate_time;
-                int addValue = Mathf.CeilToInt(passSecs * AddUpAwards[i].base_secs_value);
+                int addValue = Mathf.CeilToInt(passSecs * AddUpAwards[i].base_secs_value) + AddUpAwards[i].add_up_value;
                 if (addValue > 0)
                 {
                     CostData data = new CostData();
@@ -115,31 +115,43 @@ public class RoleProxy : BaseRemoteProxy
         }//end for
 
         if (awards.Count > 0)
+        {
             this.ChangeRoleNumberValue(awards);
+            this.SendNotification(NotiDefine.AcceptHourAwardResp);
+        }
+           
     }
 
- 
-
-
-    public void ChangeRoleNumberValue(List<CostData> datas)
+    public void ChangeRoleNumberValue(List<CostData> addDatas)
     {
-        Dictionary<string, int> _ShowAdds = new Dictionary<string, int>();
-        List<CostData> AddUpAwards = this._role.ItemList;
-        int count = datas.Count;
+        Dictionary<string, int> ShowAdds = new Dictionary<string, int>();
+        int count = addDatas.Count;
         for (int i = 0; i < count; ++i)
         {
-            CostData data = this.GetNumberValueData(AddUpAwards[i].id);
-            if (data != null)
+            string key = addDatas[i].id;
+            CostData data = this.GetNumberValueData(key);
+            if (data == null)
             {
-                data.count += AddUpAwards[i].count;
-                if (this._LimitValueKeys.Contains(data.id) && data.count > this._role.ValueLimit)
-                    data.count = this._role.ValueLimit;//超过上限了
-                
-                if (AddUpAwards[i].count > 0)
-                    _ShowAdds[AddUpAwards[i].id] += AddUpAwards[i].count;
+                data = new CostData();
+                data.id = key;
+                data.count = 0;
+                this._role.ItemList.Add(data);
             }
+
+            data.count += addDatas[i].count;
+            if (this._LimitValueKeys.Contains(key) && data.count > this._role.ValueLimit)
+                data.count = this._role.ValueLimit;//超过上限了
+
+            if (addDatas[i].count > 0)
+            {
+                int oldValue = 0;
+                if (ShowAdds.TryGetValue(key, out oldValue) == false)
+                    ShowAdds[key] = 0;
+                ShowAdds[key] += addDatas[i].count;
+            }
+
         }//end for
-        this.SendNotification(NotiDefine.NumberValueHasUpdated, _ShowAdds);
+        this.SendNotification(NotiDefine.NumberValueHasUpdated, ShowAdds);
         this.DoSaveRole();
     }
 
@@ -170,6 +182,32 @@ public class RoleProxy : BaseRemoteProxy
         int value = 0;
         if (this._IncomeDic.TryGetValue(key, out value))
             return value;
+        return 0;
+    }
+
+    public HourAwardData GetCanAcceptIncomeData(string key)
+    {
+        List<HourAwardData> AddUpAwards = this._role.AddUpAwards;
+        int count = AddUpAwards.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            if (AddUpAwards[i].generate_time > 0 && AddUpAwards[i].id.Equals(key))
+            {
+                return AddUpAwards[i];
+            }
+        }
+        return null;
+    }
+
+    public int GetCanAcceptIncomeValue(string key)
+    {
+        HourAwardData curData = RoleProxy._instance.GetCanAcceptIncomeData(key);
+        if (curData != null && curData.generate_time > 0)
+        {
+            long passSecs = GameIndex.ServerTime - curData.generate_time;
+            int addValue = Mathf.CeilToInt(passSecs * curData.base_secs_value) + curData.add_up_value;
+            return addValue;
+        }
         return 0;
     }
 

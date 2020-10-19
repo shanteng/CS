@@ -24,6 +24,9 @@ public class Building : MonoBehaviour
     private float CosDegreeValue;
     private bool _isSelect = false;
     private bool _isDrag = false;
+    private string _AddType;
+    private bool _AddIconShow = false;
+    private string _AddAttr = "";
 
     public List<GameObject> _levelParts;
 
@@ -47,8 +50,8 @@ public class Building : MonoBehaviour
         this._occupyBase.localScale = new Vector3(row, col, 1);
         float x = (float)(row - 1) / 2f;
         float z = (float)(col - 1) / 2f;
-        Vector3 pos = new Vector3(x, 0.505f, z);
-        Vector3 pos2 = new Vector3(x, 0.51f, z);
+        Vector3 pos = new Vector3(x, 0.51f, z);
+        Vector3 pos2 = new Vector3(x, 0.512f, z);
         this._occupyBase.transform.localPosition = pos;
         this._flashBase.transform.localPosition = pos2;
     }
@@ -57,14 +60,29 @@ public class Building : MonoBehaviour
     public void CreateUI(BuildingUI prefabs,int id)
     {
         this._Ui = GameObject.Instantiate<BuildingUI>(prefabs, Vector3.zero, Quaternion.identity, this.transform);
-        _Ui._CdUi.Hide();
-
         BuildingConfig config = BuildingConfig.Instance.GetData(id);
-
+        this._AddType = config.AddType;
+   
+        this._Ui.SetUI(config);
         int offset = config.RowCount - 2;
         _Ui.transform.localPosition = new Vector3(0, 0, offset);
-        _Ui._CdUi.transform.Translate(new Vector3(0, -offset, 0), Space.Self);
+        //_Ui._CdUi.transform.Translate(new Vector3(0, -offset, 0), Space.Self);
         this._Ui._NameTxt.text = config.Name;
+    }
+
+    public void UpdateIncome()
+    {
+        if (this._AddType.Equals(ValueAddType.HourTax) && this._Ui != null)
+        {
+            BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(this._data._id, this._data._level);
+            if (configLv != null)
+            {
+                CostData add = new CostData();
+                add.Init(configLv.AddValues[0]);
+                _AddIconShow =  this._Ui.UpdateIncome(add.id);
+                this._AddAttr = add.id;
+            }
+        }
     }
 
     public void SetCurrentState()
@@ -75,16 +93,18 @@ public class Building : MonoBehaviour
         }
         else if (this._data._status == BuildingData.BuildingStatus.BUILD)
         {
-            this.DoCountDown(_data._expireTime, this._data._UpgradeSecs);
+            this._Ui.DoCountDown(_data._expireTime, this._data._UpgradeSecs);
         }
         else if (this._data._status == BuildingData.BuildingStatus.UPGRADE)
         {
-            this.DoCountDown(_data._expireTime,this._data._UpgradeSecs);
+            this._Ui.DoCountDown(_data._expireTime,this._data._UpgradeSecs);
         }
         else if (this._data._status == BuildingData.BuildingStatus.NORMAL)
         {
-            this._Ui._CdUi.Hide();
+            this._Ui.HideCD();
         }
+
+        this.UpdateIncome();
 
         
         //设置显示parts
@@ -98,12 +118,6 @@ public class Building : MonoBehaviour
             bool isshow = configLevel.Parts.Contains(partname);
             this._levelParts[i].SetActive(isshow);
         }
-    }
-
-    private void DoCountDown(long expire,int totle)
-    {
-        this._Ui._CdUi.Show();
-        this._Ui._CdUi.DoCountDown(expire, totle);
     }
 
     public void RelocateToProxy(int x, int z)
@@ -205,6 +219,14 @@ public class Building : MonoBehaviour
 
         if (HomeLandManager.GetInstance().isTryBuild)
             return;
+
+
+        if (this._AddIconShow)
+        {
+            BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(this._data._id, this._data._level);
+            MediatorUtil.SendNotification(NotiDefine.AcceptHourAwardDo, this._AddAttr);
+            return;
+        }
 
         if (this._isSelect)
         {

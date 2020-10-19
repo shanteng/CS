@@ -115,6 +115,7 @@
     <Compile Include="Assets\Scripts\Framework\Proxy\WorldProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\CostItem.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NonDrawingGraphic.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\NumberAnimation.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIBase.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIButton.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIMediatorHideHandler.cs" />

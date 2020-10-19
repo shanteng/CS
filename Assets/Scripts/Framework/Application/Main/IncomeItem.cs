@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using DG.Tweening;
 
 
 public class IncomeItem : MonoBehaviour
@@ -13,6 +13,7 @@ public class IncomeItem : MonoBehaviour
     public Image Icon;
 
     private string _key;
+    private int _oldValue = -1;
 
     void Awake()
     {
@@ -30,6 +31,13 @@ public class IncomeItem : MonoBehaviour
             this.CurMax.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, curValue,maxLimit);
         else
             this.CurMax.text = LanguageConfig.GetLanguage(LanMainDefine.ProgressFull, curValue,maxLimit);
+
+        if (_oldValue > 0 && _oldValue != curValue)
+        {
+            this.CurMax.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 4, 0);
+        }
+        _oldValue = curValue;
+
     }
 }
 

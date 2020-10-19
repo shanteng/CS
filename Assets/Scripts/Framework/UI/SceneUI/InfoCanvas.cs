@@ -26,6 +26,7 @@ public class IntStrPair
 
 public class InfoCanvas : UIBase
 {
+    public RectTransform _NameRect;
     public Text _spotNameTxt;
     public TextMeshProUGUI _cordinateTxt;
     public List<UIButton> _btnFunList;
@@ -99,6 +100,8 @@ public class InfoCanvas : UIBase
             this._btnFunList[i].Label.text = btnTypeList[i].BtnName;
             this._btnFunList[i]._param._value = btnTypeList[i].OpType;
         }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_NameRect);
 
         bool isBuildUp = this._data._status == BuildingData.BuildingStatus.BUILD || this._data._status == BuildingData.BuildingStatus.UPGRADE;
         this._cdCon.gameObject.SetActive(isBuildUp);

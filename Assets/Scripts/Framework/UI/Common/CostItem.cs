@@ -24,6 +24,12 @@ public class CostData
         this.count = UtilTools.ParseInt(list[1]);
     }
 
+    public void Init(CostData d)
+    {
+        this.id = d.id;
+        this.count = d.count;
+    }
+
 }
 
 public class HourAwardData

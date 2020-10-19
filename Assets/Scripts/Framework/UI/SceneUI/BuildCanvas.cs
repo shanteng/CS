@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class BuildCanvas : UIBase
 {
+    public RectTransform _layoutRect;
     public UIButton _btnSure;
     public UIButton _btnCancel;
     

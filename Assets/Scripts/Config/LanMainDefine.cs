@@ -25,5 +25,6 @@ public class ConstDefine
     public const string InitRes = "InitRes";
     public const string InitOutCome = "InitOutCome";
     public const string InitLimit = "InitLimit";
+    public const string IncomeShowValue = "IncomeShowValue";
 }
 

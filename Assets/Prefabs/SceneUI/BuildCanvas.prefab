@@ -342,6 +342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _param:
     _key: 
+  _layoutRect: {fileID: 0}
   _btnSure: {fileID: 5961958618131868877}
   _btnCancel: {fileID: 1404453588389089116}
 --- !u!114 &4790675579630672984
@@ -542,8 +543,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9063239671959250044}
   m_LocalRotation: {x: 0.35355338, y: -0.35355338, z: 0.1464466, w: 0.8535535}
-  m_LocalPosition: {x: 0, y: 0, z: -27.8}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -15.7}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 6715505848755956670}
   - {fileID: 6498857056706651518}
@@ -552,7 +553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 45, y: -45, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 48.6, y: 116.1}
+  m_AnchoredPosition: {x: 36.5, y: 133.2}
   m_SizeDelta: {x: 130, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1884283324696291692

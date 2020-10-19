@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -17,6 +18,7 @@ public class MainView : MonoBehaviour
     public Text _timeTxt;
     public List<IncomeItem> _incomeList;
     public Text _goldTxt;
+    public Text _goldHourAddTxt;
 
     private int _dianLiangCount = 60;
     void Start()
@@ -64,13 +66,23 @@ public class MainView : MonoBehaviour
         this._dianLiang.fillAmount = leftDianValue;
     }
 
+    private int _oldValue = -1;
     public void UpdateIncome()
     {
         foreach (IncomeItem item in this._incomeList)
         {
             item.UpdateValue();
         }
-        this._goldTxt.text = UtilTools.NumberFormat(RoleProxy._instance.GetNumberValue(ItemKey.gold));
+
+        int curValue = RoleProxy._instance.GetNumberValue(ItemKey.gold);
+        this._goldTxt.text = UtilTools.NumberFormat(curValue);
+        int hourAdd = RoleProxy._instance.GetHourInCome(ItemKey.gold);
+        this._goldHourAddTxt.text = LanguageConfig.GetLanguage(LanMainDefine.HourAdd, hourAdd);
+        if (_oldValue > 0 && _oldValue != curValue)
+        {
+            this._goldTxt.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 4, 0);
+        }
+        _oldValue = curValue;
     }
 
     public void SetName()

@@ -58,6 +58,8 @@
 
     public const string InitOutComeDo = "InitOutComeDo";
     public const string AcceptHourAwardDo = "AcceptHourAwardDo";
+    public const string AcceptHourAwardResp = "AcceptHourAwardResp";
+
     public const string IncomeHasUpdated = "IncomeHasUpdated";
     public const string NumberValueHasUpdated = "NumberValueHasUpdated";
 

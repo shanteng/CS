@@ -18,6 +18,7 @@ public class HomeLandMediator : BaseNoWindowMediator
     protected override void InitListNotificationInterestsInner()
     {
         m_lInterestNotifications.Add(NotiDefine.LoadSceneFinish);
+        m_lInterestNotifications.Add(NotiDefine.GAME_RESET);
 
         m_lInterestNotifications.Add(NotiDefine.GenerateMySpotResp);
         m_lInterestNotifications.Add(NotiDefine.GenerateMyBuildingResp);
@@ -28,18 +29,24 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.ConfirmBuild);
         m_lInterestNotifications.Add(NotiDefine.BuildingRemoveNoti);
         m_lInterestNotifications.Add(NotiDefine.TryBuildBuilding);
+
+        m_lInterestNotifications.Add(NotiDefine.AcceptHourAwardResp);
     }
 
     public override void HandleNotification(INotification notification)
     {
         switch (notification.Name)
         {
+            case NotiDefine.GAME_RESET:
+                {
+                    this._isHomeLoaded = false;
+                    break;
+                }
             case NotiDefine.LoadSceneFinish:
                 {
                     string name = (string)notification.Body;
                     if (name.Equals(SceneDefine.Home))
                     {
-                        this._isHomeLoaded = true;
                         this.InitScene();
                     }
                     break;
@@ -92,6 +99,14 @@ public class HomeLandMediator : BaseNoWindowMediator
                     this._LandManager.BuildInScreenCenterPos(id);
                     break;
                 }
+            case NotiDefine.AcceptHourAwardResp:
+                {
+                    if (this._isHomeLoaded)
+                    {
+                        this._LandManager.UpdateIncome();
+                    }
+                    break;
+                }
         }
     }//end 
 
@@ -113,5 +128,6 @@ public class HomeLandMediator : BaseNoWindowMediator
         if (this._LandManager != null)
             this._LandManager.InitScene();
         MediatorUtil.ShowMediator(MediatorDefine.MAIN);
+        this._isHomeLoaded = true;
     }
 }//end class
