@@ -92,7 +92,7 @@ public class MainView : MonoBehaviour
                 this._goldAddTxt.text = add.ToString();
             this._goldAddTxt.gameObject.SetActive(true);
 
-            this._goldTxt.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 4, 0).onComplete = () =>
+            this._goldTxt.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 2, 0).onComplete = () =>
             {
                 this._goldAddTxt.gameObject.SetActive(false);
             };

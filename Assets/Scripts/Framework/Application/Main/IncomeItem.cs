@@ -44,7 +44,7 @@ public class IncomeItem : MonoBehaviour
 
             this._AddValue.gameObject.SetActive(true);
 
-            this.CurMax.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 4, 0).onComplete = () =>
+            this.CurMax.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 2, 0).onComplete = () =>
             {
                 this._AddValue.gameObject.SetActive(false);
             };

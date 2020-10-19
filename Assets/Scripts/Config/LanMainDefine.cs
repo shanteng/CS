@@ -18,6 +18,10 @@
     public const string HourAdd = "HourAdd";
     public const string Progress = "Progress";
     public const string ProgressFull = "ProgressFull";
+
+    public const string ConfirmTitle = "ConfirmTitle";
+    public const string ConfirmSure = "ConfirmSure";
+    public const string ConfirmCancel = "ConfirmCancel";
 }
 
 public class ConstDefine

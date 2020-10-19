@@ -16,11 +16,12 @@ public class UIScreenHideHandler : UIBase
     {
         this._listener = ls;
     }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (this._listener != null)
             this._listener.Invoke();
-        else
+        else if(this._hideobj != null)
             this._hideobj.SetActive(false);
     }
 }
