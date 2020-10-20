@@ -9,17 +9,13 @@ public delegate void UIToggleDelegate(UIToggle btnSelf);
 public class UIToggle : UIBase
 {
     private Toggle _toggle;
-    private Text _text;
+    public Text _text;
     private UIToggleDelegate _listener;
 
     void Awake()
     {
         this._toggle = this.gameObject.GetComponent<Toggle>();
         this._toggle.onValueChanged.AddListener(this.DoClick);
-
-        Text[] txts = transform.GetComponentsInChildren<Text>();
-        if (txts != null && txts.Length > 0)
-            this._text = txts[0];
     }
 
     public void DoClick(bool isOn)
