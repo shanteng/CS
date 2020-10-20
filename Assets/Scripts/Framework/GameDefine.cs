@@ -128,3 +128,29 @@ public class ValueAddType
     public const string Defense = "Defense";
     public const string DeployCount = "DeployCount";
 }
+
+public class ElementDefine
+{
+    public const string Fire = "Fire";
+    public const string Wind = "Wind";
+    public const string Water = "Water";
+}
+public class SoliderDefine
+{
+    public const int Rider = 1;
+    public const int Archer = 2;
+    public const int Infantry = 3;
+
+    public static string GetName(int type)
+    {
+        if (type.Equals(Rider))
+            return LanguageConfig.GetLanguage(LanMainDefine.Rider);
+
+        if (type.Equals(Archer))
+            return LanguageConfig.GetLanguage(LanMainDefine.Archer);
+
+        if (type.Equals(Infantry))
+            return LanguageConfig.GetLanguage(LanMainDefine.Infantry);
+        return "";
+    }
+}

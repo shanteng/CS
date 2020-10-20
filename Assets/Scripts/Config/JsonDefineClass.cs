@@ -109,7 +109,47 @@ public class BuildingConfig : Config<BuildingConfig>
     public int CanBuildOutSide;
 
     public BuildingConfig() : base(JsonNameDefine.Building) { }
-}
+
+    public static string GetAddOnDesc(string AddType, string[] AddValue)
+    {
+        if (ValueAddType.DayTax.Equals(AddType) ||
+            ValueAddType.HourTax.Equals(AddType))
+        {
+            CostData cost = new CostData();
+            cost.Init(AddValue[0]);
+            ItemInfoConfig config = ItemInfoConfig.Instance.GetData(cost.id);
+            return LanguageConfig.GetLanguage(AddType,config.Name,cost.count);
+        }
+
+        if (ValueAddType.StoreLimit.Equals(AddType) ||
+            ValueAddType.TroopAdd.Equals(AddType) ||
+            ValueAddType.ReserverLimit.Equals(AddType) ||
+            ValueAddType.TroopCount.Equals(AddType) ||
+             ValueAddType.RecruitSecs.Equals(AddType) ||
+             ValueAddType.MarchSpeed.Equals(AddType) ||
+             ValueAddType.DeployCount.Equals(AddType))
+        {
+            return LanguageConfig.GetLanguage(AddType, AddValue[0]);
+        }
+
+        if (ValueAddType.ElementAdd.Equals(AddType))
+        {
+            string[] list = AddValue[0].Split(':');
+            string attrName = LanguageConfig.GetLanguage(list[0]);
+            return LanguageConfig.GetLanguage(AddType, attrName, list[1]);
+        }
+
+        if (ValueAddType.AttributeAdd.Equals(AddType))
+        {
+            string[] ranges = AddValue[0].Split(':');
+            string[] attacks = AddValue[1].Split(':');
+
+            return LanguageConfig.GetLanguage(AddType, ranges[1],attacks[1]);
+        }
+
+        return "";
+    }//end switch
+}//end func
 
 public class BuildingUpgradeConfig : Config<BuildingUpgradeConfig>
 {

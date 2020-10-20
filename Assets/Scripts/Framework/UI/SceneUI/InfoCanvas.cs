@@ -24,7 +24,7 @@ public class IntStrPair
 }
 
 
-public class InfoCanvas : UIBase
+public class InfoCanvas : UIBase,IConfirmListener
 {
     public RectTransform _NameRect;
     public Text _spotNameTxt;
@@ -144,9 +144,18 @@ public class InfoCanvas : UIBase
                 }
             case OpType.Cancel:
                 {
-                    MediatorUtil.SendNotification(NotiDefine.BuildingCancelDo, this._data._key);
+                    PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelUpgradeNotice), this, "Cancel");
+                    //MediatorUtil.SendNotification(NotiDefine.BuildingCancelDo, this._data._key);
                     break;
                 }
+        }
+    }
+
+    public void OnConfirm(ConfirmData data)
+    {
+        if (data.userKey.Equals("Cancel"))
+        {
+            MediatorUtil.SendNotification(NotiDefine.BuildingCancelDo, this._data._key);
         }
     }
 

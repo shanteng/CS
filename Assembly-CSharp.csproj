@@ -88,8 +88,10 @@
     <Compile Include="Assets\Scripts\Framework\Application\Main\MainView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\DataCenterMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\MediatorUtil.cs" />
-    <Compile Include="Assets\Scripts\Framework\Application\PopUp\ConfirmView.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingInfoPop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\ConfirmPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\Popup.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\PopupFactory.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\ResourcesManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderView.cs" />
