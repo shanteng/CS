@@ -137,7 +137,7 @@ public class ExcelToJsonToolEditor : Editor
                             int[] ints = new int[strs.Length];
                             for (int k = 0; k < strs.Length; k++)
                             {
-                                ints[k] = int.Parse(strs[k]);
+                                ints[k] = UtilTools.ParseInt(strs[k]);
                             }
                             value = ints;
                         }
@@ -154,6 +154,26 @@ public class ExcelToJsonToolEditor : Editor
                         else
                         {
                             value = new string[0];
+                        }
+                        break;
+                    case "Float":
+                        float valuefloat = UtilTools.ParseFloat(str);
+                        value = Convert.ChangeType(valuefloat, typeof(float));
+                        break;
+                    case "ArrayFloat":
+                        if (str.Length > 0)
+                        {
+                            string[] strs = str.Split(',');
+                            float[] floats = new float[strs.Length];
+                            for (int k = 0; k < strs.Length; k++)
+                            {
+                                floats[k] = UtilTools.ParseFloat(strs[k]);
+                            }
+                            value = floats;
+                        }
+                        else
+                        {
+                            value = new float[0];
                         }
                         break;
                     default:

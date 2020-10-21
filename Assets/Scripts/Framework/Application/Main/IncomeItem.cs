@@ -29,10 +29,14 @@ public class IncomeItem : MonoBehaviour
         this.HourAdd.text = LanguageConfig.GetLanguage(LanMainDefine.HourAdd, hourAdd);
         int maxLimit = RoleProxy._instance.ResValueLimit;
         int curValue = RoleProxy._instance.GetNumberValue(this._key);
-        if(curValue < maxLimit)
-            this.CurMax.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, curValue,maxLimit);
+        string curStr = UtilTools.NumberFormat(curValue);
+        string maxStr = UtilTools.NumberFormat(maxLimit);
+
+
+        if (curValue < maxLimit)
+            this.CurMax.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, curStr, maxStr);
         else
-            this.CurMax.text = LanguageConfig.GetLanguage(LanMainDefine.ProgressFull, curValue,maxLimit);
+            this.CurMax.text = LanguageConfig.GetLanguage(LanMainDefine.ProgressFull, curStr, maxStr);
 
         if (_oldValue > 0 && _oldValue != curValue)
         {

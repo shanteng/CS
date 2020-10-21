@@ -107,7 +107,7 @@ public class UtilTools
         return value;
     }
 
-    public static string NumberFormat(float nNum)
+    public static string NumberFormat(long nNum)
     {
         var sText = "";
         if (nNum < 100000)
@@ -115,13 +115,13 @@ public class UtilTools
         else if (nNum >= 100000 && nNum < 100000000)
         {
             var wanNum = nNum / 10000;
-            var wanFloorStr = (float)Math.Round(wanNum, 1);
+            var wanFloorStr = (float)Math.Round((double)wanNum, 1);
             sText = LanguageConfig.GetLanguage(LanMainDefine.Wan, wanFloorStr);
         }
         else if (nNum >= 100000000)
         {
             var yiNum = nNum / 100000000;
-            var yiFloor = (float)Math.Round(yiNum, 1);
+            var yiFloor = (float)Math.Round((double)yiNum, 1);
             sText = LanguageConfig.GetLanguage(LanMainDefine.Yi, yiFloor);
         }
         return sText;

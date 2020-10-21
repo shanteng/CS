@@ -21,7 +21,10 @@ public class JsonNameDefine
     public static string BuildingUpgrade = "BuildingUpgrade";
     public static string World = "World";
     public static string Const = "Const";
-    public static string RoleLevel = "Const";
+    public static string RoleLevel = "RoleLevel";
+    public static string Hero = "Hero";
+    public static string HeroLevel = "HeroLevel";
+
     public static JArray JsonRead(string name)
     {
         string json = "";
@@ -93,6 +96,30 @@ public class RoleLevelConfig : Config<RoleLevelConfig>
     public int Power;
 
     public RoleLevelConfig() : base(JsonNameDefine.RoleLevel) { }
+}
+
+public class HeroLevelConfig : Config<HeroLevelConfig>
+{
+    public int Exp;
+    public int BloodMax;
+
+    public HeroLevelConfig() : base(JsonNameDefine.HeroLevel) { }
+}
+
+public class HeroConfig : Config<HeroConfig>
+{
+    public string Name;
+    public string Model;
+    public int Career;
+    public int Star;
+    public string Element;
+    public float ElementValue;
+    public float Range;
+    public float MarchSpeed;
+    public string[] InitAttribute;
+    public string[] AttributeGrow;
+    public int Skill;
+    public HeroConfig() : base(JsonNameDefine.Hero) { }
 }
 
 public class BuildingConfig : Config<BuildingConfig>

@@ -288,6 +288,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nameTxt: {fileID: 7985652594044329691}
+  _levelTxt: {fileID: 2857823340820429727}
+  _lvSlider: {fileID: 8112339598252995981}
   _BtnBuild: {fileID: 6393537756460310094}
   _BtnSdk: {fileID: 8551483157454896729}
   _InfoUI: {fileID: 4923120261965394175}

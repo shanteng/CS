@@ -20,7 +20,6 @@ public class DataGrid : UIBase
     public GameObject m_goItemRender;
     public bool isAbsolute = true;
 
-    private RectTransform m_content;
     private List<ScrollData> m_data = new List<ScrollData>();
     
     private readonly List<ItemRender> m_items = new List<ItemRender>();
@@ -50,10 +49,9 @@ public class DataGrid : UIBase
 
     private void Awake()
     {
-        this.m_scrollRect = this.GetComponent<ScrollRect>();
+        this.m_scrollRect = this.gameObject.GetComponent<ScrollRect>();
        
-        m_content = this.m_scrollRect.content;
-        m_LayoutGroup = m_content.GetComponent<LayoutGroup>();
+        m_LayoutGroup = this.m_scrollRect.content.GetComponent<LayoutGroup>();
 
         if (m_LayoutGroup != null)
             m_oldPadding = m_LayoutGroup.padding;
@@ -336,7 +334,7 @@ public class DataGrid : UIBase
 
             var go = GameObject.Instantiate(this.m_goItemRender) as GameObject;
             go.name = m_goItemRender.name+i;
-            go.transform.SetParent(m_content, false);
+            go.transform.SetParent(this.m_scrollRect.content, false);
             go.SetActive(true);
 
             ItemRender script = (ItemRender)go.GetComponent<ItemRender>();
@@ -398,7 +396,7 @@ public class DataGrid : UIBase
     {
         get
         {
-            return m_isVertical ? m_content.sizeDelta.y : m_content.sizeDelta.x;
+            return m_isVertical ? this.m_scrollRect.content.sizeDelta.y : this.m_scrollRect.content.sizeDelta.x;
         }
     }
     //可见区域长度

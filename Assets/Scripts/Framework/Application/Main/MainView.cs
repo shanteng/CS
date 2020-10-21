@@ -11,6 +11,8 @@ using UnityEngine.UI;
 public class MainView : MonoBehaviour
 {
     public Text _nameTxt;
+    public Text _levelTxt;
+    public Slider _lvSlider;
     public UIButton _BtnBuild;
     public UIButton _BtnSdk;
     public InfoCanvas _InfoUI;
@@ -49,8 +51,24 @@ public class MainView : MonoBehaviour
             }
             yield return waitYield;
         }
-        
     }
+
+    public void SetLevelExp()
+    {
+        RoleInfo role = RoleProxy._instance.Role;
+        RoleLevelConfig configNext = RoleLevelConfig.Instance.GetData(role.Level + 1);
+        int max = configNext != null ? configNext.Exp : role.Exp;
+        if (max == 0)
+            max = 1;
+        float value = role.Exp / max;
+        this._lvSlider.value = value;
+
+        if (configNext != null)
+            this._levelTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevelExp, role.Level, role.Exp, max);
+        else
+            this._levelTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevelExpFull, role.Level);
+    }
+    
 
     private void OnSdk(UIButton btn)
     {

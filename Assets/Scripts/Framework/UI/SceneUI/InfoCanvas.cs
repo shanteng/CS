@@ -24,7 +24,7 @@ public class IntStrPair
 }
 
 
-public class InfoCanvas : UIBase,IConfirmListener
+public class InfoCanvas : UIBase, IConfirmListener
 {
     public RectTransform _NameRect;
     public Text _spotNameTxt;
@@ -134,7 +134,7 @@ public class InfoCanvas : UIBase,IConfirmListener
                 }
             case OpType.Info:
                 {
-                    MediatorUtil.SendNotification(NotiDefine.ShowBuildingInfo, this._data._key);
+                    PopupFactory.Instance.ShowBuildingInfo(this._data._key);
                     break;
                 }
             case OpType.Upgrade:

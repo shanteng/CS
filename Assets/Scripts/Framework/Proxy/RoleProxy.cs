@@ -43,9 +43,27 @@ public class RoleProxy : BaseRemoteProxy
         {
             this.UpdateBuildingEffectComeBy(key,false);
         }
+        this.UpdateResLimit();
         this.DoSaveRole();
     }
 
+    private void UpdateResLimit()
+    {
+        ConstConfig configCst = ConstConfig.Instance.GetData(ConstDefine.InitLimit);
+        this._ResValueLimit = configCst.ValueInt;
+        Dictionary<string, BuildingData> datas = WorldProxy._instance.GetAllBuilding();
+        foreach (BuildingData data in datas.Values)
+        {
+            BuildingConfig config = BuildingConfig.Instance.GetData(data._id);
+            if (config.AddType.Equals(ValueAddType.StoreLimit) == false)
+                continue;
+            BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(data._id, data._level);
+            if (configLv == null || configLv.AddValues == null || configLv.AddValues.Length == 0)
+                continue;
+            this._ResValueLimit += UtilTools.ParseInt(configLv.AddValues[0]);
+        }
+        this.SendNotification(NotiDefine.ResLimitHasUpdated);
+    }
 
 
     public void UpdateBuildingEffectComeBy(string buildingkey,bool needSave = true)
@@ -70,10 +88,11 @@ public class RoleProxy : BaseRemoteProxy
         }
         else if (config.AddType.Equals(ValueAddType.StoreLimit))
         {
-            ConstConfig configCst = ConstConfig.Instance.GetData(ConstDefine.InitLimit);
-            this._ResValueLimit = UtilTools.ParseInt(configLv.AddValues[0]) + configCst.ValueInt;
             if (needSave)
-                this.SendNotification(NotiDefine.ResLimitHasUpdated);
+            {
+                this.UpdateResLimit();
+            }
+              
         }
     }
 
@@ -266,6 +285,7 @@ public class RoleProxy : BaseRemoteProxy
                 this._LimitValueKeys.Add(config.IDs);
         }
 
+ 
         this._role.UID = UIRoot.Intance._sdkCore.userId;
         this._role.Name = UIRoot.Intance._sdkCore.displayName;
         this.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);

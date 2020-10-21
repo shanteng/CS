@@ -50,5 +50,6 @@ public class CostItem : UIBase
     {
         this._Icon.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Common, data.id);
         this._Text.text = LanguageConfig.GetLanguage(LanMainDefine.CountValue, data.count);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(this.GetComponent<RectTransform>());
     }
 }

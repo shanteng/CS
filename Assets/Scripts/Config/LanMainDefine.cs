@@ -28,6 +28,9 @@
     public const string Archer = "Archer";
     public const string Infantry = "Infantry";
 
+    public const string RoleLevelExp = "RoleLevelExp";
+    public const string RoleLevelExpFull = "RoleLevelExpFull";
+
 }
 
 public class ConstDefine

@@ -8,7 +8,7 @@ public delegate void UIToggleDelegate(UIToggle btnSelf);
 
 public class UIToggle : UIBase
 {
-    private Toggle _toggle;
+    public Toggle _toggle;
     public Text _text;
     private UIToggleDelegate _listener;
 

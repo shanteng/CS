@@ -51,8 +51,7 @@
     public const string GenerateMyBuildingDo = "GenerateMyBuildingDo";
     public const string GenerateMyBuildingResp = "GenerateMyBuildingResp";
 
-    public const string ShowBuildingInfo = "ShowBuildingInfo";
-
+   
     public const string LoadRoleDo = "LoadRoleDo";
     public const string LoadRoleResp = "LoadRoleResp";
 
@@ -63,6 +62,7 @@
     public const string IncomeHasUpdated = "IncomeHasUpdated";
     public const string NumberValueHasUpdated = "NumberValueHasUpdated";
     public const string ResLimitHasUpdated = "ResLimitHasUpdated";
+    public const string RoleLvExpHasUpdated = "RoleLvExpHasUpdated";
 }
 
 public enum ItemTypeDefine
@@ -135,6 +135,16 @@ public class ElementDefine
     public const string Wind = "Wind";
     public const string Water = "Water";
 }
+
+public class AttributeDefine
+{
+    public const string Attack = "Attack";
+    public const string Defense = "Defense";
+    public const string AtkSpeed = "AtkSpeed";
+    public const string Burst = "Burst";
+}
+
+
 public class SoliderDefine
 {
     public const int Rider = 1;

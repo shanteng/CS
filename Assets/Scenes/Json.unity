@@ -184,3 +184,6 @@ MonoBehaviour:
   - name: RoleLevel
     sheets:
     - RoleLevel
+  - name: Hero
+    sheets:
+    - HeroLevel

@@ -1,0 +1,26 @@
+[
+    {
+        "ID": 1,
+        "Name": "英雄1",
+        "Model": "TestHero",
+        "Career": 1,
+        "Star": 1,
+        "Element": "Fire",
+        "ElementValue": 5,
+        "Range": 1.5,
+        "MarchSpeed": 10,
+        "InitAttribute": [
+            "Attack:20",
+            "Defense:10",
+            "AtkSpeed:1",
+            "Burst:10"
+        ],
+        "AttributeGrow": [
+            "Attack:1.2",
+            "Defense:0.5",
+            "AtkSpeed:0.05",
+            "Burst:1"
+        ],
+        "Skill": 1000
+    }
+]
