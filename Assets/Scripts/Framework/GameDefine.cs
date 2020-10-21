@@ -103,6 +103,7 @@ class ProxyNameDefine
     public const string TIME_CENTER = "TIME_CENTER";
     public const string WORLD = "WORLD";
     public const string ROLE = "ROLE";
+    public const string HERO = "HERO";
 }
 
 public class SceneDefine
@@ -162,5 +163,18 @@ public class SoliderDefine
         if (type.Equals(Infantry))
             return LanguageConfig.GetLanguage(LanMainDefine.Infantry);
         return "";
+    }
+}
+
+public class AttributeInfo
+{
+    public string Id;
+    public float Value;
+
+    public void Init(string keyValueStr)
+    {
+        string[] list = keyValueStr.Split(':');
+        this.Id = list[0];
+        this.Value = UtilTools.ParseFloat(list[1]);
     }
 }
