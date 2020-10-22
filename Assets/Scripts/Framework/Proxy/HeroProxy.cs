@@ -23,8 +23,7 @@ public class HeroProxy : BaseRemoteProxy
         {
             list.Add(data);
         }
-        string fileName = UtilTools.combine(SaveFileDefine.Heros);
-        CloudDataTool.SaveFile(fileName, list);
+        CloudDataTool.SaveFile(SaveFileDefine.HeroDatas, this._datas);
     }
 
     public Hero GetHero(int id)
@@ -62,15 +61,11 @@ public class HeroProxy : BaseRemoteProxy
     public void LoadAllHeros()
     {
         this._datas.Clear();
-        string fileName = UtilTools.combine(SaveFileDefine.Heros);
+        string fileName = UtilTools.combine(SaveFileDefine.HeroDatas);
         string json = CloudDataTool.LoadFile(fileName);
         if (json.Equals(string.Empty) == false)
         {
-            List<Hero> heros = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Hero>>(json);
-            foreach (Hero hero in heros)
-            {
-                this._datas[hero.Id] = hero;
-            }
+           this._datas = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Hero>>(json);
         }
 
         bool hasNewHero = false;

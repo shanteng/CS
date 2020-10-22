@@ -124,6 +124,8 @@ public class HeroConfig : Config<HeroConfig>
     public string[] AttributeGrow;
     public int Skill;
     public string[] Cost;
+    
+
     public int NeedPower;//招募到达声望
     public int NeedFavor;//招募或者好高度高于
     public int Fancy;//FancyDefine
@@ -137,6 +139,16 @@ public class PowerHeroLevelConfig : Config<PowerHeroLevelConfig>
     public int Level;
 
     public PowerHeroLevelConfig() : base(JsonNameDefine.PowerHeroLevel) { }
+    public static int GetLevel(int power)
+    {
+        Dictionary<int, PowerHeroLevelConfig> dic = PowerHeroLevelConfig.Instance.getDataArray();
+        foreach (PowerHeroLevelConfig config in dic.Values)
+        {
+            if (power >= config.PowerRange[0] && power <= config.PowerRange[1])
+                return config.Level;
+        }
+        return 1;
+    }
 }
 
 public class BuildingConfig : Config<BuildingConfig>
@@ -234,9 +246,12 @@ public class ItemInfoConfig : Config<ItemInfoConfig>
     public string Name;//Id
     public string Desc;//
     public int Type;//升级所需时间 ItemTypeDefine
+    public int SubType;//
     public int Quality;//耐久度
     public int isMaxLimit;//
     public string[] Values;
+    public string[] BelongToHeros;
+
     public ItemInfoConfig() : base(JsonNameDefine.ItemInfo,JsonKeyType.STRING) { }
 }
 #endregion

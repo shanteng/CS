@@ -18,27 +18,28 @@ public class SaveFileDefine
     public const string Role = "Role";
     public const string WorldBuiding = "WorldBuiding";
     public const string WorldSpot = "WorldSpot";
-    public const string Heros = "Heros";
+    public const string HeroDatas = "HeroDatas";
 }
 
 public class CloudDataTool
 {
     public static void SaveFile(string filename,object obj)
     {
-        string jsonPath = Application.persistentDataPath + "/" + filename + ".json";
         string content = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
-
-     /*   StreamWriter streamWriter;
-        FileStream fileStream;
-        if (File.Exists(jsonPath))
-            File.Delete(jsonPath);
-        fileStream = new FileStream(jsonPath, FileMode.Create);
-        streamWriter = new StreamWriter(fileStream);
-        streamWriter.Write(content);
-        streamWriter.Close();
-     */
-        //同步云端
         UIRoot.Intance.SaveToCloud(filename, content);
+        /*
+        string jsonPath = Application.persistentDataPath + "/" + filename + ".json";   
+        StreamWriter streamWriter;
+           FileStream fileStream;
+           if (File.Exists(jsonPath))
+               File.Delete(jsonPath);
+           fileStream = new FileStream(jsonPath, FileMode.Create);
+           streamWriter = new StreamWriter(fileStream);
+           streamWriter.Write(content);
+           streamWriter.Close();
+        */
+        //同步云端
+
     }
 
     public static string LoadFile(string filename)

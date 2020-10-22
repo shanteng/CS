@@ -100,10 +100,12 @@ public enum ItemTypeDefine
     GIVE_FAVOR = 3,
 }
 
+
+
 public enum FancyDefine
 {
     WINE = 1,
-    EQUIPMENT = 2,
+    DRAWING = 2,
     BOOK = 3,
     TREASURE = 4,
 }
@@ -267,6 +269,13 @@ public class ItemKey
     }
 }
 
+public enum EqupType
+{
+    Weapon =1,
+    Armor = 2,
+    Horse = 3,
+};
+
 public class Hero
 {
     public int Id;//唯一标识
@@ -281,17 +290,20 @@ public class Hero
     public int TeamId;//上阵队伍ID 0-未上阵
     public int Favor;//好感度
     public Dictionary<string, int> GetItems;//获得过的馈赠
+    public Dictionary<int, string> Equips;// EqupType 装备的部位和道具ID
+  
 
     public void Create(HeroConfig config)
     {
         this.Id = config.ID;
-        this.Level = 1;//可以根据主角的声望来进行初始设置
+        this.Level = PowerHeroLevelConfig.GetLevel(RoleProxy._instance.Role.Power);
         this.Exp = 0;
         this.Blood = 0;
         this.Belong = (int)HeroBelong.Wild;
         this.TeamId = 0;
         this.Favor = 0;
         this.GetItems = new Dictionary<string, int>();
+        this.Equips = new Dictionary<int, string>();
         this.ComputeAttributes();
     }
 
@@ -307,27 +319,32 @@ public class Hero
         Dictionary<string, float> levelAddValueDic = AttributeData.InitAttributes(config.AttributeGrow);
         BuildingEffectsData bdAddData = WorldProxy._instance.GetBuildingEffects();
 
-        foreach (string key in initValueDic.Keys)
+        var it = initValueDic.Keys.GetEnumerator();
+
+        while (it.MoveNext())
         {
+            string key = it.Current;
             float curAdd = 0;
+            float initValue = initValueDic[key];
             if (levelAddValueDic.TryGetValue(key, out curAdd))
             {
                 float levelAdd = curAdd * (this.Level - 1);
                 //等级增加的属性
-                initValueDic[key] += levelAdd;
+                initValue += levelAdd;
             }
 
             if (bdAddData.CareerAttrAdds[config.Career].TryGetValue(key, out curAdd) && this.Belong == (int)HeroBelong.My)
             {
                 //建筑属性增加只有自己的英雄计算
-                initValueDic[key] += curAdd;
+                initValue += curAdd;
             }
 
             AttributeData data = new AttributeData();
             data.Id = key;
-            data.Value = initValueDic[key];
+            data.Value = initValue;
             this.Attributes.Add(data);
-        }//end for
+        }
+        it.Dispose();
 
         if (this.Belong == (int)HeroBelong.My)
         {

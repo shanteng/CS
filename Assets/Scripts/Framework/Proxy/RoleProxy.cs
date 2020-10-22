@@ -265,6 +265,12 @@ public class RoleProxy : BaseRemoteProxy
  
         this._role.UID = UIRoot.Intance._sdkCore.userId;
         this._role.Name = UIRoot.Intance._sdkCore.displayName;
+
+        //初始化数据
+        MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo, 1);
+        MediatorUtil.SendNotification(NotiDefine.GenerateMyBuildingDo, 1);
+        MediatorUtil.SendNotification(NotiDefine.LoadAllHeroDo);
+        //加载场景
         this.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);
     }//end func
 

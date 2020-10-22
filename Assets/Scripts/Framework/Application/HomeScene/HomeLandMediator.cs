@@ -20,9 +20,6 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.LoadSceneFinish);
         m_lInterestNotifications.Add(NotiDefine.GAME_RESET);
 
-        m_lInterestNotifications.Add(NotiDefine.GenerateMySpotResp);
-        m_lInterestNotifications.Add(NotiDefine.GenerateMyBuildingResp);
-
         m_lInterestNotifications.Add(NotiDefine.CreateOneBuildingResp);
         m_lInterestNotifications.Add(NotiDefine.BuildingRelocateResp);
         m_lInterestNotifications.Add(NotiDefine.BuildingStatusChanged);
@@ -50,18 +47,6 @@ public class HomeLandMediator : BaseNoWindowMediator
                     {
                         this.InitScene();
                     }
-                    break;
-                }
-            case NotiDefine.GenerateMySpotResp:
-                {
-                    List<string> datas = (List<string>)notification.Body;
-                    this._LandManager.OnGenerateMySpotEnd(datas);
-                    break;
-                }
-            case NotiDefine.GenerateMyBuildingResp:
-                {
-                    Dictionary<string, BuildingData> datas = (Dictionary<string, BuildingData>)notification.Body;
-                    this._LandManager.OnGenerateAllBuildingEnd(datas);
                     break;
                 }
             case NotiDefine.CreateOneBuildingResp:

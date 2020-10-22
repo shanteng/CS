@@ -96,6 +96,10 @@ public class WorldProxy : BaseRemoteProxy
         _instance = this;
     }
 
+    public List<string> GetCanOperateSpots()
+    {
+        return this._canOperateSpots;
+    }
 
     public bool IsBuildingByOverLevel(int id, int level)
     {

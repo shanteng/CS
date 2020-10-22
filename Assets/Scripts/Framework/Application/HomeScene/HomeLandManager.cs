@@ -375,11 +375,11 @@ public class HomeLandManager : MonoBehaviour
         this._QuadCanBuild.transform.localScale = new Vector3(row, col, 1);
         this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(row, col, 0, 0));
 
-
-        MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo,this.World);
-        MediatorUtil.SendNotification(NotiDefine.GenerateMyBuildingDo,this.World);
+        this.OnGenerateMySpotEnd(WorldProxy._instance.GetCanOperateSpots());
+        this.OnGenerateAllBuildingEnd(WorldProxy._instance.GetAllBuilding());
 
         ViewControllerLocal.GetInstance().InitBorder(this._config.RowCount, this._config.ColCount);
+
     }
 
     private void CreateOneBuilding(BuildingData data)
