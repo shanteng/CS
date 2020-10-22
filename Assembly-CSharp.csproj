@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\MediatorUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingInfoPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\ConfirmPop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\NoticePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\Popup.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\PopupFactory.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\ResourcesManager.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Assets\Scripts\Framework\ApplicationFacade.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\BuildingCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\ControllersInitializeCommand.cs" />
+    <Compile Include="Assets\Scripts\Framework\Commond\HeroCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\ModelsInitializeCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\RoleCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\StartupCommand.cs" />

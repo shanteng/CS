@@ -16,6 +16,7 @@ public enum JsonKeyType
 public class JsonNameDefine
 {
     public static string Language = "Language";
+    public static string LanError = "LanError";
     public static string ItemInfo = "ItemInfo";
     public static string Building = "Building";
     public static string BuildingUpgrade = "BuildingUpgrade";
@@ -37,6 +38,19 @@ public class JsonNameDefine
 }
 
 #region ConfigClassDefine
+public class LanErrorConfig : Config<LanErrorConfig>
+{
+    public string Value;
+    public LanErrorConfig() : base(JsonNameDefine.LanError, JsonKeyType.STRING) { }
+    public static string GetLanguage(string key, params object[] paramName)
+    {
+        LanErrorConfig config = LanErrorConfig.Instance.GetData(key);
+        if (config == null)
+            return "";
+        return UtilTools.format(config.Value, paramName);
+    }
+}
+
 public class LanguageConfig : Config<LanguageConfig>
 {
     public string Value;
@@ -46,19 +60,7 @@ public class LanguageConfig : Config<LanguageConfig>
         LanguageConfig config = LanguageConfig.Instance.GetData(key);
         if (config == null)
             return "";
-        string valuestr = config.Value;
-        try
-        {
-            valuestr = string.Format(config.Value, paramName);
-        }
-        catch (Exception ex)
-        {
-#if UNITY_EDITOR
-            UnityEngine.Debug.LogError(string.Format("LanguageConfig Key: {0} 参数数量不匹配", key));
-#endif
-        }
-
-        return valuestr;
+        return UtilTools.format(config.Value, paramName);
     }
 }
 
@@ -149,7 +151,7 @@ public class BuildingConfig : Config<BuildingConfig>
         }
 
         if (ValueAddType.StoreLimit.Equals(AddType) ||
-            ValueAddType.TroopAdd.Equals(AddType) ||
+            ValueAddType.HeroMaxBlood.Equals(AddType) ||
             ValueAddType.ReserverLimit.Equals(AddType) ||
             ValueAddType.TroopCount.Equals(AddType) ||
              ValueAddType.RecruitSecs.Equals(AddType) ||

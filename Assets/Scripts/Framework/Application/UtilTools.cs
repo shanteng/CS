@@ -96,15 +96,20 @@ public class UtilTools
         return val;
     }
 
-    public static string format(string template, params object[] paramStrs)
+    public static string format(string valuestr, params object[] paramStrs)
     {
-        string value = template;
-        int count = paramStrs.Length;
-        for (int i = 0; i < count; i++)
+        string afterStr = "";
+        try
         {
-            value = value.Replace(combine("{", i, "}"), paramStrs[i].ToString());
+            afterStr = string.Format(valuestr, paramStrs);
         }
-        return value;
+        catch (Exception ex)
+        {
+#if UNITY_EDITOR
+            UnityEngine.Debug.LogError(string.Format("Language: {0} 参数数量不匹配", valuestr));
+#endif
+        }
+        return afterStr;
     }
 
     public static string NumberFormat(long nNum)

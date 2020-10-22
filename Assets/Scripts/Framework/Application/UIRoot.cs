@@ -77,17 +77,24 @@ public class UIRoot : MonoBehaviour, ISyncCallback
         this._SdkClickHandler.AddListener(OnClickSdkBg);
     }
 
-    public void ShowUIInCenter(GameObject ui, WindowLayer layer)
+    public void ShowUIInCenter(GameObject ui, WindowLayer layer,bool setAnchorCenter)
     {
         Transform parent = this.GetLayer(layer);
         var rectForm = ui.GetComponent<RectTransform>();
-        var offmini = rectForm.offsetMin;
-        var offmax = rectForm.offsetMax;
         rectForm.SetParent(parent.transform);
-        rectForm.offsetMax = offmax;
-        rectForm.offsetMin = offmini;
+
+        if (setAnchorCenter)
+        {
+            var offmini = rectForm.offsetMin;
+            var offmax = rectForm.offsetMax;
+            rectForm.offsetMax = offmax;
+            rectForm.offsetMin = offmini;
+        }
+       
+
         rectForm.localScale = Vector3.one;
         rectForm.localPosition = Vector3.zero;
+
         ui.SetActive(true);
     }
 

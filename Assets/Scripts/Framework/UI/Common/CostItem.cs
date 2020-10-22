@@ -3,14 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemKey
-{
-    public const string gold = "gold";
-    public const string food = "food";
-    public const string wood = "wood";
-    public const string metal = "metal";
-    public const string stone = "stone";
-};
 
 public class CostData
 {

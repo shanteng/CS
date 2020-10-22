@@ -8,6 +8,7 @@ public enum PopType
 {
     COMFIRM,
     BUILDING,
+    NOTICE,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -20,6 +21,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         {
             GameObject.Destroy(this._curShowWin.gameObject);
             this._curShowWin = null;
+            if (this._cor != null)
+            {
+                CoroutineUtil.GetInstance().Stop(this._cor);
+                this._cor = null;
+            }
         }
     }//end func
 
@@ -43,15 +49,32 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.BUILDING, bdKey);
     }
 
+    public void ShowNotice(string notice)
+    {
+        this.ShowPop(PopType.NOTICE, notice);
+    }
+
+    public void ShowErrorNotice(string errorCode, params object[] paramName)
+    {
+        string notice =  LanErrorConfig.GetLanguage(errorCode,paramName);
+        this.ShowNotice(notice);
+    }
+
+    private Coroutine _cor;
     private void ShowPop(PopType type, object content)
     {
         this.Hide();
         this._curShowWin = GetPopUi(type);
         this._curShowWin.setContent(content);
-        if (this._curShowWin._ShowInCenter)
-        {
-            UIRoot.Intance.ShowUIInCenter(this._curShowWin.gameObject, this._curShowWin._layer);
-        }
+        UIRoot.Intance.ShowUIInCenter(this._curShowWin.gameObject, this._curShowWin._layer, this._curShowWin._ShowInCenter);
+        if (this._curShowWin._DestorySecs > 0)
+            _cor = CoroutineUtil.GetInstance().WaitTime(this._curShowWin._DestorySecs, true, WaitDestory);
+    }
+
+    private void WaitDestory(object[] param)
+    {
+        if (this._curShowWin != null)
+            this.Hide();
     }
 
     private Popup GetPopUi(PopType type)
@@ -69,6 +92,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
                     ui = InitBuilding();
                     break;
                 }
+            case PopType.NOTICE:
+                {
+                    ui = InitNotice();
+                    break;
+                }
         }
         return ui;
     }//end func
@@ -84,6 +112,13 @@ public class PopupFactory : SingletonFactory<PopupFactory>
     {
         GameObject view = ResourcesManager.Instance.LoadPopupRes("BuildingInfoPop");
         BuildingInfoPop script = GameObject.Instantiate(view).GetComponent<BuildingInfoPop>();
+        return script;
+    }
+
+    protected Popup InitNotice()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("NoticePop");
+        NoticePop script = GameObject.Instantiate(view).GetComponent<NoticePop>();
         return script;
     }
 }//end class

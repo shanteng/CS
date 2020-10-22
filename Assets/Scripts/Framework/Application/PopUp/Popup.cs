@@ -9,6 +9,7 @@ public class Popup : UIBase
     public UIButton _BtnClose;
     public WindowLayer _layer = WindowLayer.Popup;
     public bool _ShowInCenter = true;
+    public float _DestorySecs = 0;
     private UIScreenHideHandler _ClickHide;
     void Awake()
     {

@@ -207,8 +207,8 @@ public class WorldProxy : BaseRemoteProxy
                 }
             }
         }
+        ComputeEffects();
         this.SendNotification(NotiDefine.GenerateMyBuildingResp, this._datas);
-        this.SendNotification(NotiDefine.InitOutComeDo);
     }
 
     public void DoSaveLocalBuildings()
@@ -239,6 +239,87 @@ public class WorldProxy : BaseRemoteProxy
             return data;
         }
         return null;
+    }
+
+    private BuildingEffectsData _Effects;
+    private void ComputeEffects()
+    {
+        _Effects = new BuildingEffectsData();
+        for (int i = (int)CareerDefine.Rider; i <= (int)CareerDefine.Count; ++i)
+        {
+            Dictionary<string, float> attrDic = new Dictionary<string, float>();
+            attrDic[AttributeDefine.Attack] = 0;
+            attrDic[AttributeDefine.Defense] = 0;
+            attrDic[AttributeDefine.AtkSpeed] = 0;
+            attrDic[AttributeDefine.Burst] = 0;
+            _Effects.CareerAttrAdds[i] = attrDic;
+        }
+
+        _Effects.ElementAdds[ElementDefine.Fire] = 0;
+        _Effects.ElementAdds[ElementDefine.Wind] = 0;
+        _Effects.ElementAdds[ElementDefine.Water] = 0;
+
+        _Effects.IncomeDic[ItemKey.gold] = 0;
+        _Effects.IncomeDic[ItemKey.food] = 0;
+        _Effects.IncomeDic[ItemKey.wood] = 0;
+        _Effects.IncomeDic[ItemKey.metal] = 0;
+        _Effects.IncomeDic[ItemKey.stone] = 0;
+
+
+        Dictionary<string, float> dic = new Dictionary<string, float>();
+        foreach (BuildingData data in this._datas.Values)
+        {
+            if (data._status == BuildingData.BuildingStatus.BUILD || data._status == BuildingData.BuildingStatus.INIT)
+                continue;
+            BuildingConfig config = BuildingConfig.Instance.GetData(data._id);
+            BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(data._id, data._level);
+            if (config.AddType.Equals(ValueAddType.AttributeAdd))
+            {
+                int curCareer = UtilTools.ParseInt(configLevel.AddValues[0]);
+                Dictionary<string, float> attrDic = _Effects.CareerAttrAdds[curCareer];
+                Dictionary<string, float> adds = AttributeData.InitAttributesBy(configLevel.AddValues[1]);
+                foreach (string attr in adds.Keys)
+                {
+                    attrDic[attr] += adds[attr];
+                }
+            }//end if
+            else if (config.AddType.Equals(ValueAddType.ElementAdd))
+            {
+                string curElement = configLevel.AddValues[0];
+                float addValue = UtilTools.ParseFloat(configLevel.AddValues[1]);
+                _Effects.ElementAdds[curElement] += addValue;
+            }
+            else if (config.AddType.Equals(ValueAddType.MarchSpeed))
+            {
+                float addValue = UtilTools.ParseFloat(configLevel.AddValues[0]);
+                _Effects.MarchSpeedAdd += addValue;
+            }
+            else if (config.AddType.Equals(ValueAddType.HeroMaxBlood))
+            {
+                int addValue = UtilTools.ParseInt(configLevel.AddValues[0]);
+                _Effects.MaxBloodAdd += addValue;
+            }
+            else if (config.AddType.Equals(ValueAddType.StoreLimit))
+            {
+                _Effects.ResLimitAdd += UtilTools.ParseInt(configLevel.AddValues[0]);
+            }
+            else if (config.AddType.Equals(ValueAddType.HourTax))
+            {
+                //税收
+                CostData add = new CostData();
+                add.Init(configLevel.AddValues[0]);
+                _Effects.IncomeDic[add.id] += add.count;
+            }
+        }//end for
+
+        //处理监听
+        RoleProxy._instance.ComputeBuildingEffect();
+        HeroProxy._instance.ComputeBuildingEffect();
+    }
+
+    public BuildingEffectsData GetBuildingEffects()
+    {
+        return this._Effects;
     }
 
     private void AddOneTimeListener(BuildingData data)
@@ -294,6 +375,7 @@ public class WorldProxy : BaseRemoteProxy
 
         data.SetStatus(BuildingData.BuildingStatus.NORMAL);
         data.SetLevel(data._level + 1);
+        ComputeEffects();//计算影响
         this.DoSaveLocalBuildings();
         MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
     }
@@ -343,6 +425,7 @@ public class WorldProxy : BaseRemoteProxy
             data._status == BuildingData.BuildingStatus.BUILD)
         {
             data.SetLevel(data._level + 1);//升级完成
+            ComputeEffects();//计算影响
         }
         
         data.SetStatus(BuildingData.BuildingStatus.NORMAL);

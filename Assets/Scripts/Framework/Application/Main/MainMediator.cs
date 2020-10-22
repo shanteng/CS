@@ -17,7 +17,6 @@ public class MainMediator : BaseWindowMediator<MainView>
     protected override void InitListNotificationInterestsInner()
     {
         this.m_HideNoHandleNotifations.Add(NotiDefine.NumberValueHasUpdated);
-        this.m_HideNoHandleNotifations.Add(NotiDefine.IncomeHasUpdated);
         this.m_HideNoHandleNotifations.Add(NotiDefine.ResLimitHasUpdated);
         this.m_HideNoHandleNotifations.Add(NotiDefine.RoleLvExpHasUpdated);
     }
@@ -27,7 +26,6 @@ public class MainMediator : BaseWindowMediator<MainView>
         switch (notification.Name)
         {
             case NotiDefine.NumberValueHasUpdated:
-            case NotiDefine.IncomeHasUpdated:
             case NotiDefine.ResLimitHasUpdated:
                 {
                     this.m_view.UpdateIncome();

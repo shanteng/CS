@@ -1,4 +1,6 @@
-﻿public class NotiDefine
+﻿using Boo.Lang;
+using System.Collections.Generic;
+public class NotiDefine
 {
     public const string APP_START_UP = "APP_START_UP";
     public const string MVC_STARTED = "MVC_STARTED";
@@ -40,7 +42,7 @@
     public const string BuildingCancelDo = "BuildingCancelDo";
     public const string BuildingSpeedUpDo = "BuildingSpeedUpDo";
 
-    
+
     public const string BuildingRemoveNoti = "BuildingRemoveNoti";
 
     public const string ConfirmBuild = "ConfirmBuild";
@@ -55,7 +57,7 @@
     public const string LoadRoleDo = "LoadRoleDo";
     public const string LoadRoleResp = "LoadRoleResp";
 
-    public const string InitOutComeDo = "InitOutComeDo";
+   
     public const string AcceptHourAwardDo = "AcceptHourAwardDo";
     public const string AcceptHourAwardResp = "AcceptHourAwardResp";
 
@@ -63,6 +65,22 @@
     public const string NumberValueHasUpdated = "NumberValueHasUpdated";
     public const string ResLimitHasUpdated = "ResLimitHasUpdated";
     public const string RoleLvExpHasUpdated = "RoleLvExpHasUpdated";
+
+    public const string LoadAllHeroDo = "LoadAllHeroDo";
+    public const string LoadAllHeroResp = "LoadAllHeroResp";
+
+    public const string CreateHeroDo = "CreateHeroDo";
+    public const string CreateHeroResp = "CreateHeroResp";
+
+    public const string AllHeroUpdated = "AllHeroUpdated";
+
+    public const string ErrorCode = "ErrorCode";
+    
+}
+
+public class ErrorCode
+{
+    public const string ValueOutOfRange = "ValueOutOfRange";
 }
 
 public enum ItemTypeDefine
@@ -119,7 +137,7 @@ public class ValueAddType
     public const string StoreLimit = "StoreLimit";
     public const string HourTax = "HourTax";
     public const string World = "World";
-    public const string TroopAdd = "TroopAdd";
+    public const string HeroMaxBlood = "HeroMaxBlood";
     public const string ReserverLimit = "ReserverLimit";
     public const string TroopCount = "TroopCount";
     public const string RecruitSecs = "RecruitSecs";
@@ -146,12 +164,12 @@ public class AttributeDefine
 }
 
 
-public class SoliderDefine
+public class CareerDefine
 {
     public const int Rider = 1;
     public const int Archer = 2;
     public const int Infantry = 3;
-
+    public const int Count = 3;
     public static string GetName(int type)
     {
         if (type.Equals(Rider))
@@ -166,7 +184,7 @@ public class SoliderDefine
     }
 }
 
-public class AttributeInfo
+public class AttributeData
 {
     public string Id;
     public float Value;
@@ -177,4 +195,55 @@ public class AttributeInfo
         this.Id = list[0];
         this.Value = UtilTools.ParseFloat(list[1]);
     }
+
+    public static Dictionary<string,float> InitAttributes(string[] keyValues)
+    {
+        Dictionary<string, float> dic = new Dictionary<string, float>();
+        int len = keyValues.Length;
+        for (int i = 0; i < len; ++i)
+        {
+            AttributeData data = new AttributeData();
+            data.Init(keyValues[i]);
+            float oldValue = 0;
+            if (dic.TryGetValue(data.Id, out oldValue) == false)
+                oldValue = 0;
+            dic[data.Id] = oldValue + data.Value;
+        }
+        return dic;
+    }//end func
+
+    public static Dictionary<string, float> InitAttributesBy(string keyValuesStr,char split='|')
+    {
+        string[] keyvalues = keyValuesStr.Split(split);
+        return InitAttributes(keyvalues);
+    }//end func
 }
+
+public class BuildingEffectsData
+{
+    public System.Collections.Generic.List<string> _changeKeys = new System.Collections.Generic.List<string>();
+    public Dictionary<int, Dictionary<string, float>> CareerAttrAdds = new Dictionary<int, Dictionary<string, float>>();
+    public Dictionary<string, float> ElementAdds = new Dictionary<string, float>();
+    public float MarchSpeedAdd = 0;
+    public int MaxBloodAdd = 0;
+    public int ResLimitAdd = 0;
+    public Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
+}
+
+public class ItemKey
+{
+    public const string gold = "gold";
+    public const string food = "food";
+    public const string wood = "wood";
+    public const string metal = "metal";
+    public const string stone = "stone";
+
+    public static string GetName(string key)
+    {
+        ItemInfoConfig config = ItemInfoConfig.Instance.GetData(key);
+        if (config != null)
+            return config.Name;
+        return "";
+    }
+};
+

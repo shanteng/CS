@@ -2,21 +2,21 @@
 using SMVC.Patterns;
 using System.Collections.Generic;
 
-public class RoleCommand : SimpleCommand
+public class HeroCommand : SimpleCommand
 {
     public override void Execute(INotification notification)
     {
-        RoleProxy proxy = Facade.RetrieveProxy(ProxyNameDefine.ROLE) as RoleProxy;
+        HeroProxy proxy = Facade.RetrieveProxy(ProxyNameDefine.HERO) as HeroProxy;
         switch (notification.Name)
         {
-            case NotiDefine.LoadRoleDo:
+            case NotiDefine.LoadAllHeroDo:
                 {
-                    proxy.LoadOrGenerateRole();
+                    proxy.LoadAllHeros();
                     break;
                 }
-            case NotiDefine.AcceptHourAwardDo:
+            case NotiDefine.CreateHeroDo:
                 {
-                    proxy.AcceptHourAward((string)notification.Body);
+                    proxy.CreateOneHero((int)notification.Body);
                     break;
                 }
         }

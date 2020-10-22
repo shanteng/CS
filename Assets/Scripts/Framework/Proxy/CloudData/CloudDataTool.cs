@@ -18,6 +18,7 @@ public class SaveFileDefine
     public const string Role = "Role";
     public const string WorldBuiding = "WorldBuiding";
     public const string WorldSpot = "WorldSpot";
+    public const string Heros = "Heros";
 }
 
 public class CloudDataTool
