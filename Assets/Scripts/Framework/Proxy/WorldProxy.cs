@@ -273,6 +273,8 @@ public class WorldProxy : BaseRemoteProxy
                 continue;
             BuildingConfig config = BuildingConfig.Instance.GetData(data._id);
             BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(data._id, data._level);
+            this._Effects.PowerAdd += configLevel.Power;
+
             if (config.AddType.Equals(ValueAddType.AttributeAdd))
             {
                 int curCareer = UtilTools.ParseInt(configLevel.AddValues[0]);

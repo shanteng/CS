@@ -21,6 +21,12 @@
             "AtkSpeed:0.05",
             "Burst:1"
         ],
-        "Skill": 1000
+        "Skill": 1000,
+        "Cost": [
+            "gold:20000"
+        ],
+        "NeedPower": 1000,
+        "NeedFavor": 60,
+        "Fancy": 1
     }
 ]

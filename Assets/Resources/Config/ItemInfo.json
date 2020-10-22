@@ -1,1 +1,95 @@
-[{"IDs":"gold","Name":"黄金","Desc":"描述文字","Type":1,"Values":"","Quality":1,"isMaxLimit":0},{"IDs":"food","Name":"粮食","Desc":"描述文字","Type":1,"Values":"","Quality":1,"isMaxLimit":1},{"IDs":"wood","Name":"木材","Desc":"描述文字","Type":1,"Values":"","Quality":1,"isMaxLimit":1},{"IDs":"metal","Name":"铁矿","Desc":"描述文字","Type":1,"Values":"","Quality":1,"isMaxLimit":1},{"IDs":"stone","Name":"石料","Desc":"描述文字","Type":1,"Values":"","Quality":1,"isMaxLimit":1}]
+[
+    {
+        "IDs": "gold",
+        "Name": "黄金",
+        "Desc": "描述文字",
+        "Type": 1,
+        "Values": [],
+        "Quality": 1,
+        "isMaxLimit": 0
+    },
+    {
+        "IDs": "food",
+        "Name": "粮食",
+        "Desc": "描述文字",
+        "Type": 1,
+        "Values": [],
+        "Quality": 1,
+        "isMaxLimit": 1
+    },
+    {
+        "IDs": "wood",
+        "Name": "木材",
+        "Desc": "描述文字",
+        "Type": 1,
+        "Values": [],
+        "Quality": 1,
+        "isMaxLimit": 1
+    },
+    {
+        "IDs": "metal",
+        "Name": "铁矿",
+        "Desc": "描述文字",
+        "Type": 1,
+        "Values": [],
+        "Quality": 1,
+        "isMaxLimit": 1
+    },
+    {
+        "IDs": "stone",
+        "Name": "石料",
+        "Desc": "描述文字",
+        "Type": 1,
+        "Values": [],
+        "Quality": 1,
+        "isMaxLimit": 1
+    },
+    {
+        "IDs": "shuang_gu_jian",
+        "Name": "双股剑",
+        "Desc": "描述文字",
+        "Type": 3,
+        "Values": [
+            "2",
+            "10"
+        ],
+        "Quality": 3,
+        "isMaxLimit": 0
+    },
+    {
+        "IDs": "nv_er_hong",
+        "Name": "女儿红",
+        "Desc": "描述文字",
+        "Type": 3,
+        "Values": [
+            "1",
+            "20"
+        ],
+        "Quality": 3,
+        "isMaxLimit": 0
+    },
+    {
+        "IDs": "shi_jing",
+        "Name": "诗经",
+        "Desc": "描述文字",
+        "Type": 3,
+        "Values": [
+            "3",
+            "15"
+        ],
+        "Quality": 3,
+        "isMaxLimit": 0
+    },
+    {
+        "IDs": "he_shi_bi",
+        "Name": "和氏璧",
+        "Desc": "描述文字",
+        "Type": 3,
+        "Values": [
+            "4",
+            "30"
+        ],
+        "Quality": 3,
+        "isMaxLimit": 0
+    }
+]

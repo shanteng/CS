@@ -1,0 +1,50 @@
+[
+    {
+        "ID": 1,
+        "PowerRange": [
+            0,
+            100
+        ],
+        "Level": 1
+    },
+    {
+        "ID": 2,
+        "PowerRange": [
+            101,
+            1000
+        ],
+        "Level": 5
+    },
+    {
+        "ID": 3,
+        "PowerRange": [
+            1001,
+            5000
+        ],
+        "Level": 10
+    },
+    {
+        "ID": 4,
+        "PowerRange": [
+            5001,
+            15000
+        ],
+        "Level": 15
+    },
+    {
+        "ID": 5,
+        "PowerRange": [
+            15001,
+            50000
+        ],
+        "Level": 20
+    },
+    {
+        "ID": 6,
+        "PowerRange": [
+            50001,
+            999999999
+        ],
+        "Level": 25
+    }
+]

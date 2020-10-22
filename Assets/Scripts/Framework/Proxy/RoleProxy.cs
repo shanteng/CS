@@ -12,7 +12,7 @@ public class RoleInfo
     public string Name;
     public int Level;//
     public int Exp;//
-    
+    public int Power;//声望
     public List<CostData> ItemList;//属性道具
     public List<HourAwardData> AddUpAwards;//当前可以领取的数值
     public int ResValueLimit;//上限
@@ -43,9 +43,19 @@ public class RoleProxy : BaseRemoteProxy
         this._role.ResValueLimit = configCst.ValueInt;
         this._role.ResValueLimit += datas.ResLimitAdd;
 
+        this.ComputePower(false);
         this.UpdateHourAward();
         this.DoSaveRole();
         this.SendNotification(NotiDefine.ResLimitHasUpdated);
+    }
+
+    public void ComputePower(bool save)
+    {
+        BuildingEffectsData datas = WorldProxy._instance.GetBuildingEffects();
+        RoleLevelConfig config = RoleLevelConfig.Instance.GetData(this._role.Level);
+        this._role.Power = config.Power + datas.PowerAdd;
+        if (save)
+            this.DoSaveRole();
     }
 
     private void UpdateHourAward()

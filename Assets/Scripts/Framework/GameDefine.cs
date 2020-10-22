@@ -69,10 +69,14 @@ public class NotiDefine
     public const string LoadAllHeroDo = "LoadAllHeroDo";
     public const string LoadAllHeroResp = "LoadAllHeroResp";
 
-    public const string CreateHeroDo = "CreateHeroDo";
-    public const string CreateHeroResp = "CreateHeroResp";
+    public const string ChangeHeroBelongDo = "ChangeHeroBelongDo";
+ 
 
-    public const string AllHeroUpdated = "AllHeroUpdated";
+    public const string GetHeroNoti = "GetHeroNoti";
+    public const string LosetHeroNoti = "LosetHeroNoti";
+
+
+    public const string HerosUpdated = "HerosUpdated";
 
     public const string ErrorCode = "ErrorCode";
     
@@ -83,10 +87,25 @@ public class ErrorCode
     public const string ValueOutOfRange = "ValueOutOfRange";
 }
 
+public enum HeroBelong
+{
+    Wild= 0,
+    My = -1,
+}
+
 public enum ItemTypeDefine
 {
     RES = 1,
     DROP_BAG = 2,
+    GIVE_FAVOR = 3,
+}
+
+public enum FancyDefine
+{
+    WINE = 1,
+    EQUIPMENT = 2,
+    BOOK = 3,
+    TREASURE = 4,
 }
 
 public enum MediatorDefine
@@ -227,6 +246,7 @@ public class BuildingEffectsData
     public float MarchSpeedAdd = 0;
     public int MaxBloodAdd = 0;
     public int ResLimitAdd = 0;
+    public int PowerAdd = 0;
     public Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
 }
 
@@ -245,5 +265,83 @@ public class ItemKey
             return config.Name;
         return "";
     }
-};
+}
+
+public class Hero
+{
+    public int Id;//唯一标识
+    public int Level;
+    public int Exp;
+    public System.Collections.Generic.List<AttributeData> Attributes;
+    public float MarchSpeed;
+    public float ElementValue;
+    public int Blood;
+    public int MaxBlood;
+    public int Belong;//0-在野 1-我方  >0 为对应Npc君主的ID
+    public int TeamId;//上阵队伍ID 0-未上阵
+    public int Favor;//好感度
+    public Dictionary<string, int> GetItems;//获得过的馈赠
+
+    public void Create(HeroConfig config)
+    {
+        this.Id = config.ID;
+        this.Level = 1;//可以根据主角的声望来进行初始设置
+        this.Exp = 0;
+        this.Blood = 0;
+        this.Belong = (int)HeroBelong.Wild;
+        this.TeamId = 0;
+        this.Favor = 0;
+        this.GetItems = new Dictionary<string, int>();
+        this.ComputeAttributes();
+    }
+
+    public void ComputeAttributes()
+    {
+        HeroConfig config = HeroConfig.Instance.GetData(this.Id);
+        HeroLevelConfig configLv = HeroLevelConfig.Instance.GetData(this.Level);
+        if (this.Attributes == null)
+            this.Attributes = new System.Collections.Generic.List<AttributeData>();
+        else
+            this.Attributes.Clear();
+        Dictionary<string, float> initValueDic = AttributeData.InitAttributes(config.InitAttribute);
+        Dictionary<string, float> levelAddValueDic = AttributeData.InitAttributes(config.AttributeGrow);
+        BuildingEffectsData bdAddData = WorldProxy._instance.GetBuildingEffects();
+
+        foreach (string key in initValueDic.Keys)
+        {
+            float curAdd = 0;
+            if (levelAddValueDic.TryGetValue(key, out curAdd))
+            {
+                float levelAdd = curAdd * (this.Level - 1);
+                //等级增加的属性
+                initValueDic[key] += levelAdd;
+            }
+
+            if (bdAddData.CareerAttrAdds[config.Career].TryGetValue(key, out curAdd) && this.Belong == (int)HeroBelong.My)
+            {
+                //建筑属性增加只有自己的英雄计算
+                initValueDic[key] += curAdd;
+            }
+
+            AttributeData data = new AttributeData();
+            data.Id = key;
+            data.Value = initValueDic[key];
+            this.Attributes.Add(data);
+        }//end for
+
+        if (this.Belong == (int)HeroBelong.My)
+        {
+            this.MarchSpeed = config.MarchSpeed + bdAddData.MarchSpeedAdd;
+            this.ElementValue = config.ElementValue + bdAddData.ElementAdds[config.Element];
+            this.MaxBlood = configLv.BloodMax + bdAddData.MaxBloodAdd;
+        }
+        else
+        {
+            this.MarchSpeed = config.MarchSpeed ;
+            this.ElementValue = config.ElementValue;
+            this.MaxBlood = configLv.BloodMax;
+        }
+
+    }//end function
+}
 

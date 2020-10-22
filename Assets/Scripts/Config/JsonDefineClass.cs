@@ -25,6 +25,8 @@ public class JsonNameDefine
     public static string RoleLevel = "RoleLevel";
     public static string Hero = "Hero";
     public static string HeroLevel = "HeroLevel";
+    public static string PowerHeroLevel = "PowerHeroLevel";
+
 
     public static JArray JsonRead(string name)
     {
@@ -121,7 +123,20 @@ public class HeroConfig : Config<HeroConfig>
     public string[] InitAttribute;
     public string[] AttributeGrow;
     public int Skill;
+    public string[] Cost;
+    public int NeedPower;//招募到达声望
+    public int NeedFavor;//招募或者好高度高于
+    public int Fancy;//FancyDefine
+
     public HeroConfig() : base(JsonNameDefine.Hero) { }
+}
+
+public class PowerHeroLevelConfig : Config<PowerHeroLevelConfig>
+{
+    public int[] PowerRange;
+    public int Level;
+
+    public PowerHeroLevelConfig() : base(JsonNameDefine.PowerHeroLevel) { }
 }
 
 public class BuildingConfig : Config<BuildingConfig>
@@ -218,12 +233,11 @@ public class ItemInfoConfig : Config<ItemInfoConfig>
 {
     public string Name;//Id
     public string Desc;//
-    public int Type;//升级所需时间
+    public int Type;//升级所需时间 ItemTypeDefine
     public int Quality;//耐久度
     public int isMaxLimit;//
     public string[] Values;
     public ItemInfoConfig() : base(JsonNameDefine.ItemInfo,JsonKeyType.STRING) { }
-
 }
 #endregion
 

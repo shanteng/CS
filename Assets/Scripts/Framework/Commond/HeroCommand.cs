@@ -14,9 +14,9 @@ public class HeroCommand : SimpleCommand
                     proxy.LoadAllHeros();
                     break;
                 }
-            case NotiDefine.CreateHeroDo:
+            case NotiDefine.ChangeHeroBelongDo:
                 {
-                    proxy.CreateOneHero((int)notification.Body);
+                    proxy.ChangeHeroBelong(notification.Body as Dictionary<string, object>);
                     break;
                 }
         }
