@@ -40,7 +40,7 @@ public class DataGrid : UIBase
     private Vector2 sizeDelta = Vector2.zero;
  
     private IScollItemClickListener _onClickListnerer = null;
-    public Text _sizeTxt;
+    //public Text _sizeTxt;
     public void AddClickEvent(IScollItemClickListener listener)
     {
         this._onClickListnerer = listener;
@@ -78,7 +78,7 @@ public class DataGrid : UIBase
                 this.sizeDelta.y = rt.sizeDelta.y;
             }
 
-            this._sizeTxt.text = UtilTools.combine("Screen.currentResolution.width:", Screen.currentResolution.width, " ScreenWidth:", Screen.width);
+           // this._sizeTxt.text = UtilTools.combine("Screen.currentResolution.width:", Screen.currentResolution.width, " ScreenWidth:", Screen.width);
         }
        
         this.m_goItemRender.SetActive(false);

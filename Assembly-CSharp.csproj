@@ -71,6 +71,9 @@
     <Compile Include="Assets\Scripts\Config\LanMainDefine.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitItemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\Building.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\ColorFlash.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeLandManager.cs" />
@@ -120,7 +123,11 @@
     <Compile Include="Assets\Scripts\Framework\Proxy\RoleProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\TimeCenterProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\WorldProxy.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\CostBig.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\CostItem.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\EquipItem.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\FullBg.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\HeroStar.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NonDrawingGraphic.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NumberAnimation.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIBase.cs" />

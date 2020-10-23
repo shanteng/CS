@@ -31,6 +31,13 @@
     public const string RoleLevelExp = "RoleLevelExp";
     public const string RoleLevelExpFull = "RoleLevelExpFull";
 
+    public const string RecruitCondition = "RecruitCondition";
+    public const string OwnCount = "OwnCount";
+
+    public const string Weapon = "Weapon";
+    public const string Armor = "Armor";
+    public const string Horse = "Horse";
+
 }
 
 public class ConstDefine
@@ -39,5 +46,6 @@ public class ConstDefine
     public const string InitOutCome = "InitOutCome";
     public const string InitLimit = "InitLimit";
     public const string IncomeShowValue = "IncomeShowValue";
+    public const string TavernRefreshSecs = " TavernRefreshSecs";
 }
 

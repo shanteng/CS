@@ -67,38 +67,68 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 17680
+    totalSpriteSurfaceArea: 88663
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 44b52f504cea893498de44360039ef04, type: 3}
+  - {fileID: 21300000, guid: 6f9f4c90f9e9a3c43861f45b428793ff, type: 3}
   - {fileID: 21300000, guid: 3c63c101e028329479a0826e3dc7bf33, type: 3}
   - {fileID: 21300000, guid: ecf57c0120c3c9a429a3152488058e26, type: 3}
-  - {fileID: 21300000, guid: c0498ec27046a984e829b5e1b3622200, type: 3}
-  - {fileID: 21300000, guid: a0f904930cbab7b41ad99da185e09f1f, type: 3}
+  - {fileID: 21300000, guid: 615655c13b66a9e47abe2b940ca31759, type: 3}
+  - {fileID: 21300000, guid: 641edc32121d4f4458d79e86fba3a51f, type: 3}
+  - {fileID: 21300000, guid: 50df9062126c71d499b8bcb9dba4da9a, type: 3}
+  - {fileID: 21300000, guid: 50cefcc252b1b3a44a1e0ce772f1c4a7, type: 3}
+  - {fileID: 21300000, guid: 674411b392f4fd2408ce0343b71f0cce, type: 3}
   - {fileID: 21300000, guid: c41d82e3400ec804ba0a733868584473, type: 3}
+  - {fileID: 21300000, guid: 155a53a403bcf6943bdfaeef187be7dd, type: 3}
+  - {fileID: 21300000, guid: 2b01c1c5a5834a34a9aa058ecaba500b, type: 3}
   - {fileID: 21300000, guid: 88da0326d6d9a2d49b27d82e8d3ad4fa, type: 3}
-  - {fileID: 21300000, guid: d1b8dfb6c60a1674c80a6bb2b045b449, type: 3}
+  - {fileID: 21300000, guid: 67c4d4464f0c29945860f45f632a4474, type: 3}
+  - {fileID: 21300000, guid: 023ea3a6116e2534c9f1f155c0a3e110, type: 3}
+  - {fileID: 21300000, guid: aac48657c8af1e648aea489a158ca4bc, type: 3}
   - {fileID: 21300000, guid: 72d160a71e26ebd479d602b0072fde56, type: 3}
+  - {fileID: 21300000, guid: 37b9b918067717b439c1a276c03a7a4a, type: 3}
   - {fileID: 21300000, guid: 14734a38a783a894286fd5572a961253, type: 3}
+  - {fileID: 21300000, guid: d41f513a8458b5646a70c8083c37ec17, type: 3}
   - {fileID: 21300000, guid: 30c5988a6a4f4ec4da9dd7431c002265, type: 3}
   - {fileID: 21300000, guid: e5083ada032c6c848a6e7adf943355e7, type: 3}
+  - {fileID: 21300000, guid: 21f3f04b9f1f77b42bead348d8f43bc9, type: 3}
+  - {fileID: 21300000, guid: 7658f57bb0a260544838026eb0658157, type: 3}
+  - {fileID: 21300000, guid: f9fc57eb747a5a349bb878a27652ec41, type: 3}
   - {fileID: 21300000, guid: eb243e7cc414d9d48a974d41a66bb77f, type: 3}
-  - {fileID: 21300000, guid: 3d28104f82469ae4cacc760fdefbba0a, type: 3}
+  - {fileID: 21300000, guid: 78c21a8c51d924642a564593efb319d6, type: 3}
   - {fileID: 21300000, guid: e0a52d6fa30868f4db961e9a82b8f714, type: 3}
+  - {fileID: 21300000, guid: 983f409f3d88ece4cb8e1edec06394d9, type: 3}
   m_PackedSpriteNamesToIndex:
+  - Prompt
+  - ItemFrame4
   - power02
   - check
-  - aps
-  - attack
+  - Fire
+  - 6-STAR
+  - ca1
+  - Title-LIGHT
+  - ItemFrame3
   - img_lock
+  - ca4
+  - close
   - metal
-  - brute
+  - 0-STAR
+  - ball
+  - ItemFrame1
   - bg_frame
+  - frame
   - food
+  - ItemFrame2
   - gold
   - power01
+  - ItemFrame5
+  - ca2
+  - Wind
   - stone
-  - defense
+  - Water
   - wood
+  - bgframe
   m_Tag: Common
   m_IsVariant: 0

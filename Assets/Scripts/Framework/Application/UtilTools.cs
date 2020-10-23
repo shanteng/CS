@@ -234,6 +234,24 @@ public class UtilTools
         }//end for
     }//end func
 
+    public static void SetCostList(List<CostBig> items, string[] Costs,bool needMy = false)
+    {
+        int len = Costs.Length;
+        int count = items.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            if (i >= len)
+            {
+                items[i].Hide();
+                continue;
+            }
+            CostData data = new CostData();
+            data.Init(Costs[i]);
+            items[i].SetData(data, needMy);
+            items[i].Show();
+        }//end for
+    }//end func
+
 
     public static VInt2 WorldToGameCordinate(int x, int z)
     {

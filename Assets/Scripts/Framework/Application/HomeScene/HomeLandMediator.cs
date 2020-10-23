@@ -63,8 +63,11 @@ public class HomeLandMediator : BaseNoWindowMediator
                 }
             case NotiDefine.BuildingStatusChanged:
                 {
-                    string key = (string)notification.Body;
-                    this._LandManager.OnBuildingStateChanged(key);
+                    if (this._isHomeLoaded)
+                    {
+                        string key = (string)notification.Body;
+                        this._LandManager.OnBuildingStateChanged(key);
+                    }
                     break;
                 }
             case NotiDefine.ConfirmBuild:
@@ -75,8 +78,11 @@ public class HomeLandMediator : BaseNoWindowMediator
                 }
             case NotiDefine.BuildingRemoveNoti:
                 {
-                    string key = (string)notification.Body;
-                    this._LandManager.OnRemoveBuild(key);
+                    if (this._isHomeLoaded)
+                    {
+                        string key = (string)notification.Body;
+                        this._LandManager.OnRemoveBuild(key);
+                    }
                     break;
                 }
             case NotiDefine.TryBuildBuilding:

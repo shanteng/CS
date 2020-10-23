@@ -118,7 +118,8 @@ public enum MediatorDefine
     HOME_LAND,
     SCENE_LOADER,
     MAIN,
-    BUILD_CENTER
+    BUILD_CENTER,
+    RECRUIT
 }
 
 public class VInt2
@@ -167,6 +168,7 @@ public class ValueAddType
     public const string MarchSpeed = "MarchSpeed";
     public const string Defense = "Defense";
     public const string DeployCount = "DeployCount";
+    public const string HeroRecruit = "HeroRecruit";
 }
 
 public class ElementDefine
@@ -269,7 +271,7 @@ public class ItemKey
     }
 }
 
-public enum EqupType
+public enum EquipType
 {
     Weapon =1,
     Armor = 2,
@@ -362,3 +364,30 @@ public class Hero
     }//end function
 }
 
+
+public class CostData
+{
+    public string id;
+    public int count;
+
+    public void Init(string keyValueStr)
+    {
+        string[] list = keyValueStr.Split(':');
+        this.id = list[0];
+        this.count = UtilTools.ParseInt(list[1]);
+    }
+
+    public void Init(CostData d)
+    {
+        this.id = d.id;
+        this.count = d.count;
+    }
+}
+
+public class HourAwardData
+{
+    public string id;
+    public int add_up_value;//当前已经累计量
+    public float base_secs_value;//每秒可产出的量
+    public long generate_time;//开始计算的时间
+}

@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Item
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 47
+      m_TextureCompression: 1
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 2
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    - serializedVersion: 3
+      m_BuildTarget: Standalone
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 6dde56fc9d8508e468d91ad2a4380fe2, type: 3}
+    totalSpriteSurfaceArea: 102400
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 46ba8702c909f454bb8cccde0698c780, type: 3}
+  - {fileID: 21300000, guid: a6a5d6539af0d784488ffc88c32e4f54, type: 3}
+  - {fileID: 21300000, guid: 5df7aa53b7be258449376dd13a2418dd, type: 3}
+  - {fileID: 21300000, guid: 49944864cd8ef35418aaca7a6eca4add, type: 3}
+  - {fileID: 21300000, guid: 93ec1b84c7f43e546862c4956cbd0953, type: 3}
+  - {fileID: 21300000, guid: 5ac6275540554a44e8b39380600ee719, type: 3}
+  - {fileID: 21300000, guid: 946312a5433eae64db2251046c568c19, type: 3}
+  - {fileID: 21300000, guid: 6a91d196bdbfb644bb4db7f4edca7e4b, type: 3}
+  - {fileID: 21300000, guid: 183ec44792767324ba80a563b00e52d9, type: 3}
+  - {fileID: 21300000, guid: d2e4649779d0db748a82b0c2937bf5b0, type: 3}
+  - {fileID: 21300000, guid: d2701de781505e841b44fa77213cbb2a, type: 3}
+  - {fileID: 21300000, guid: 8c81b108e8d844e47899a066c5a9feaa, type: 3}
+  - {fileID: 21300000, guid: 0195d6a9c0c1a1d49b743ddc5cd04e99, type: 3}
+  - {fileID: 21300000, guid: 8510e39af878c944ca18a8a5d462545d, type: 3}
+  - {fileID: 21300000, guid: e301a28da44573642945d27218201116, type: 3}
+  - {fileID: 21300000, guid: 98c1293f74bd3014499fb866deb3e856, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - metal
+  - nv_er_hong
+  - wood
+  - stone
+  - soldier_equip_3_b
+  - chi_tu_ma
+  - qing_long_yan_yu_dao
+  - yu_pei
+  - ming_hua
+  - jing_shu
+  - niu_bi_kui_jia
+  - exp
+  - bao_dao
+  - gold
+  - shuang_gu_jian
+  - food
+  m_Tag: Item
+  m_IsVariant: 0

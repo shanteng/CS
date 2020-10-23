@@ -26,6 +26,7 @@ public class JsonNameDefine
     public static string Hero = "Hero";
     public static string HeroLevel = "HeroLevel";
     public static string PowerHeroLevel = "PowerHeroLevel";
+    public static string HeroPool = "HeroPool";
 
 
     public static JArray JsonRead(string name)
@@ -151,6 +152,12 @@ public class PowerHeroLevelConfig : Config<PowerHeroLevelConfig>
     }
 }
 
+public class HeroPoolConfig : Config<HeroPoolConfig>
+{
+    public int[] QualtyRate;
+    public HeroPoolConfig() : base(JsonNameDefine.HeroPool) { }
+}
+
 public class BuildingConfig : Config<BuildingConfig>
 {
     public string Prefab;
@@ -193,6 +200,12 @@ public class BuildingConfig : Config<BuildingConfig>
             string[] list = AddValue[0].Split(':');
             string attrName = LanguageConfig.GetLanguage(list[0]);
             return LanguageConfig.GetLanguage(AddType, attrName, list[1]);
+        }
+
+        if (ValueAddType.HeroRecruit.Equals(AddType))
+        {
+            string count = AddValue[0];
+            return LanguageConfig.GetLanguage(AddType, count);
         }
 
         if (ValueAddType.AttributeAdd.Equals(AddType))
@@ -245,6 +258,7 @@ public class ItemInfoConfig : Config<ItemInfoConfig>
 {
     public string Name;//Id
     public string Desc;//
+    public string Icon;//
     public int Type;//升级所需时间 ItemTypeDefine
     public int SubType;//
     public int Quality;//耐久度
@@ -253,6 +267,17 @@ public class ItemInfoConfig : Config<ItemInfoConfig>
     public string[] BelongToHeros;
 
     public ItemInfoConfig() : base(JsonNameDefine.ItemInfo,JsonKeyType.STRING) { }
+
+    public static string GetEquipTypeName(EquipType type)
+    {
+        if (type == EquipType.Weapon)
+            return LanguageConfig.GetLanguage(LanMainDefine.Weapon);
+        if (type == EquipType.Armor)
+            return LanguageConfig.GetLanguage(LanMainDefine.Armor);
+        if (type == EquipType.Horse)
+            return LanguageConfig.GetLanguage(LanMainDefine.Horse);
+        return type.ToString();
+    }
 }
 #endregion
 
