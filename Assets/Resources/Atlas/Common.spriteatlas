@@ -67,7 +67,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 88663
+    totalSpriteSurfaceArea: 100019
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -78,6 +78,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 615655c13b66a9e47abe2b940ca31759, type: 3}
   - {fileID: 21300000, guid: 641edc32121d4f4458d79e86fba3a51f, type: 3}
   - {fileID: 21300000, guid: 50df9062126c71d499b8bcb9dba4da9a, type: 3}
+  - {fileID: 21300000, guid: 7aa35d92bfdf94b4b9144560b5d4a7ed, type: 3}
   - {fileID: 21300000, guid: 50cefcc252b1b3a44a1e0ce772f1c4a7, type: 3}
   - {fileID: 21300000, guid: 674411b392f4fd2408ce0343b71f0cce, type: 3}
   - {fileID: 21300000, guid: c41d82e3400ec804ba0a733868584473, type: 3}
@@ -86,18 +87,21 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 88da0326d6d9a2d49b27d82e8d3ad4fa, type: 3}
   - {fileID: 21300000, guid: 67c4d4464f0c29945860f45f632a4474, type: 3}
   - {fileID: 21300000, guid: 023ea3a6116e2534c9f1f155c0a3e110, type: 3}
+  - {fileID: 21300000, guid: 5412f227a8527d542a5a8437992d2cbd, type: 3}
   - {fileID: 21300000, guid: aac48657c8af1e648aea489a158ca4bc, type: 3}
   - {fileID: 21300000, guid: 72d160a71e26ebd479d602b0072fde56, type: 3}
   - {fileID: 21300000, guid: 37b9b918067717b439c1a276c03a7a4a, type: 3}
   - {fileID: 21300000, guid: 14734a38a783a894286fd5572a961253, type: 3}
   - {fileID: 21300000, guid: d41f513a8458b5646a70c8083c37ec17, type: 3}
   - {fileID: 21300000, guid: 30c5988a6a4f4ec4da9dd7431c002265, type: 3}
+  - {fileID: 21300000, guid: f6404faa85881ec4d8bd8446ea3bbbd4, type: 3}
   - {fileID: 21300000, guid: e5083ada032c6c848a6e7adf943355e7, type: 3}
   - {fileID: 21300000, guid: 21f3f04b9f1f77b42bead348d8f43bc9, type: 3}
   - {fileID: 21300000, guid: 7658f57bb0a260544838026eb0658157, type: 3}
   - {fileID: 21300000, guid: f9fc57eb747a5a349bb878a27652ec41, type: 3}
   - {fileID: 21300000, guid: eb243e7cc414d9d48a974d41a66bb77f, type: 3}
   - {fileID: 21300000, guid: 78c21a8c51d924642a564593efb319d6, type: 3}
+  - {fileID: 21300000, guid: 2a4bbdbdab1563749b99792c8b11366f, type: 3}
   - {fileID: 21300000, guid: e0a52d6fa30868f4db961e9a82b8f714, type: 3}
   - {fileID: 21300000, guid: 983f409f3d88ece4cb8e1edec06394d9, type: 3}
   m_PackedSpriteNamesToIndex:
@@ -108,26 +112,30 @@ SpriteAtlas:
   - Fire
   - 6-STAR
   - ca1
+  - optionsBG
   - Title-LIGHT
   - ItemFrame3
   - img_lock
-  - ca4
+  - ca3
   - close
   - metal
   - 0-STAR
   - ball
+  - plus02
   - ItemFrame1
   - bg_frame
   - frame
   - food
   - ItemFrame2
   - gold
+  - smallcircle
   - power01
   - ItemFrame5
   - ca2
   - Wind
   - stone
   - Water
+  - Selectedbar
   - wood
   - bgframe
   m_Tag: Common
