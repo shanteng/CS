@@ -86,7 +86,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.playerid-cn": {
-      "version": "0.2.5-preview.10",
+      "version": "0.2.5-preview.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
