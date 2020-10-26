@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using SMVC.Patterns;
 using UnityEngine;
+using UnityEngine.PlayerIdentity;
 
 public class RoleInfo
 {
@@ -231,8 +232,9 @@ public class RoleProxy : BaseRemoteProxy
         else
         {
             this._role = new RoleInfo();
-            this._role.UID = UIRoot.Intance._sdkCore.userId;
-            this._role.Name = UIRoot.Intance._sdkCore.displayName;
+           ;
+            this._role.UID = PlayerIdentityManager.Current.userId;
+            this._role.Name = PlayerIdentityManager.Current.displayName;
             this._role.Level = 1;
             this._role.Exp = 0;
             ConstConfig config = ConstConfig.Instance.GetData(ConstDefine.InitRes);
@@ -262,13 +264,12 @@ public class RoleProxy : BaseRemoteProxy
                 this._LimitValueKeys.Add(config.IDs);
         }
 
- 
-        this._role.UID = UIRoot.Intance._sdkCore.userId;
-        this._role.Name = UIRoot.Intance._sdkCore.displayName;
+
+        this._role.UID = PlayerIdentityManager.Current.userId;
+        this._role.Name = PlayerIdentityManager.Current.displayName;
 
         //初始化数据
         MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo, 1);
-        MediatorUtil.SendNotification(NotiDefine.GenerateMyBuildingDo, 1);
         MediatorUtil.SendNotification(NotiDefine.LoadAllHeroDo);
         //加载场景
         this.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);

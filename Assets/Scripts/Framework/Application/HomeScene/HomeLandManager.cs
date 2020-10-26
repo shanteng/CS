@@ -8,28 +8,21 @@ public class HomeLandManager : MonoBehaviour
 {
     public static float Degree = 45;
 
-    private WorldConfig _config;
     public int World = 1;
+    private WorldConfig _config;
+
     public MeshRenderer _HomePlane;
     public MeshRenderer _QuadCanBuild;
 
-    public List<SpotCube> _spotPrefabs;
-    public BuildingUI _uiPrefabs;
+    public MyCity _cityPrefab;
     public BuildCanvas _BuildCanvas;
 
-    public List<Building> _BuildPrefabs;
-    private Dictionary<string, Building> _BuildPrefabDic;
+    private MyCity _myLandCity;
 
-
-    private Dictionary<string, List<VInt2>> _BuildingDic;
-    private Dictionary<string,Building> _AllBuildings;
-    private List<string> _SpotHasOccupys;//key x|z,bool value
-
-    private List<string> _canOperateSpots = new List<string>();//key x|z
-   // private Dictionary<string, SpotCube> _allSpotDic;//key格式x|y,存储当前所有的地块
     public bool isTryBuild => this._TryBuildScript != null;
     private Building _TryBuildScript;
     private InfoCanvas _infoCanvas;
+    private string _currentBuildKey = "";
 
     private static HomeLandManager instance;
     public static HomeLandManager GetInstance()
@@ -40,23 +33,14 @@ public class HomeLandManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        this._BuildPrefabDic = new Dictionary<string, Building>();
-        foreach (Building bd in this._BuildPrefabs)
-        {
-            this._BuildPrefabDic[bd.name] = bd;
-        }
-        
     }
-
 
     void Start()
     {
         this._BuildCanvas.Hide();
-      //  this._QuadCanBuild.gameObject.SetActive(false);
     }
 
-
-    public bool canBuildInSpot(string key, int posX, int posZ,int rowCount,int colCount)
+    public bool canBuildInSpot(string key, int posX, int posZ, int rowCount, int colCount)
     {
         for (int row = 0; row < rowCount; ++row)
         {
@@ -69,8 +53,8 @@ public class HomeLandManager : MonoBehaviour
                     return false;
 
                 string spotKey = UtilTools.combine(curX, "|", curZ);
-                bool inOther = _SpotHasOccupys.Contains(spotKey);//是否占领了别人的格子
-                bool isInMySpot = this.isInMyOldRange(curX, curZ, key);//占领的是不本身我自己的格子
+                bool inOther = this._myLandCity.HasOccupy(spotKey);//是否占领了别人的格子
+                bool isInMySpot = _myLandCity.isInMyOldRange(curX, curZ, key);//占领的是不本身我自己的格子
                 if (inOther && isInMySpot == false)
                     return false;//不可以建造
             }
@@ -82,23 +66,9 @@ public class HomeLandManager : MonoBehaviour
     public bool CanOperateSpot(int x, int z)
     {
         string key = UtilTools.combine(x, "|", z);
-        return this._canOperateSpots.Contains(key);
+        return WorldProxy._instance.GetCanOperateSpots().Contains(key);
     }
 
-    private bool isInMyOldRange(int x, int z, string key)
-    {
-        List<VInt2> buildOccupy = null;
-        if (this._BuildingDic.TryGetValue(key, out buildOccupy) == false)
-            return false;//我本身还没有建造
-
-        foreach (VInt2 pos in buildOccupy)
-        {
-            if (pos.x == x && pos.y == z)
-                return true;
-        }
-
-        return false;
-    }
 
 
     public void OnCreateResp(BuildingData data)
@@ -110,25 +80,25 @@ public class HomeLandManager : MonoBehaviour
         building._data = data;
         building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
         building.SetCurrentState();
-        this._AllBuildings.Add(data._key, building);
-        this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
+        this._myLandCity.AddOneBuilding(data._key, building);
+        this._myLandCity.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
         this.SetCurrentSelectBuilding(data._key);
         this._TryBuildScript = null;
     }
 
     public void OnRelocateResp(string key)
     {
-        Building curBuild = this.GetBuilding(key);
+        Building curBuild = this._myLandCity.GetBuilding(key);
         if (curBuild != null)
         {
-            this.RecordBuildOccupy(curBuild._data._key, curBuild._data._occupyCordinates);
+            _myLandCity.RecordBuildOccupy(curBuild._data._key, curBuild._data._occupyCordinates);
             this.ShowBuildingInfoCanvas(curBuild);
         }
     }
 
     public void OnBuildingStateChanged(string key)
     {
-        Building curBuild = this.GetBuilding(key);
+        Building curBuild = _myLandCity.GetBuilding(key);
         if (curBuild != null)
         {
             curBuild.SetCurrentState();
@@ -140,79 +110,56 @@ public class HomeLandManager : MonoBehaviour
     public void OnRemoveBuild(string key)
     {
         this.HideInfoCanvas();
-        Building curBuild = this.GetBuilding(key);
+        Building curBuild = _myLandCity.GetBuilding(key);
         if (curBuild != null)
         {
-            this.ClearBuildOccupy(key);
-            _AllBuildings.Remove(key);
+            this._myLandCity.ClearBuildOccupy(key);
             GameObject.Destroy(curBuild.gameObject);
             curBuild = null;
         }
     }
 
 
-    private Building GetBuilding(string key)
-    {
-        Building building;
-        if (this._AllBuildings != null && this._AllBuildings.TryGetValue(key, out building))
-            return building;
-        return null;
-    }
 
     public void BuildInScreenCenterPos(int id)
     {
-       // Vector3 screenSpace = Camera.main.WorldToScreenPoint(new Vector3(0, 0, 0));
         Vector3 posScreen = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(posScreen);//摄像机发射射线到屏幕点。
         if (Physics.Raycast(ray, out hit))//射线发出并碰撞到外壳，那么手臂就应该朝向碰撞点
         {
-            
+
             int xCenter = Mathf.RoundToInt(hit.point.x);
             int zCenter = Mathf.RoundToInt(hit.point.z);
             this.TryBuild(id, xCenter, zCenter);//测试
         }
-
-        // Vector3 posScreenWorld = Camera.main.ScreenToWorldPoint(posScreen);
-
-
-       
     }
-   
 
-    public void OnClickSpotCube(int x,int z)
+
+    public void OnClickSpotCube(int x, int z)
     {
         if (this.isTryBuild)
             return;
         this.SetCurrentSelectBuilding("");
     }
 
-    private Building InitOneBuild(int configid, int x, int z)
-    {
-        BuildingConfig config = BuildingConfig.Instance.GetData(configid);
-        Building prefab;
-        if (config == null || this._BuildPrefabDic.TryGetValue(config.Prefab, out prefab) == false)
-            return null;
-        Building building = GameObject.Instantiate<Building>(prefab, new Vector3(x, Building.drag_offsety, z), Quaternion.identity, this.transform);
-        building.CreateUI(this._uiPrefabs,configid);
-        building.SetRowCol(config.RowCount, config.ColCount);
-        return building;
-    }
-  
+
+
+
     public void TryBuild(int configid, int x, int z)
     {
         this.SetCurrentSelectBuilding("");
         BuildingConfig config = BuildingConfig.Instance.GetData(configid);
         Building prefab;
-        if (config == null || this._BuildPrefabDic.TryGetValue(config.Prefab, out prefab) == false)
+        if (config == null)
             return;
-        Building building = this.InitOneBuild(configid,x,z);
+        Building building = this._myLandCity.InitOneBuild(configid, x, z);
         building._data = new BuildingData();
         building._data.Create(configid, x, z);
         building.SetCurrentState();
         building.SetSelect(true);
         building._flashBase.gameObject.SetActive(true);
-        
+
 
         _BuildCanvas.transform.SetParent(building.transform);
         int zOff = config.RowCount - 2;
@@ -221,6 +168,7 @@ public class HomeLandManager : MonoBehaviour
         _BuildCanvas.Show();
         _TryBuildScript = building;
         _TryBuildScript.SetCanDoState(x, z);
+
     }
 
     public void SetBuildCanvasState(bool canBuild)
@@ -228,12 +176,11 @@ public class HomeLandManager : MonoBehaviour
         this._BuildCanvas.SetState(canBuild);
     }
 
-
-
     public void ConfirmBuild(bool isBuild)
     {
         if (this._TryBuildScript == null)
             return;
+
         this._BuildCanvas.Hide();
         _BuildCanvas.transform.SetParent(this.transform);
         if (isBuild == false)
@@ -285,13 +232,13 @@ public class HomeLandManager : MonoBehaviour
         _infoCanvas.SetBuildState(bd._data);
     }
 
-    public void Build(int configid,int x, int z)
+    public void Build(int configid, int x, int z)
     {
         BuildingConfig config = BuildingConfig.Instance.GetData(configid);
         if (config == null)
             return;
 
-        bool canBuild = this.canBuildInSpot("", x, z,config.RowCount,config.ColCount);
+        bool canBuild = this.canBuildInSpot("", x, z, config.RowCount, config.ColCount);
         if (canBuild == false)
             return;
 
@@ -304,19 +251,11 @@ public class HomeLandManager : MonoBehaviour
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingDo, vo);
     }
 
-    private string _currentBuildKey = "";
+
     public void SetCurrentSelectBuilding(string key)
     {
         this._currentBuildKey = key;
-        Building showBd = null;
-        foreach (Building bd in this._AllBuildings.Values)
-        {
-            bool isCur = key.Equals(bd._data._key);
-            bd.SetSelect(isCur);
-            if(isCur)
-                showBd = bd;
-        }
-
+        Building showBd = this._myLandCity.SetCurrentSelectBuilding(this._currentBuildKey, this.isTryBuild);
         this.ShowBuildingInfoCanvas(showBd);
     }
 
@@ -324,7 +263,7 @@ public class HomeLandManager : MonoBehaviour
     public void SetDraging(bool isd)
     {
         this._isDraging = isd;
-        
+
     }
 
     public void SetQuadVisible(bool show)
@@ -332,84 +271,42 @@ public class HomeLandManager : MonoBehaviour
         //this._QuadCanBuild.gameObject.SetActive(show);
     }
 
-    public  bool IsDraging => _isDraging;
+    public bool IsDraging => _isDraging;
 
-    public void ClearBuildOccupy(string key)
-    {
-        List<VInt2> buildOccupy = null;
-        if (this._BuildingDic.TryGetValue(key, out buildOccupy))
-        {
-            foreach (VInt2 pos in buildOccupy)
-            {
-                string oldKey = UtilTools.combine(pos.x, "|", pos.y);
-                this._SpotHasOccupys.Remove(oldKey);
-            }
-        }
-    }
 
-    public void RecordBuildOccupy(string key, List<VInt2> occs)
-    {
-        this.ClearBuildOccupy(key);
- 
-        List<VInt2> buildOccupy = new List<VInt2>();
-        buildOccupy.AddRange(occs);
-        this._BuildingDic[key] = buildOccupy;
-        foreach (VInt2 pos in buildOccupy)
-        {
-            string curKey = UtilTools.combine(pos.x, "|", pos.y);
-            this._SpotHasOccupys.Add(curKey);
-        }
-    }
 
     public void InitScene()
     {
         this._config = WorldConfig.Instance.GetData(this.World);
         int row = this._config.MaxRowCount + 1;
         int col = this._config.MaxColCount + 1;
+        ViewControllerLocal.GetInstance().InitBorder(row, col);
+
         this._HomePlane.transform.localScale = new Vector3(row, col, 1);
         this._HomePlane.material.SetVector("_MainTex_ST", new Vector4(row, col, 0, 0));
-
-
-        row = this._config.RowCount + 1;
-        col = this._config.ColCount + 1;
-        this._QuadCanBuild.transform.localScale = new Vector3(row, col, 1);
-        this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(row, col, 0, 0));
-
-        this.OnGenerateMySpotEnd(WorldProxy._instance.GetCanOperateSpots());
-        this.OnGenerateAllBuildingEnd(WorldProxy._instance.GetAllBuilding());
-
-        ViewControllerLocal.GetInstance().InitBorder(this._config.RowCount, this._config.ColCount);
-
+        this.GenerateMyCity();
+        this.SetMySpotRange();
     }
 
-    private void CreateOneBuilding(BuildingData data)
+    public void SetMySpotRange()
     {
-        //创建一个
-        Building building   = this.InitOneBuild(data._id, data._cordinate.x, data._cordinate.y);
-        building._data = data;
-        building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
-        building.SetCurrentState();
-        this._AllBuildings.Add(data._key, building);
-        this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
+        int range = WorldProxy._instance.GetBuildingEffects().BuildRange;
+        this._QuadCanBuild.transform.localScale = new Vector3(range + 3, range + 3, 1);
+        this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(range + 3, range + 3, 0, 0));
+        this._myLandCity.SetRange(range, range);
     }
 
-    public void OnGenerateMySpotEnd(List<string> mySpots)
-    {
-        this._canOperateSpots = mySpots;
-    }
 
-    public void OnGenerateAllBuildingEnd(Dictionary<string, BuildingData> builds)
+    private void GenerateMyCity()
     {
-        this._SpotHasOccupys = new List<string>();
-        this._AllBuildings = new Dictionary<string, Building>();
-        this._BuildingDic = new Dictionary<string, List<VInt2>>();
-        foreach (BuildingData data in builds.Values)
-        {
-            this.CreateOneBuilding(data);
-        }
-
+        WorldBuildings worldData = WorldProxy._instance.Data;
+        this._myLandCity = GameObject.Instantiate<MyCity>(this._cityPrefab, new Vector3(worldData.StartCordinates.x, 0, worldData.StartCordinates.y), Quaternion.identity, this.transform);
+        this._myLandCity.name = "MyCity";
+        this._myLandCity.CreateMyCity();
         StartCoroutine(InComeCountDown());
     }
+
+
 
     IEnumerator InComeCountDown()
     {
@@ -423,10 +320,7 @@ public class HomeLandManager : MonoBehaviour
 
     public void UpdateIncome()
     {
-        foreach (Building bd in this._AllBuildings.Values)
-        {
-            bd.UpdateIncome();
-        }
+        _myLandCity.UpdateIncome();
     }
 
 }//end cloass

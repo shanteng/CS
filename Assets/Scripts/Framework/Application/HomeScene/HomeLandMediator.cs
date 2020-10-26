@@ -26,6 +26,7 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.ConfirmBuild);
         m_lInterestNotifications.Add(NotiDefine.BuildingRemoveNoti);
         m_lInterestNotifications.Add(NotiDefine.TryBuildBuilding);
+        m_lInterestNotifications.Add(NotiDefine.HomeRangeChanged);
 
         m_lInterestNotifications.Add(NotiDefine.AcceptHourAwardResp);
     }
@@ -67,6 +68,14 @@ public class HomeLandMediator : BaseNoWindowMediator
                     {
                         string key = (string)notification.Body;
                         this._LandManager.OnBuildingStateChanged(key);
+                    }
+                    break;
+                }
+            case NotiDefine.HomeRangeChanged:
+                {
+                    if (this._isHomeLoaded)
+                    {
+                        this._LandManager.SetMySpotRange();
                     }
                     break;
                 }

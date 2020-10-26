@@ -23,6 +23,7 @@
     public const string ConfirmSure = "ConfirmSure";
     public const string ConfirmCancel = "ConfirmCancel";
     public const string CancelUpgradeNotice = "CancelUpgradeNotice";
+    public const string CancelBuildNotice = "CancelBuildNotice";
 
     public const string Rider = "Rider";
     public const string Archer = "Archer";

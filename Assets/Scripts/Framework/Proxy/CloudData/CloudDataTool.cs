@@ -26,7 +26,7 @@ public class CloudDataTool
     public static void SaveFile(string filename,object obj)
     {
         string content = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
-        UIRoot.Intance.SaveToCloud(filename, content);
+        SdkView.Intance.SaveToCloud(filename, content);
         /*
         string jsonPath = Application.persistentDataPath + "/" + filename + ".json";   
         StreamWriter streamWriter;
@@ -46,7 +46,7 @@ public class CloudDataTool
     {
         //直接从云端读取
 
-        string str = UIRoot.Intance.LoadCloudData(filename);
+        string str = SdkView.Intance.LoadCloudData(filename);
         if (str == null)
             return string.Empty;
         return str;
@@ -67,6 +67,8 @@ public class CloudDataTool
 public class WorldBuildings
 {
     public int World;
+    public string MainCityKey;
+    public VInt2 StartCordinates;//出生地中心点坐标
     public List<BuildingData> Datas;
 }
 

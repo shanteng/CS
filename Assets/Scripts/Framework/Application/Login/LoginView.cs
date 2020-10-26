@@ -22,6 +22,6 @@ public class LoginView : MonoBehaviour
 
     private void OnClear(UIButton btn)
     {
-        UIRoot.Intance.WipeOut();
+        SdkView.Intance.WipeOut();
     }
 }

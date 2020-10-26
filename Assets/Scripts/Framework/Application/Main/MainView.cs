@@ -72,13 +72,13 @@ public class MainView : MonoBehaviour
 
     private void OnSdk(UIButton btn)
     {
-        UIRoot.Intance._SdkView.SetActive(true);
+        SdkView.Intance.ShowSdk();
     }
 
     private void OnClickBuild(UIButton btn)
     {
         HomeLandManager.GetInstance().ConfirmBuild(false);
-        MediatorUtil.ShowMediator(MediatorDefine.RECRUIT);
+        MediatorUtil.ShowMediator(MediatorDefine.BUILD_CENTER);
     }
 
     public void setDianLiang()

@@ -42,6 +42,8 @@ public class NotiDefine
     public const string BuildingCancelDo = "BuildingCancelDo";
     public const string BuildingSpeedUpDo = "BuildingSpeedUpDo";
 
+    public const string HomeRangeChanged = "HomeRangeChanged";
+
 
     public const string BuildingRemoveNoti = "BuildingRemoveNoti";
 
@@ -50,10 +52,6 @@ public class NotiDefine
     public const string GenerateMySpotDo = "GenerateMySpotDo";
     public const string GenerateMySpotResp = "GenerateMySpotResp";
 
-    public const string GenerateMyBuildingDo = "GenerateMyBuildingDo";
-    public const string GenerateMyBuildingResp = "GenerateMyBuildingResp";
-
-   
     public const string LoadRoleDo = "LoadRoleDo";
     public const string LoadRoleResp = "LoadRoleResp";
 
@@ -155,7 +153,7 @@ public class SceneDefine
 
 public class ValueAddType
 {
-    public const string DayTax = "DayTax";
+    public const string BuildRange = "BuildRange";
     public const string StoreLimit = "StoreLimit";
     public const string HourTax = "HourTax";
     public const string World = "World";
@@ -251,7 +249,37 @@ public class BuildingEffectsData
     public int MaxBloodAdd = 0;
     public int ResLimitAdd = 0;
     public int PowerAdd = 0;
+    public int BuildRange = 0;
     public Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
+
+    public void Reset()
+    {
+        for (int i = (int)CareerDefine.Rider; i <= (int)CareerDefine.Count; ++i)
+        {
+            Dictionary<string, float> attrDic = new Dictionary<string, float>();
+            attrDic[AttributeDefine.Attack] = 0;
+            attrDic[AttributeDefine.Defense] = 0;
+            attrDic[AttributeDefine.AtkSpeed] = 0;
+            attrDic[AttributeDefine.Burst] = 0;
+            this.CareerAttrAdds[i] = attrDic;
+        }
+
+        this.ElementAdds[ElementDefine.Fire] = 0;
+        this.ElementAdds[ElementDefine.Wind] = 0;
+        this.ElementAdds[ElementDefine.Water] = 0;
+
+        this.IncomeDic[ItemKey.gold] = 0;
+        this.IncomeDic[ItemKey.food] = 0;
+        this.IncomeDic[ItemKey.wood] = 0;
+        this.IncomeDic[ItemKey.metal] = 0;
+        this.IncomeDic[ItemKey.stone] = 0;
+
+        this.MarchSpeedAdd = 0;
+        this.MaxBloodAdd = 0;
+        this.ResLimitAdd = 0;
+        this.PowerAdd = 0;
+        this.BuildRange = 0;
+    }
 }
 
 public class ItemKey

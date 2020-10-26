@@ -239,7 +239,7 @@ public class ViewControllerLocal : MonoBehaviour
     void JudgeDragMap()
     {
 #if UNITY_EDITOR
-        if (this._DoUpdateDrag && UtilTools.isFingerOverUI() == false)
+        if (this._DoUpdateDrag && UtilTools.isFingerOverUI() == false && this._isOverBuilding == false)
         {
             float xMove = -Input.GetAxisRaw("Mouse X") * Time.deltaTime * _realDragSpeed;
             float yMove = -Input.GetAxisRaw("Mouse Y") * Time.deltaTime * _realDragSpeed;

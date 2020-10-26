@@ -175,8 +175,7 @@ public class BuildingConfig : Config<BuildingConfig>
 
     public static string GetAddOnDesc(string AddType, string[] AddValue)
     {
-        if (ValueAddType.DayTax.Equals(AddType) ||
-            ValueAddType.HourTax.Equals(AddType))
+        if ( ValueAddType.HourTax.Equals(AddType))
         {
             CostData cost = new CostData();
             cost.Init(AddValue[0]);
@@ -245,8 +244,6 @@ public class WorldConfig : Config<WorldConfig>
     public string Name;
     public string Desc;
  
-    public int RowCount;
-    public int ColCount;
     public int MaxRowCount;
     public int MaxColCount;
 

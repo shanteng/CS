@@ -144,7 +144,10 @@ public class InfoCanvas : UIBase, IConfirmListener
                 }
             case OpType.Cancel:
                 {
-                    PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelUpgradeNotice), this, "Cancel");
+                    if(this._data._status == BuildingData.BuildingStatus.UPGRADE)
+                        PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelUpgradeNotice), this, "Cancel");
+                    else if (this._data._status == BuildingData.BuildingStatus.BUILD)
+                        PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelBuildNotice), this, "Cancel");
                     //MediatorUtil.SendNotification(NotiDefine.BuildingCancelDo, this._data._key);
                     break;
                 }

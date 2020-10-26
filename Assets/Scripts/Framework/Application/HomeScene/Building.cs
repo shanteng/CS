@@ -15,6 +15,7 @@ public class Building : MonoBehaviour
     [HideInInspector]
     public PlaneBase _flashBase;
     private Transform _occupyBase;
+    private BoxCollider _collider;
 
     private Transform _BuildingTran; 
     private ColorFlash _flash;
@@ -29,17 +30,18 @@ public class Building : MonoBehaviour
     private string _AddAttr = "";
 
     public List<GameObject> _levelParts;
-
+    private int _offsetDrag;
 
     private Dictionary<string, object> vo = new Dictionary<string, object>();
 
     void Awake()
     {
+        _collider = this.transform.GetComponent<BoxCollider>();
         _flashBase = this.transform.Find("FlashBase").GetComponent<PlaneBase>();
         _occupyBase = this.transform.Find("OccupyBase");
         _BuildingTran = this.transform.Find("Building");
         this._flash = _BuildingTran.GetComponent<ColorFlash>();
-        this._flash.Stop();
+        this._flash.SetOrignal();
         _flashBase.gameObject.SetActive(false);
         CosDegreeValue = Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad);
     }
@@ -54,8 +56,13 @@ public class Building : MonoBehaviour
         Vector3 pos2 = new Vector3(x, 0.512f, z);
         this._occupyBase.transform.localPosition = pos;
         this._flashBase.transform.localPosition = pos2;
+        this._offsetDrag = row - 1;
     }
-  
+
+    public void DoTransparent()
+    {
+        this._flash.DoTransparent();
+    }
 
     public void CreateUI(BuildingUI prefabs,int id)
     {
@@ -167,12 +174,10 @@ public class Building : MonoBehaviour
         float yoffset = offset.y * this.CosDegreeValue;
         curPosition.x -= yoffset;
         curPosition.z += yoffset;
+        //curPosition.x -= 2.5f;
+        curPosition.z -= this._offsetDrag;
         curPosition.x = Mathf.RoundToInt(curPosition.x);
         curPosition.z = Mathf.RoundToInt(curPosition.z);
-       // int maxX = HomeLandManager.ROW_COUNT - this._data._config.RowCount;
-      //  int maxZ = HomeLandManager.COL_COUNT - this._data._config.ColCount;
-       // maxX = Mathf.Clamp((int)curPosition.x, 0, maxX);
-       // maxZ = Mathf.Clamp((int)curPosition.z, 0, maxZ);
 
         this.transform.position = new Vector3(curPosition.x, drag_offsety, curPosition.z);
         this.SetCanDoState((int)curPosition.x, (int)curPosition.z);
@@ -207,6 +212,7 @@ public class Building : MonoBehaviour
     {
         this._isSelect = isSelect;
         this._flash.DoFlash(this._isSelect);
+      
         if (isSelect == false)
             this.EndRelocate();
     }

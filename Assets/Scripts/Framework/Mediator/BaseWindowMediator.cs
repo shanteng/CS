@@ -171,18 +171,8 @@ public abstract class BaseWindowMediator<T> : Mediator
         if (null == obj)
             return;
 
-        Transform parent = UIRoot.Intance.GetLayer(this.m_eWindowLayer);
-        m_viewComponent = Object.Instantiate(obj, parent, false);
+        m_viewComponent = UIRoot.Intance.InstantiateUIInCenter(obj,this.m_eWindowLayer);
         this._viewObj = (GameObject)m_viewComponent;
-        this._viewObj.SetActive(true);
-
-        RectTransform rectForm = _viewObj.GetComponent<RectTransform>();
-        Vector2 offmini = rectForm.offsetMin;
-        Vector2 offmax = rectForm.offsetMax;
-        rectForm.offsetMax = offmax;
-        rectForm.offsetMin = offmini;
-        rectForm.localScale = Vector3.one;
-
         m_view = _viewObj.GetComponent<T>();
 
 

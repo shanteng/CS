@@ -6,9 +6,9 @@ using UnityEngine.EventSystems;
 public class ColorFlash : MonoBehaviour
 {
     public Color _orignColor = Color.white;
-
-    private List<MeshRenderer> _allRenders;
     public Color _EndColor;
+ 
+    private List<MeshRenderer> _allRenders;
     public float _Speed = 1f;
     private Color _curColor;
     private bool _isStart = false;
@@ -43,10 +43,20 @@ public class ColorFlash : MonoBehaviour
         _delatTime = 0;
         this._isStart = start;
         if (start == false)
-            this.Stop();
+            this.SetOrignal();
     }
 
-    public void Stop()
+    public void DoTransparent()
+    {
+        this._isStart = false;
+        _curColor = new Color(this._orignColor.r,this._orignColor.g,this._orignColor.b,0.5f);
+        foreach (MeshRenderer render in this._allRenders)
+        {
+            render.material.color = this._curColor;
+        }
+    }
+
+    public void SetOrignal()
     {
         this.Init();
         this._isStart = false;

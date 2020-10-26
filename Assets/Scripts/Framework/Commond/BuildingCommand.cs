@@ -14,11 +14,6 @@ public class BuildingCommand : SimpleCommand
                     proxy.GenerateAllBaseSpot((int)notification.Body);
                     break;
                 }
-            case NotiDefine.GenerateMyBuildingDo:
-                {
-                    proxy.GenerateAllBuilding((int)notification.Body);
-                    break;
-                }
             case NotiDefine.CreateOneBuildingDo:
                 {
                     proxy.Create(notification.Body as Dictionary<string,object>);

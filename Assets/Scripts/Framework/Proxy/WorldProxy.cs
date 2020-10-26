@@ -85,12 +85,11 @@ public class BuildingData
 public class WorldProxy : BaseRemoteProxy
 {
     public static WorldProxy _instance;
-
     public static WorldConfig _config;
     private int _World;
-    private Dictionary<string, BuildingData> _datas = new Dictionary<string, BuildingData>();
+    
     private List<string> _canOperateSpots = new List<string>();//我可以操作的地块
-
+    private WorldBuildings _WorldData;
     public WorldProxy() : base(ProxyNameDefine.WORLD)
     {
         _instance = this;
@@ -103,7 +102,7 @@ public class WorldProxy : BaseRemoteProxy
 
     public bool IsBuildingByOverLevel(int id, int level)
     {
-        foreach (BuildingData data in this._datas.Values)
+        foreach (BuildingData data in this._WorldData.Datas)
         {
             if (data._id == id && data._level >= level)
                 return true;
@@ -124,7 +123,7 @@ public class WorldProxy : BaseRemoteProxy
     public int GetBuildingCount(int id)
     {
         int count = 0;
-        foreach (BuildingData data in this._datas.Values)
+        foreach (BuildingData data in this._WorldData.Datas)
         {
             if (data._id == id)
                 count++;
@@ -140,51 +139,33 @@ public class WorldProxy : BaseRemoteProxy
         WorldProxy._config = WorldConfig.Instance.GetData(this._World);
         GameIndex.ROW = WorldProxy._config.MaxRowCount;
         GameIndex.COL = WorldProxy._config.MaxColCount;
-
-
-        string fileName = UtilTools.combine(SaveFileDefine.WorldSpot, world);
-        string json = CloudDataTool.LoadFile(fileName);
-        WorldCanOprateSpot spots = new WorldCanOprateSpot();
-        spots.World = world;
-        spots.Dpots = new List<string>();
-        if (json.Equals(string.Empty) == false)
-        {
-            spots = Newtonsoft.Json.JsonConvert.DeserializeObject<WorldCanOprateSpot>(json);
-        }
-        else
-        {
-            int halfRow = WorldProxy._config.RowCount / 2;
-            int halfCol = WorldProxy._config.ColCount / 2;
-            for (int row = -halfRow; row <= halfRow; ++row)
-            {
-                int corX = row;
-                for (int col = -halfCol; col <= halfCol; ++col)
-                {
-                    int corZ = col;
-                    string key = UtilTools.combine(corX, "|", corZ);
-                    spots.Dpots.Add(key);
-                }
-            }//end for
-            this.DoSaveLocalSpots(spots);
-        }//end else
-        this._canOperateSpots.AddRange(spots.Dpots);
-        this.SendNotification(NotiDefine.GenerateMySpotResp, this._canOperateSpots);
+        this.GenerateAllBuilding(world);
+        this.SendNotification(NotiDefine.GenerateMySpotResp);
     }//end func
 
-    public void DoSaveLocalSpots(WorldCanOprateSpot script)
+    private void UpdateCanBuildSpot()
     {
-        //存储
-        string fileName = UtilTools.combine(SaveFileDefine.WorldSpot, this._World);
-        CloudDataTool.SaveFile(fileName, script);
+        this._canOperateSpots.Clear();
+        int halfRange = this._Effects.BuildRange / 2;
+        for (int row = -halfRange; row <= halfRange; ++row)
+        {
+            int corX = row;
+            for (int col = -halfRange; col <= halfRange; ++col)
+            {
+                int corZ = col;
+                string key = UtilTools.combine(corX, "|", corZ);
+                this._canOperateSpots.Add(key);
+            }
+        }//end for
     }
+
 
     public void GenerateAllBuilding(int world)
     {
-        this._datas.Clear();
         string fileName = UtilTools.combine(SaveFileDefine.WorldBuiding, world);
         string json = CloudDataTool.LoadFile(fileName);
-        WorldBuildings builds = new WorldBuildings();
-        builds.World = world;
+        this._WorldData = new WorldBuildings();
+        _WorldData.World = world;
         if (json.Equals(string.Empty))
         {
             //构造一个主城
@@ -192,18 +173,22 @@ public class WorldProxy : BaseRemoteProxy
             BuildingConfig config = BuildingConfig.Instance.GetData(BuildingData.MainCityID);
             int posx = (config.RowCount - 1) / 2;
             int posz = (config.ColCount - 1) / 2;
-            mainCity.Create(BuildingData.MainCityID, -posx, -posz);
+            _WorldData.StartCordinates = new VInt2();
+            _WorldData.StartCordinates.x =0;
+            _WorldData.StartCordinates.y = 0;
+            mainCity.Create(BuildingData.MainCityID,-posx, -posz);
             mainCity.SetLevel(1);
             mainCity.SetStatus(BuildingData.BuildingStatus.NORMAL);
-            this._datas.Add(mainCity._key, mainCity);
-            this.DoSaveLocalBuildings();
+            this._WorldData.Datas = new List<BuildingData>();
+            this._WorldData.Datas.Add(mainCity);
+            _WorldData.MainCityKey = mainCity._key;
+            this.DoSaveWorldDatas();
         }
         else
         {
-            builds = Newtonsoft.Json.JsonConvert.DeserializeObject<WorldBuildings>(json);
-            foreach (BuildingData data in builds.Datas)
+            _WorldData = Newtonsoft.Json.JsonConvert.DeserializeObject<WorldBuildings>(json);
+            foreach (BuildingData data in _WorldData.Datas)
             {
-                this._datas[data._key] = data;
                 if (data._status == BuildingData.BuildingStatus.BUILD ||
                     data._status == BuildingData.BuildingStatus.UPGRADE)
                 {
@@ -212,35 +197,31 @@ public class WorldProxy : BaseRemoteProxy
             }
         }
         ComputeEffects();
-        this.SendNotification(NotiDefine.GenerateMyBuildingResp, this._datas);
     }
 
-    public void DoSaveLocalBuildings()
+    public void DoSaveWorldDatas()
     {
         //存储
-        WorldBuildings script = new WorldBuildings();
-        script.World = this._World;
-        script.Datas = new List<BuildingData>();
-        foreach (BuildingData data in this._datas.Values)
-        {
-            script.Datas.Add(data);
-        }
         string fileName = UtilTools.combine(SaveFileDefine.WorldBuiding, this._World);
-        CloudDataTool.SaveFile(fileName, script);
+        CloudDataTool.SaveFile(fileName, _WorldData);
     }
 
 
-    public Dictionary<string, BuildingData> GetAllBuilding()
+    public List<BuildingData> GetAllBuilding()
     {
-        return this._datas;
+        return this._WorldData.Datas;
     }
 
+    public WorldBuildings Data => this._WorldData;
+
+     
     public BuildingData GetBuilding(string key)
     {
-        BuildingData data = null;
-        if (this._datas.TryGetValue(key, out data))
+        int count = this._WorldData.Datas.Count;
+        for (int i = 0; i < count; ++i)
         {
-            return data;
+            if (this._WorldData.Datas[i]._key.Equals(key))
+                return this._WorldData.Datas[i];
         }
         return null;
     }
@@ -248,30 +229,13 @@ public class WorldProxy : BaseRemoteProxy
     private BuildingEffectsData _Effects;
     private void ComputeEffects()
     {
-        _Effects = new BuildingEffectsData();
-        for (int i = (int)CareerDefine.Rider; i <= (int)CareerDefine.Count; ++i)
-        {
-            Dictionary<string, float> attrDic = new Dictionary<string, float>();
-            attrDic[AttributeDefine.Attack] = 0;
-            attrDic[AttributeDefine.Defense] = 0;
-            attrDic[AttributeDefine.AtkSpeed] = 0;
-            attrDic[AttributeDefine.Burst] = 0;
-            _Effects.CareerAttrAdds[i] = attrDic;
-        }
-
-        _Effects.ElementAdds[ElementDefine.Fire] = 0;
-        _Effects.ElementAdds[ElementDefine.Wind] = 0;
-        _Effects.ElementAdds[ElementDefine.Water] = 0;
-
-        _Effects.IncomeDic[ItemKey.gold] = 0;
-        _Effects.IncomeDic[ItemKey.food] = 0;
-        _Effects.IncomeDic[ItemKey.wood] = 0;
-        _Effects.IncomeDic[ItemKey.metal] = 0;
-        _Effects.IncomeDic[ItemKey.stone] = 0;
-
+        if (this._Effects == null)
+            _Effects = new BuildingEffectsData();
+        int oldRange = this._Effects.BuildRange;
+        this._Effects.Reset();
 
         Dictionary<string, float> dic = new Dictionary<string, float>();
-        foreach (BuildingData data in this._datas.Values)
+        foreach (BuildingData data in this._WorldData.Datas)
         {
             if (data._status == BuildingData.BuildingStatus.BUILD || data._status == BuildingData.BuildingStatus.INIT)
                 continue;
@@ -291,8 +255,9 @@ public class WorldProxy : BaseRemoteProxy
             }//end if
             else if (config.AddType.Equals(ValueAddType.ElementAdd))
             {
-                string curElement = configLevel.AddValues[0];
-                float addValue = UtilTools.ParseFloat(configLevel.AddValues[1]);
+                string[] list = configLevel.AddValues[0].Split(':');
+                string curElement = list[0];
+                float addValue = UtilTools.ParseFloat(list[1]);
                 _Effects.ElementAdds[curElement] += addValue;
             }
             else if (config.AddType.Equals(ValueAddType.MarchSpeed))
@@ -316,11 +281,19 @@ public class WorldProxy : BaseRemoteProxy
                 add.Init(configLevel.AddValues[0]);
                 _Effects.IncomeDic[add.id] += add.count;
             }
+            else if (config.AddType.Equals(ValueAddType.BuildRange))
+            {
+                this._Effects.BuildRange = UtilTools.ParseInt(configLevel.AddValues[0]);
+            }
         }//end for
 
         //处理监听
         RoleProxy._instance.ComputeBuildingEffect();
         HeroProxy._instance.ComputeBuildingEffect();
+        //存储可以建筑的范围
+        this.UpdateCanBuildSpot();
+        if (oldRange != this._Effects.BuildRange && oldRange > 0)
+            this.SendNotification(NotiDefine.HomeRangeChanged);
     }
 
     public BuildingEffectsData GetBuildingEffects()
@@ -348,14 +321,14 @@ public class WorldProxy : BaseRemoteProxy
         data.Create(id, x, z);
         data.SetLevel(0);
         data.SetStatus(BuildingData.BuildingStatus.BUILD);
-        this._datas.Add(data._key, data);
-
+        this._WorldData.Datas.Add(data);
+  
         //通知时间中心添加一个监听
         this.AddOneTimeListener(data);
        
         //通知Land创建完成
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingResp, data);
-        this.DoSaveLocalBuildings();
+        this.DoSaveWorldDatas();
     }
 
     public void Upgrade(string key)
@@ -368,7 +341,7 @@ public class WorldProxy : BaseRemoteProxy
         //通知时间中心添加一个监听
         this.AddOneTimeListener(data);
         MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
-        this.DoSaveLocalBuildings();
+        this.DoSaveWorldDatas();
     }
 
     public void SpeedUpUpgrade(string key)
@@ -382,7 +355,7 @@ public class WorldProxy : BaseRemoteProxy
         data.SetStatus(BuildingData.BuildingStatus.NORMAL);
         data.SetLevel(data._level + 1);
         ComputeEffects();//计算影响
-        this.DoSaveLocalBuildings();
+        this.DoSaveWorldDatas();
         MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
     }
     public void CancelUpgrade(string key)
@@ -396,7 +369,7 @@ public class WorldProxy : BaseRemoteProxy
         if (data._status == BuildingData.BuildingStatus.BUILD)
         {
             //删除取消
-            this._datas.Remove(key);
+            this._WorldData.Datas.Remove(data);
             MediatorUtil.SendNotification(NotiDefine.BuildingRemoveNoti, key);
         }
         else if (data._status == BuildingData.BuildingStatus.UPGRADE)
@@ -405,7 +378,7 @@ public class WorldProxy : BaseRemoteProxy
             data.SetStatus(BuildingData.BuildingStatus.NORMAL);
             MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
         }
-        this.DoSaveLocalBuildings();
+        this.DoSaveWorldDatas();
     }
 
     public void Relocate(Dictionary<string, object> vo)
@@ -419,7 +392,7 @@ public class WorldProxy : BaseRemoteProxy
             data.SetCordinate(x, z);
             MediatorUtil.SendNotification(NotiDefine.BuildingRelocateResp, key);
         }
-        this.DoSaveLocalBuildings();
+        this.DoSaveWorldDatas();
     }
 
     public void OnBuildExpireFinsih(string key)
@@ -427,8 +400,13 @@ public class WorldProxy : BaseRemoteProxy
         BuildingData data = this.GetBuilding(key);
         if (data == null)
             return;
+
+        BuildingConfig config = BuildingConfig.Instance.GetData(data._id);
+        if (data._level == config.MaxLevel)
+            return;
+
         if (data._status == BuildingData.BuildingStatus.UPGRADE ||
-            data._status == BuildingData.BuildingStatus.BUILD)
+        data._status == BuildingData.BuildingStatus.BUILD)
         {
             data.SetLevel(data._level + 1);//升级完成
             ComputeEffects();//计算影响
@@ -436,8 +414,6 @@ public class WorldProxy : BaseRemoteProxy
         
         data.SetStatus(BuildingData.BuildingStatus.NORMAL);
         this.SendNotification(NotiDefine.BuildingStatusChanged, key);
-        this.DoSaveLocalBuildings();
+        this.DoSaveWorldDatas();
     }
-
-
 }//end class
