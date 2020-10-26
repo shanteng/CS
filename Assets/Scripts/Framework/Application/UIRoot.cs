@@ -21,7 +21,8 @@ public enum WindowLayer
     Window,
     Popup,
     Tips,
-    Sdk
+    Sdk,
+    Count
 
 }
 public class UIRoot : MonoBehaviour

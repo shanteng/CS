@@ -250,10 +250,7 @@ public class HomeLandManager : MonoBehaviour
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingDo, vo);
     }
 
-    public bool IsTryDragState()
-    {
-        return this.isTryBuild || !this._currentBuildKey.Equals("");
-    }
+
 
     public void SetCurrentSelectBuilding(string key)
     {
@@ -263,10 +260,10 @@ public class HomeLandManager : MonoBehaviour
     }
 
     private bool _isDraging;
-    public void SetDraging(bool isd)
+    public void SetDraging(bool isDrag)
     {
-        this._isDraging = isd;
-
+        this._isDraging = isDrag;
+        this._myLandCity.SetOtherTransparent(this._currentBuildKey,isDrag);
     }
 
     public void SetQuadVisible(bool show)

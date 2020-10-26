@@ -59,9 +59,9 @@ public class Building : MonoBehaviour
         this._offsetDrag = row - 1;
     }
 
-    public void DoTransparent()
+    public void DoTransparent(bool isTrans)
     {
-        this._flash.DoTransparent();
+        this._flash.DoTransparent(isTrans);
     }
 
     public void CreateUI(BuildingUI prefabs,int id)
@@ -230,9 +230,8 @@ public class Building : MonoBehaviour
 
         if (this._AddIconShow)
         {
-            BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(this._data._id, this._data._level);
-            MediatorUtil.SendNotification(NotiDefine.AcceptHourAwardDo, this._AddAttr);
-            return;
+            //MediatorUtil.SendNotification(NotiDefine.AcceptHourAwardDo, this._AddAttr);
+           // return;
         }
 
         if (this._isSelect)

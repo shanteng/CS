@@ -83,6 +83,7 @@ public class NotiDefine
 public class ErrorCode
 {
     public const string ValueOutOfRange = "ValueOutOfRange";
+    public const string CostNotEnought = "CostNotEnought";
 }
 
 public enum HeroBelong

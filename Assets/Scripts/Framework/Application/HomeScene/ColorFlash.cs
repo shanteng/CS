@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class ColorFlash : MonoBehaviour
 {
     public Color _orignColor = Color.white;
-    private Color _EndColor = new Color(0.6f, 0.8f, 0.5f, 1);
+    private Color _EndColor = new Color(0.3f, 0.5f, 0.9f, 1);
  
     private List<MeshRenderer> _allRenders;
     public float _Speed = 1f;
@@ -46,10 +46,13 @@ public class ColorFlash : MonoBehaviour
             this.SetOrignal();
     }
 
-    public void DoTransparent()
+    public void DoTransparent(bool isTrans)
     {
         this._isStart = false;
-        _curColor = new Color(this._orignColor.r,this._orignColor.g,this._orignColor.b,0.3f);
+        if (isTrans)
+            _curColor = new Color(this._orignColor.r, this._orignColor.g, this._orignColor.b, 0.3f);
+        else
+            this._curColor = this._orignColor;
         foreach (MeshRenderer render in this._allRenders)
         {
             render.material.color = this._curColor;

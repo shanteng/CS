@@ -88,7 +88,6 @@ public class RoleProxy : BaseRemoteProxy
         {
             string attrName = ItemKey.GetName(key);
             PopupFactory.Instance.ShowErrorNotice(ErrorCode.ValueOutOfRange, attrName, addValue);
-            this.SendNotification(NotiDefine.ErrorCode, ErrorCode.ValueOutOfRange);
         }
         return isOverLimit;
     }
@@ -132,6 +131,33 @@ public class RoleProxy : BaseRemoteProxy
            
     }
 
+    public bool TryDeductCost(string[] costs)
+    {
+        List<CostData> awards = new List<CostData>();
+        int count = costs.Length;
+        for (int i = 0; i < count; ++i)
+        {
+            CostData data = new CostData();
+            data.Init(costs[i]);
+            int myValue = this.GetNumberValue(data.id);
+            if (myValue < data.count)
+            {
+                string attrName = ItemKey.GetName(data.id);
+                PopupFactory.Instance.ShowErrorNotice(ErrorCode.CostNotEnought, attrName);
+                return false;
+            }
+              
+            data.count = -data.count;
+            awards.Add(data);
+        }
+
+        if (awards.Count > 0)
+        {
+            this.ChangeRoleNumberValue(awards);
+        }
+        return true;
+    }
+
     public void ChangeRoleNumberValue(List<CostData> addDatas)
     {
         Dictionary<string, int> ShowAdds = new Dictionary<string, int>();
@@ -152,6 +178,8 @@ public class RoleProxy : BaseRemoteProxy
             int limit = RoleProxy._instance.ResValueLimit;
             if (this._LimitValueKeys.Contains(key) && data.count > limit)
                 data.count = limit;//超过上限了
+            else if (data.count < 0)
+                data.count = 0;
 
             if (addDatas[i].count > 0)
             {

@@ -60,6 +60,7 @@ public class PopupFactory : SingletonFactory<PopupFactory>
     {
         string notice =  LanErrorConfig.GetLanguage(errorCode,paramName);
         this.ShowNotice(notice);
+        MediatorUtil.SendNotification(NotiDefine.ErrorCode, errorCode);
     }
 
     private void ShowPop(PopType type, object content)

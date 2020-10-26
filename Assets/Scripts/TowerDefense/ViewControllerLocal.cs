@@ -5,7 +5,8 @@ using UnityEngine.EventSystems;
 
 public class ViewControllerLocal : MonoBehaviour
 {
-    
+
+    Vector3 _StartPos;
     public float _WheelSpeed = 1000f;
     public float _WheelMobile = 100f;
 
@@ -74,11 +75,11 @@ public class ViewControllerLocal : MonoBehaviour
    
     public void InitBorder(int showRow,int showCol)
     {
-
         Camera.main.orthographicSize = this._maxSize / 2f;
-
         float halfRow = showRow / 2 - _overShowCount;//多显示5个范围
         float halfCol = showCol / 2 - _overShowCount;//多显示5个范围
+
+        this._StartPos = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 
         this.rightBorder.transform.position = new Vector3(halfRow, 1, halfCol);
         this.topBorder.transform.position = new Vector3(-halfRow, 1, halfCol);
@@ -135,12 +136,11 @@ public class ViewControllerLocal : MonoBehaviour
         {
             this._DoUpdateDrag = true;
             _isOverBuilding = UtilTools.IsFingerOverBuilding();
-           // this._isSelectBuilding = HomeLandManager.GetInstance().IsTryDragState();
         }
         else if (Input.GetMouseButtonUp(0))
         {
             this._DoUpdateDrag = false;
-            if (HomeLandManager.GetInstance().IsDraging == false && _isOverBuilding == false)
+            if (HomeLandManager.GetInstance().IsDraging == false && _isOverBuilding == false &&  UtilTools.isFingerOverUI() == false)
             {
                 HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
             }
@@ -205,9 +205,22 @@ public class ViewControllerLocal : MonoBehaviour
         }
     }
 
+    public void TryGoto(Vector3 wolrdPos)
+    {
+        Vector3 cameraPos = new Vector3(this._StartPos.x + wolrdPos.x, this._StartPos.y, this._StartPos.z + wolrdPos.z);
+        this.transform.position = cameraPos;
+        this._translateX = cameraPos.x;
+        this._translateY = cameraPos.z;
+        return;
+        float xOffset = this.transform.position.x - cameraPos.x;
+        float zOffset = this.transform.position.z - cameraPos.z;
+        this.DoDrag(-xOffset, -zOffset);
+    }
 
     private void DoDrag(float xMove, float yMove)
     {
+        Debug.Log(xMove);
+        Debug.Log(yMove);
         yMove = yMove * CosDegreeValue;
         float endX = this._translateX + xMove;
         if (endX > this._xMax)
@@ -245,7 +258,8 @@ public class ViewControllerLocal : MonoBehaviour
         {
             float xMove = -Input.GetAxisRaw("Mouse X") * Time.deltaTime * _realDragSpeed;
             float yMove = -Input.GetAxisRaw("Mouse Y") * Time.deltaTime * _realDragSpeed;
-            this.DoDrag(xMove, yMove);
+            if (xMove != 0 || yMove != 0)
+                this.DoDrag(xMove, yMove);
         }
 #else
         if (Input.touchCount == 1 &&  UtilTools.isFingerOverUI() == false && this._isOverBuilding == false)

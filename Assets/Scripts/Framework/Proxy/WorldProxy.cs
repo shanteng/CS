@@ -311,11 +311,20 @@ public class WorldProxy : BaseRemoteProxy
         MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
     }
 
+
+  
     public void Create(Dictionary<string, object> vo)
     {
         int id = (int)vo["configid"];
         int x = (int)vo["x"];
         int z = (int)vo["z"];
+
+
+        BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(id, 1);
+        bool isCostEnough = RoleProxy._instance.TryDeductCost(configLv.Cost);
+        if (isCostEnough == false)
+            return;
+        
 
         BuildingData data = new BuildingData();
         data.Create(id, x, z);
@@ -337,6 +346,12 @@ public class WorldProxy : BaseRemoteProxy
         BuildingConfig _config = BuildingConfig.Instance.GetData(data._id);
         if (data == null || data._status != BuildingData.BuildingStatus.NORMAL || data._level >= _config.MaxLevel)
             return;
+
+        BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(data._id, 1);
+        bool isCostEnough = RoleProxy._instance.TryDeductCost(configLv.Cost);
+        if (isCostEnough == false)
+            return;
+
         data.SetStatus(BuildingData.BuildingStatus.UPGRADE);
         //通知时间中心添加一个监听
         this.AddOneTimeListener(data);

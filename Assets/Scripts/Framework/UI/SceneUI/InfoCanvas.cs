@@ -10,6 +10,7 @@ public enum OpType
     Info,
     Upgrade,
     Cancel,
+    AcceptRes,
 }
 
 public class IntStrPair
@@ -30,18 +31,23 @@ public class InfoCanvas : UIBase, IConfirmListener
     public Text _spotNameTxt;
     public TextMeshProUGUI _cordinateTxt;
     public List<UIButton> _btnFunList;
+    public UIButton _btnRes;
+    public Image _resIcon;
 
     public GameObject _cdCon;
     public CountDownCanvas _countDown;
     public UIButton _btnSpeedUp;
 
     private BuildingData _data;
+    private string _AddAttr = "";
     private void Start()
     {
         foreach (UIButton btn in this._btnFunList)
         {
             btn.AddEvent(this.OnClickFun);
         }
+        this._btnRes.AddEvent(this.OnClickFun);
+        this._btnRes._param._value = OpType.AcceptRes;
         this._btnSpeedUp.AddEvent(this.OnClickSpeedUp);
     }
 
@@ -66,8 +72,12 @@ public class InfoCanvas : UIBase, IConfirmListener
         }
     }
 
+    private int _needValueShow = 0;
     public void SetBuildState(BuildingData data)
     {
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.IncomeShowValue);
+        _needValueShow = cfgconst.IntValues[0];
+
         this._data = data;
         BuildingConfig config = BuildingConfig.Instance.GetData(this._data._id);
         string showName = "";
@@ -101,6 +111,26 @@ public class InfoCanvas : UIBase, IConfirmListener
             this._btnFunList[i]._param._value = btnTypeList[i].OpType;
         }
 
+        //是否有资源可以领取
+        BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(this._data._id, this._data._level);
+        bool isRes = config.AddType.Equals(ValueAddType.HourTax) && configLv != null;
+        this._btnRes.gameObject.SetActive(isRes);
+        if (isRes)
+        {
+            CostData add = new CostData();
+            add.Init(configLv.AddValues[0]);
+            this._AddAttr = add.id;
+            int value = RoleProxy._instance.GetCanAcceptIncomeValue(add.id);
+            bool isEnable = value >= this._needValueShow;
+            this._btnRes.IsEnable = isEnable;
+            this._resIcon.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Common, add.id);
+            UIRoot.Intance.SetImageGray(this._resIcon, !isEnable);
+        }
+        else
+        {
+            this._AddAttr = "";
+        }
+
         LayoutRebuilder.ForceRebuildLayoutImmediate(_NameRect);
 
         bool isBuildUp = this._data._status == BuildingData.BuildingStatus.BUILD || this._data._status == BuildingData.BuildingStatus.UPGRADE;
@@ -129,7 +159,6 @@ public class InfoCanvas : UIBase, IConfirmListener
         {
             case OpType.Enter:
                 {
-                    
                     break;
                 }
             case OpType.Info:
@@ -151,7 +180,13 @@ public class InfoCanvas : UIBase, IConfirmListener
                     //MediatorUtil.SendNotification(NotiDefine.BuildingCancelDo, this._data._key);
                     break;
                 }
+            case OpType.AcceptRes:
+                {
+                    MediatorUtil.SendNotification(NotiDefine.AcceptHourAwardDo, this._AddAttr);
+                    break;
+                }
         }
+        HomeLandManager.GetInstance().HideInfoCanvas();
     }
 
     public void OnConfirm(ConfirmData data)

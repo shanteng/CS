@@ -28,16 +28,25 @@ public class MyCity : MonoBehaviour
         }
     }
 
+    public void SetOtherTransparent(string key,bool isDrag)
+    {
+        foreach (Building bd in _AllBuildings.Values)
+        {
+            bool isCur = key.Equals(bd._data._key);
+            if(isCur == false)
+                bd.DoTransparent(isDrag);
+        }
+    }
+
     public Building SetCurrentSelectBuilding(string key,bool isTryBuild)
     {
         Building showBd = null;
         foreach (Building bd in _AllBuildings.Values)
         {
             bool isCur = key.Equals(bd._data._key);
-            //  bd.SetSelect(isCur);
-            if ((key.Equals("") == false && isCur == false) || isTryBuild)
-                bd.DoTransparent();
-            else
+           // if ((key.Equals("") == false && isCur == false) || isTryBuild)
+         //       bd.DoTransparent();
+        //    else
                 bd.SetSelect(isCur);
 
             if (isCur)

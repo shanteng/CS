@@ -72,7 +72,8 @@ public class MainView : MonoBehaviour
 
     private void OnSdk(UIButton btn)
     {
-        PopupFactory.Instance.ShowErrorNotice(ErrorCode.ValueOutOfRange, "", 1);
+        ViewControllerLocal.GetInstance().TryGoto(Vector3.zero);
+        //PopupFactory.Instance.ShowErrorNotice(ErrorCode.ValueOutOfRange, "", 1);
        // SdkView.Intance.ShowSdk();
     }
 
