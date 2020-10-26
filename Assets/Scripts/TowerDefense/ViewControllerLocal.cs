@@ -128,12 +128,14 @@ public class ViewControllerLocal : MonoBehaviour
     }
 
     private bool _isOverBuilding = false;
+   // private bool _isSelectBuilding = false;
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             this._DoUpdateDrag = true;
             _isOverBuilding = UtilTools.IsFingerOverBuilding();
+           // this._isSelectBuilding = HomeLandManager.GetInstance().IsTryDragState();
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -246,7 +248,7 @@ public class ViewControllerLocal : MonoBehaviour
             this.DoDrag(xMove, yMove);
         }
 #else
-        if (Input.touchCount == 1 &&  UtilTools.isFingerOverUI() == false)
+        if (Input.touchCount == 1 &&  UtilTools.isFingerOverUI() == false && this._isOverBuilding == false)
         {
             // 单点触碰移动摄像机
             if (Input.touches[0].phase == TouchPhase.Moved) //手指在屏幕上移动，移动摄像机

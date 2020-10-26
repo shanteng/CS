@@ -45,7 +45,7 @@ public class BuidItemRender : ItemRender
         if (isOpen)
         {
             BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(curData._config.ID, 1);
-            UtilTools.SetCostList(this._costs, configLevel.Cost);
+            UtilTools.SetCostList(this._costs, configLevel.Cost,true);
             string cdStr = UtilTools.GetCdString(configLevel.NeedTime);
             this._timeTxt.text = LanguageConfig.GetLanguage(LanMainDefine.BuildCD, cdStr);
             int count = WorldProxy._instance.GetBuildingCount(curData._config.ID);

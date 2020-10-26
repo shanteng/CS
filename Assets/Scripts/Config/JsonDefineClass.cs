@@ -183,6 +183,11 @@ public class BuildingConfig : Config<BuildingConfig>
             return LanguageConfig.GetLanguage(AddType,config.Name,cost.count);
         }
 
+        if (ValueAddType.BuildRange.Equals(AddType))
+        {
+            return LanguageConfig.GetLanguage(AddType, AddValue[0], AddValue[0]);
+        }
+
         if (ValueAddType.StoreLimit.Equals(AddType) ||
             ValueAddType.HeroMaxBlood.Equals(AddType) ||
             ValueAddType.ReserverLimit.Equals(AddType) ||

@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\DataCenterMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\MediatorUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingInfoPop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingUpgradePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\ConfirmPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\NoticePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\Popup.cs" />

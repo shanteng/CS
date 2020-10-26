@@ -9,6 +9,7 @@ public enum PopType
     COMFIRM,
     BUILDING,
     NOTICE,
+    BUILDING_UPGRADE,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -17,16 +18,12 @@ public class PopupFactory : SingletonFactory<PopupFactory>
 
     public void Hide()
     {
-        if (this._curShowWin != null)
+        if (this._curShowWin != null && this._curShowWin.gameObject != null)
         {
             GameObject.Destroy(this._curShowWin.gameObject);
             this._curShowWin = null;
-            if (this._cor != null)
-            {
-                CoroutineUtil.GetInstance().Stop(this._cor);
-                this._cor = null;
-            }
         }
+        
     }//end func
 
     public void ShowConfirmBy(ConfirmData data)
@@ -49,6 +46,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.BUILDING, bdKey);
     }
 
+    public void ShowBuildingUpgrade(string bdKey)
+    {
+        this.ShowPop(PopType.BUILDING_UPGRADE, bdKey);
+    }
+
     public void ShowNotice(string notice)
     {
         this.ShowPop(PopType.NOTICE, notice);
@@ -60,65 +62,72 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowNotice(notice);
     }
 
-    private Coroutine _cor;
     private void ShowPop(PopType type, object content)
     {
-        this.Hide();
-        this._curShowWin = GetPopUi(type);
-        this._curShowWin.setContent(content);
-        UIRoot.Intance.ShowUIInCenter(this._curShowWin.gameObject, this._curShowWin._layer, this._curShowWin._ShowInCenter);
-        if (this._curShowWin._DestorySecs > 0)
-            _cor = CoroutineUtil.GetInstance().WaitTime(this._curShowWin._DestorySecs, true, WaitDestory);
-    }
-
-    private void WaitDestory(object[] param)
-    {
-        if (this._curShowWin != null)
-            this.Hide();
-    }
-
-    private Popup GetPopUi(PopType type)
-    {
-        Popup ui = null;
+        this._curShowWin = null;
         switch (type)
         {
             case PopType.COMFIRM:
                 {
-                    ui = InitConfirm();
+                    _curShowWin = InitConfirm();
                     break;
                 }
             case PopType.BUILDING:
                 {
-                    ui = InitBuilding();
+                    _curShowWin = InitBuilding();
                     break;
                 }
             case PopType.NOTICE:
                 {
-                    ui = InitNotice();
+                    _curShowWin = InitNotice();
+                    break;
+                }
+            case PopType.BUILDING_UPGRADE:
+                {
+                    _curShowWin = InitBuildingUpgrade();
                     break;
                 }
         }
-        return ui;
-    }//end func
+
+        this._curShowWin.setContent(content);
+    }
+
+
 
     protected Popup InitConfirm()
     {
         GameObject view = ResourcesManager.Instance.LoadPopupRes("ConfirmPop");
-        ConfirmPop script = GameObject.Instantiate(view).GetComponent<ConfirmPop>();
-        return script;
+        Popup script = view.GetComponent<Popup>();
+        
+        ConfirmPop scriptClone  =   UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<ConfirmPop>();
+        return scriptClone;
     }
 
     protected Popup InitBuilding()
     {
         GameObject view = ResourcesManager.Instance.LoadPopupRes("BuildingInfoPop");
-        BuildingInfoPop script = GameObject.Instantiate(view).GetComponent<BuildingInfoPop>();
-        return script;
+        Popup script = view.GetComponent<Popup>();
+
+        BuildingInfoPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<BuildingInfoPop>();
+        return scriptClone;
+    }
+
+    protected Popup InitBuildingUpgrade()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("BuildingUpgradePop");
+        Popup script = view.GetComponent<Popup>();
+
+        BuildingUpgradePop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<BuildingUpgradePop>();
+        return scriptClone;
     }
 
     protected Popup InitNotice()
     {
         GameObject view = ResourcesManager.Instance.LoadPopupRes("NoticePop");
-        NoticePop script = GameObject.Instantiate(view).GetComponent<NoticePop>();
-        return script;
+        Popup script = view.GetComponent<Popup>();
+
+        NoticePop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<NoticePop>();
+        GameObject.Destroy(scriptClone.gameObject, 1.5f);
+        return scriptClone;
     }
 }//end class

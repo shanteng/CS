@@ -6,9 +6,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -25,9 +26,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -45,9 +47,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -66,9 +69,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -88,9 +92,10 @@
         "NeedTime": 50,
         "Durability": 500,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:3200",
+            "stone:40000",
+            "wood:40000",
+            "metal:40000"
         ],
         "Power": 5,
         "AddValues": [
@@ -111,9 +116,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -130,9 +136,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -150,9 +157,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -171,9 +179,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -193,9 +202,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -213,9 +223,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -234,9 +245,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -256,9 +268,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -279,9 +292,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -299,9 +313,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -320,9 +335,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -342,9 +358,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -365,9 +382,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -385,9 +403,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -406,9 +425,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -428,9 +448,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -451,9 +472,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -471,9 +493,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -492,9 +515,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -514,9 +538,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -537,9 +562,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -557,9 +583,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -578,9 +605,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -600,9 +628,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -623,9 +652,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -642,9 +672,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -662,9 +693,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -683,9 +715,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -705,9 +738,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -724,9 +758,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -744,9 +779,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -765,9 +801,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -787,9 +824,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -806,9 +844,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -826,9 +865,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -847,9 +887,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -869,9 +910,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -888,9 +930,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -908,9 +951,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -929,9 +973,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -951,9 +996,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -970,9 +1016,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -990,9 +1037,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1011,9 +1059,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1033,9 +1082,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1052,9 +1102,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1072,9 +1123,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1093,9 +1145,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1115,9 +1168,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1134,9 +1188,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1154,9 +1209,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1175,9 +1231,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1197,9 +1254,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1217,9 +1275,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1238,9 +1297,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1260,9 +1320,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1283,9 +1344,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1303,9 +1365,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1324,9 +1387,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1346,9 +1410,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1369,9 +1434,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1389,9 +1455,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1410,9 +1477,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1432,9 +1500,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1455,9 +1524,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1474,9 +1544,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1494,9 +1565,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1515,9 +1587,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1537,9 +1610,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1557,9 +1631,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1578,9 +1653,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1600,9 +1676,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1623,9 +1700,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1643,9 +1721,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1664,9 +1743,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1686,9 +1766,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1709,9 +1790,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1728,9 +1810,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1748,9 +1831,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1769,9 +1853,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [
@@ -1791,9 +1876,10 @@
         "NeedTime": 10,
         "Durability": 100,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:200",
+            "stone:1000",
+            "wood:1000",
+            "metal:1000"
         ],
         "Power": 1,
         "AddValues": [
@@ -1811,9 +1897,10 @@
         "NeedTime": 20,
         "Durability": 200,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:400",
+            "stone:5000",
+            "wood:5000",
+            "metal:5000"
         ],
         "Power": 2,
         "AddValues": [
@@ -1832,9 +1919,10 @@
         "NeedTime": 30,
         "Durability": 300,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:800",
+            "stone:10000",
+            "wood:10000",
+            "metal:10000"
         ],
         "Power": 3,
         "AddValues": [
@@ -1854,9 +1942,10 @@
         "NeedTime": 40,
         "Durability": 400,
         "Cost": [
-            "gold:200:stone:100",
-            "wood:100",
-            "metal:100"
+            "gold:1600",
+            "stone:20000",
+            "wood:20000",
+            "metal:20000"
         ],
         "Power": 4,
         "AddValues": [

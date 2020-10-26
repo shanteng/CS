@@ -56,26 +56,23 @@ public class UIRoot : MonoBehaviour
         this.InstantiateUIInCenter(obj,WindowLayer.Sdk);
     }
 
-    public GameObject InstantiateUIInCenter(GameObject obj, WindowLayer layer)
+    public GameObject InstantiateUIInCenter(GameObject obj, WindowLayer layer, bool setAnchorCenter = true)
     {
         Transform parent = UIRoot.Intance.GetLayer(layer);
         GameObject view = GameObject.Instantiate(obj, parent, false);
-        this.ShowUIInCenter(view, WindowLayer.Sdk, true);
+        this.ShowUIInCenter(view, setAnchorCenter);
         return view;
     }
 
-    public void ShowUIInCenter(GameObject ui, WindowLayer layer,bool setAnchorCenter)
+    public void ShowUIInCenter(GameObject ui,bool setAnchorCenter)
     {
-        Transform parent = this.GetLayer(layer);
         var rectForm = ui.GetComponent<RectTransform>();
-        rectForm.SetParent(parent.transform);
-
         if (setAnchorCenter)
         {
             var offmini = rectForm.offsetMin;
             var offmax = rectForm.offsetMax;
-            rectForm.offsetMax = offmax;
-            rectForm.offsetMin = offmini;
+            rectForm.offsetMax = Vector2.zero;
+            rectForm.offsetMin = Vector2.zero;
         }
        
         rectForm.localScale = Vector3.one;

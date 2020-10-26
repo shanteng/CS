@@ -139,7 +139,7 @@ public class InfoCanvas : UIBase, IConfirmListener
                 }
             case OpType.Upgrade:
                 {
-                    MediatorUtil.SendNotification(NotiDefine.UpgradeOneBuildingDo, this._data._key);
+                    PopupFactory.Instance.ShowBuildingUpgrade(this._data._key);
                     break;
                 }
             case OpType.Cancel:

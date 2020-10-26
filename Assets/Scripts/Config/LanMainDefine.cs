@@ -39,6 +39,9 @@
     public const string Armor = "Armor";
     public const string Horse = "Horse";
 
+    public const string Level = "Level";
+
+
 }
 
 public class ConstDefine

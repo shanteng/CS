@@ -569,7 +569,7 @@ MonoBehaviour:
   _speedMobile: 2
   rightBorder: {fileID: 53471150}
   topBorder: {fileID: 1723419651}
-  _maxSize: 10
+  _maxSize: 12
   _minSize: 3
   _overShowCount: 0
   _constY: 36

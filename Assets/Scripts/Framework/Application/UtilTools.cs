@@ -216,8 +216,9 @@ public class UtilTools
     }
 
 
-    public static void SetCostList(List<CostItem> items, string[] Costs)
+    public static bool SetCostList(List<CostItem> items, string[] Costs,bool NeedMy = false)
     {
+        bool isEnough = true;
         int len = Costs.Length;
         int count = items.Count;
         for (int i = 0; i < count; ++i)
@@ -229,9 +230,12 @@ public class UtilTools
             }
             CostData data = new CostData();
             data.Init(Costs[i]);
-            items[i].SetData(data);
+            bool isStisfy = items[i].SetData(data, NeedMy);
+            if (isStisfy == false)
+                isEnough = false;
             items[i].Show();
         }//end for
+        return isEnough;
     }//end func
 
     public static void SetCostList(List<CostBig> items, string[] Costs,bool needMy = false)

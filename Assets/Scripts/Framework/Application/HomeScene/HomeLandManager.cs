@@ -145,7 +145,6 @@ public class HomeLandManager : MonoBehaviour
 
 
 
-
     public void TryBuild(int configid, int x, int z)
     {
         this.SetCurrentSelectBuilding("");
@@ -251,6 +250,10 @@ public class HomeLandManager : MonoBehaviour
         MediatorUtil.SendNotification(NotiDefine.CreateOneBuildingDo, vo);
     }
 
+    public bool IsTryDragState()
+    {
+        return this.isTryBuild || !this._currentBuildKey.Equals("");
+    }
 
     public void SetCurrentSelectBuilding(string key)
     {
