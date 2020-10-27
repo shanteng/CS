@@ -38,6 +38,8 @@ public class HomeLandManager : MonoBehaviour
     void Start()
     {
         this._BuildCanvas.Hide();
+        this._QuadCanBuild.gameObject.SetActive(true);
+        this._HomePlane.gameObject.SetActive(true);
     }
 
     public string CurrentKey => this._currentBuildKey;
@@ -94,7 +96,8 @@ public class HomeLandManager : MonoBehaviour
         if (curBuild != null)
         {
             _myLandCity.RecordBuildOccupy(curBuild._data._key, curBuild._data._occupyCordinates);
-            this.ShowBuildingInfoCanvas(curBuild);
+            this.SetCurrentSelectBuilding("");
+           //this.ShowBuildingInfoCanvas(curBuild);
         }
     }
 
@@ -295,8 +298,8 @@ public class HomeLandManager : MonoBehaviour
     public void SetMySpotRange()
     {
         int range = WorldProxy._instance.GetBuildingEffects().BuildRange;
-        this._QuadCanBuild.transform.localScale = new Vector3(range + 3, range + 3, 1);
-        this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(range + 3, range + 3, 0, 0));
+        this._QuadCanBuild.transform.localScale = new Vector3(range, range, 1);
+        this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(range, range, 0, 0));
         this._myLandCity.SetRange(range, range);
     }
 

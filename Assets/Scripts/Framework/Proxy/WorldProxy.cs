@@ -12,6 +12,7 @@ using UnityEngine;
 public class BuildingData
 {
     public static int MainCityID = 1;
+    public static int GateID = 23;
     public enum BuildingStatus
     {
         INIT = 0,//等待创建的状态
@@ -146,7 +147,7 @@ public class WorldProxy : BaseRemoteProxy
     private void UpdateCanBuildSpot()
     {
         this._canOperateSpots.Clear();
-        int halfRange = this._Effects.BuildRange / 2;
+        int halfRange = this._Effects.BuildRange / 2;//必须为基数的格子数
         for (int row = -halfRange; row <= halfRange; ++row)
         {
             int corX = row;
@@ -182,6 +183,19 @@ public class WorldProxy : BaseRemoteProxy
             this._WorldData.Datas = new List<BuildingData>();
             this._WorldData.Datas.Add(mainCity);
             _WorldData.MainCityKey = mainCity._key;
+
+            //构造一个城门
+            BuildingData wallData = new BuildingData();
+            config = BuildingConfig.Instance.GetData(BuildingData.GateID);
+            BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(config.ID, 1);
+            int range = UtilTools.ParseInt(configLv.AddValues[0]);
+            posx = range / 2 + 1;
+            posz = -1;
+            wallData.Create(BuildingData.GateID, posx, posz);
+            wallData.SetLevel(1);
+            wallData.SetStatus(BuildingData.BuildingStatus.NORMAL);
+            this._WorldData.Datas.Add(wallData);
+
             this.DoSaveWorldDatas();
         }
         else
@@ -221,6 +235,17 @@ public class WorldProxy : BaseRemoteProxy
         for (int i = 0; i < count; ++i)
         {
             if (this._WorldData.Datas[i]._key.Equals(key))
+                return this._WorldData.Datas[i];
+        }
+        return null;
+    }
+
+    public BuildingData GetFirstBuilding(int id)
+    {
+        int count = this._WorldData.Datas.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            if (this._WorldData.Datas[i]._id.Equals(id))
                 return this._WorldData.Datas[i];
         }
         return null;
@@ -293,7 +318,21 @@ public class WorldProxy : BaseRemoteProxy
         //存储可以建筑的范围
         this.UpdateCanBuildSpot();
         if (oldRange != this._Effects.BuildRange && oldRange > 0)
+        {
+            BuildingData data = this.GetFirstBuilding(BuildingData.GateID);
+            if (data._id == BuildingData.GateID)
+            {
+                BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(data._id, data._level);
+                int range = UtilTools.ParseInt(configLv.AddValues[0]);
+                int posx = range / 2 + 1;
+                int posz = -1;
+                data.SetCordinate(posx, posz);
+                MediatorUtil.SendNotification(NotiDefine.BuildingRelocateResp, data._key);
+                this.DoSaveWorldDatas();
+            }
             this.SendNotification(NotiDefine.HomeRangeChanged);
+        }
+            
     }
 
     public BuildingEffectsData GetBuildingEffects()
@@ -426,7 +465,6 @@ public class WorldProxy : BaseRemoteProxy
             data.SetLevel(data._level + 1);//升级完成
             ComputeEffects();//计算影响
         }
-        
         data.SetStatus(BuildingData.BuildingStatus.NORMAL);
         this.SendNotification(NotiDefine.BuildingStatusChanged, key);
         this.DoSaveWorldDatas();

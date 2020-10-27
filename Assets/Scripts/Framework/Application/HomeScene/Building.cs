@@ -23,6 +23,7 @@ public class Building : MonoBehaviour
     private BuildingUI _Ui;
 
     private float CosDegreeValue;
+    private bool _isDisableDrag = false;
     private bool _isSelect = false;
     private bool _isDrag = false;
     private string _AddType;
@@ -114,7 +115,7 @@ public class Building : MonoBehaviour
 
         this.UpdateIncome();
 
-        
+        this._isDisableDrag = this._data._id.Equals(BuildingData.GateID);
         //设置显示parts
         int level = this._data._level > 0 ? this._data._level : 1;
         BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(this._data._id, level);
@@ -137,22 +138,6 @@ public class Building : MonoBehaviour
         MediatorUtil.SendNotification(NotiDefine.BuildingRelocateDo, vo);
     }
 
-    private Vector3 _beginPos;
-    private Vector3 _screenSpace;
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (this._isSelect == false)
-            return;
-        HomeLandManager.GetInstance().HideInfoCanvas();
-        this._isDrag = true;
-        HomeLandManager.GetInstance().SetDraging(true);
-        HomeLandManager.GetInstance().SetQuadVisible(true);
-        _screenSpace = Camera.main.WorldToScreenPoint(this.transform.position);
-        _beginPos = this.transform.position;
-        this._flashBase.gameObject.SetActive(true);
-        this.SetCanDoState((int)this.transform.position.x, (int)this.transform.position.z);
-    }
-
     public void SetCanDoState(int newX, int newZ)
     {
         BuildingConfig _config = BuildingConfig.Instance.GetData(this._data._id);
@@ -164,9 +149,26 @@ public class Building : MonoBehaviour
             HomeLandManager.GetInstance().SetBuildCanvasState(canBuildHere);
     }
 
+    private Vector3 _beginPos;
+    private Vector3 _screenSpace;
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (this._isSelect == false || this._isDisableDrag)
+            return;
+        HomeLandManager.GetInstance().HideInfoCanvas();
+        this._isDrag = true;
+        HomeLandManager.GetInstance().SetDraging(true);
+        HomeLandManager.GetInstance().SetQuadVisible(true);
+        _screenSpace = Camera.main.WorldToScreenPoint(this.transform.position);
+        _beginPos = this.transform.position;
+        this._flashBase.gameObject.SetActive(true);
+        this.SetCanDoState((int)this.transform.position.x, (int)this.transform.position.z);
+    }
+
+  
     public void OnDrag(PointerEventData eventData)
     {
-        if (this._isSelect == false)
+        if (this._isSelect == false || this._isDisableDrag)
             return;
         Vector3 curScreenSpace = new Vector3(eventData.position.x, eventData.position.y, _screenSpace.z);
         var curPosition = Camera.main.ScreenToWorldPoint(curScreenSpace);
@@ -185,7 +187,7 @@ public class Building : MonoBehaviour
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (this._isSelect == false)
+        if (this._isSelect == false || this._isDisableDrag)
             return;
 
         this._isDrag = false;
