@@ -1,4 +1,4 @@
-﻿using Boo.Lang;
+﻿
 using System.Collections.Generic;
 public class NotiDefine
 {
@@ -76,6 +76,9 @@ public class NotiDefine
 
     public const string HerosUpdated = "HerosUpdated";
 
+    public const string CordinateChange = "CordinateChange";
+
+
     public const string ErrorCode = "ErrorCode";
     
 }
@@ -123,6 +126,7 @@ public enum MediatorDefine
 
 public class VInt2
 {
+
     public int x;
     public int y;
     public VInt2()

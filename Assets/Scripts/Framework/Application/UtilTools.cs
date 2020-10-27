@@ -199,7 +199,7 @@ public class UtilTools
         return false;
     }
 
-    public static bool IsFingerOverBuilding()
+    public static bool IsFingerOverBuilding(string key = "")
     {
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
 #if UNITY_EDITOR
@@ -212,6 +212,10 @@ public class UtilTools
         List<RaycastResult> results = new List<RaycastResult>();
         PhysicsRaycaster graphicRaycaster = Camera.main.gameObject.GetComponent<PhysicsRaycaster>();
         graphicRaycaster.Raycast(pointerEventData, results);
+        if (results.Count > 0 && key.Equals("") == false)
+        {
+            return results[0].gameObject.name.Equals(key);
+        }
         return results.Count > 0;
     }
 

@@ -40,6 +40,8 @@ public class HomeLandManager : MonoBehaviour
         this._BuildCanvas.Hide();
     }
 
+    public string CurrentKey => this._currentBuildKey;
+
     public bool canBuildInSpot(string key, int posX, int posZ, int rowCount, int colCount)
     {
         for (int row = 0; row < rowCount; ++row)
@@ -78,7 +80,7 @@ public class HomeLandManager : MonoBehaviour
         //创建一个
         Building building = _TryBuildScript;
         building._data = data;
-        building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
+        building.name = building._data._key;
         building.SetCurrentState();
         this._myLandCity.AddOneBuilding(data._key, building);
         this._myLandCity.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
@@ -148,6 +150,8 @@ public class HomeLandManager : MonoBehaviour
     public void TryBuild(int configid, int x, int z)
     {
         this.SetCurrentSelectBuilding("");
+        this._myLandCity.SetOtherTransparent(this._currentBuildKey, true);
+
         BuildingConfig config = BuildingConfig.Instance.GetData(configid);
         Building prefab;
         if (config == null)
@@ -263,7 +267,7 @@ public class HomeLandManager : MonoBehaviour
     public void SetDraging(bool isDrag)
     {
         this._isDraging = isDrag;
-        this._myLandCity.SetOtherTransparent(this._currentBuildKey,isDrag);
+        this._myLandCity.SetOtherTransparent(this._currentBuildKey,isDrag || this.isTryBuild);
     }
 
     public void SetQuadVisible(bool show)

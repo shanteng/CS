@@ -23,11 +23,14 @@ public class MainView : MonoBehaviour
     public Text _goldHourAddTxt;
     public Text _goldAddTxt;
 
+    public MapUI _mapUI;
+
     private int _dianLiangCount = 60;
     private void Awake()
     {
         _goldAddTxt.gameObject.SetActive(false);
     }
+
     void Start()
     {
         _dianLiangCount = 60;
@@ -72,9 +75,9 @@ public class MainView : MonoBehaviour
 
     private void OnSdk(UIButton btn)
     {
-        ViewControllerLocal.GetInstance().TryGoto(Vector3.zero);
+        
         //PopupFactory.Instance.ShowErrorNotice(ErrorCode.ValueOutOfRange, "", 1);
-       // SdkView.Intance.ShowSdk();
+        SdkView.Intance.ShowSdk();
     }
 
     private void OnClickBuild(UIButton btn)

@@ -65,7 +65,6 @@ public class MyCity : MonoBehaviour
         this._AllBuildings.Add(key, bd);
     }
 
-
     public void CreateMyCity()
     {
         this._SpotHasOccupys = new List<string>();
@@ -83,7 +82,7 @@ public class MyCity : MonoBehaviour
         //创建一个
         Building building = this.InitOneBuild(data._id, data._cordinate.x, data._cordinate.y);
         building._data = data;
-        building.name = UtilTools.combine(building._data._key + "|" + building._data._id);
+        building.name = building._data._key;
         building.SetCurrentState();
         this._AllBuildings.Add(data._key, building);
         this.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);

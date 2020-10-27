@@ -10,8 +10,7 @@ public class CityRange : MonoBehaviour
     public Transform _Right;
     public Transform _Top;
     public Transform _Bottom;
-    public float _constY = 0f;
-
+   
 
     private void Awake()
     {
@@ -25,16 +24,21 @@ public class CityRange : MonoBehaviour
         float rowZlen = row + 2.5f;
         float colZlen = col + 2.5f;
 
+        Vector3 size = this._Left.localScale;
+        size.z = colZlen;
 
-        this._Left.localScale = new Vector3(0.5f, 1, colZlen);
-        this._Right.localScale = new Vector3(0.5f, 1, colZlen);
-        this._Top.localScale = new Vector3(0.5f, 1, rowZlen);
-        this._Bottom.localScale = new Vector3(0.5f, 1, rowZlen);
+        this._Left.localScale = size;
+        this._Right.localScale = size;
 
-        this._Left.localPosition = new Vector3(-colOffset, this._constY, 0);
-        this._Right.localPosition = new Vector3(colOffset, this._constY, 0);
-        this._Top.localPosition = new Vector3(0, this._constY, rowOffset);
-        this._Bottom.localPosition = new Vector3(0, this._constY, -rowOffset);
+        size = this._Top.localScale;
+        size.z = rowZlen;
+        this._Top.localScale = size;
+        this._Bottom.localScale = size;
+
+        this._Left.localPosition = new Vector3(-colOffset, 0, 0);
+        this._Right.localPosition = new Vector3(colOffset, 0, 0);
+        this._Top.localPosition = new Vector3(0, 0, rowOffset);
+        this._Bottom.localPosition = new Vector3(0, 0, -rowOffset);
 
     }
 

@@ -1,1 +1,202 @@
-[{"IDs":"Percent","Value":"{0}%"},{"IDs":"CountValue","Value":"x{0}"},{"IDs":"Wan","Value":"{0}万"},{"IDs":"Yi","Value":"{0}亿"},{"IDs":"BuildCD","Value":"建造时间:{0}"},{"IDs":"HasBuild","Value":"已建造:{0}/{1}"},{"IDs":"BuildOpenCondition","Value":"{0}到达{1}级后解锁"},{"IDs":"OpEnter","Value":"进入"},{"IDs":"OpInfo","Value":"信息"},{"IDs":"OpUpgrade","Value":"升级"},{"IDs":"OpCancel","Value":"取消"},{"IDs":"NameLv","Value":"{0}Lv.{1}"},{"IDs":"SpotCordinate","Value":"<color=#00ff00><u>({0},{1})</u></color>"},{"IDs":"HourAdd","Value":"+{0}/小时"},{"IDs":"Progress","Value":"{0}/{1}"},{"IDs":"ProgressFull","Value":"{0}<color=#ff0000>/{1}</color>"},{"IDs":"ConfirmTitle","Value":"提示"},{"IDs":"ConfirmSure","Value":"确认"},{"IDs":"ConfirmCancel","Value":"取消"},{"IDs":"CancelUpgradeNotice","Value":"是否要取消升级？"},{"IDs":"DayTax","Value":"{0}税收+{1}/天"},{"IDs":"StoreLimit","Value":"存储上限+{0}"},{"IDs":"HourTax","Value":"{0}+{1}/小时"},{"IDs":"TroopAdd","Value":"英雄兵力上限+{0}"},{"IDs":"ReserverLimit","Value":"预备兵上限+{0}"},{"IDs":"TroopCount","Value":"可部署{0}部队"},{"IDs":"RecruitSecs","Value":"募兵速度+{0}"},{"IDs":"ElementAdd","Value":"英雄{0}属性+{1}"},{"IDs":"AttributeAdd","Value":"{0}部队的英雄四维属性+{1}"},{"IDs":"MarchSpeed","Value":"英雄行军速度+{0}"},{"IDs":"Defense","Value":"防御伤害+{0},范围+{1}"},{"IDs":"DeployCount","Value":"可调动{0}只部队"},{"IDs":"Fire","Value":"火"},{"IDs":"Wind","Value":"风"},{"IDs":"Water","Value":"水"},{"IDs":"Rider","Value":"骑兵"},{"IDs":"Archer","Value":"弓兵"},{"IDs":"Infantry","Value":"步兵"},{"IDs":"RoleLevelExp","Value":"Lv.{0}({1}/{2})"},{"IDs":"RoleLevelExpFull","Value":"Lv.{0}(满级)"},{"IDs":"RecruitCondition","Value":"声望高于{0}或\n好感度大于{1}"},{"IDs":"OwnCount","Value":"已有{0}"},{"IDs":"HeroRecruit","Value":"酒馆刷新英雄上限:{0}个\n提升高稀有的的英雄出现概率"},{"IDs":"Weapon","Value":"武器"},{"IDs":"Armor","Value":"护甲"},{"IDs":"Horse","Value":"坐骑"},{"IDs":"CancelBuildNotice","Value":"是否要取消建造？"},{"IDs":"BuildRange","Value":"城池大小:{0}x{1}"},{"IDs":"Level","Value":"Lv.{0}"}]
+[
+    {
+        "IDs": "Percent",
+        "Value": "{0}%"
+    },
+    {
+        "IDs": "CountValue",
+        "Value": "x{0}"
+    },
+    {
+        "IDs": "Wan",
+        "Value": "{0}万"
+    },
+    {
+        "IDs": "Yi",
+        "Value": "{0}亿"
+    },
+    {
+        "IDs": "BuildCD",
+        "Value": "建造时间:{0}"
+    },
+    {
+        "IDs": "HasBuild",
+        "Value": "已建造:{0}/{1}"
+    },
+    {
+        "IDs": "BuildOpenCondition",
+        "Value": "{0}到达{1}级后解锁"
+    },
+    {
+        "IDs": "OpEnter",
+        "Value": "进入"
+    },
+    {
+        "IDs": "OpInfo",
+        "Value": "信息"
+    },
+    {
+        "IDs": "OpUpgrade",
+        "Value": "升级"
+    },
+    {
+        "IDs": "OpCancel",
+        "Value": "取消"
+    },
+    {
+        "IDs": "NameLv",
+        "Value": "{0}Lv.{1}"
+    },
+    {
+        "IDs": "SpotCordinate",
+        "Value": "<color=#00ff00><u>({0},{1})</u></color>"
+    },
+    {
+        "IDs": "HourAdd",
+        "Value": "+{0}/小时"
+    },
+    {
+        "IDs": "Progress",
+        "Value": "{0}/{1}"
+    },
+    {
+        "IDs": "ProgressFull",
+        "Value": "{0}<color=#ff0000>/{1}</color>"
+    },
+    {
+        "IDs": "ConfirmTitle",
+        "Value": "提示"
+    },
+    {
+        "IDs": "ConfirmSure",
+        "Value": "确认"
+    },
+    {
+        "IDs": "ConfirmCancel",
+        "Value": "取消"
+    },
+    {
+        "IDs": "CancelUpgradeNotice",
+        "Value": "是否要取消升级？"
+    },
+    {
+        "IDs": "DayTax",
+        "Value": "{0}税收+{1}/天"
+    },
+    {
+        "IDs": "StoreLimit",
+        "Value": "存储上限+{0}"
+    },
+    {
+        "IDs": "HourTax",
+        "Value": "{0}+{1}/小时"
+    },
+    {
+        "IDs": "TroopAdd",
+        "Value": "英雄兵力上限+{0}"
+    },
+    {
+        "IDs": "ReserverLimit",
+        "Value": "预备兵上限+{0}"
+    },
+    {
+        "IDs": "TroopCount",
+        "Value": "可部署{0}部队"
+    },
+    {
+        "IDs": "RecruitSecs",
+        "Value": "募兵速度+{0}"
+    },
+    {
+        "IDs": "ElementAdd",
+        "Value": "英雄{0}属性+{1}"
+    },
+    {
+        "IDs": "AttributeAdd",
+        "Value": "{0}部队的英雄四维属性+{1}"
+    },
+    {
+        "IDs": "MarchSpeed",
+        "Value": "英雄行军速度+{0}"
+    },
+    {
+        "IDs": "Defense",
+        "Value": "防御伤害+{0},范围+{1}"
+    },
+    {
+        "IDs": "DeployCount",
+        "Value": "可调动{0}只部队"
+    },
+    {
+        "IDs": "Fire",
+        "Value": "火"
+    },
+    {
+        "IDs": "Wind",
+        "Value": "风"
+    },
+    {
+        "IDs": "Water",
+        "Value": "水"
+    },
+    {
+        "IDs": "Rider",
+        "Value": "骑兵"
+    },
+    {
+        "IDs": "Archer",
+        "Value": "弓兵"
+    },
+    {
+        "IDs": "Infantry",
+        "Value": "步兵"
+    },
+    {
+        "IDs": "RoleLevelExp",
+        "Value": "Lv.{0}({1}/{2})"
+    },
+    {
+        "IDs": "RoleLevelExpFull",
+        "Value": "Lv.{0}(满级)"
+    },
+    {
+        "IDs": "RecruitCondition",
+        "Value": "声望高于{0}或\n好感度大于{1}"
+    },
+    {
+        "IDs": "OwnCount",
+        "Value": "已有{0}"
+    },
+    {
+        "IDs": "HeroRecruit",
+        "Value": "酒馆刷新英雄上限:{0}个\n提升高稀有的的英雄出现概率"
+    },
+    {
+        "IDs": "Weapon",
+        "Value": "武器"
+    },
+    {
+        "IDs": "Armor",
+        "Value": "护甲"
+    },
+    {
+        "IDs": "Horse",
+        "Value": "坐骑"
+    },
+    {
+        "IDs": "CancelBuildNotice",
+        "Value": "是否要取消建造？"
+    },
+    {
+        "IDs": "BuildRange",
+        "Value": "城池大小:{0}x{1}"
+    },
+    {
+        "IDs": "Level",
+        "Value": "Lv.{0}"
+    },
+    {
+        "IDs": "Distance",
+        "Value": "{0}km"
+    }
+]

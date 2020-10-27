@@ -49,13 +49,14 @@ public class ColorFlash : MonoBehaviour
     public void DoTransparent(bool isTrans)
     {
         this._isStart = false;
+        float alpha = 1f;
         if (isTrans)
-            _curColor = new Color(this._orignColor.r, this._orignColor.g, this._orignColor.b, 0.3f);
+            alpha = 0.5f;
         else
-            this._curColor = this._orignColor;
+            alpha = 1f;
         foreach (MeshRenderer render in this._allRenders)
         {
-            render.material.color = this._curColor;
+            render.material.SetFloat("_AlphaScale", alpha);
         }
     }
 
@@ -83,6 +84,7 @@ public class ColorFlash : MonoBehaviour
         foreach (MeshRenderer render in this._allRenders)
         {
             render.material.color = this._curColor;
+            render.material.SetFloat("_AlphaScale", 1f);
         }
     }
 }

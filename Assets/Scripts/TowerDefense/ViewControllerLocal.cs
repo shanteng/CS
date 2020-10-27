@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using DG.Tweening;
 public class ViewControllerLocal : MonoBehaviour
 {
 
@@ -16,21 +16,14 @@ public class ViewControllerLocal : MonoBehaviour
     public float _speedMobile = 2f;
     private float _realDragSpeed = 100;
 
-    public Transform rightBorder;
-    public Transform topBorder;
+    public Transform _minFollowTran;
   
 
     public float _maxSize = 21f;
     public float _minSize = 5f;
-   
+    
     public int _overShowCount = 50;
     public float _constY = 36;
-
-    //相机局部坐标系下Translate的范围
-    private float _xRightBorder = 0;
-    private float _yTopBorder = 0;
-
-  
 
     private bool _DoUpdateDrag = false;
     private float CosDegreeValue;
@@ -41,6 +34,7 @@ public class ViewControllerLocal : MonoBehaviour
     private Vector2 oldPosition2;
 
     private int isForward;
+    private bool _isTryGoTo = false;
     
     private static ViewControllerLocal instance;
 
@@ -54,7 +48,7 @@ public class ViewControllerLocal : MonoBehaviour
     void Awake()
     {
         instance = this;
-        CosDegreeValue =(1+ Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad));
+        CosDegreeValue =Mathf.Cos(HomeLandManager.Degree * Mathf.Deg2Rad);
         SinDegreeValue = Mathf.Sin(HomeLandManager.Degree * Mathf.Deg2Rad);
 
         maxDesc = this._maxSize - this._minSize;
@@ -76,18 +70,17 @@ public class ViewControllerLocal : MonoBehaviour
     public void InitBorder(int showRow,int showCol)
     {
         Camera.main.orthographicSize = this._maxSize / 2f;
-        float halfRow = showRow / 2 - _overShowCount;//多显示5个范围
-        float halfCol = showCol / 2 - _overShowCount;//多显示5个范围
-
         this._StartPos = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 
-        this.rightBorder.transform.position = new Vector3(halfRow, 1, halfCol);
-        this.topBorder.transform.position = new Vector3(-halfRow, 1, halfCol);
+            // float halfRow = showRow / 2 - _overShowCount;//多显示5个范围
+        //float halfCol = showCol / 2 - _overShowCount;//多显示5个范围
+       // this.rightBorder.transform.position = new Vector3(halfRow, 1, halfCol);
+     //   this.topBorder.transform.position = new Vector3(-halfRow, 1, halfCol);
      //   this.leftBorder.transform.position = new Vector3(-halfRow, 1, -halfCol);
      //   this.bottomBorder.transform.position = new Vector3(halfRow, 1, -halfCol);
 
-        this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
-        this._yTopBorder = Camera.main.transform.InverseTransformPoint(topBorder.position).y;
+        //this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
+        //this._yTopBorder = Camera.main.transform.InverseTransformPoint(topBorder.position).y;
 
         this.ComputeBorder();
     }
@@ -101,23 +94,23 @@ public class ViewControllerLocal : MonoBehaviour
     public void ComputeBorder()
     {
         //视口宽高
-        float halfHeight = Camera.main.orthographicSize;//正交相机高度的一半
-        float _width = halfHeight * 2 * Camera.main.aspect;//正交相机的宽度
-        float halfWidth = _width * 0.5f;
+     //   float halfHeight = Camera.main.orthographicSize;//正交相机高度的一半
+       // float _width = halfHeight * 2 * Camera.main.aspect;//正交相机的宽度
+       // float halfWidth = _width * 0.5f;
 
         //左右边界相机空间局部坐标
-        float localMoveOffset = this._xRightBorder - halfWidth;
-        this._xMax = localMoveOffset > 0 ? localMoveOffset : 0;
-        this._xMin = -this._xMax;// this._xLeftBorder + halfWidth < 0 ? this._xLeftBorder + halfWidth : 0;
+     //   float localMoveOffset = this._xRightBorder - halfWidth;
+        this._xMax = GameIndex.ROW / 2 + this._StartPos.x;// localMoveOffset > 0 ? localMoveOffset : 0;
+        this._xMin = this._StartPos.x - GameIndex.ROW / 2;// this._xLeftBorder + halfWidth < 0 ? this._xLeftBorder + halfWidth : 0;
 
 
-        float desc = (this._maxSize - Camera.main.orthographicSize) / maxDesc * maxxiebian;
-        float xiebian = desc / SinDegreeValue;
-        float offset = halfHeight * SinDegreeValue + this._constY+ desc;
+        //float desc = (this._maxSize - Camera.main.orthographicSize) / maxDesc * maxxiebian;
+       // float xiebian = desc / SinDegreeValue;
+      //  float offset = halfHeight * SinDegreeValue + this._constY+ desc;
         //Debug.LogError(offset);
-        localMoveOffset = (this._yTopBorder - halfHeight) + offset;// + (this._maxSize - Camera.main.orthographicSize);
-        this._yMax = localMoveOffset > 0 ? localMoveOffset : 0;
-        this._yMin = -_yMax;
+     //   localMoveOffset = (this._yTopBorder - halfHeight) + offset;// + (this._maxSize - Camera.main.orthographicSize);
+        this._yMax = GameIndex.COL / 2 + this._StartPos.z;// localMoveOffset > 0 ? localMoveOffset : 0;
+        this._yMin = this._StartPos.z - GameIndex.COL / 2;
         //localMoveOffset = (this._yBottomBorder + halfHeight);
         //this._yMin = localMoveOffset < 0 ? localMoveOffset : 0;
 
@@ -135,12 +128,13 @@ public class ViewControllerLocal : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             this._DoUpdateDrag = true;
-            _isOverBuilding = UtilTools.IsFingerOverBuilding();
+            _isOverBuilding = UtilTools.IsFingerOverBuilding(HomeLandManager.GetInstance().CurrentKey) && HomeLandManager.GetInstance().CurrentKey.Length > 0;
         }
         else if (Input.GetMouseButtonUp(0))
         {
             this._DoUpdateDrag = false;
-            if (HomeLandManager.GetInstance().IsDraging == false && _isOverBuilding == false &&  UtilTools.isFingerOverUI() == false)
+            _isOverBuilding = UtilTools.IsFingerOverBuilding(HomeLandManager.GetInstance().CurrentKey) && HomeLandManager.GetInstance().CurrentKey.Length > 0;
+            if (!HomeLandManager.GetInstance().IsDraging && !_isOverBuilding &&  !UtilTools.isFingerOverUI() && !HomeLandManager.GetInstance().isTryBuild)
             {
                 HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
             }
@@ -149,7 +143,15 @@ public class ViewControllerLocal : MonoBehaviour
             this.JudgeScaleMap();
     }
 
-    
+    private VInt2 _curPos = new VInt2();
+    public VInt2 GetCurrentCordinate()
+    {
+        this._curPos.x = Mathf.RoundToInt( this.transform.position.x - this._StartPos.x);
+        this._curPos.y = Mathf.RoundToInt(this.transform.position.z - this._StartPos.z);
+        return this._curPos;
+    }
+
+   
 
     void LateUpdate()
     {
@@ -159,10 +161,9 @@ public class ViewControllerLocal : MonoBehaviour
 
     void JudgeScaleMap()
     {
-        
 #if UNITY_EDITOR
         // 缩放
-        if (Input.GetAxis("Mouse ScrollWheel") != 0 && UtilTools.isFingerOverUI() == false)
+        if (Input.GetAxis("Mouse ScrollWheel") != 0 && UtilTools.isFingerOverUI() == false && !this._isTryGoTo)
         {
             //获取鼠标滚轮的滑动量
             float wheel = Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * _WheelSpeed;
@@ -170,7 +171,7 @@ public class ViewControllerLocal : MonoBehaviour
         }
 #else
         if (Input.touchCount > 1 && Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved 
-        &&  UtilTools.isFingerOverUI() == false)//多点触碰
+        &&  UtilTools.isFingerOverUI() == false &&  !this._isTryGoTo)//多点触碰
         {
             //前两只手指触摸类型都为移动触摸
             //计算出当前两点触摸点的位置
@@ -187,6 +188,7 @@ public class ViewControllerLocal : MonoBehaviour
         }
 #endif
     }
+
 
     private void DoScale(float wheel)
     {
@@ -205,29 +207,99 @@ public class ViewControllerLocal : MonoBehaviour
         }
     }
 
-    public void TryGoto(Vector3 wolrdPos)
+    public bool TryGoto(VInt2 wolrdPos)
     {
-        Vector3 cameraPos = new Vector3(this._StartPos.x + wolrdPos.x, this._StartPos.y, this._StartPos.z + wolrdPos.z);
-        this.transform.position = cameraPos;
-        this._translateX = cameraPos.x;
-        this._translateY = cameraPos.z;
-        return;
-        float xOffset = this.transform.position.x - cameraPos.x;
-        float zOffset = this.transform.position.z - cameraPos.z;
-        this.DoDrag(-xOffset, -zOffset);
+        VInt2 gamePos = UtilTools.WorldToGameCordinate(wolrdPos.x, wolrdPos.y);
+
+        if (gamePos.x <= 0 || gamePos.x > GameIndex.ROW || gamePos.y <= 0 || gamePos.y > GameIndex.COL)
+        {
+            return false;
+        }
+         
+        Vector3 cameraPos = new Vector3(this._StartPos.x + wolrdPos.x, this._StartPos.y, this._StartPos.z + wolrdPos.y);
+        //this.transform.position = cameraPos;
+        this._isTryGoTo = true;
+        this.transform.DOMove(cameraPos, 1f).onComplete = () =>
+        {
+            this.SetMinMapPostion();
+            this._isTryGoTo = false;
+            MediatorUtil.SendNotification(NotiDefine.CordinateChange);
+        };
+        this._translateX = wolrdPos.x;
+        this._translateY = wolrdPos.y;
+        return true;
+    }
+
+    
+    private float _translateX = 0;
+    private float _translateY = 0;
+    void JudgeDragMap()
+    {
+#if UNITY_EDITOR
+        if (this._DoUpdateDrag && UtilTools.isFingerOverUI() == false && this._isOverBuilding == false && !this._isTryGoTo)
+        {
+            float xMove = -Input.GetAxisRaw("Mouse X") * Time.deltaTime * _realDragSpeed;
+            float yMove = -Input.GetAxisRaw("Mouse Y") * Time.deltaTime * _realDragSpeed;
+            if (xMove != 0 || yMove != 0)
+                this.DoDrag(xMove, yMove);
+        }
+#else
+        if (Input.touchCount == 1 &&  UtilTools.isFingerOverUI() == false && this._isOverBuilding == false && !this._isTryGoTo)
+        {
+            // 单点触碰移动摄像机
+            if (Input.touches[0].phase == TouchPhase.Moved) //手指在屏幕上移动，移动摄像机
+            {
+                float xMove = -Input.touches[0].deltaPosition.x * Time.deltaTime * _realDragSpeed;
+                float yMove = -Input.touches[0].deltaPosition.y * Time.deltaTime * _realDragSpeed;
+                if (xMove != 0 || yMove != 0)
+                    this.DoDrag(xMove, yMove);
+            }
+        }
+#endif
+    }//end func
+
+    private void DoDrag2(float x, float y)
+    {
+        Vector3 pos = this.transform.position;
+        pos.x += (x - y)*this.CosDegreeValue;
+        //y = y * CosDegreeValue;
+        pos.z += (x+y)*this.CosDegreeValue;
+       
+
+        if (pos.x > this._xMax)
+            pos.x = this._xMax;
+        else if (pos.x < this._xMin)
+            pos.x = this._xMin;
+
+        if (pos.z > this._yMax)
+            pos.z = this._yMax;
+        else if (pos.z < this._yMin)
+            pos.z = this._yMin;
+
+        pos.y = this._constY;
+        this.transform.position = pos;
+
+        this.SetMinMapPostion();
+        MediatorUtil.SendNotification(NotiDefine.CordinateChange);
+    }
+
+    private void SetMinMapPostion()
+    {
+        float followX = this.transform.position.x - this._StartPos.x;
+        float followZ = this.transform.position.z - this._StartPos.z;
+        this._minFollowTran.position = new Vector3(followX, 0.2f, followZ);
     }
 
     private void DoDrag(float xMove, float yMove)
     {
-        Debug.Log(xMove);
-        Debug.Log(yMove);
-        yMove = yMove * CosDegreeValue;
+        this.DoDrag2(xMove, yMove);
+       /* yMove = yMove * CosDegreeValue;
         float endX = this._translateX + xMove;
         if (endX > this._xMax)
         {
             xMove = this._xMax - this._translateX;
         }
-        else if (endX  < this._xMin)
+        else if (endX < this._xMin)
         {
             xMove = this._xMin - this._translateX;
         }
@@ -248,34 +320,9 @@ public class ViewControllerLocal : MonoBehaviour
         Vector3 pos = this.transform.position;
         pos.y = _constY;
         this.transform.position = pos;
+        MediatorUtil.SendNotification(NotiDefine.CordinateChange);
+       */
     }
-    private float _translateX = 0;
-    private float _translateY = 0;
-    void JudgeDragMap()
-    {
-#if UNITY_EDITOR
-        if (this._DoUpdateDrag && UtilTools.isFingerOverUI() == false && this._isOverBuilding == false)
-        {
-            float xMove = -Input.GetAxisRaw("Mouse X") * Time.deltaTime * _realDragSpeed;
-            float yMove = -Input.GetAxisRaw("Mouse Y") * Time.deltaTime * _realDragSpeed;
-            if (xMove != 0 || yMove != 0)
-                this.DoDrag(xMove, yMove);
-        }
-#else
-        if (Input.touchCount == 1 &&  UtilTools.isFingerOverUI() == false && this._isOverBuilding == false)
-        {
-            // 单点触碰移动摄像机
-            if (Input.touches[0].phase == TouchPhase.Moved) //手指在屏幕上移动，移动摄像机
-            {
-                float xMove = -Input.touches[0].deltaPosition.x * Time.deltaTime * _realDragSpeed;
-                float yMove = -Input.touches[0].deltaPosition.y * Time.deltaTime * _realDragSpeed;
-                this.DoDrag(xMove, yMove);
-            }
-        }
-#endif
-    }//end func
-
-
 
     //用于判断是否放大
     bool isEnlarge(Vector2 oP1, Vector2 oP2, Vector2 nP1, Vector2 nP2)

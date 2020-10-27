@@ -40,6 +40,7 @@
     public const string Horse = "Horse";
 
     public const string Level = "Level";
+    public const string Distance = "Distance";
 
 
 }

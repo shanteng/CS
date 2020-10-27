@@ -67,11 +67,12 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 101056
+    totalSpriteSurfaceArea: 110109
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 44b52f504cea893498de44360039ef04, type: 3}
+  - {fileID: 21300000, guid: 3c6fd68053570dd45b03156a45cab700, type: 3}
   - {fileID: 21300000, guid: 6f9f4c90f9e9a3c43861f45b428793ff, type: 3}
   - {fileID: 21300000, guid: 3c63c101e028329479a0826e3dc7bf33, type: 3}
   - {fileID: 21300000, guid: ecf57c0120c3c9a429a3152488058e26, type: 3}
@@ -83,6 +84,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 674411b392f4fd2408ce0343b71f0cce, type: 3}
   - {fileID: 21300000, guid: c41d82e3400ec804ba0a733868584473, type: 3}
   - {fileID: 21300000, guid: 621d86346f977fb4fb863a0e3839e23d, type: 3}
+  - {fileID: 21300000, guid: 5f49c744115fbbe4e9330acdc23f5d1c, type: 3}
   - {fileID: 21300000, guid: 155a53a403bcf6943bdfaeef187be7dd, type: 3}
   - {fileID: 21300000, guid: 2b01c1c5a5834a34a9aa058ecaba500b, type: 3}
   - {fileID: 21300000, guid: 88da0326d6d9a2d49b27d82e8d3ad4fa, type: 3}
@@ -93,6 +95,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 72d160a71e26ebd479d602b0072fde56, type: 3}
   - {fileID: 21300000, guid: 37b9b918067717b439c1a276c03a7a4a, type: 3}
   - {fileID: 21300000, guid: 14734a38a783a894286fd5572a961253, type: 3}
+  - {fileID: 21300000, guid: 5a2c5fd9d57c7404d8c134681cd80a9a, type: 3}
   - {fileID: 21300000, guid: d41f513a8458b5646a70c8083c37ec17, type: 3}
   - {fileID: 21300000, guid: 30c5988a6a4f4ec4da9dd7431c002265, type: 3}
   - {fileID: 21300000, guid: f6404faa85881ec4d8bd8446ea3bbbd4, type: 3}
@@ -100,6 +103,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 21f3f04b9f1f77b42bead348d8f43bc9, type: 3}
   - {fileID: 21300000, guid: 7658f57bb0a260544838026eb0658157, type: 3}
   - {fileID: 21300000, guid: f9fc57eb747a5a349bb878a27652ec41, type: 3}
+  - {fileID: 21300000, guid: 90a0957c177b4544d9207712688217f1, type: 3}
   - {fileID: 21300000, guid: eb243e7cc414d9d48a974d41a66bb77f, type: 3}
   - {fileID: 21300000, guid: 78c21a8c51d924642a564593efb319d6, type: 3}
   - {fileID: 21300000, guid: 2a4bbdbdab1563749b99792c8b11366f, type: 3}
@@ -107,6 +111,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 983f409f3d88ece4cb8e1edec06394d9, type: 3}
   m_PackedSpriteNamesToIndex:
   - Prompt
+  - position
   - ItemFrame4
   - power02
   - check
@@ -118,6 +123,7 @@ SpriteAtlas:
   - ItemFrame3
   - img_lock
   - ARROW
+  - Navigation
   - ca3
   - close
   - metal
@@ -128,6 +134,7 @@ SpriteAtlas:
   - bg_frame
   - frame
   - food
+  - building
   - ItemFrame2
   - gold
   - smallcircle
@@ -135,6 +142,7 @@ SpriteAtlas:
   - ItemFrame5
   - ca2
   - Wind
+  - position-arrow
   - stone
   - Water
   - Selectedbar

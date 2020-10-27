@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7472984870060803143}
   - component: {fileID: 5175105628413721743}
   - component: {fileID: 8761927430687766076}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: BuildCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,3 +106,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c227b766cf2b8543a4e0805d4ba6888, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isMy: 0

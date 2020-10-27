@@ -21,8 +21,8 @@ TagManager:
   - Enemy
   - Missile
   - PlaneBorder
-  - 
-  - 
+  - MinMap
+  - SceneUI
   - 
   - 
   - 

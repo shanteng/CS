@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 410072027404274193}
   - component: {fileID: 5067202547567563816}
   - component: {fileID: 5257965292119365270}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 7163835127595562502}
   - component: {fileID: 1369522517406929719}
   - component: {fileID: 202936486000509874}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: CD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 1935338745198832888}
   - component: {fileID: 2179377038566251240}
   - component: {fileID: 6979501135864482818}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: CD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 6211618478501924107}
   - component: {fileID: 6121004533198060382}
   - component: {fileID: 3693317997858794000}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,7 +365,7 @@ GameObject:
   - component: {fileID: 7740815697518475499}
   - component: {fileID: 8217675204358937461}
   - component: {fileID: 2850720071981474487}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: IconAnimation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -459,7 +459,7 @@ GameObject:
   - component: {fileID: 682717766867540479}
   - component: {fileID: 4425319928045824979}
   - component: {fileID: 9051563443175260563}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -533,7 +533,7 @@ GameObject:
   - component: {fileID: 8621718687760060553}
   - component: {fileID: 5303831862923279893}
   - component: {fileID: 4461144850809862647}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -607,7 +607,7 @@ GameObject:
   - component: {fileID: 1776517365561420012}
   - component: {fileID: 1736910049094003122}
   - component: {fileID: 7893790466464908416}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BuildingUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -686,7 +686,7 @@ GameObject:
   - component: {fileID: 972195840014533740}
   - component: {fileID: 1901590657091721254}
   - component: {fileID: 7213619470405469251}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -778,7 +778,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5784469135981662346}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}

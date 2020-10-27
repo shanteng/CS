@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5163340110093711592}
   - component: {fileID: 5035068076753628648}
   - component: {fileID: 1404453588389089116}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BtnCancel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 5347368649940276953}
   - component: {fileID: 6386749006646286187}
   - component: {fileID: 5961958618131868877}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BtnSure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 1736910049094003122}
   - component: {fileID: 8866423181676391183}
   - component: {fileID: 4790675579630672984}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BuildCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -342,7 +342,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _param:
     _key: 
-  _layoutRect: {fileID: 0}
   _btnSure: {fileID: 5961958618131868877}
   _btnCancel: {fileID: 1404453588389089116}
 --- !u!114 &4790675579630672984
@@ -373,7 +372,7 @@ GameObject:
   - component: {fileID: 7845869920865612038}
   - component: {fileID: 9217114304104379785}
   - component: {fileID: 8306616308465552682}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -451,7 +450,7 @@ GameObject:
   - component: {fileID: 2405309924552420265}
   - component: {fileID: 972195840014533740}
   - component: {fileID: 1901590657091721254}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -528,7 +527,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6734732103208686323}
   - component: {fileID: 1884283324696291692}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Layout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
