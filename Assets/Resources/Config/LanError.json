@@ -1,1 +1,1 @@
-[{"IDs":"ValueOutOfRange","Value":"获取{0}x{1}会超过资源上限！"},{"IDs":"CostNotEnought","Value":"所需{0}资源不足！"}]
+[{"IDs":"ValueOutOfRange","Value":"获取{0}x{1}会超过资源上限！"},{"IDs":"CostNotEnought","Value":"所需<color=#ff0000>{0}</color>不足！"}]

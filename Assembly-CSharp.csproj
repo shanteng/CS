@@ -94,6 +94,8 @@
     <Compile Include="Assets\Scripts\Framework\Application\Main\MapUI.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\DataCenterMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\MediatorUtil.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildLevelPop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildLevelRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingInfoPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingUpgradePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\ConfirmPop.cs" />

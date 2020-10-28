@@ -508,16 +508,14 @@ public class WorldProxy : BaseRemoteProxy
         this.DoSaveWorldDatas();
     }
 
-    public List<StringKeyValue> GetAddOnDesc(int id, string key = "")
+    public List<StringKeyValue> GetAddOnDesc(int id, int level = 1)
     {
         List<StringKeyValue> list = new List<StringKeyValue>();
-        BuildingData data = this.GetBuilding(key);
+
         BuildingConfig config = BuildingConfig.Instance.GetData(id);
         string AddType = config.AddType;
         if (AddType.Equals(""))
             return list;
-
-        int level = data != null ? data._level : 1;
         BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(id, level);
 
       

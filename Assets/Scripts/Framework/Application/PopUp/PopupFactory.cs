@@ -10,6 +10,7 @@ public enum PopType
     BUILDING,
     NOTICE,
     BUILDING_UPGRADE,
+    BUILDING_LEVEL_EFFECT,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -46,6 +47,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.BUILDING, bdKey);
     }
 
+    public void ShowBuildingLevelEffect(string bdKey)
+    {
+        this.ShowPop(PopType.BUILDING_LEVEL_EFFECT, bdKey);
+    }
+
     public void ShowBuildingUpgrade(string bdKey)
     {
         this.ShowPop(PopType.BUILDING_UPGRADE, bdKey);
@@ -65,7 +71,10 @@ public class PopupFactory : SingletonFactory<PopupFactory>
 
     private void ShowPop(PopType type, object content)
     {
-        this._curShowWin = null;
+        if (this._curShowWin != null && this._curShowWin._DestorySecs == 0)
+        {
+            this.Hide();
+        }
         switch (type)
         {
             case PopType.COMFIRM:
@@ -86,6 +95,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
             case PopType.BUILDING_UPGRADE:
                 {
                     _curShowWin = InitBuildingUpgrade();
+                    break;
+                }
+            case PopType.BUILDING_LEVEL_EFFECT:
+                {
+                    _curShowWin = InitBuildingLevelEffect();
                     break;
                 }
         }
@@ -119,6 +133,15 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         Popup script = view.GetComponent<Popup>();
 
         BuildingUpgradePop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<BuildingUpgradePop>();
+        return scriptClone;
+    }
+
+    protected Popup InitBuildingLevelEffect()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("BuildingLevelInfoPop");
+        Popup script = view.GetComponent<Popup>();
+
+        BuildLevelPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<BuildLevelPop>();
         return scriptClone;
     }
 
