@@ -17,28 +17,25 @@ public class CityRange : MonoBehaviour
        
     }
 
-    public void SetRange(int row, int col)
+    public void SetRange(int range)
     {
-        float rowOffset = row/2 + 1;
-        float colOffset = col/2 + 1;
-        float rowZlen = row + 2.5f;
-        float colZlen = col + 2.5f;
+        float Offset = range / 2 + 1;
+     //   float colOffset = col/2 + 1;
+        float Len = range + 1.5f;
+     //   float colZlen = col + 1.5f;
 
         Vector3 size = this._Left.localScale;
-        size.z = colZlen;
+        size.z = Len;
 
         this._Left.localScale = size;
         this._Right.localScale = size;
-
-        size = this._Top.localScale;
-        size.z = rowZlen;
         this._Top.localScale = size;
         this._Bottom.localScale = size;
 
-        this._Left.localPosition = new Vector3(-colOffset, 0, 0);
-        this._Right.localPosition = new Vector3(colOffset, 0, 0);
-        this._Top.localPosition = new Vector3(0, 0, rowOffset);
-        this._Bottom.localPosition = new Vector3(0, 0, -rowOffset);
+        this._Left.localPosition = new Vector3(-Offset, 0, 0);
+        this._Right.localPosition = new Vector3(Offset, 0, 0);
+        this._Top.localPosition = new Vector3(0, 0, Offset);
+        this._Bottom.localPosition = new Vector3(0, 0, -Offset);
 
     }
 

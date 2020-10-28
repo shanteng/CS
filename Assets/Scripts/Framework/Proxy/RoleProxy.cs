@@ -17,13 +17,13 @@ public class RoleInfo
     public List<CostData> ItemList;//属性道具
     public List<HourAwardData> AddUpAwards;//当前可以领取的数值
     public int ResValueLimit;//上限
-    public Dictionary<string, int> IncomeDic;
 }
 
 
 //时间戳回调管理
 public class RoleProxy : BaseRemoteProxy
 {
+    private Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
     private List<string> _LimitValueKeys = new List<string>();
     private RoleInfo _role;
     public static RoleProxy _instance;
@@ -35,11 +35,24 @@ public class RoleProxy : BaseRemoteProxy
     public RoleInfo Role => this._role;
     public int ResValueLimit => this._role.ResValueLimit;
 
+    public void ComputeIncome()
+    {
+        this.IncomeDic.Clear();
+        BuildingEffectsData datas = WorldProxy._instance.GetBuildingEffects();
+        foreach (string key in datas.IncomeDic.Keys)
+        {
+            this.IncomeDic[key] = datas.IncomeDic[key].Count;
+        }
+        //计算占领的野外建筑加成
+
+    }
+
     public void ComputeBuildingEffect()
     {
-        //重新计算收益和可领取的收益
+        //计算收益和可领取的收益
         BuildingEffectsData datas = WorldProxy._instance.GetBuildingEffects();
-        this._role.IncomeDic = datas.IncomeDic;
+        this.ComputeIncome();
+        
         ConstConfig configCst = ConstConfig.Instance.GetData(ConstDefine.InitLimit);
         this._role.ResValueLimit = configCst.ValueInt;
         this._role.ResValueLimit += datas.ResLimitAdd;
@@ -219,7 +232,7 @@ public class RoleProxy : BaseRemoteProxy
     public int GetHourInCome(string key)
     {
         int value = 0;
-        if (this._role.IncomeDic != null &&  this._role.IncomeDic.TryGetValue(key, out value))
+        if (this.IncomeDic.TryGetValue(key, out value))
             return value;
         return 0;
     }

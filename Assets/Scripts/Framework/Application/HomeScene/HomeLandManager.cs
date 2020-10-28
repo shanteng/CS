@@ -300,7 +300,7 @@ public class HomeLandManager : MonoBehaviour
         int range = WorldProxy._instance.GetBuildingEffects().BuildRange;
         this._QuadCanBuild.transform.localScale = new Vector3(range, range, 1);
         this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(range, range, 0, 0));
-        this._myLandCity.SetRange(range, range);
+        this._myLandCity.SetRange(range);
     }
 
 

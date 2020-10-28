@@ -102,7 +102,13 @@ public enum ItemTypeDefine
     GIVE_FAVOR = 3,
 }
 
-
+public enum BuildingType
+{
+    Economy= 1,
+    Military = 2,
+    Decorate = 3,
+    Wild = 4,
+}
 
 public enum FancyDefine
 {
@@ -164,14 +170,15 @@ public class ValueAddType
     public const string World = "World";
     public const string HeroMaxBlood = "HeroMaxBlood";
     public const string ReserverLimit = "ReserverLimit";
-    public const string TroopCount = "TroopCount";
+    public const string ResearchSpeed = "ResearchSpeed";
     public const string RecruitSecs = "RecruitSecs";
     public const string ElementAdd = "ElementAdd";
-    public const string AttributeAdd = "AttributeAdd";
-    public const string MarchSpeed = "MarchSpeed";
-    public const string Defense = "Defense";
+    public const string RecruitVolume = "RecruitVolume";
+    public const string Cure = "Cure";
     public const string DeployCount = "DeployCount";
     public const string HeroRecruit = "HeroRecruit";
+    public const string AttributeAdd = "AttributeAdd";
+    public const string Worker = "Worker";
 }
 
 public class ElementDefine
@@ -245,17 +252,29 @@ public class AttributeData
     }//end func
 }
 
+public class IncomeData
+{
+    public string Key;
+    public int Count;
+    public int StoreLimit;
+    public IncomeData(string key)
+    {
+        this.Key = key;
+        this.Count = 0;
+        this.StoreLimit = 0;
+    }
+}
 public class BuildingEffectsData
 {
     public System.Collections.Generic.List<string> _changeKeys = new System.Collections.Generic.List<string>();
     public Dictionary<int, Dictionary<string, float>> CareerAttrAdds = new Dictionary<int, Dictionary<string, float>>();
     public Dictionary<string, float> ElementAdds = new Dictionary<string, float>();
-    public float MarchSpeedAdd = 0;
+
     public int MaxBloodAdd = 0;
     public int ResLimitAdd = 0;
     public int PowerAdd = 0;
     public int BuildRange = 0;
-    public Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
+    public Dictionary<string, IncomeData> IncomeDic = new Dictionary<string, IncomeData>();
 
     public void Reset()
     {
@@ -273,13 +292,12 @@ public class BuildingEffectsData
         this.ElementAdds[ElementDefine.Wind] = 0;
         this.ElementAdds[ElementDefine.Water] = 0;
 
-        this.IncomeDic[ItemKey.gold] = 0;
-        this.IncomeDic[ItemKey.food] = 0;
-        this.IncomeDic[ItemKey.wood] = 0;
-        this.IncomeDic[ItemKey.metal] = 0;
-        this.IncomeDic[ItemKey.stone] = 0;
+        this.IncomeDic[ItemKey.gold] = new IncomeData(ItemKey.gold);
+        this.IncomeDic[ItemKey.food] = new IncomeData(ItemKey.food);
+        this.IncomeDic[ItemKey.wood] = new IncomeData(ItemKey.wood);
+        this.IncomeDic[ItemKey.metal] = new IncomeData(ItemKey.metal);
+        this.IncomeDic[ItemKey.stone] = new IncomeData(ItemKey.stone);
 
-        this.MarchSpeedAdd = 0;
         this.MaxBloodAdd = 0;
         this.ResLimitAdd = 0;
         this.PowerAdd = 0;
@@ -383,7 +401,7 @@ public class Hero
 
         if (this.Belong == (int)HeroBelong.My)
         {
-            this.MarchSpeed = config.MarchSpeed + bdAddData.MarchSpeedAdd;
+            this.MarchSpeed = config.MarchSpeed;
             this.ElementValue = config.ElementValue + bdAddData.ElementAdds[config.Element];
             this.MaxBlood = configLv.BloodMax + bdAddData.MaxBloodAdd;
         }

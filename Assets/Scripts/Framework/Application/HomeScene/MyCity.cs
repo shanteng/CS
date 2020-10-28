@@ -150,9 +150,9 @@ public class MyCity : MonoBehaviour
         return building;
     }
 
-    public void SetRange(int row, int col)
+    public void SetRange(int range)
     {
-        this._Wall.SetRange(row, col);
+        this._Wall.SetRange(range);
     }
 
 }

@@ -285,11 +285,7 @@ public class WorldProxy : BaseRemoteProxy
                 float addValue = UtilTools.ParseFloat(list[1]);
                 _Effects.ElementAdds[curElement] += addValue;
             }
-            else if (config.AddType.Equals(ValueAddType.MarchSpeed))
-            {
-                float addValue = UtilTools.ParseFloat(configLevel.AddValues[0]);
-                _Effects.MarchSpeedAdd += addValue;
-            }
+         
             else if (config.AddType.Equals(ValueAddType.HeroMaxBlood))
             {
                 int addValue = UtilTools.ParseInt(configLevel.AddValues[0]);
@@ -304,7 +300,9 @@ public class WorldProxy : BaseRemoteProxy
                 //税收
                 CostData add = new CostData();
                 add.Init(configLevel.AddValues[0]);
-                _Effects.IncomeDic[add.id] += add.count;
+                int limit = UtilTools.ParseInt(configLevel.AddValues[1]);
+                _Effects.IncomeDic[add.id].Count += add.count;
+                _Effects.IncomeDic[add.id].StoreLimit = limit;
             }
             else if (config.AddType.Equals(ValueAddType.BuildRange))
             {

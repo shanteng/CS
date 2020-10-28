@@ -31,7 +31,7 @@ public class BuildingUI : UIBase
     public void SetUI(BuildingConfig config)
     {
         //调整内部坐标
-        int desc = (config.RowCount + config.ColCount) / 2;
+        int desc = config.RowCount;// (config.RowCount + config.ColCount) / 2;
         if (desc > 0)
             desc--;
         Vector2 pos = this._NameTxt.rectTransform.anchoredPosition;
