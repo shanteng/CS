@@ -111,15 +111,6 @@ public class WorldProxy : BaseRemoteProxy
         return false;
     }
 
-    public bool IsBuildingOpen(int id)
-    {
-        BuildingConfig config = BuildingConfig.Instance.GetData(id);
-        if (config.Condition == null || config.Condition.Length == 0)
-            return true;
-
-        bool isOverLevel = this.IsBuildingByOverLevel(config.Condition[0], config.Condition[1]);
-        return isOverLevel;
-    }
 
     public int GetBuildingCount(int id)
     {
@@ -224,6 +215,54 @@ public class WorldProxy : BaseRemoteProxy
     public List<BuildingData> GetAllBuilding()
     {
         return this._WorldData.Datas;
+    }
+
+    public VInt2 GetBuildingMaxAndLimitCount(int id)
+    {
+        VInt2 kv = new VInt2();
+        BuildingConfig config = BuildingConfig.Instance.GetData(id);
+        int len = config.Condition.Length;
+        for (int i = 0; i < len; ++i)
+        {
+            string[] firstlist = config.Condition[i].Split('|');
+            int bdid = UtilTools.ParseInt(firstlist[0]);
+            int level = UtilTools.ParseInt(firstlist[1]);
+            int bdCount = UtilTools.ParseInt(firstlist[2]);
+            BuildingData data = this.GetFirstBuilding(bdid);
+            if (data != null && data._level >= level)
+            {
+                kv.x = bdCount;
+            }
+            
+            if (bdCount > kv.y)
+            {
+                kv.y = bdCount;
+            }
+        }
+        return kv;
+    }
+
+    public VInt2 GetBuildingNextOpenCondition(int id)
+    {
+        VInt2 needkv = new VInt2();
+        VInt2 kv = this.GetBuildingMaxAndLimitCount(id);
+        BuildingConfig config = BuildingConfig.Instance.GetData(id);
+        int max = kv.x;
+        int len = config.Condition.Length;
+        for (int i = 0; i < len; ++i)
+        {
+            string[] firstlist = config.Condition[i].Split('|');
+            int bdid = UtilTools.ParseInt(firstlist[0]);
+            int level = UtilTools.ParseInt(firstlist[1]);
+            int bdCount = UtilTools.ParseInt(firstlist[2]);
+            if (bdCount > max)
+            {
+                needkv.x = bdid;
+                needkv.y = level;
+                break;
+            }
+        }//end for
+        return needkv;
     }
 
     public WorldBuildings Data => this._WorldData;
@@ -461,10 +500,100 @@ public class WorldProxy : BaseRemoteProxy
         data._status == BuildingData.BuildingStatus.BUILD)
         {
             data.SetLevel(data._level + 1);//升级完成
+            data.SetStatus(BuildingData.BuildingStatus.NORMAL);
             ComputeEffects();//计算影响
         }
-        data.SetStatus(BuildingData.BuildingStatus.NORMAL);
+        
         this.SendNotification(NotiDefine.BuildingStatusChanged, key);
         this.DoSaveWorldDatas();
+    }
+
+    public List<StringKeyValue> GetAddOnDesc(int id, string key = "")
+    {
+        List<StringKeyValue> list = new List<StringKeyValue>();
+        BuildingData data = this.GetBuilding(key);
+        BuildingConfig config = BuildingConfig.Instance.GetData(id);
+        string AddType = config.AddType;
+        if (AddType.Equals(""))
+            return list;
+
+        int level = data != null ? data._level : 1;
+        BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(id, level);
+
+      
+        string[] AddValues = configLv.AddValues;
+        int len = AddValues.Length;
+        if (len == 0)
+            return list;
+
+        StringKeyValue kv;
+        if (ValueAddType.CityTroop.Equals(AddType))
+        {
+            kv = new StringKeyValue();
+            kv.key = config.AddDescs[0];
+            kv.value = AddValues[0];
+            list.Add(kv);
+
+            kv = new StringKeyValue();
+            kv.key = config.AddDescs[1];
+            kv.value = AddValues[1];
+            list.Add(kv);
+        }
+        else if (ValueAddType.HourTax.Equals(AddType))
+        {
+            CostData cost = new CostData();
+            cost.Init(AddValues[0]);
+            ItemInfoConfig configItem = ItemInfoConfig.Instance.GetData(cost.id);
+
+            kv = new StringKeyValue();
+            kv.key = UtilTools.format(config.AddDescs[0], configItem.Name);
+            kv.value = cost.count.ToString();
+            list.Add(kv);
+
+            kv = new StringKeyValue();
+            kv.key = UtilTools.format(config.AddDescs[1], configItem.Name);
+            kv.value = AddValues[1];
+            list.Add(kv);
+        }
+        else if (ValueAddType.StoreLimit.Equals(AddType) ||
+            ValueAddType.HeroMaxBlood.Equals(AddType) ||
+            ValueAddType.Equipment.Equals(AddType) ||
+            ValueAddType.RecruitVolume.Equals(AddType) ||
+            ValueAddType.Cure.Equals(AddType) ||
+            ValueAddType.DeployCount.Equals(AddType) ||
+            ValueAddType.HeroRecruit.Equals(AddType) ||
+            ValueAddType.Worker.Equals(AddType))
+        {
+            kv = new StringKeyValue();
+            kv.key = config.AddDescs[0];
+            kv.value = AddValues[0];
+            list.Add(kv);
+        }
+        else if (ValueAddType.ResearchSpeed.Equals(AddType) ||
+            ValueAddType.RecruitSecs.Equals(AddType))
+        {
+            kv = new StringKeyValue();
+            kv.key = config.AddDescs[0];
+            kv.value = LanguageConfig.GetLanguage(LanMainDefine.Percent, AddValues[0]);
+            list.Add(kv);
+        }
+        else if (ValueAddType.ElementAdd.Equals(AddType))
+        {
+            string[] adds = AddValues[0].Split(':');
+            string attrName = LanguageConfig.GetLanguage(adds[0]);
+            kv = new StringKeyValue();
+            kv.key = UtilTools.format(config.AddDescs[0], attrName);
+            kv.value = adds[1];
+            list.Add(kv);
+        }
+        else if (ValueAddType.BuildRange.Equals(AddType))
+        {
+            kv = new StringKeyValue();
+            kv.key = config.AddDescs[0];
+            kv.value = LanguageConfig.GetLanguage(LanMainDefine.BuildRange, AddValues[0], AddValues[0]);
+            list.Add(kv);
+        }
+
+        return list;
     }
 }//end class

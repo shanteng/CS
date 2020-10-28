@@ -130,6 +130,12 @@ public enum MediatorDefine
     RECRUIT
 }
 
+public class StringKeyValue
+{
+    public string key = "";
+    public string value = "";
+}
+
 public class VInt2
 {
 
@@ -164,12 +170,13 @@ public class SceneDefine
 
 public class ValueAddType
 {
+    public const string CityTroop = "CityTroop";
     public const string BuildRange = "BuildRange";
     public const string StoreLimit = "StoreLimit";
     public const string HourTax = "HourTax";
     public const string World = "World";
     public const string HeroMaxBlood = "HeroMaxBlood";
-    public const string ReserverLimit = "ReserverLimit";
+    public const string Equipment = "Equipment";
     public const string ResearchSpeed = "ResearchSpeed";
     public const string RecruitSecs = "RecruitSecs";
     public const string ElementAdd = "ElementAdd";
@@ -264,6 +271,7 @@ public class IncomeData
         this.StoreLimit = 0;
     }
 }
+
 public class BuildingEffectsData
 {
     public System.Collections.Generic.List<string> _changeKeys = new System.Collections.Generic.List<string>();

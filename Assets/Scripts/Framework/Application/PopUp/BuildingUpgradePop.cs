@@ -52,8 +52,8 @@ public class BuildingUpgradePop : Popup
         this._curLvTxt.text = LanguageConfig.GetLanguage(LanMainDefine.Level, bd._level);
         this._nextLvTxt.text = LanguageConfig.GetLanguage(LanMainDefine.Level, next);
 
-        this._curDescTxt.text = BuildingConfig.GetAddOnDesc(config.AddType, configLv.AddValues);
-        this._nextDescTxt.text = BuildingConfig.GetAddOnDesc(config.AddType, configNext.AddValues);
+      //  this._curDescTxt.text = BuildingConfig.GetAddOnDesc(config.AddType, configLv.AddValues);
+     //   this._nextDescTxt.text = BuildingConfig.GetAddOnDesc(config.AddType, configNext.AddValues);
 
         bool isStisfy = UtilTools.SetCostList(this._costs, configNext.Cost,true);
         this._BtnSure.IsEnable = isStisfy;

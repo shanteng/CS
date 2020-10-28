@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
 ///所有滑动列表单项数据的基类
 public class ScrollData
@@ -42,7 +43,12 @@ public class ItemRender : UIBase,IPointerClickHandler
     {
         if (this.m_renderData != null && this._listener != null)
         {
-            this._listener.onClickScrollItem(this.m_renderData);
+            this.transform.DOKill();
+            this.transform.localScale = Vector3.one;
+            this.transform.DOPunchScale(new Vector3(-0.05f, -0.05f, -0.05f), 0.3f, 2, 0).onComplete = () =>
+            {
+                this._listener.onClickScrollItem(this.m_renderData);
+            };
         }
             
     }

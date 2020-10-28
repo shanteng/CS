@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json.Utilities;
 using SMVC.Patterns;
 using UnityEngine;
 using UnityEngine.PlayerIdentity;
@@ -38,12 +39,19 @@ public class RoleProxy : BaseRemoteProxy
     public void ComputeIncome()
     {
         this.IncomeDic.Clear();
+
+
+        //建筑加成
         BuildingEffectsData datas = WorldProxy._instance.GetBuildingEffects();
         foreach (string key in datas.IncomeDic.Keys)
         {
-            this.IncomeDic[key] = datas.IncomeDic[key].Count;
+            int oldvalue = 0;
+            if (this.IncomeDic.TryGetValue(key, out oldvalue) == false)
+                oldvalue = 0;
+            this.IncomeDic[key] = datas.IncomeDic[key].Count+ oldvalue;
         }
-        //计算占领的野外建筑加成
+
+        //占领的野外加成
 
     }
 
@@ -146,6 +154,7 @@ public class RoleProxy : BaseRemoteProxy
 
     public bool TryDeductCost(string[] costs)
     {
+        List<string> attrNames = new List<string>();
         List<CostData> awards = new List<CostData>();
         int count = costs.Length;
         for (int i = 0; i < count; ++i)
@@ -156,14 +165,20 @@ public class RoleProxy : BaseRemoteProxy
             if (myValue < data.count)
             {
                 string attrName = ItemKey.GetName(data.id);
-                PopupFactory.Instance.ShowErrorNotice(ErrorCode.CostNotEnought, attrName);
-                return false;
+                attrNames.Add(attrName);
+                continue;
             }
-              
             data.count = -data.count;
             awards.Add(data);
         }
 
+        if (attrNames.Count > 0)
+        {
+            string names = string.Join(",", attrNames);
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.CostNotEnought, names);
+            return false;
+        }
+     
         if (awards.Count > 0)
         {
             this.ChangeRoleNumberValue(awards);

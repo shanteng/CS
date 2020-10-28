@@ -164,73 +164,16 @@ public class BuildingConfig : Config<BuildingConfig>
     public string AddType;
     public string Name;
     public string Desc;
-    public int[] Condition;
+    public string[] Condition;
     public int MaxLevel;
     public int RowCount;
     public int ColCount;
-    public int BuildMax;
+    public string[] AddDescs;
     public int Type;
     public int RemoveType;
     public BuildingConfig() : base(JsonNameDefine.Building) { }
 
-    public static string GetAddOnDesc(string AddType, string[] AddValue)
-    {
-        if ( ValueAddType.HourTax.Equals(AddType))
-        {
-            CostData cost = new CostData();
-            cost.Init(AddValue[0]);
-            ItemInfoConfig config = ItemInfoConfig.Instance.GetData(cost.id);
-            return LanguageConfig.GetLanguage(AddType,config.Name,cost.count, AddValue[1]);
-        }
-
-        if (ValueAddType.BuildRange.Equals(AddType))
-        {
-            return LanguageConfig.GetLanguage(AddType, AddValue[0], AddValue[0]);
-        }
-
-        if (ValueAddType.StoreLimit.Equals(AddType) ||
-            ValueAddType.HeroMaxBlood.Equals(AddType) ||
-            ValueAddType.ReserverLimit.Equals(AddType) ||
-            ValueAddType.ResearchSpeed.Equals(AddType) ||
-             ValueAddType.RecruitSecs.Equals(AddType) ||
-              ValueAddType.RecruitVolume.Equals(AddType) ||
-               ValueAddType.Worker.Equals(AddType) ||
-             ValueAddType.DeployCount.Equals(AddType))
-        {
-            return LanguageConfig.GetLanguage(AddType, AddValue[0]);
-        }
-
-        if (ValueAddType.Cure.Equals(AddType))
-        {
-            return LanguageConfig.GetLanguage(AddType, AddValue[0], AddValue[1]);
-        }
-
-        
-        if (ValueAddType.ElementAdd.Equals(AddType))
-        {
-            string[] list = AddValue[0].Split(':');
-            string attrName = LanguageConfig.GetLanguage(list[0]);
-            return LanguageConfig.GetLanguage(AddType, attrName, list[1]);
-        }
-
-        if (ValueAddType.HeroRecruit.Equals(AddType))
-        {
-            string count = AddValue[0];
-            return LanguageConfig.GetLanguage(AddType, count);
-        }
-
-        if (ValueAddType.AttributeAdd.Equals(AddType))
-        {
-            int career = UtilTools.ParseInt(AddValue[0]);
-            string careerName = CareerDefine.GetName(career);
-            string[] attacks = AddValue[1].Split(':');
-
-            return LanguageConfig.GetLanguage(AddType, career, attacks[1]);
-        }
-
-        return "";
-    }//end switch
-}//end func
+}
 
 public class BuildingUpgradeConfig : Config<BuildingUpgradeConfig>
 {
@@ -241,6 +184,7 @@ public class BuildingUpgradeConfig : Config<BuildingUpgradeConfig>
     public string[] Cost;
     public int Power;//
     public string[] AddValues;
+   
     public int[] Parts;
     public BuildingUpgradeConfig() : base(JsonNameDefine.BuildingUpgrade) { }
 

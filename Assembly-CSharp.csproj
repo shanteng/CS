@@ -139,6 +139,7 @@
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIButton.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIMediatorHideHandler.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIScreenHideHandler.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\UITexts.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIToggle.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\DataGrid\DataGrid.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\DataGrid\DataTestItemRender.cs" />

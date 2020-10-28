@@ -38,26 +38,46 @@ public class BuidItemRender : ItemRender
         BuidItemData curData = (BuidItemData)data;
         this._nameTxt.text = curData._config.Name;
         this._descTxt.text = curData._config.Desc;
-        bool isOpen =WorldProxy._instance.IsBuildingOpen(curData._config.ID);
-        this._open.SetActive(isOpen);
-        this._notOpen.SetActive(!isOpen);
-        bool canClick = false;
-        if (isOpen)
+
+        VInt2 Kv = WorldProxy._instance.GetBuildingMaxAndLimitCount(curData._config.ID);
+        int count = WorldProxy._instance.GetBuildingCount(curData._config.ID);
+        int max = Kv.x;
+        int limt = Kv.y;
+        bool canClick = count < max;
+        this._open.SetActive(canClick);
+        this._notOpen.SetActive(!canClick);
+
+        if (canClick)
         {
+            //可以建造
             BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(curData._config.ID, 1);
-            UtilTools.SetCostList(this._costs, configLevel.Cost,true);
+            UtilTools.SetCostList(this._costs, configLevel.Cost, true);
             string cdStr = UtilTools.GetCdString(configLevel.NeedTime);
             this._timeTxt.text = LanguageConfig.GetLanguage(LanMainDefine.BuildCD, cdStr);
-            int count = WorldProxy._instance.GetBuildingCount(curData._config.ID);
-            this._countTxt.text = LanguageConfig.GetLanguage(LanMainDefine.HasBuild, count,curData._config.BuildMax);
-            canClick = count < curData._config.BuildMax;
+            this._countTxt.text = LanguageConfig.GetLanguage(LanMainDefine.HasBuild, count, Kv.x);
+        }
+        else if (count == limt)
+        {
+            //到达上限
+            this._conditionTxt.text = LanguageConfig.GetLanguage(LanMainDefine.LimitReach);
+        }
+        else if (count == 0)
+        {
+            //建造开启条件
+            string[] firstlist = curData._config.Condition[0].Split('|');
+            int id = UtilTools.ParseInt(firstlist[0]);
+            int level = UtilTools.ParseInt(firstlist[1]);
+            int bdCount = UtilTools.ParseInt(firstlist[2]);
+            BuildingConfig configNeed = BuildingConfig.Instance.GetData(id);
+            this._conditionTxt.text = LanguageConfig.GetLanguage(LanMainDefine.BuildOpenCondition, configNeed.Name, level);
         }
         else
         {
-            BuildingConfig configNeed = BuildingConfig.Instance.GetData(curData._config.Condition[0]);
-            this._conditionTxt.text = LanguageConfig.GetLanguage(LanMainDefine.BuildOpenCondition, configNeed.Name, curData._config.Condition[1]);
+            //判断下个数量所需等级
+            VInt2 needKv = WorldProxy._instance.GetBuildingNextOpenCondition(curData._config.ID);
+            BuildingConfig configNeed = BuildingConfig.Instance.GetData(needKv.x);
+            this._conditionTxt.text = LanguageConfig.GetLanguage(LanMainDefine.BuildNextCondition, configNeed.Name, needKv.y);
         }
-
         UIRoot.Intance.SetImageGray(this._Bg, !canClick);
     }
 

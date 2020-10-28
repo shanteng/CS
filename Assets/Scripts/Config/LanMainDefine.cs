@@ -9,6 +9,9 @@
     public const string BuildOpenCondition = "BuildOpenCondition";
     public const string NameLv = "NameLv";
     public const string SpotCordinate = "SpotCordinate";
+    public const string LimitReach = "LimitReach";
+    public const string BuildNextCondition = "BuildNextCondition";
+
 
     public const string OpEnter = "OpEnter";
     public const string OpInfo = "OpInfo";
@@ -41,7 +44,9 @@
 
     public const string Level = "Level";
     public const string Distance = "Distance";
+    public const string BuildRange = "BuildRange";
 
+    public const string Power = "Power";
 
 }
 

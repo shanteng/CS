@@ -1,1 +1,436 @@
-[{"ID":1,"Prefab":"MainCity","AddType":"BuildCount","Name":"主城","Desc":"增加城市内建筑上限","Condition":[],"MaxLevel":5,"RowCount":5,"ColCount":5,"BuildMax":0,"CanBuildOutSide":0},{"ID":2,"Prefab":"Ware","AddType":"StoreLimit","Name":"仓库","Desc":"增加资源存储上限","Condition":[1,1],"MaxLevel":4,"RowCount":1,"ColCount":1,"BuildMax":5,"CanBuildOutSide":0},{"ID":3,"Prefab":"Market","AddType":"HourTax","Name":"市场","Desc":"增加每小时黄金税收","Condition":[1,2],"MaxLevel":4,"RowCount":3,"ColCount":3,"BuildMax":1,"CanBuildOutSide":0},{"ID":4,"Prefab":"Stone","AddType":"HourTax","Name":"采石场","Desc":"增加每小时石头产量","Condition":[1,3],"MaxLevel":4,"RowCount":2,"ColCount":2,"BuildMax":1,"CanBuildOutSide":0},{"ID":5,"Prefab":"Metal","AddType":"HourTax","Name":"金属矿场","Desc":"增加每小时铁矿产量","Condition":[1,4],"MaxLevel":4,"RowCount":2,"ColCount":2,"BuildMax":1,"CanBuildOutSide":0},{"ID":6,"Prefab":"Wood","AddType":"HourTax","Name":"伐木场","Desc":"增加每小时木头产量","Condition":[1,5],"MaxLevel":4,"RowCount":2,"ColCount":2,"BuildMax":1,"CanBuildOutSide":0},{"ID":7,"Prefab":"Food","AddType":"HourTax","Name":"牧场","Desc":"增加每小时食物产量","Condition":[1,1],"MaxLevel":4,"RowCount":2,"ColCount":2,"BuildMax":1,"CanBuildOutSide":0},{"ID":8,"Prefab":"Soldier","AddType":"HeroMaxBlood","Name":"兵营","Desc":"英雄带兵上限","Condition":[1,2],"MaxLevel":4,"RowCount":3,"ColCount":3,"BuildMax":1,"CanBuildOutSide":0},{"ID":9,"Prefab":"Reserve","AddType":"ReserverLimit","Name":"兵役所","Desc":"增加主城兵役上限值","Condition":[1,3],"MaxLevel":4,"RowCount":3,"ColCount":3,"BuildMax":1,"CanBuildOutSide":0},{"ID":10,"Prefab":"Strategy","AddType":"TroopCount","Name":"战略中心","Desc":"增加本城可部署的部队数量","Condition":[1,5],"MaxLevel":4,"RowCount":3,"ColCount":3,"BuildMax":1,"CanBuildOutSide":0},{"ID":11,"Prefab":"Recruit","AddType":"RecruitSecs","Name":"募兵所","Desc":"增加部队的募兵速度","Condition":[1,1],"MaxLevel":4,"RowCount":3,"ColCount":3,"BuildMax":1,"CanBuildOutSide":0},{"ID":12,"Prefab":"Fire","AddType":"ElementAdd","Name":"火坛","Desc":"提高火属性","Condition":[1,2],"MaxLevel":4,"RowCount":2,"ColCount":2,"BuildMax":1,"CanBuildOutSide":0},{"ID":13,"Prefab":"Wind","AddType":"ElementAdd","Name":"风坛","Desc":"提高风属性","Condition":[1,3],"MaxLevel":4,"RowCount":2,"ColCount":2,"BuildMax":1,"CanBuildOutSide":0},{"ID":14,"Prefab":"Water","AddType":"ElementAdd","Name":"水坛","Desc":"提高水属性","Condition":[1,4],"MaxLevel":4,"RowCount":2,"ColCount":2,"BuildMax":1,"CanBuildOutSide":0},{"ID":15,"Prefab":"Rider","AddType":"AttributeAdd","Name":"骑兵营","Desc":"提高骑兵四维属性","Condition":[1,5],"MaxLevel":4,"RowCount":3,"ColCount":3,"BuildMax":1,"CanBuildOutSide":0},{"ID":16,"Prefab":"Archer","AddType":"AttributeAdd","Name":"弓兵营","Desc":"提高弓兵四维属性","Condition":[1,1],"MaxLevel":4,"RowCount":3,"ColCount":3,"BuildMax":1,"CanBuildOutSide":0},{"ID":17,"Prefab":"Infantry","AddType":"AttributeAdd","Name":"步兵营","Desc":"提高步兵四维属性","Condition":[1,3],"MaxLevel":4,"RowCount":3,"ColCount":3,"BuildMax":1,"CanBuildOutSide":0},{"ID":18,"Prefab":"SpeedRoad","AddType":"MarchSpeed","Name":"栈道","Desc":"提高部队行军速度","Condition":[1,4],"MaxLevel":4,"RowCount":2,"ColCount":2,"BuildMax":1,"CanBuildOutSide":0},{"ID":19,"Prefab":"ArrowTower","AddType":"Defense","Name":"箭塔","Desc":"防御型建筑","Condition":[1,4],"MaxLevel":4,"RowCount":1,"ColCount":1,"BuildMax":10,"CanBuildOutSide":1},{"ID":20,"Prefab":"GangTower","AddType":"Defense","Name":"炮塔","Desc":"防御型建筑","Condition":[1,4],"MaxLevel":4,"RowCount":1,"ColCount":1,"BuildMax":10,"CanBuildOutSide":1},{"ID":21,"Prefab":"Fortress","AddType":"DeployCount","Name":"要塞","Desc":"可以调动部署部队","Condition":[1,4],"MaxLevel":4,"RowCount":1,"ColCount":1,"BuildMax":20,"CanBuildOutSide":1},{"ID":22,"Prefab":" Tavern","AddType":"HeroRecruit","Name":"酒馆","Desc":"可偶遇英雄并且招募他们","Condition":[1,4],"MaxLevel":4,"RowCount":4,"ColCount":4,"BuildMax":1,"CanBuildOutSide":0},{"ID":23,"Prefab":"Gate","AddType":"BuildRange","Name":"城墙","Desc":"增加城池区大小","Condition":[],"MaxLevel":5,"RowCount":1,"ColCount":3,"BuildMax":0,"CanBuildOutSide":0}]
+[
+    {
+        "ID": 1,
+        "Prefab": "MainCity",
+        "Type": 1,
+        "AddType": "CityTroop",
+        "Name": "主城",
+        "Desc": "增加城市内建筑上限,提升兵力上限，增加部队队列数",
+        "AddDescs": [
+            "兵力上限",
+            "部队队列数"
+        ],
+        "Condition": [],
+        "MaxLevel": 5,
+        "RowCount": 5,
+        "ColCount": 5,
+        "RemoveType": 0
+    },
+    {
+        "ID": 2,
+        "Prefab": "Ware",
+        "Type": 1,
+        "AddType": "StoreLimit",
+        "Name": "仓库",
+        "Desc": "增加资源存储上限",
+        "AddDescs": [
+            "资源存储上限"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 1,
+        "ColCount": 1,
+        "RemoveType": 0
+    },
+    {
+        "ID": 3,
+        "Prefab": "Market",
+        "Type": 1,
+        "AddType": "HourTax",
+        "Name": "市场",
+        "Desc": "增加每小时黄金税收",
+        "AddDescs": [
+            "每小时{0}产量",
+            "{0}最大收取量"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 3,
+        "ColCount": 3,
+        "RemoveType": 0
+    },
+    {
+        "ID": 4,
+        "Prefab": "Stone",
+        "Type": 1,
+        "AddType": "HourTax",
+        "Name": "采石场",
+        "Desc": "增加每小时石头税收",
+        "AddDescs": [
+            "每小时{0}产量",
+            "{0}最大收取量"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 2,
+        "ColCount": 2,
+        "RemoveType": 0
+    },
+    {
+        "ID": 5,
+        "Prefab": "Metal",
+        "Type": 1,
+        "AddType": "HourTax",
+        "Name": "金属矿场",
+        "Desc": "增加每小时铁矿税收",
+        "AddDescs": [
+            "每小时{0}产量",
+            "{0}最大收取量"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 2,
+        "ColCount": 2,
+        "RemoveType": 0
+    },
+    {
+        "ID": 6,
+        "Prefab": "Wood",
+        "Type": 1,
+        "AddType": "HourTax",
+        "Name": "伐木场",
+        "Desc": "增加每小时木头税收",
+        "AddDescs": [
+            "每小时{0}产量",
+            "{0}最大收取量"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 2,
+        "ColCount": 2,
+        "RemoveType": 0
+    },
+    {
+        "ID": 7,
+        "Prefab": "Food",
+        "Type": 1,
+        "AddType": "HourTax",
+        "Name": "牧场",
+        "Desc": "增加每小时食物税收",
+        "AddDescs": [
+            "每小时{0}产量",
+            "{0}最大收取量"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 2,
+        "ColCount": 2,
+        "RemoveType": 0
+    },
+    {
+        "ID": 8,
+        "Prefab": "Soldier",
+        "Type": 2,
+        "AddType": "HeroMaxBlood",
+        "Name": "兵营",
+        "Desc": "额外增加英雄带兵上限",
+        "AddDescs": [
+            "英雄带兵上限额外增加"
+        ],
+        "Condition": [
+            "1|2|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 3,
+        "ColCount": 3,
+        "RemoveType": 0
+    },
+    {
+        "ID": 9,
+        "Prefab": "Reserve",
+        "Type": 2,
+        "AddType": "Equipment",
+        "Name": "铁匠部",
+        "Desc": "装备获取",
+        "AddDescs": [
+            "暂无"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 3,
+        "ColCount": 3,
+        "RemoveType": 0
+    },
+    {
+        "ID": 10,
+        "Prefab": "Strategy",
+        "Type": 2,
+        "AddType": "ResearchSpeed",
+        "Name": "科研中心",
+        "Desc": "研究各种酷炫的科学技术",
+        "AddDescs": [
+            "研究速度加快"
+        ],
+        "Condition": [
+            "1|3|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 3,
+        "ColCount": 3,
+        "RemoveType": 0
+    },
+    {
+        "ID": 11,
+        "Prefab": "Recruit",
+        "Type": 1,
+        "AddType": "RecruitSecs",
+        "Name": "募兵所",
+        "Desc": "增加部队的募兵速度",
+        "AddDescs": [
+            "募兵速度加快"
+        ],
+        "Condition": [
+            "1|3|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 3,
+        "ColCount": 3,
+        "RemoveType": 0
+    },
+    {
+        "ID": 12,
+        "Prefab": "Fire",
+        "Type": 1,
+        "AddType": "ElementAdd",
+        "Name": "火坛",
+        "Desc": "提高火属性",
+        "AddDescs": [
+            "英雄{0}属性额外增加"
+        ],
+        "Condition": [
+            "1|3|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 2,
+        "ColCount": 2,
+        "RemoveType": 0
+    },
+    {
+        "ID": 13,
+        "Prefab": "Wind",
+        "Type": 1,
+        "AddType": "ElementAdd",
+        "Name": "风坛",
+        "Desc": "提高风属性",
+        "AddDescs": [
+            "英雄{0}属性额外增加"
+        ],
+        "Condition": [
+            "1|3|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 2,
+        "ColCount": 2,
+        "RemoveType": 0
+    },
+    {
+        "ID": 14,
+        "Prefab": "Water",
+        "Type": 1,
+        "AddType": "ElementAdd",
+        "Name": "水坛",
+        "Desc": "提高水属性",
+        "AddDescs": [
+            "英雄{0}属性额外增加"
+        ],
+        "Condition": [
+            "1|3|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 2,
+        "ColCount": 2,
+        "RemoveType": 0
+    },
+    {
+        "ID": 15,
+        "Prefab": "Rider",
+        "Type": 1,
+        "AddType": "RecruitVolume",
+        "Name": "骑兵营",
+        "Desc": "可招募骑兵",
+        "AddDescs": [
+            "训练容量"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 3,
+        "ColCount": 3,
+        "RemoveType": 0
+    },
+    {
+        "ID": 16,
+        "Prefab": "Archer",
+        "Type": 1,
+        "AddType": "RecruitVolume",
+        "Name": "弓兵营",
+        "Desc": "可招募弓兵",
+        "AddDescs": [
+            "训练容量"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 3,
+        "ColCount": 3,
+        "RemoveType": 0
+    },
+    {
+        "ID": 17,
+        "Prefab": "Infantry",
+        "Type": 1,
+        "AddType": "RecruitVolume",
+        "Name": "步兵营",
+        "Desc": "可招募步兵",
+        "AddDescs": [
+            "训练容量"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 3,
+        "ColCount": 3,
+        "RemoveType": 0
+    },
+    {
+        "ID": 18,
+        "Prefab": "Hospital",
+        "Type": 1,
+        "AddType": "Cure",
+        "Name": "医院",
+        "Desc": "治疗受伤的部队",
+        "AddDescs": [
+            "医院伤员容量"
+        ],
+        "Condition": [
+            "1|1|1",
+            "1|3|2"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 2,
+        "ColCount": 2,
+        "RemoveType": 0
+    },
+    {
+        "ID": 19,
+        "Prefab": "Shop",
+        "Type": 2,
+        "AddType": "",
+        "Name": "商店",
+        "Desc": "可以购买各种资源",
+        "AddDescs": [],
+        "Condition": [
+            "1|3|1"
+        ],
+        "MaxLevel": 1,
+        "RowCount": 1,
+        "ColCount": 1,
+        "RemoveType": 0
+    },
+    {
+        "ID": 20,
+        "Prefab": "WorkHouse",
+        "Type": 2,
+        "AddType": "Worker",
+        "Name": "工棚",
+        "Desc": "增加可建造升级队列数量",
+        "AddDescs": [
+            "建筑建造升级队列"
+        ],
+        "Condition": [
+            "1|1|1"
+        ],
+        "MaxLevel": 2,
+        "RowCount": 1,
+        "ColCount": 1,
+        "RemoveType": 0
+    },
+    {
+        "ID": 21,
+        "Prefab": "Fortress",
+        "Type": 4,
+        "AddType": "DeployCount",
+        "Name": "要塞",
+        "Desc": "可以调动部署部队",
+        "AddDescs": [
+            "要塞部队数量上限"
+        ],
+        "Condition": [
+            "1|1|5",
+            "1|2|10",
+            "1|3|15",
+            "1|4|20"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 1,
+        "ColCount": 1,
+        "RemoveType": 2
+    },
+    {
+        "ID": 22,
+        "Prefab": " Tavern",
+        "Type": 1,
+        "AddType": "HeroRecruit",
+        "Name": "酒馆",
+        "Desc": "可偶遇英雄并且招募他们",
+        "AddDescs": [
+            "英雄刷新数量"
+        ],
+        "Condition": [
+            "1|3|1"
+        ],
+        "MaxLevel": 4,
+        "RowCount": 4,
+        "ColCount": 4,
+        "RemoveType": 0
+    },
+    {
+        "ID": 23,
+        "Prefab": "Gate",
+        "Type": 2,
+        "AddType": "BuildRange",
+        "Name": "城墙",
+        "Desc": "增加城池大小",
+        "AddDescs": [
+            "城市容量"
+        ],
+        "Condition": [],
+        "MaxLevel": 5,
+        "RowCount": 1,
+        "ColCount": 3,
+        "RemoveType": 0
+    },
+    {
+        "ID": 24,
+        "Prefab": "Tree",
+        "Type": 3,
+        "AddType": "",
+        "Name": "柳树",
+        "Desc": "装点城市",
+        "AddDescs": [],
+        "Condition": [
+            "1|1|10"
+        ],
+        "MaxLevel": 1,
+        "RowCount": 1,
+        "ColCount": 3,
+        "RemoveType": 1
+    }
+]
