@@ -228,7 +228,7 @@ public class WorldProxy : BaseRemoteProxy
             int bdid = UtilTools.ParseInt(firstlist[0]);
             int level = UtilTools.ParseInt(firstlist[1]);
             int bdCount = UtilTools.ParseInt(firstlist[2]);
-            BuildingData data = this.GetFirstBuilding(bdid);
+            BuildingData data = this.GetTopLevelBuilding(bdid);
             if (data != null && data._level >= level)
             {
                 kv.x = bdCount;
@@ -279,6 +279,18 @@ public class WorldProxy : BaseRemoteProxy
         return null;
     }
 
+    public bool IsUpgradeConditonStaisfy(string key)
+    {
+        BuildingData bd = WorldProxy._instance.GetBuilding(key);
+        BuildingUpgradeConfig configNext = BuildingUpgradeConfig.GetConfig(bd._id, bd._level+1);
+        if (configNext == null)
+            return false;
+        if (configNext.Condition.Length == 0)
+            return true;
+        BuildingData bdNeed = WorldProxy._instance.GetTopLevelBuilding(configNext.Condition[0]);
+        return bdNeed != null && bdNeed._level >= configNext.Condition[1];
+    }
+
     public BuildingData GetFirstBuilding(int id)
     {
         int count = this._WorldData.Datas.Count;
@@ -288,6 +300,22 @@ public class WorldProxy : BaseRemoteProxy
                 return this._WorldData.Datas[i];
         }
         return null;
+    }
+
+    public BuildingData GetTopLevelBuilding(int id)
+    {
+        BuildingData data = null;
+        int curLevel = 0;
+        int count = this._WorldData.Datas.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            if (this._WorldData.Datas[i]._id.Equals(id) && this._WorldData.Datas[i]._level > curLevel)
+            {
+                data = this._WorldData.Datas[i];
+                curLevel = data._level;
+            }
+        }
+        return data;
     }
 
     private BuildingEffectsData _Effects;
@@ -334,6 +362,17 @@ public class WorldProxy : BaseRemoteProxy
             {
                 _Effects.ResLimitAdd += UtilTools.ParseInt(configLevel.AddValues[0]);
             }
+            else if (config.AddType.Equals(ValueAddType.RecruitVolume))
+            {
+                int career = UtilTools.ParseInt(configLevel.AddValues[0]);
+                int volume = UtilTools.ParseInt(configLevel.AddValues[1]);
+                this._Effects.RecruitVolume[career] = volume;
+            }
+            else if (config.AddType.Equals(ValueAddType.CityTroop))
+            {
+                _Effects.ArmyLimit = UtilTools.ParseInt(configLevel.AddValues[0]);
+                _Effects.TroopNum = UtilTools.ParseInt(configLevel.AddValues[1]);
+            }
             else if (config.AddType.Equals(ValueAddType.HourTax))
             {
                 //税收
@@ -347,11 +386,16 @@ public class WorldProxy : BaseRemoteProxy
             {
                 this._Effects.BuildRange = UtilTools.ParseInt(configLevel.AddValues[0]);
             }
+            else if (config.AddType.Equals(ValueAddType.RecruitSecs))
+            {
+                this._Effects.RecruitReduceRate = UtilTools.ParseFloat(configLevel.AddValues[0]);
+            }
         }//end for
 
         //处理监听
         RoleProxy._instance.ComputeBuildingEffect();
         HeroProxy._instance.ComputeBuildingEffect();
+        
         //存储可以建筑的范围
         this.UpdateCanBuildSpot();
         if (oldRange != this._Effects.BuildRange && oldRange > 0)
@@ -508,7 +552,7 @@ public class WorldProxy : BaseRemoteProxy
         this.DoSaveWorldDatas();
     }
 
-    public List<StringKeyValue> GetAddOnDesc(int id, int level = 1)
+    public List<StringKeyValue> GetAddOnDesc(int id, int level = 1,bool needExtra = false)
     {
         List<StringKeyValue> list = new List<StringKeyValue>();
 
@@ -542,6 +586,8 @@ public class WorldProxy : BaseRemoteProxy
             CostData cost = new CostData();
             cost.Init(AddValues[0]);
             ItemInfoConfig configItem = ItemInfoConfig.Instance.GetData(cost.id);
+            int currenValue = RoleProxy._instance.GetHourAwardValue(cost.id);
+
 
             kv = new StringKeyValue();
             kv.key = UtilTools.format(config.AddDescs[0], configItem.Name);
@@ -550,13 +596,25 @@ public class WorldProxy : BaseRemoteProxy
 
             kv = new StringKeyValue();
             kv.key = UtilTools.format(config.AddDescs[1], configItem.Name);
-            kv.value = AddValues[1];
+            int storeLimit = UtilTools.ParseInt(AddValues[1]);
+
+            if (needExtra)
+            {
+                if (currenValue >= storeLimit)
+                    kv.value = LanguageConfig.GetLanguage(LanMainDefine.ResCurrentFull, storeLimit, storeLimit);
+                else
+                    kv.value = LanguageConfig.GetLanguage(LanMainDefine.ResCurrent, storeLimit, currenValue);
+            }
+            else
+            {
+                kv.value = storeLimit.ToString();
+            }
+
             list.Add(kv);
         }
         else if (ValueAddType.StoreLimit.Equals(AddType) ||
             ValueAddType.HeroMaxBlood.Equals(AddType) ||
             ValueAddType.Equipment.Equals(AddType) ||
-            ValueAddType.RecruitVolume.Equals(AddType) ||
             ValueAddType.Cure.Equals(AddType) ||
             ValueAddType.DeployCount.Equals(AddType) ||
             ValueAddType.HeroRecruit.Equals(AddType) ||
@@ -573,6 +631,13 @@ public class WorldProxy : BaseRemoteProxy
             kv = new StringKeyValue();
             kv.key = config.AddDescs[0];
             kv.value = LanguageConfig.GetLanguage(LanMainDefine.Percent, AddValues[0]);
+            list.Add(kv);
+        }
+        else if (ValueAddType.RecruitVolume.Equals(AddType))
+        {
+            kv = new StringKeyValue();
+            kv.key = config.AddDescs[0];
+            kv.value = AddValues[1];
             list.Add(kv);
         }
         else if (ValueAddType.ElementAdd.Equals(AddType))

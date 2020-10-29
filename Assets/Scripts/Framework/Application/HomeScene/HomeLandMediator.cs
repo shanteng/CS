@@ -29,6 +29,7 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.HomeRangeChanged);
 
         m_lInterestNotifications.Add(NotiDefine.AcceptHourAwardResp);
+        m_lInterestNotifications.Add(NotiDefine.GO_TO_SELEC_BUILDING_BY_ID);
     }
 
     public override void HandleNotification(INotification notification)
@@ -105,6 +106,15 @@ public class HomeLandMediator : BaseNoWindowMediator
                     if (this._isHomeLoaded)
                     {
                         this._LandManager.UpdateIncome();
+                    }
+                    break;
+                }
+            case NotiDefine.GO_TO_SELEC_BUILDING_BY_ID:
+                {
+                    if (this._isHomeLoaded)
+                    {
+                        int id = (int)notification.Body;
+                        this._LandManager.GotoSelectBuildingBy(id);
                     }
                     break;
                 }

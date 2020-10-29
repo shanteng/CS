@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.Events;
+
 public class ViewControllerLocal : MonoBehaviour
 {
 
@@ -207,7 +209,7 @@ public class ViewControllerLocal : MonoBehaviour
         }
     }
 
-    public bool TryGoto(VInt2 wolrdPos)
+    public bool TryGoto(VInt2 wolrdPos,UnityAction<object> callBack = null,object param = null)
     {
         VInt2 gamePos = UtilTools.WorldToGameCordinate(wolrdPos.x, wolrdPos.y);
 
@@ -224,6 +226,8 @@ public class ViewControllerLocal : MonoBehaviour
             this.SetMinMapPostion();
             this._isTryGoTo = false;
             MediatorUtil.SendNotification(NotiDefine.CordinateChange);
+            if (callBack != null)
+                callBack.Invoke(param);
         };
         this._translateX = wolrdPos.x;
         this._translateY = wolrdPos.y;

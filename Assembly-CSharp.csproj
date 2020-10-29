@@ -69,6 +69,8 @@
     <Compile Include="Assets\Scripts\Config\ExcelToJsonToolEditor.cs" />
     <Compile Include="Assets\Scripts\Config\JsonDefineClass.cs" />
     <Compile Include="Assets\Scripts\Config\LanMainDefine.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyItem.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitItemRender.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeLandManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeLandMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\MyCity.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\HomeScene\OccupyBase.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PlaneBase.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PlaneBuilder.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\SpotCube.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\UIRoot.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\UtilTools.cs" />
     <Compile Include="Assets\Scripts\Framework\ApplicationFacade.cs" />
+    <Compile Include="Assets\Scripts\Framework\Commond\ArmyCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\BuildingCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\ControllersInitializeCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\HeroCommand.cs" />
@@ -124,6 +128,7 @@
     <Compile Include="Assets\Scripts\Framework\Mediator\BaseFullScreenWindowMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Mediator\BaseNoWindowMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Mediator\BaseWindowMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Proxy\ArmyProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\BaseProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\CloudData\CloudDataTool.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\HeroProxy.cs" />
@@ -137,6 +142,7 @@
     <Compile Include="Assets\Scripts\Framework\UI\Common\HeroStar.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NonDrawingGraphic.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NumberAnimation.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\TextColorPingPong.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIBase.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIButton.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIMediatorHideHandler.cs" />

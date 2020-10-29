@@ -11,6 +11,7 @@ public class BuildLevelPop : Popup
     public UIButton _btnBack;
     public DataGrid _vGrid;
     private string _key;
+    private PopType _lastWin;
     void Start()
     {
         this._btnBack.AddEvent(OnClickBack);
@@ -18,12 +19,18 @@ public class BuildLevelPop : Popup
 
     private void OnClickBack(UIButton btn)
     {
-        PopupFactory.Instance.ShowBuildingInfo(this._key);
+        if(this._lastWin == PopType.BUILDING)
+            PopupFactory.Instance.ShowBuildingInfo(this._key);
+        else if (this._lastWin == PopType.BUILDING_UPGRADE)
+            PopupFactory.Instance.ShowBuildingUpgrade(this._key);
     }
 
     public override void setContent(object data)
     {
-        this._key = (string)data;
+        Dictionary<string, object> vo = (Dictionary<string, object>)data;
+        this._key = (string)vo["key"];
+        this._lastWin = (PopType)vo["last"];
+
         BuildingData bd = WorldProxy._instance.GetBuilding(this._key);
         BuildingConfig config = BuildingConfig.Instance.GetData(bd._id);
         this._titleTxt.text = LanguageConfig.GetLanguage(LanMainDefine.NameLv, config.Name, bd._level);

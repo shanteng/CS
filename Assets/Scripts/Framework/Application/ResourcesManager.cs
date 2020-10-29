@@ -13,6 +13,7 @@ public class AtlasDefine
 {
     public static string Common = "Common";//
     public static string Item = "Item";//
+    public static string Army = "Army";//
 }
 public class ResourcesManager : SingletonFactory<ResourcesManager>
 {
@@ -73,6 +74,12 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
     public Sprite GetCommonFrame(int Quality)
     {
         string icon = UtilTools.combine("ItemFrame", Quality);
+        return this.getAtlasSprite(AtlasDefine.Common, icon);
+    }
+
+    public Sprite GetCareerIcon(int career)
+    {
+        string icon = UtilTools.combine("ca", career);
         return this.getAtlasSprite(AtlasDefine.Common, icon);
     }
 

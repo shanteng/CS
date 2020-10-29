@@ -14,7 +14,6 @@ public class UIToggle : UIBase
 
     void Awake()
     {
-        this._toggle = this.gameObject.GetComponent<Toggle>();
         this._toggle.onValueChanged.AddListener(this.DoClick);
     }
 

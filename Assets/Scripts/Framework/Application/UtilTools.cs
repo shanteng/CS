@@ -193,7 +193,7 @@ public class UtilTools
         {
             GraphicRaycaster graphicRaycaster = UIRoot.Intance.GetLayer(layer).gameObject.GetComponent<GraphicRaycaster>();
             graphicRaycaster.Raycast(pointerEventData, results);
-            if (results.Count > 0)
+            if (results != null && results.Count > 0)
                 return true;
         }
         return false;
@@ -212,15 +212,15 @@ public class UtilTools
         List<RaycastResult> results = new List<RaycastResult>();
         PhysicsRaycaster graphicRaycaster = Camera.main.gameObject.GetComponent<PhysicsRaycaster>();
         graphicRaycaster.Raycast(pointerEventData, results);
-        if (results.Count > 0 && key.Equals("") == false)
+        if (results != null && results.Count > 0 && key.Equals("") == false)
         {
             return results[0].gameObject.name.Equals(key);
         }
-        return results.Count > 0;
+        return results != null && results.Count > 0;
     }
 
 
-    public static bool SetCostList(List<CostItem> items, string[] Costs,bool NeedMy = false)
+    public static bool SetCostList(List<CostItem> items, string[] Costs,bool NeedMy = false,float mutil = 1f)
     {
         bool isEnough = true;
         int len = Costs.Length;
@@ -233,7 +233,7 @@ public class UtilTools
                 continue;
             }
             CostData data = new CostData();
-            data.Init(Costs[i]);
+            data.Init(Costs[i],mutil);
             bool isStisfy = items[i].SetData(data, NeedMy);
             if (isStisfy == false)
                 isEnough = false;

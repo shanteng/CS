@@ -1,5 +1,7 @@
 ﻿
 using System.Collections.Generic;
+using UnityEngine;
+
 public class NotiDefine
 {
     public const string APP_START_UP = "APP_START_UP";
@@ -75,18 +77,32 @@ public class NotiDefine
 
 
     public const string HerosUpdated = "HerosUpdated";
-
     public const string CordinateChange = "CordinateChange";
+    public const string GoToEnd = "GoToEnd";
+
+    public const string LoadAllArmyDo = "LoadAllArmyDo";
+    public const string LoadAllArmyResp = "LoadAllArmyResp";
+    public const string ArmyRecruitExpireReachedNoti = "ArmyRecruitExpireReachedNoti";
+
+    public const string RecruitArmyDo = "RecruitArmyDo";
+    public const string RecruitArmyResp = "RecruitArmyResp";
+
+    public const string ArmyRecruitFinishedNoti = "ArmyRecruitFinishedNoti";
 
 
     public const string ErrorCode = "ErrorCode";
-    
+
+    public const string GO_TO_SELEC_BUILDING_BY_ID = "GO_TO_SELEC_BUILDING_BY_ID";
+
+
 }
 
 public class ErrorCode
 {
     public const string ValueOutOfRange = "ValueOutOfRange";
     public const string CostNotEnought = "CostNotEnought";
+    public const string CareerRecruitLimit = "CareerRecruitLimit";
+    public const string CityArmyFull = "CityArmyFull";
 }
 
 public enum HeroBelong
@@ -127,7 +143,8 @@ public enum MediatorDefine
     SCENE_LOADER,
     MAIN,
     BUILD_CENTER,
-    RECRUIT
+    RECRUIT,
+    ARMY
 }
 
 public class StringKeyValue
@@ -159,6 +176,7 @@ class ProxyNameDefine
     public const string WORLD = "WORLD";
     public const string ROLE = "ROLE";
     public const string HERO = "HERO";
+    public const string ARMY = "ARMY";
 }
 
 public class SceneDefine
@@ -199,8 +217,6 @@ public class AttributeDefine
 {
     public const string Attack = "Attack";
     public const string Defense = "Defense";
-    public const string AtkSpeed = "AtkSpeed";
-    public const string Burst = "Burst";
 }
 
 
@@ -282,6 +298,10 @@ public class BuildingEffectsData
     public int ResLimitAdd = 0;
     public int PowerAdd = 0;
     public int BuildRange = 0;
+    public float RecruitReduceRate = 0f;
+    public int TroopNum = 0;//可以配置队伍数量
+    public int ArmyLimit = 0;//整个城市的兵力上限
+    public Dictionary<int, int> RecruitVolume;//兵种每次招募的上限
     public Dictionary<string, IncomeData> IncomeDic = new Dictionary<string, IncomeData>();
 
     public void Reset()
@@ -291,8 +311,7 @@ public class BuildingEffectsData
             Dictionary<string, float> attrDic = new Dictionary<string, float>();
             attrDic[AttributeDefine.Attack] = 0;
             attrDic[AttributeDefine.Defense] = 0;
-            attrDic[AttributeDefine.AtkSpeed] = 0;
-            attrDic[AttributeDefine.Burst] = 0;
+        
             this.CareerAttrAdds[i] = attrDic;
         }
 
@@ -327,6 +346,28 @@ public class ItemKey
         if (config != null)
             return config.Name;
         return "";
+    }
+}
+
+public class Army
+{
+    public int Id;//兵种ID
+    public int Count;//正常数量
+    public int RecruitOneSces;//招募开始时每个招募所需的时间
+    public long RecruitStartTime;//招募开始时间
+    public long RecruitExpireTime;//招募到期时间
+    public int ReserveCount;//待领取的兵力
+    public int Injured;//伤病
+
+    public void Init(int id)
+    {
+        this.Id = id;
+        this.Count = 0;
+        this.RecruitExpireTime = 0;
+        this.RecruitOneSces = 0;
+        this.RecruitStartTime = 0;
+        this.ReserveCount = 0;
+        this.Injured = 0;
     }
 }
 
@@ -429,11 +470,11 @@ public class CostData
     public string id;
     public int count;
 
-    public void Init(string keyValueStr)
+    public void Init(string keyValueStr,float mutil =1f)
     {
         string[] list = keyValueStr.Split(':');
         this.id = list[0];
-        this.count = UtilTools.ParseInt(list[1]);
+        this.count = Mathf.FloorToInt(UtilTools.ParseInt(list[1]) * mutil);
     }
 
     public void Init(CostData d)

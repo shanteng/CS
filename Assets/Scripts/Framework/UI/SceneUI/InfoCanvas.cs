@@ -37,9 +37,10 @@ public class InfoCanvas : UIBase, IConfirmListener
     public GameObject _cdCon;
     public CountDownCanvas _countDown;
     public UIButton _btnSpeedUp;
-
+    public Animator _animator;
     private BuildingData _data;
     private string _AddAttr = "";
+    private Coroutine _cor;
     private void Start()
     {
         foreach (UIButton btn in this._btnFunList)
@@ -49,6 +50,29 @@ public class InfoCanvas : UIBase, IConfirmListener
         this._btnRes.AddEvent(this.OnClickFun);
         this._btnRes._param._value = OpType.AcceptRes;
         this._btnSpeedUp.AddEvent(this.OnClickSpeedUp);
+    }
+
+    public new void Show()
+    {
+        if (this._cor != null)
+        {
+            CoroutineUtil.GetInstance().Stop(this._cor);
+            this._cor = null;
+        }
+        this.gameObject.SetActive(true);
+        this._animator.enabled = true;
+        //this.transform
+    }
+
+    public new void Hide()
+    {
+        this._animator.SetTrigger("MoveOut");
+        _cor =  CoroutineUtil.GetInstance().WaitTime(0.4f, true, WaitInitEnd);
+    }
+
+    private void WaitInitEnd(object[] param)
+    {
+        this.gameObject.SetActive(false);
     }
 
     private void GetBtnList( out List<IntStrPair> btnTypeList)

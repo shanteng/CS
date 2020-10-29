@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using DG.Tweening.Plugins;
 using Newtonsoft.Json.Utilities;
 using SMVC.Patterns;
 using UnityEngine;
@@ -80,6 +81,8 @@ public class RoleProxy : BaseRemoteProxy
             this.DoSaveRole();
     }
 
+   
+
     private void UpdateHourAward()
     {
         List<HourAwardData> AddUpAwards = this._role.AddUpAwards;
@@ -99,23 +102,47 @@ public class RoleProxy : BaseRemoteProxy
         }
     }
 
-    private bool IsAddOverLimit(string key, int addValue)
+    private int IsAddOverLimit(string key, int addValue)
     {
         int limit = RoleProxy._instance.ResValueLimit;
-        CostData data = this.GetNumberValueData(key);
-        int afterValue = data.count + addValue;
+        CostData currentValue = this.GetNumberValueData(key);
+        int afterValue = currentValue.count + addValue;
         bool isOverLimit =  this._LimitValueKeys.Contains(key) && afterValue > limit;
         if (isOverLimit)
         {
-            string attrName = ItemKey.GetName(key);
-            PopupFactory.Instance.ShowErrorNotice(ErrorCode.ValueOutOfRange, attrName, addValue);
+            if (currentValue.count >= limit)
+            {
+                string attrName = ItemKey.GetName(key);
+                PopupFactory.Instance.ShowErrorNotice(ErrorCode.ValueOutOfRange, attrName);
+                return -1;
+            }
+            int overNum = afterValue - limit;
+            return overNum;
         }
-        return isOverLimit;
+        return 0;
+    }
+
+
+    public int GetHourAwardValue(string key)
+    {
+        List<HourAwardData> AddUpAwards = this._role.AddUpAwards;
+        int count = AddUpAwards.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            if (AddUpAwards[i].id.Equals(key))
+            {
+                long passSecs = GameIndex.ServerTime - AddUpAwards[i].generate_time;
+                int addValue = Mathf.CeilToInt(passSecs * AddUpAwards[i].base_secs_value) + AddUpAwards[i].add_up_value;
+                return addValue;
+            }
+        }
+        return 0;
     }
 
     public void AcceptHourAward(string key)
     {
         //重新计算收益和可领取的收益
+        BuildingEffectsData effects = WorldProxy._instance.GetBuildingEffects();
         List<HourAwardData> AddUpAwards = this._role.AddUpAwards;
         List<CostData> awards = new List<CostData>();
         int count = AddUpAwards.Count;
@@ -127,17 +154,33 @@ public class RoleProxy : BaseRemoteProxy
                 int addValue = Mathf.CeilToInt(passSecs * AddUpAwards[i].base_secs_value) + AddUpAwards[i].add_up_value;
                 if (addValue > 0)
                 {
-                    bool isOverLimit = this.IsAddOverLimit(key,addValue);
-                    if (isOverLimit)
-                        return;
+                    IncomeData bdIncome;
+                    if (effects.IncomeDic.TryGetValue(key, out bdIncome) && addValue > bdIncome.StoreLimit)
+                    {
+                        //只领取存储上限
+                        addValue = bdIncome.StoreLimit;
+                    }
                     
+                    //判断是否超过资源上限
+                    int overNum = this.IsAddOverLimit(key,addValue);
+                    if (overNum < 0)//资源本身已经到达上限
+                        return;
+
+                    int currentAdd = addValue;
+                    if (overNum > 0)//只领取未超出部分
+                        currentAdd -= overNum;
+
                     CostData data = new CostData();
                     data.id = AddUpAwards[i].id;
-                    data.count = addValue;
+                    data.count = currentAdd;
                     awards.Add(data);
 
+                    //计算剩下的时间
+                    int leftValue = addValue - currentAdd;
+                    int LeftGeneratePassSecs = Mathf.CeilToInt(leftValue / AddUpAwards[i].base_secs_value);
+                    AddUpAwards[i].generate_time = GameIndex.ServerTime - LeftGeneratePassSecs;
                     AddUpAwards[i].add_up_value = 0;
-                    AddUpAwards[i].generate_time = GameIndex.ServerTime;
+
                     this.DoSaveRole();
                 }
                 break;
@@ -152,6 +195,26 @@ public class RoleProxy : BaseRemoteProxy
            
     }
 
+    public int GetCanDoMinCountBy(string[] costs)
+    {
+        int canDoMin = int.MaxValue;//当前拥有资源最少可以做多少个
+        List<CostData> awards = new List<CostData>();
+        int count = costs.Length;
+        for (int i = 0; i < count; ++i)
+        {
+            CostData data = new CostData();
+            data.Init(costs[i]);
+            int myValue = this.GetNumberValue(data.id);
+            int valueCanDO = myValue / data.count;
+            if (valueCanDO < canDoMin)
+                canDoMin = valueCanDO;
+        }//end for
+
+        if (canDoMin == int.MaxValue)
+            return 0;
+        return canDoMin;
+    }
+     
     public bool TryDeductCost(string[] costs)
     {
         List<string> attrNames = new List<string>();

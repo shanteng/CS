@@ -27,7 +27,7 @@ public class CountDownCanvas : UIBase
             this.StopCoroutine(_curCor);
     }
 
-    public void DoCountDown(long expire,int totleSecs)
+    public void DoCountDown(long expire,long totleSecs)
     {
         this._expire = expire;
         this._totleSces = totleSecs;

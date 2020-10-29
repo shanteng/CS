@@ -14,7 +14,7 @@ public class Building : MonoBehaviour
     public BuildingData _data;//从Proxy取到的引用
     [HideInInspector]
     public PlaneBase _flashBase;
-    private Transform _occupyBase;
+    private OccupyBase _occupyBase;
     private BoxCollider _collider;
 
     private Transform _BuildingTran; 
@@ -39,7 +39,9 @@ public class Building : MonoBehaviour
     {
         _collider = this.transform.GetComponent<BoxCollider>();
         _flashBase = this.transform.Find("FlashBase").GetComponent<PlaneBase>();
-        _occupyBase = this.transform.Find("OccupyBase");
+        _occupyBase = this.transform.Find("OccupyBase").GetComponent<OccupyBase>();
+        this._occupyBase.SetArrowVisible(false);
+
         _BuildingTran = this.transform.Find("Building");
         this._flash = _BuildingTran.GetComponent<ColorFlash>();
         this._flash.SetOrignal();
@@ -50,7 +52,7 @@ public class Building : MonoBehaviour
     public void SetRowCol(int row, int col)
     {
         this._flashBase.SetSize(row, col);
-        this._occupyBase.localScale = new Vector3(row, col, 1);
+        this._occupyBase.transform.localScale = new Vector3(row, col, 1);
         float x = (float)(row - 1) / 2f;
         float z = (float)(col - 1) / 2f;
         Vector3 pos = new Vector3(x, 0.51f, z);
@@ -70,13 +72,12 @@ public class Building : MonoBehaviour
         this._Ui = GameObject.Instantiate<BuildingUI>(prefabs, Vector3.zero, Quaternion.identity, this.transform);
         BuildingConfig config = BuildingConfig.Instance.GetData(id);
         this._AddType = config.AddType;
-   
+        
         this._Ui.SetUI(config);
         int offset = config.RowCount - 2;
         _Ui.transform.localPosition = new Vector3(0, 0, offset);
-        //_Ui._CdUi.transform.Translate(new Vector3(0, -offset, 0), Space.Self);
         this._Ui._NameTxt.text = config.Name;
-       
+
     }
 
     public void UpdateIncome()
@@ -116,6 +117,7 @@ public class Building : MonoBehaviour
         this.UpdateIncome();
 
         this._isDisableDrag = this._data._id.Equals(BuildingData.GateID);
+   
         //设置显示parts
         int level = this._data._level > 0 ? this._data._level : 1;
         BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(this._data._id, level);
@@ -214,7 +216,8 @@ public class Building : MonoBehaviour
     {
         this._isSelect = isSelect;
         this._flash.DoFlash(this._isSelect);
-      
+        this._occupyBase.SetArrowVisible(isSelect, this._isDisableDrag);
+
         if (isSelect == false)
             this.EndRelocate();
     }

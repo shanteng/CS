@@ -330,4 +330,37 @@ public class HomeLandManager : MonoBehaviour
         _myLandCity.UpdateIncome();
     }
 
+    private string _gotoKey;
+    public void GotoSelectBuilding(string key)
+    {
+        this.SetCurrentSelectBuilding("");
+        BuildingData data = WorldProxy._instance.GetBuilding(key);
+        if (data == null)
+            return;
+        this._gotoKey = key;
+        ViewControllerLocal.GetInstance().TryGoto(data._cordinate,this.OnGotoEnd,key);
+       
+    }
+
+    public void OnGotoEnd(object param)
+    {
+        string key = (string)param;
+        this.SetCurrentSelectBuilding(key);
+    }
+
+    public void GotoSelectBuildingBy(int id)
+    {
+        BuildingData data = WorldProxy._instance.GetTopLevelBuilding(id);
+        if (data == null)
+        {
+            BuildingConfig configNeed = BuildingConfig.Instance.GetData(id);
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.GoToBuild, configNeed.Name));
+            MediatorUtil.ShowMediator(MediatorDefine.BUILD_CENTER);
+            return;
+        }
+        this.GotoSelectBuilding(data._key);
+    }
+
+
+
 }//end cloass

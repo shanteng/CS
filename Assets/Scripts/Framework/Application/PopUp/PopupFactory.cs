@@ -47,9 +47,12 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.BUILDING, bdKey);
     }
 
-    public void ShowBuildingLevelEffect(string bdKey)
+    public void ShowBuildingLevelEffect(string bdKey, PopType lastPop)
     {
-        this.ShowPop(PopType.BUILDING_LEVEL_EFFECT, bdKey);
+        Dictionary<string, object> vo = new Dictionary<string, object>();
+        vo["key"] = bdKey;
+        vo["last"] = lastPop;
+        this.ShowPop(PopType.BUILDING_LEVEL_EFFECT, vo);
     }
 
     public void ShowBuildingUpgrade(string bdKey)

@@ -1,0 +1,347 @@
+[
+    {
+        "ID": 11,
+        "Name": "骑兵1",
+        "Desc": "描述文字文字",
+        "Model": "QiBing",
+        "Career": 1,
+        "Star": 1,
+        "MarchSpeedType": 5,
+        "InitAttribute": [
+            "Attack:10",
+            "Defense:20"
+        ],
+        "Blood": 100,
+        "Load": 1,
+        "Power": 1,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 12,
+        "Name": "骑兵2",
+        "Desc": "描述文字文字",
+        "Model": "QiBing",
+        "Career": 1,
+        "Star": 2,
+        "MarchSpeedType": 4,
+        "InitAttribute": [
+            "Attack:11",
+            "Defense:22"
+        ],
+        "Blood": 120,
+        "Load": 2,
+        "Power": 2,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 13,
+        "Name": "骑兵3",
+        "Desc": "描述文字文字",
+        "Model": "QiBing",
+        "Career": 1,
+        "Star": 3,
+        "MarchSpeedType": 3,
+        "InitAttribute": [
+            "Attack:12",
+            "Defense:24"
+        ],
+        "Blood": 130,
+        "Load": 3,
+        "Power": 3,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 14,
+        "Name": "骑兵4",
+        "Desc": "描述文字文字",
+        "Model": "QiBing",
+        "Career": 1,
+        "Star": 4,
+        "MarchSpeedType": 2,
+        "InitAttribute": [
+            "Attack:13",
+            "Defense:26"
+        ],
+        "Blood": 140,
+        "Load": 4,
+        "Power": 4,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 15,
+        "Name": "骑兵5",
+        "Desc": "描述文字文字",
+        "Model": "QiBing",
+        "Career": 1,
+        "Star": 5,
+        "MarchSpeedType": 1,
+        "InitAttribute": [
+            "Attack:14",
+            "Defense:28"
+        ],
+        "Blood": 150,
+        "Load": 5,
+        "Power": 5,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 21,
+        "Name": "弓兵1",
+        "Desc": "描述文字文字",
+        "Model": "GongBing",
+        "Career": 2,
+        "Star": 1,
+        "MarchSpeedType": 5,
+        "InitAttribute": [
+            "Attack:10",
+            "Defense:20"
+        ],
+        "Blood": 100,
+        "Load": 1,
+        "Power": 1,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 22,
+        "Name": "弓兵2",
+        "Desc": "描述文字文字",
+        "Model": "GongBing",
+        "Career": 2,
+        "Star": 2,
+        "MarchSpeedType": 4,
+        "InitAttribute": [
+            "Attack:11",
+            "Defense:22"
+        ],
+        "Blood": 120,
+        "Load": 2,
+        "Power": 2,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 23,
+        "Name": "弓兵3",
+        "Desc": "描述文字文字",
+        "Model": "GongBing",
+        "Career": 2,
+        "Star": 3,
+        "MarchSpeedType": 3,
+        "InitAttribute": [
+            "Attack:12",
+            "Defense:24"
+        ],
+        "Blood": 130,
+        "Load": 3,
+        "Power": 3,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 24,
+        "Name": "弓兵4",
+        "Desc": "描述文字文字",
+        "Model": "GongBing",
+        "Career": 2,
+        "Star": 4,
+        "MarchSpeedType": 2,
+        "InitAttribute": [
+            "Attack:13",
+            "Defense:26"
+        ],
+        "Blood": 140,
+        "Load": 4,
+        "Power": 4,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 25,
+        "Name": "弓兵5",
+        "Desc": "描述文字文字",
+        "Model": "GongBing",
+        "Career": 2,
+        "Star": 5,
+        "MarchSpeedType": 1,
+        "InitAttribute": [
+            "Attack:14",
+            "Defense:28"
+        ],
+        "Blood": 150,
+        "Load": 5,
+        "Power": 5,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 31,
+        "Name": "步兵1",
+        "Desc": "描述文字文字",
+        "Model": "BuBing",
+        "Career": 3,
+        "Star": 1,
+        "MarchSpeedType": 5,
+        "InitAttribute": [
+            "Attack:10",
+            "Defense:20"
+        ],
+        "Blood": 100,
+        "Load": 1,
+        "Power": 1,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 32,
+        "Name": "步兵2",
+        "Desc": "描述文字文字",
+        "Model": "BuBing",
+        "Career": 3,
+        "Star": 2,
+        "MarchSpeedType": 4,
+        "InitAttribute": [
+            "Attack:11",
+            "Defense:22"
+        ],
+        "Blood": 120,
+        "Load": 2,
+        "Power": 2,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 33,
+        "Name": "步兵3",
+        "Desc": "描述文字文字",
+        "Model": "BuBing",
+        "Career": 3,
+        "Star": 3,
+        "MarchSpeedType": 3,
+        "InitAttribute": [
+            "Attack:12",
+            "Defense:24"
+        ],
+        "Blood": 130,
+        "Load": 3,
+        "Power": 3,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 34,
+        "Name": "步兵4",
+        "Desc": "描述文字文字",
+        "Model": "BuBing",
+        "Career": 3,
+        "Star": 4,
+        "MarchSpeedType": 2,
+        "InitAttribute": [
+            "Attack:13",
+            "Defense:26"
+        ],
+        "Blood": 140,
+        "Load": 4,
+        "Power": 4,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    },
+    {
+        "ID": 35,
+        "Name": "步兵5",
+        "Desc": "描述文字文字",
+        "Model": "BuBing",
+        "Career": 3,
+        "Star": 5,
+        "MarchSpeedType": 1,
+        "InitAttribute": [
+            "Attack:14",
+            "Defense:28"
+        ],
+        "Blood": 150,
+        "Load": 5,
+        "Power": 5,
+        "Cost": [
+            "gold:5",
+            "food:50",
+            "wood:40",
+            "metal:20"
+        ],
+        "UnlockTech": 0
+    }
+]

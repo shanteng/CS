@@ -28,6 +28,10 @@
     public const string CancelUpgradeNotice = "CancelUpgradeNotice";
     public const string CancelBuildNotice = "CancelBuildNotice";
 
+    public const string ResCurrentFull = "ResCurrentFull";
+    public const string ResCurrent = "ResCurrent";
+
+
     public const string Rider = "Rider";
     public const string Archer = "Archer";
     public const string Infantry = "Infantry";
@@ -45,8 +49,10 @@
     public const string Level = "Level";
     public const string Distance = "Distance";
     public const string BuildRange = "BuildRange";
-
+    public const string CurNextValue = "CurNextValue";
     public const string Power = "Power";
+    public const string NeedBuildingLevel = "NeedBuildingLevel";
+    public const string GoToBuild = "GoToBuild";
 
 }
 
@@ -57,5 +63,6 @@ public class ConstDefine
     public const string InitLimit = "InitLimit";
     public const string IncomeShowValue = "IncomeShowValue";
     public const string TavernRefreshSecs = " TavernRefreshSecs";
+    public const string RecruitArmySecs = " RecruitArmySecs";
 }
 

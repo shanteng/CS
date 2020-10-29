@@ -27,6 +27,8 @@ public class JsonNameDefine
     public static string HeroLevel = "HeroLevel";
     public static string PowerHeroLevel = "PowerHeroLevel";
     public static string HeroPool = "HeroPool";
+    public static string Army = "Army";
+
 
 
     public static JArray JsonRead(string name)
@@ -93,6 +95,24 @@ public class ConstConfig : Config<ConstConfig>
         }
     }
 
+}
+
+public class ArmyConfig : Config<ArmyConfig>
+{
+    public string Name;
+    public string Desc;
+    public string Model;
+    public int Career;
+    public int Star;
+    public int MarchSpeedType;
+    public int Blood;
+    public int Load;
+    public int Power;
+    public string[] InitAttribute;
+    public string[] Cost;
+    public int UnlockTech;//招募所需科技ID
+
+    public ArmyConfig() : base(JsonNameDefine.Army) { }
 }
 
 public class RoleLevelConfig : Config<RoleLevelConfig>
@@ -184,7 +204,8 @@ public class BuildingUpgradeConfig : Config<BuildingUpgradeConfig>
     public string[] Cost;
     public int Power;//
     public string[] AddValues;
-   
+    public int[] Condition;
+
     public int[] Parts;
     public BuildingUpgradeConfig() : base(JsonNameDefine.BuildingUpgrade) { }
 

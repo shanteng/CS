@@ -14,15 +14,20 @@ public class BuildingInfoPop : Popup
     public UITexts _powerText;
     public UIButton _btnLevel;
 
+  
+
     private string _key;
     void Start()
     {
         this._btnLevel.AddEvent(OnClickLevel);
+        
     }
+
+
 
     private void OnClickLevel(UIButton btn)
     {
-        PopupFactory.Instance.ShowBuildingLevelEffect(this._key);
+        PopupFactory.Instance.ShowBuildingLevelEffect(this._key,PopType.BUILDING);
     }
 
     public override void setContent(object data)
@@ -37,7 +42,7 @@ public class BuildingInfoPop : Popup
         this._powerText._texts[0].text = LanguageConfig.GetLanguage(LanMainDefine.Power);
         this._powerText._texts[1].text = configLv.Power.ToString();
 
-        List<StringKeyValue> list = WorldProxy._instance.GetAddOnDesc(bd._id, bd._level);
+        List<StringKeyValue> list = WorldProxy._instance.GetAddOnDesc(bd._id, bd._level,true);
         int count = this._FunTexts.Count;
         int len = list.Count;
         for (int i = 0; i < count; ++i)
