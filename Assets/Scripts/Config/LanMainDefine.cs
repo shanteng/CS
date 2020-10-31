@@ -62,7 +62,7 @@ public class ConstDefine
     public const string InitOutCome = "InitOutCome";
     public const string InitLimit = "InitLimit";
     public const string IncomeShowValue = "IncomeShowValue";
-    public const string TavernRefreshSecs = " TavernRefreshSecs";
-    public const string RecruitArmySecs = " RecruitArmySecs";
+    public const string TavernRefreshSecs = "TavernRefreshSecs";
+    public const string RecruitSecs = "RecruitSecs";
 }
 

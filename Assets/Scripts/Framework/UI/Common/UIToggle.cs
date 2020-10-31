@@ -53,7 +53,7 @@ public class UIToggle : UIBase
         }
         set
         {
-            this._toggle.isOn = value;
+            this._toggle.SetIsOnWithoutNotify(value);
         }
     }
 

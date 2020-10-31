@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\Config\JsonDefineClass.cs" />
     <Compile Include="Assets\Scripts\Config\LanMainDefine.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyItem.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />

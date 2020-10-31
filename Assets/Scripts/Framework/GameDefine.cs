@@ -101,8 +101,9 @@ public class ErrorCode
 {
     public const string ValueOutOfRange = "ValueOutOfRange";
     public const string CostNotEnought = "CostNotEnought";
-    public const string CareerRecruitLimit = "CareerRecruitLimit";
+    public const string CareerRecruitYet = "CareerRecruitYet";
     public const string CityArmyFull = "CityArmyFull";
+    public const string CareerRecruitLimit = "CareerRecruitLimit";
 }
 
 public enum HeroBelong
@@ -301,7 +302,7 @@ public class BuildingEffectsData
     public float RecruitReduceRate = 0f;
     public int TroopNum = 0;//可以配置队伍数量
     public int ArmyLimit = 0;//整个城市的兵力上限
-    public Dictionary<int, int> RecruitVolume;//兵种每次招募的上限
+    public Dictionary<int, int> RecruitVolume = new Dictionary<int, int>();//兵种每次招募的上限
     public Dictionary<string, IncomeData> IncomeDic = new Dictionary<string, IncomeData>();
 
     public void Reset()
@@ -324,6 +325,10 @@ public class BuildingEffectsData
         this.IncomeDic[ItemKey.wood] = new IncomeData(ItemKey.wood);
         this.IncomeDic[ItemKey.metal] = new IncomeData(ItemKey.metal);
         this.IncomeDic[ItemKey.stone] = new IncomeData(ItemKey.stone);
+
+        this.RecruitVolume[CareerDefine.Archer] = 0;
+        this.RecruitVolume[CareerDefine.Rider] = 0;
+        this.RecruitVolume[CareerDefine.Infantry] = 0;
 
         this.MaxBloodAdd = 0;
         this.ResLimitAdd = 0;

@@ -45,7 +45,10 @@ public class ArmyView : MonoBehaviour
 
     private void OnClickStart(UIButton btn)
     {
-        
+        Dictionary<string, object> vo = new Dictionary<string, object>();
+        vo["id"] = this._id;
+        vo["count"] = (int)this._recruitSlider.value;
+        MediatorUtil.SendNotification(NotiDefine.RecruitArmyDo, vo);
     }
 
     private void OnClickGoTo(UIButton btn)
@@ -71,7 +74,7 @@ public class ArmyView : MonoBehaviour
         this._nameTxt.text = config.Name;
         this._careerIcon.sprite = ResourcesManager.Instance.GetCareerIcon(config.Career);
 
-        Army armyDoing = ArmyProxy._instance.GetDoingArmy(id);
+        Army armyDoing = ArmyProxy._instance.GetCareerDoingArmy(config.Career);
         bool isDoing = armyDoing != null;
         bool isOpen = ArmyProxy._instance.isArmyOpen(id);
 
@@ -100,11 +103,7 @@ public class ArmyView : MonoBehaviour
         }
         else
         {
-            BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
-            ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.IncomeShowValue);
-            int nSecs = cfgconst.IntValues[0];
-            this._oneSecs = Mathf.FloorToInt(nSecs * (1f - effect.RecruitReduceRate));
-
+            this._oneSecs = ArmyProxy._instance.GetOneRecruitSecs();
             VInt2 canDoKv = ArmyProxy._instance.GetArmyCanRecruitCountBy(id);
             this._recruitSlider.maxValue = canDoKv.y;
             this._recruitSlider.value = canDoKv.x;

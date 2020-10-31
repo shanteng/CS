@@ -8,11 +8,11 @@ using System;
 
 public class MediatorUtil
 {
-    public static void ShowMediator(MediatorDefine mediatorName)
+    public static void ShowMediator(MediatorDefine mediatorName,object param=null)
     {
         string name = MediatorUtil.GetName(mediatorName);
         var noti = $"{NotiDefine.WINDOW_DO_SHOW}_{name}";
-        SendNotification(noti);
+        SendNotification(noti, param);
     }
 
     public static void HideMediator(MediatorDefine mediatorName)

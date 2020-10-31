@@ -215,7 +215,7 @@ public class RoleProxy : BaseRemoteProxy
         return canDoMin;
     }
      
-    public bool TryDeductCost(string[] costs)
+    public bool TryDeductCost(string[] costs,float mutil = 1f)
     {
         List<string> attrNames = new List<string>();
         List<CostData> awards = new List<CostData>();
@@ -223,7 +223,7 @@ public class RoleProxy : BaseRemoteProxy
         for (int i = 0; i < count; ++i)
         {
             CostData data = new CostData();
-            data.Init(costs[i]);
+            data.Init(costs[i], mutil);
             int myValue = this.GetNumberValue(data.id);
             if (myValue < data.count)
             {

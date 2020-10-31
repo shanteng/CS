@@ -10,6 +10,7 @@ public class UIButton : UIBase
 {
     private Button _btn;
     private Text _text;
+    private Image _icon;
     private UIButtonDelegate _listener;
 
     void Awake()
@@ -19,6 +20,10 @@ public class UIButton : UIBase
         Text[] txts =  transform.GetComponentsInChildren<Text>();
         if (txts != null && txts.Length > 0)
             this._text = txts[0];
+
+
+        if (this.transform.Find("Icon") != null)
+            this._icon = this.transform.Find("Icon").GetComponent<Image>();
     }
 
    
@@ -51,5 +56,5 @@ public class UIButton : UIBase
     }
 
     public Text Label => this._text;
-
+    public Image Icon => this._icon;
 }

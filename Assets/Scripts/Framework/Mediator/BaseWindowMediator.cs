@@ -30,6 +30,7 @@ public abstract class BaseWindowMediator<T> : Mediator
     protected GameObject _viewObj;
     protected T m_view;
     protected string _prefabName = "";
+
     public bool windowVisible => (this.m_eWindowState == WindowState.SHOW);
 
     protected BaseWindowMediator(MediatorDefine mediatorName, WindowLayer layer)
@@ -185,7 +186,6 @@ public abstract class BaseWindowMediator<T> : Mediator
         this.SetAsLastSibling();
         if (WindowLayer.FullScreen == m_eWindowLayer)
             SendNotification(NotiDefine.FULLSCREEN_WINDOW_SHOW, this);
-        ShowData = null;
         m_eWindowState = WindowState.SHOW;
         this.DoInitializeInner();
     }

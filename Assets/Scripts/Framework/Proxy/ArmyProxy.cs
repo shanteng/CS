@@ -30,8 +30,9 @@ public class ArmyProxy : BaseRemoteProxy
         return null;
     }
 
-    public Army GetDoingArmy(int id)
+    public Army GetCareerDoingArmy(int id)
     {
+        //还未实现
         Army army = null;
         if (this._datas.TryGetValue(id, out army))
             return army;
@@ -43,6 +44,7 @@ public class ArmyProxy : BaseRemoteProxy
         return this._datas;
     }
 
+ 
 
     public int GetCareerRecruitCount(int career)
     {
@@ -97,19 +99,33 @@ public class ArmyProxy : BaseRemoteProxy
         return 0;
     }
 
+    public int GetCareerRecruitVolume(int career)
+    {
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
+        int CareerLimit = 0;
+        if (effect.RecruitVolume.TryGetValue(career, out CareerLimit) == false)
+            return 0;
+        return CareerLimit;
+    }
+
     public VInt2 GetArmyCanRecruitCountBy(int id)
     {
+        VInt2 kv = new VInt2();
         ArmyConfig config = ArmyConfig.Instance.GetData(id);
         BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
-        //int Limit = effect.ArmyLimit;
-        int CareerLimit = effect.RecruitVolume[config.ID];
+
+        int CareerLimit = this.GetCareerRecruitVolume(config.Career);
+        if (CareerLimit == 0)
+            return kv;
+        
         int CareerDoingCount = this.GetCareerRecruitCount(config.Career);//正在招募
-        int left = CareerLimit - CareerDoingCount;
-        VInt2 kv = new VInt2();
+        if (CareerDoingCount > 0)
+            return kv;
+
         kv.x = RoleProxy._instance.GetCanDoMinCountBy(config.Cost);//计算当前资源量可以招募的上限
-        kv.y = left;//最大数量
-        if (kv.x > left)
-            kv.x = left;
+        kv.y = CareerLimit;//最大数量
+        if (kv.x > CareerLimit)
+            kv.x = CareerLimit;
         return kv;
     }
 
@@ -117,13 +133,25 @@ public class ArmyProxy : BaseRemoteProxy
     {
         BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
         int id = (int)vo["id"];
-        int count = (int)vo["count"];
+        int count = 100;// (int)vo["count"];
+
+        if (count <= 0)
+            return;
 
         ArmyConfig config = ArmyConfig.Instance.GetData(id);
         int careerRecruitNow = this.GetCareerRecruitCount(config.Career);
-        if (count > careerRecruitNow)
+        if (careerRecruitNow > 0)
         {
-            PopupFactory.Instance.ShowErrorNotice(ErrorCode.CostNotEnought);
+            string str = CareerDefine.GetName(config.Career);
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.CareerRecruitYet, str);
+            return;
+        }
+
+        int volume = this.GetCareerRecruitVolume(config.Career);
+        if (count > volume)
+        {
+            string str = CareerDefine.GetName(config.Career);
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.CareerRecruitLimit, volume);
             return;
         }
 
@@ -131,6 +159,13 @@ public class ArmyProxy : BaseRemoteProxy
         if (totleCount >= effect.ArmyLimit)
         {
             PopupFactory.Instance.ShowErrorNotice(ErrorCode.CityArmyFull,effect.ArmyLimit);
+            return;
+        }
+
+        //扣除消耗
+        bool isCostEnough = RoleProxy._instance.TryDeductCost(config.Cost,count);
+        if (isCostEnough == false)
+        {
             return;
         }
 
@@ -142,13 +177,21 @@ public class ArmyProxy : BaseRemoteProxy
             this._datas[id] = army;
         }
 
-        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.IncomeShowValue);
-        int nSecs = cfgconst.IntValues[0];
-        army.RecruitOneSces = Mathf.FloorToInt(nSecs * (1f - effect.RecruitReduceRate));
+
+        army.RecruitOneSces = this.GetOneRecruitSecs();
         army.RecruitStartTime = GameIndex.ServerTime;
         army.RecruitExpireTime = army.RecruitStartTime + army.RecruitOneSces * count;
         this.AddOneTimeListener(army);
         this.DoSave();
+    }
+
+    public int GetOneRecruitSecs()
+    {
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.RecruitSecs);
+        int nSecs = cfgconst.IntValues[0];
+        int RecruitOneSces = Mathf.FloorToInt(nSecs * (1f - effect.RecruitReduceRate));
+        return RecruitOneSces;
     }
 
     public void LoadAllArmys()

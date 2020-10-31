@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+using Newtonsoft.Json.Utilities;
+
 public enum OpType
 {
     Enter=1,
@@ -11,16 +13,23 @@ public enum OpType
     Upgrade,
     Cancel,
     AcceptRes,
+    Recruit,
 }
 
 public class IntStrPair
 {
     public OpType OpType;
     public string BtnName;
-    public IntStrPair(OpType key, string value)
+    public string Icon;
+    public bool Enable;
+    public object Param;
+    public IntStrPair(OpType key, string value="",string icon = "",bool en = true,object param = null)
     {
         this.OpType = key;
         this.BtnName = value;
+        this.Icon = icon;
+        this.Enable = en;
+        this.Param = param;
     }
 }
 
@@ -31,15 +40,14 @@ public class InfoCanvas : UIBase, IConfirmListener
     public Text _spotNameTxt;
     public TextMeshProUGUI _cordinateTxt;
     public List<UIButton> _btnFunList;
-    public UIButton _btnRes;
-    public Image _resIcon;
+
 
     public GameObject _cdCon;
     public CountDownCanvas _countDown;
     public UIButton _btnSpeedUp;
     public Animator _animator;
     private BuildingData _data;
-    private string _AddAttr = "";
+   
     private Coroutine _cor;
     private void Start()
     {
@@ -47,8 +55,6 @@ public class InfoCanvas : UIBase, IConfirmListener
         {
             btn.AddEvent(this.OnClickFun);
         }
-        this._btnRes.AddEvent(this.OnClickFun);
-        this._btnRes._param._value = OpType.AcceptRes;
         this._btnSpeedUp.AddEvent(this.OnClickSpeedUp);
     }
 
@@ -77,23 +83,66 @@ public class InfoCanvas : UIBase, IConfirmListener
 
     private void GetBtnList( out List<IntStrPair> btnTypeList)
     {
-        BuildingConfig _config = BuildingConfig.Instance.GetData(this._data._id);
+        BuildingConfig config = BuildingConfig.Instance.GetData(this._data._id);
+        BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(this._data._id, this._data._level);
         btnTypeList = new List<IntStrPair>();
+
         IntStrPair data = new IntStrPair(OpType.Info,LanguageConfig.GetLanguage(LanMainDefine.OpInfo));
         btnTypeList.Add(data);
 
-        bool isBuildUp = this._data._status == BuildingData.BuildingStatus.BUILD ||
-           this._data._status == BuildingData.BuildingStatus.UPGRADE;
-        if (this._data._status == BuildingData.BuildingStatus.BUILD || this._data._status == BuildingData.BuildingStatus.UPGRADE)
+
+        if (this._data._status == BuildingData.BuildingStatus.NORMAL && this._data._level < config.MaxLevel)
+        {
+            bool canUpgrade = true;
+            if (config.AddType.Equals(ValueAddType.RecruitVolume))
+            {
+                int career = UtilTools.ParseInt(configLevel.AddValues[0]);
+                int doingCount = ArmyProxy._instance.GetCareerRecruitCount(career);
+                canUpgrade = doingCount == 0;
+            }
+
+            if (canUpgrade)
+            {
+                data = new IntStrPair(OpType.Upgrade, LanguageConfig.GetLanguage(LanMainDefine.OpUpgrade));
+                btnTypeList.Add(data);
+            }
+        }
+        else if (this._data._status == BuildingData.BuildingStatus.UPGRADE)
         {
             data = new IntStrPair(OpType.Cancel, LanguageConfig.GetLanguage(LanMainDefine.OpCancel));
             btnTypeList.Add(data);
         }
-        else if(this._data._status == BuildingData.BuildingStatus.NORMAL && this._data._level < _config.MaxLevel)
+      
+
+        if (this._data._status == BuildingData.BuildingStatus.BUILD)
+            return;//建造中的没有功能入口
+       
+        //功能入口
+        switch (config.AddType)
         {
-            data = new IntStrPair(OpType.Upgrade, LanguageConfig.GetLanguage(LanMainDefine.OpUpgrade));
-            btnTypeList.Add(data);
+            case ValueAddType.HourTax:
+                {
+                    CostData add = new CostData();
+                    add.Init(configLevel.AddValues[0]);
+                    int value = RoleProxy._instance.GetCanAcceptIncomeValue(add.id);
+                    bool isEnable = value >= this._needValueShow;
+                    data = new IntStrPair(OpType.AcceptRes, "", add.id, isEnable, add.id);
+                    btnTypeList.Add(data);
+                    break;
+                }
+            case ValueAddType.RecruitVolume:
+                {
+                    if (this._data._status == BuildingData.BuildingStatus.NORMAL)
+                    {
+                        string icon = UtilTools.combine("ca", configLevel.AddValues[0]);
+                        int career = UtilTools.ParseInt(configLevel.AddValues[0]);
+                        data = new IntStrPair(OpType.Recruit, "", icon, true, career);
+                        btnTypeList.Add(data);
+                    }
+                    break;
+                }
         }
+
     }
 
     private int _needValueShow = 0;
@@ -131,30 +180,26 @@ public class InfoCanvas : UIBase, IConfirmListener
                 continue;
             }
             this._btnFunList[i].Show();
-            this._btnFunList[i].Label.text = btnTypeList[i].BtnName;
-            this._btnFunList[i]._param._value = btnTypeList[i].OpType;
+            this._btnFunList[i]._param._key = ((int)btnTypeList[i].OpType).ToString();
+            this._btnFunList[i]._param._value = btnTypeList[i].Param;
+
+            bool hasIcon = btnTypeList[i].Icon.Equals("") == false;
+            this._btnFunList[i].Icon.gameObject.SetActive(hasIcon);
+            this._btnFunList[i].Label.gameObject.SetActive(hasIcon == false);
+            if (hasIcon)
+            {
+                this._btnFunList[i].Icon.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Common, btnTypeList[i].Icon);
+                this._btnFunList[i].Icon.SetNativeSize();
+            }
+            else
+            {
+                this._btnFunList[i].Label.text = btnTypeList[i].BtnName;
+            }
+            this._btnFunList[i].IsEnable = btnTypeList[i].Enable;
+            UIRoot.Intance.SetImageGray(this._btnFunList[i].Icon, !btnTypeList[i].Enable);
         }
 
-        //是否有资源可以领取
-        BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(this._data._id, this._data._level);
-        bool isRes = config.AddType.Equals(ValueAddType.HourTax) && configLv != null;
-        this._btnRes.gameObject.SetActive(isRes);
-        if (isRes)
-        {
-            CostData add = new CostData();
-            add.Init(configLv.AddValues[0]);
-            this._AddAttr = add.id;
-            int value = RoleProxy._instance.GetCanAcceptIncomeValue(add.id);
-            bool isEnable = value >= this._needValueShow;
-            this._btnRes.IsEnable = isEnable;
-            this._resIcon.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Common, add.id);
-            UIRoot.Intance.SetImageGray(this._resIcon, !isEnable);
-        }
-        else
-        {
-            this._AddAttr = "";
-        }
-
+      
         LayoutRebuilder.ForceRebuildLayoutImmediate(_NameRect);
 
         bool isBuildUp = this._data._status == BuildingData.BuildingStatus.BUILD || this._data._status == BuildingData.BuildingStatus.UPGRADE;
@@ -178,8 +223,8 @@ public class InfoCanvas : UIBase, IConfirmListener
 
     private void OnClickFun(UIButton btn)
     {
-        OpType op = (OpType)btn._param._value;
-        switch (op)
+        int op = UtilTools.ParseInt(btn._param._key);
+        switch ((OpType)op)
         {
             case OpType.Enter:
                 {
@@ -201,12 +246,18 @@ public class InfoCanvas : UIBase, IConfirmListener
                         PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelUpgradeNotice), this, "Cancel");
                     else if (this._data._status == BuildingData.BuildingStatus.BUILD)
                         PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelBuildNotice), this, "Cancel");
-                    //MediatorUtil.SendNotification(NotiDefine.BuildingCancelDo, this._data._key);
                     break;
                 }
             case OpType.AcceptRes:
                 {
-                    MediatorUtil.SendNotification(NotiDefine.AcceptHourAwardDo, this._AddAttr);
+                    string attrKey = (string)btn._param._value;
+                    MediatorUtil.SendNotification(NotiDefine.AcceptHourAwardDo, attrKey);
+                    break;
+                }
+            case OpType.Recruit:
+                {
+                    int career = (int)btn._param._value;
+                    MediatorUtil.ShowMediator(MediatorDefine.ARMY, career);
                     break;
                 }
         }
