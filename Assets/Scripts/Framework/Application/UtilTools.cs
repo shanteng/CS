@@ -276,4 +276,13 @@ public class UtilTools
         kv.y = z - GameIndex.COL / 2;
         return kv;
     }
+
+    public static void ChangeLayer(GameObject obj, Layer layerValue)
+    {
+        Transform[] transArray = obj.GetComponentsInChildren<Transform>();
+        foreach (Transform trans in transArray)
+        {
+            trans.gameObject.layer = (int)layerValue;
+        }
+    }
 }

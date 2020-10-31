@@ -146,7 +146,10 @@
     <Compile Include="Assets\Scripts\Framework\UI\Common\TextColorPingPong.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIBase.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIButton.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\UIDragRotation.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIMediatorHideHandler.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\UIModel.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\UIPress.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIScreenHideHandler.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UITexts.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIToggle.cs" />

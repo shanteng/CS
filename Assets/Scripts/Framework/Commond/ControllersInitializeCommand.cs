@@ -33,5 +33,8 @@ public class ControllersInitializeCommand : SimpleCommand
         Facade.RegisterCommand(NotiDefine.LoadAllArmyDo, typeof(ArmyCommand));
         Facade.RegisterCommand(NotiDefine.ArmyRecruitExpireReachedNoti, typeof(ArmyCommand));
         Facade.RegisterCommand(NotiDefine.RecruitArmyDo, typeof(ArmyCommand));
+        Facade.RegisterCommand(NotiDefine.HarvestArmyDo, typeof(ArmyCommand));
+        Facade.RegisterCommand(NotiDefine.SpeedUpArmyDo, typeof(ArmyCommand));
+        Facade.RegisterCommand(NotiDefine.CancelArmyDo, typeof(ArmyCommand));
     }
 }

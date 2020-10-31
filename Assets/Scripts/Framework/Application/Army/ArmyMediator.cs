@@ -16,15 +16,18 @@ public class ArmyMediator : BaseWindowMediator<ArmyView>
    
     protected override void InitListNotificationInterestsInner()
     {
-        //m_HideNoHandleNotifations.Add(NotiDefine.TEST_CALLBACK_NOTI);
+        m_HideNoHandleNotifations.Add(NotiDefine.ArmyStateChange);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.TEST_CALLBACK_NOTI:
+            case NotiDefine.ArmyStateChange:
                 {
+                    int id = (int)notification.Body;
+                    ArmyConfig config = ArmyConfig.Instance.GetData(id);
+                    this.m_view.UpdateState(config.Career);
                     break;
                 }
         }

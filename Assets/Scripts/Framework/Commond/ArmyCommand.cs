@@ -24,6 +24,21 @@ public class ArmyCommand : SimpleCommand
                     proxy.RecruitArmy((Dictionary<string,object>)notification.Body);
                     break;
                 }
+            case NotiDefine.HarvestArmyDo:
+                {
+                    proxy.HarvestArmy ((int)notification.Body);
+                    break;
+                }
+            case NotiDefine.CancelArmyDo:
+                {
+                    proxy.CancelRecruitArmy((int)notification.Body);
+                    break;
+                }
+            case NotiDefine.SpeedUpArmyDo:
+                {
+                    proxy.SpeedUpRecruitArmy((int)notification.Body);
+                    break;
+                }
         }
     }//end func
 }

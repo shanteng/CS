@@ -35,7 +35,10 @@ public class CountDownCanvas : UIBase
         this._progress.value = 0;
         if (this._curCor != null)
             this.StopCoroutine(_curCor);
-        _curCor = StartCoroutine(CountDown());
+        if (this._expire > GameIndex.ServerTime)
+        {
+            _curCor = StartCoroutine(CountDown());
+        }
     }
 
     IEnumerator CountDown()

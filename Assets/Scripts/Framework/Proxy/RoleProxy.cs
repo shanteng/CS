@@ -7,6 +7,7 @@ using DG.Tweening.Plugins;
 using Newtonsoft.Json.Utilities;
 using SMVC.Patterns;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.PlayerIdentity;
 
 public class RoleInfo
@@ -24,6 +25,7 @@ public class RoleInfo
 
 //时间戳回调管理
 public class RoleProxy : BaseRemoteProxy
+     , IConfirmListener
 {
     private Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
     private List<string> _LimitValueKeys = new List<string>();
@@ -40,7 +42,6 @@ public class RoleProxy : BaseRemoteProxy
     public void ComputeIncome()
     {
         this.IncomeDic.Clear();
-
 
         //建筑加成
         BuildingEffectsData datas = WorldProxy._instance.GetBuildingEffects();
@@ -249,6 +250,23 @@ public class RoleProxy : BaseRemoteProxy
         return true;
     }
 
+    public void TryAddNumValue(string[] costs, float mutil = 1f)
+    {
+        List<CostData> awards = new List<CostData>();
+        int count = costs.Length;
+        for (int i = 0; i < count; ++i)
+        {
+            CostData data = new CostData();
+            data.Init(costs[i], mutil);
+            awards.Add(data);
+        }
+
+        if (awards.Count > 0)
+        {
+            this.ChangeRoleNumberValue(awards);
+        }
+    }
+
     public void ChangeRoleNumberValue(List<CostData> addDatas)
     {
         Dictionary<string, int> ShowAdds = new Dictionary<string, int>();
@@ -281,6 +299,7 @@ public class RoleProxy : BaseRemoteProxy
             }
 
         }//end for
+
         this.SendNotification(NotiDefine.NumberValueHasUpdated, ShowAdds);
         this.DoSaveRole();
     }
@@ -295,7 +314,63 @@ public class RoleProxy : BaseRemoteProxy
         return null;
     }
 
+    private object _callBackParam;
+    private List<CostData> _costsSpeedUp = new List<CostData>();
+    private ConfirmData _confirmSpeed;
+    public bool TrySpeedUp(int secs,UnityAction<object> callBack,object callBackParam)
+    {
+        if (this._confirmSpeed == null)
+        {
+            _confirmSpeed = new ConfirmData();
+            _confirmSpeed.contentText = LanguageConfig.GetLanguage(LanMainDefine.SpeedUpNotice);
+            _confirmSpeed.resTitleText = LanguageConfig.GetLanguage(LanMainDefine.NeedCostValue);
+            _confirmSpeed.Reses = new List<CostData>();
+            _confirmSpeed.listener = this;
+            _confirmSpeed.userKey = "SpeedUp";
+        }
 
+        _confirmSpeed.Reses.Clear();
+        _confirmSpeed.param = callBack;
+
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.SpeedUpOneSecsNeed);
+        int count = cfgconst.StringValues.Length;
+        _costsSpeedUp.Clear();
+        for (int i = 0; i < count; ++i)
+        {
+            CostData data = new CostData();
+            data.Init(cfgconst.StringValues[i], secs);
+            int myValue = this.GetNumberValue(data.id);
+            if (myValue < data.count)
+            {
+                ItemInfoConfig cfg = ItemInfoConfig.Instance.GetData(data.id);
+                PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoArmyRecruit, cfg.Name);
+                return false;
+            }
+
+            _confirmSpeed.Reses.Add(data);
+
+            CostData costData = new CostData();
+            costData.count = -data.count;
+            costData.id = data.id;
+            _costsSpeedUp.Add(costData);
+        }
+        this._callBackParam = callBackParam;
+
+       
+        PopupFactory.Instance.ShowConfirmBy(_confirmSpeed);
+        return true;
+    }
+
+    public void OnConfirm(ConfirmData data)
+    {
+        if (data.userKey.Equals("SpeedUp"))
+        {
+            //扣除费用
+            this.ChangeRoleNumberValue(this._costsSpeedUp);
+            UnityAction<object> callBack = (UnityAction<object>)data.param;
+            callBack.Invoke(this._callBackParam);//回调
+        }
+    }
 
     public int GetNumberValue(string key)
     {
@@ -388,6 +463,7 @@ public class RoleProxy : BaseRemoteProxy
         this._role.Name = PlayerIdentityManager.Current.displayName;
 
         //初始化数据
+        MediatorUtil.SendNotification(NotiDefine.LoadAllArmyDo);
         MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo, 1);
         MediatorUtil.SendNotification(NotiDefine.LoadAllHeroDo);
         //加载场景

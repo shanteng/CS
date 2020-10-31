@@ -178,5 +178,29 @@
     {
         "IDs": "GoToBuild",
         "Value": "还未建造<color=#ff0000>{0}</color>，请前往建造！"
+    },
+    {
+        "IDs": "ArmyOverFlowHarvest",
+        "Value": "本次收取<color=#ff0000>{0}</color>兵力将超过城市兵力上限，有<color=#ff0000>{1}</color>兵力不会获得，是否继续？"
+    },
+    {
+        "IDs": "ArmyHarvest",
+        "Value": "城市增加了<color=#00ff00>{0}{1}</color>"
+    },
+    {
+        "IDs": "CancelArmyNotice",
+        "Value": "取消训练只会返回<color=#00ff00>{0}%</color>资源，是否继续？"
+    },
+    {
+        "IDs": "SpeedUpNotice",
+        "Value": "是否确认加速完成？"
+    },
+    {
+        "IDs": "NeedCostValue",
+        "Value": "需要消耗:"
+    },
+    {
+        "IDs": "Finished",
+        "Value": "已完成"
     }
 ]

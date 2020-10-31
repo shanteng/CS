@@ -8,6 +8,7 @@ using UnityEngine;
 
 
 public class ArmyProxy : BaseRemoteProxy
+    ,IConfirmListener
 {
     private Dictionary<int, Army> _datas = new Dictionary<int, Army>();
   
@@ -30,12 +31,18 @@ public class ArmyProxy : BaseRemoteProxy
         return null;
     }
 
-    public Army GetCareerDoingArmy(int id)
+    public Army GetCareerDoingArmy(int career)
     {
-        //还未实现
-        Army army = null;
-        if (this._datas.TryGetValue(id, out army))
-            return army;
+        foreach (Army army in this._datas.Values)
+        {
+            if (army.ReserveCount == 0)
+                continue;
+            ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
+            if (config.Career == career)
+            {
+                return army;
+            }
+        }
         return null;
     }
 
@@ -51,12 +58,12 @@ public class ArmyProxy : BaseRemoteProxy
         int count = 0;
         foreach (Army army in this._datas.Values)
         {
-            if (army.RecruitExpireTime == 0)
+            if (army.ReserveCount == 0)
                 continue;
             ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
             if (config.Career == career)
             {
-                int recruiCount = this.ComputeRecruitCount(army);
+                int recruiCount = army.ReserveCount;
                 count += recruiCount;
             }
         }
@@ -68,7 +75,7 @@ public class ArmyProxy : BaseRemoteProxy
         int count = 0;
         foreach (Army army in this._datas.Values)
         {
-            if (army.RecruitExpireTime == 0)
+            if (army.ReserveCount == 0)
                 continue;
             ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
             if (config.Career == career || career == 0)
@@ -88,8 +95,6 @@ public class ArmyProxy : BaseRemoteProxy
     {
         foreach (Army army in this._datas.Values)
         {
-            if (army.RecruitExpireTime == 0)
-                continue;
             ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
             if (config.ID == id)
             {
@@ -129,11 +134,20 @@ public class ArmyProxy : BaseRemoteProxy
         return kv;
     }
 
+    public int GetOneRecruitSecs()
+    {
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.RecruitSecs);
+        int nSecs = cfgconst.IntValues[0];
+        int RecruitOneSces = Mathf.FloorToInt(nSecs * (1f - effect.RecruitReduceRate));
+        return RecruitOneSces;
+    }
+
     public void RecruitArmy(Dictionary<string, object> vo)
     {
         BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
         int id = (int)vo["id"];
-        int count = 100;// (int)vo["count"];
+        int count = (int)vo["count"];
 
         if (count <= 0)
             return;
@@ -174,24 +188,135 @@ public class ArmyProxy : BaseRemoteProxy
         {
             army = new Army();
             army.Init(id);
+            army.TimeKey = UtilTools.GenerateUId();
             this._datas[id] = army;
         }
-
 
         army.RecruitOneSces = this.GetOneRecruitSecs();
         army.RecruitStartTime = GameIndex.ServerTime;
         army.RecruitExpireTime = army.RecruitStartTime + army.RecruitOneSces * count;
+        army.ReserveCount = count;
+        army.CanAccept = false;
         this.AddOneTimeListener(army);
         this.DoSave();
+        MediatorUtil.SendNotification(NotiDefine.RecruitArmyResp, army.Id);
+        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, id);
     }
 
-    public int GetOneRecruitSecs()
+    public void SpeedUpRecruitArmy(int id, bool isIgnorlNotice = false)
     {
+        Army army = this.GetArmy(id);
+        ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
+        if (army == null || army.ReserveCount == 0)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoArmyRecruit, config.Name);
+            return;
+        }
+
+        long leftSecs = army.RecruitExpireTime - GameIndex.ServerTime;
+        if (leftSecs <= 0)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.FinishArmyRecruit);
+            return;
+        }
+        bool IsOk = RoleProxy._instance.TrySpeedUp((int)leftSecs,this.OnSpeedSure,id);
+    }
+
+    public void OnSpeedSure(object param)
+    {
+        int id = (int)param;
+        Army army = this.GetArmy(id);
+        //时间中心去掉
+        MediatorUtil.SendNotification(NotiDefine.RemoveTimestepCallback, army.TimeKey);
+        this.OnRecruitExpireFinish(id);
+        this.DoSave();
+        MediatorUtil.SendNotification(NotiDefine.SpeedUpArmyResp, id);
+        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, id);
+
+    }
+
+    public void CancelRecruitArmy(int id, bool isIgnorlNotice = false)
+    {
+        Army army = this.GetArmy(id);
+        ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
+        if (army == null || army.ReserveCount == 0)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoArmyRecruit, config.Name);
+            return;
+        }
+
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.CancelArmyReturnRate);
+        int rate = cfgconst.IntValues[0];
+        if (isIgnorlNotice == false)
+        {
+            PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelArmyNotice, rate), this, "CancelRecruitArmy", id);
+            return;
+        }
+
+        //计算返还
+        int count = army.ReserveCount * rate / 100;
+        RoleProxy._instance.TryAddNumValue(config.Cost, count);
+
+        army.RecruitExpireTime = 0;
+        army.RecruitStartTime = 0;
+        army.ReserveCount = 0;
+        army.CanAccept = false;
+        this.DoSave();
+        MediatorUtil.SendNotification(NotiDefine.CancelArmyResp,id);
+        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, id);
+    }
+
+
+    public void HarvestArmy(int id,bool ignorlOverflow = false)
+    {
+        Army army =  this.GetArmy(id);
+        ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
+        if (army == null || army.CanAccept == false)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoArmyCanHarvest, config.Name);
+            return;
+        }
+
+        int totleCount = this.GetArmyTotleCount();
         BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
-        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.RecruitSecs);
-        int nSecs = cfgconst.IntValues[0];
-        int RecruitOneSces = Mathf.FloorToInt(nSecs * (1f - effect.RecruitReduceRate));
-        return RecruitOneSces;
+        int afterCount = totleCount + army.ReserveCount;
+        int overFlow = afterCount - effect.ArmyLimit;
+        if (overFlow > 0 && ignorlOverflow == false)
+        {
+            PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.ArmyOverFlowHarvest, army.ReserveCount,overFlow), this, "HarvestArmyOverFlow", id);
+            return;
+        }
+
+        if (overFlow < 0)
+            overFlow = 0;
+
+        int addCount = army.ReserveCount - overFlow;
+        army.Count += addCount;
+        army.RecruitExpireTime = 0;
+        army.RecruitStartTime = 0;
+        army.ReserveCount = 0;
+        army.CanAccept = false;
+
+        if (addCount > 0)
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, addCount, config.Name));
+
+        this.DoSave();
+        MediatorUtil.SendNotification(NotiDefine.HarvestArmyResp, addCount);
+        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange,id);
+    }
+
+    public void OnConfirm(ConfirmData data)
+    {
+        if (data.userKey.Equals("HarvestArmyOverFlow"))
+        {
+            int id = (int)data.param;
+            this.HarvestArmy(id, true);
+        }
+        else if (data.userKey.Equals("CancelRecruitArmy"))
+        {
+            int id = (int)data.param;
+            this.CancelRecruitArmy(id, true);
+        }
     }
 
     public void LoadAllArmys()
@@ -205,7 +330,7 @@ public class ArmyProxy : BaseRemoteProxy
 
         foreach (Army army in this._datas.Values)
         {
-            if (army.RecruitExpireTime == 0)
+            if (army.ReserveCount == 0)
                 continue;
             long leftSecs = army.RecruitExpireTime - GameIndex.ServerTime;
             if (leftSecs <= 0)
@@ -226,25 +351,19 @@ public class ArmyProxy : BaseRemoteProxy
         Army army = this.GetArmy(id);
         if (army == null)
             return;
-        int recruiCount = this.ComputeRecruitCount(army);
-        army.ReserveCount = recruiCount;
-        //army.RecruitExpireTime = 0;等领取后在清理掉时间
-       // army.RecruitStartTime = 0;
+        army.CanAccept = true;
+        army.RecruitExpireTime = 0;
+        army.RecruitStartTime = 0;
         this.DoSave();
         this.SendNotification(NotiDefine.ArmyRecruitFinishedNoti, id);
+        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, id);
     }
 
-    public int ComputeRecruitCount(Army army)
-    {
-        long passSecs = army.RecruitExpireTime - army.RecruitStartTime;
-        int recruiCount = Mathf.FloorToInt((float)passSecs / (float)army.RecruitOneSces);
-        return recruiCount;
-    }
-
+    
     private void AddOneTimeListener(Army data)
     {
         TimeCallData dataTime = new TimeCallData();
-        dataTime._key = UtilTools.GenerateUId();
+        dataTime._key = data.TimeKey;
         dataTime._notifaction = NotiDefine.ArmyRecruitExpireReachedNoti;
         dataTime.TimeStep = data.RecruitExpireTime;
         dataTime._param = data.Id;

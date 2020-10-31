@@ -21,6 +21,7 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
     private string UI_Path = "UI/";
     private string Popup_Path = "Popup/";
     private string Building = "Building/";
+    private string Army = "Army/";
 
     private Dictionary<string, SpriteAtlas> _atlasDic = new Dictionary<string, SpriteAtlas>();
     public GameObject LoadUIRes(string resName)
@@ -32,6 +33,12 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
     public GameObject LoadBuildingRes(string resName)
     {
         string path = UtilTools.combine(Building, resName);
+        return Resources.Load<GameObject>(path);
+    }
+
+    public GameObject LoadArmyModel(string model)
+    {
+        string path = UtilTools.combine(Army, model);
         return Resources.Load<GameObject>(path);
     }
 

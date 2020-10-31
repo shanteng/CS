@@ -27,8 +27,12 @@ public class ArmyView : MonoBehaviour
     public UIButton _btnGoto;
     public UIButton _btnSpeed;
     public UIButton _btnCancel;
+    public UIButton _btnHarvest;
+
+    public UIModel _curModel;
 
     private int _id;
+    private int _career;
     private int _oneSecs = 0;
     void Awake()
     {
@@ -38,8 +42,10 @@ public class ArmyView : MonoBehaviour
         }
         this._btnStart.AddEvent(this.OnClickStart);
         this._btnGoto.AddEvent(this.OnClickGoTo);
-        this._btnSpeed.AddEvent(this.OnClickStart);
-        this._btnCancel.AddEvent(this.OnClickGoTo);
+        this._btnSpeed.AddEvent(this.OnClickSpeed);
+        this._btnCancel.AddEvent(this.OnClickCancel);
+        this._btnHarvest.AddEvent(this.OnClickHarvest);
+
         this._recruitSlider.onValueChanged.AddListener(UpdateCost);
     }
 
@@ -56,10 +62,89 @@ public class ArmyView : MonoBehaviour
 
     }
 
+    private void OnClickSpeed(UIButton btn)
+    {
+        int id = (int)btn._param._value;
+        MediatorUtil.SendNotification(NotiDefine.SpeedUpArmyDo, id);
+    }
+
+    private void OnClickCancel(UIButton btn)
+    {
+        int id = (int)btn._param._value;
+        MediatorUtil.SendNotification(NotiDefine.CancelArmyDo, id);
+    }
+
+    private void OnClickHarvest(UIButton btn)
+    {
+        int id = (int)btn._param._value;
+        MediatorUtil.SendNotification(NotiDefine.HarvestArmyDo, id);
+    }
+
     private void OnSelectToggle(UIToggle btnSelf)
     {
         ArmyItem item = (ArmyItem)btnSelf;
         this.SetData((int)item.ID);
+    }
+
+    public void UpdateState(int career)
+    {
+        if (career != this._career)
+            return;
+        ArmyConfig config = ArmyConfig.Instance.GetData(this._id);
+        Army armyDoing = ArmyProxy._instance.GetCareerDoingArmy(config.Career);
+        bool isDoing = armyDoing != null;
+        bool isOpen = ArmyProxy._instance.isArmyOpen(_id);
+
+        this._DoingCon.SetActive(isDoing);
+        this._SelectCon.SetActive(!isDoing && isOpen);
+        this._openTxt.gameObject.SetActive(!isDoing && isOpen == false);
+
+        this._btnStart.gameObject.SetActive(isOpen && isDoing == false);
+        this._btnGoto.gameObject.SetActive(isOpen == false && isDoing == false);
+
+        bool canHarvest = armyDoing != null && armyDoing.CanAccept;
+        this._btnSpeed.gameObject.SetActive(isDoing && !canHarvest);
+        this._btnCancel.gameObject.SetActive(isDoing && !canHarvest);
+        this._btnHarvest.gameObject.SetActive(isDoing && canHarvest);
+
+
+        if (isDoing)
+        {
+            this._btnHarvest._param._value = armyDoing.Id;
+            this._btnSpeed._param._value = armyDoing.Id;
+            this._btnCancel._param._value = armyDoing.Id;
+
+            long totleSecs = armyDoing.RecruitExpireTime - armyDoing.RecruitStartTime;
+            if (totleSecs == 0)
+            {
+                this._CdUi.Stop();
+                this._CdUi._progress.maxValue = 1f;
+                this._CdUi._progress.value = 1f;
+                this._CdUi._CDTxt.text = LanguageConfig.GetLanguage(LanMainDefine.Finished);
+            }
+            else
+            {
+                this._CdUi.DoCountDown(armyDoing.RecruitExpireTime, totleSecs);
+            }
+
+            this._doingCountTxt.text = armyDoing.ReserveCount.ToString();
+            ArmyConfig configDo = ArmyConfig.Instance.GetData(armyDoing.Id);
+            this._iconDoing.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Army, configDo.Model);
+        }
+        else if (isOpen == false)
+        {
+            //显示所需科技
+        }
+        else
+        {
+            this._oneSecs = ArmyProxy._instance.GetOneRecruitSecs();
+            VInt2 canDoKv = ArmyProxy._instance.GetArmyCanRecruitCountBy(this._id);
+            this._recruitSlider.minValue = 1;
+            this._recruitSlider.maxValue = canDoKv.y;
+            this._recruitSlider.value = canDoKv.x;
+            //显示消耗
+            this.UpdateCost(this._recruitSlider.value);
+        }
     }
 
     private void SetData(int id)
@@ -71,45 +156,12 @@ public class ArmyView : MonoBehaviour
 
         this._id = id;
         ArmyConfig config = ArmyConfig.Instance.GetData(id);
+        this._curModel.SetModel(config.Model);
+
         this._nameTxt.text = config.Name;
         this._careerIcon.sprite = ResourcesManager.Instance.GetCareerIcon(config.Career);
-
-        Army armyDoing = ArmyProxy._instance.GetCareerDoingArmy(config.Career);
-        bool isDoing = armyDoing != null;
-        bool isOpen = ArmyProxy._instance.isArmyOpen(id);
-
-        this._DoingCon.SetActive(isDoing);
-        this._SelectCon.SetActive(!isDoing && isOpen);
-        this._openTxt.gameObject.SetActive(!isDoing && isOpen == false);
-     
-
-        this._btnStart.gameObject.SetActive(isOpen && isDoing== false);
-        this._btnGoto.gameObject.SetActive(isOpen == false && isDoing == false);
-        this._btnSpeed.gameObject.SetActive(isDoing);
-        this._btnCancel.gameObject.SetActive(isDoing);
-
-
-        if (isDoing)
-        {
-            long totleSecs = armyDoing.RecruitExpireTime - armyDoing.RecruitStartTime;
-            this._CdUi.DoCountDown(armyDoing.RecruitExpireTime, totleSecs);
-            this._doingCountTxt.text = ArmyProxy._instance.ComputeRecruitCount(armyDoing).ToString();
-            ArmyConfig configDo = ArmyConfig.Instance.GetData(armyDoing.Id);
-            this._iconDoing.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Army, configDo.Model);
-        }
-        else if (isOpen == false)
-        {
-            //显示所需科技
-        }
-        else
-        {
-            this._oneSecs = ArmyProxy._instance.GetOneRecruitSecs();
-            VInt2 canDoKv = ArmyProxy._instance.GetArmyCanRecruitCountBy(id);
-            this._recruitSlider.maxValue = canDoKv.y;
-            this._recruitSlider.value = canDoKv.x;
-            //显示消耗
-            this.UpdateCost(this._recruitSlider.value);
-        }
+        this.UpdateState(this._career);
+        
     }
 
     private void UpdateCost(float value)
@@ -127,6 +179,7 @@ public class ArmyView : MonoBehaviour
 
     public void SetList(int career)
     {
+        this._career = career;
         Dictionary<int, ArmyConfig> dic = ArmyConfig.Instance.getDataArray();
         List<ArmyConfig> list = new List<ArmyConfig>();
         foreach (ArmyConfig config in dic.Values)

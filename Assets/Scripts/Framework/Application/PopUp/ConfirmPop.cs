@@ -15,6 +15,7 @@ public class ConfirmData
     public string titleText = "";
     public string contentText = "";
     public string doubleCheckText = "";
+    public string resTitleText = "";
     public bool isDoubleCheckOn;//是否默认选中
     public List<CostData> Reses;
     //按钮
@@ -33,6 +34,7 @@ public class ConfirmPop : Popup
     public UIButton _BtnCancel;
     public UIToggle _BtnDoubleCheck;
     public GameObject _ResCon;
+    public Text _resTitleTxt;
     public List<CostItem> _ResList;
     private ConfirmData _data;
     void Start()
@@ -58,11 +60,12 @@ public class ConfirmPop : Popup
         this._contentTxt.text = this._data.contentText;
         this._BtnSure.Label.text = !this._data.sureText.Equals("") ? this._data.sureText : LanguageConfig.GetLanguage(LanMainDefine.ConfirmSure);
         this._BtnCancel.Label.text = !this._data.cancelText.Equals("") ? this._data.cancelText : LanguageConfig.GetLanguage(LanMainDefine.ConfirmCancel);
-
+      
         this._BtnDoubleCheck.gameObject.SetActive(this._data.doubleCheckText.Equals("") == false);
         this._BtnDoubleCheck.Label.text = this._data.doubleCheckText;
         this._BtnDoubleCheck.IsOn = this._data.isDoubleCheckOn;
 
+        this._resTitleTxt.text = this._data.resTitleText;
         this._ResCon.SetActive(this._data.Reses != null);
         if (this._data.Reses != null)
         {

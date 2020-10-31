@@ -38,16 +38,11 @@ public class IncomeItem : MonoBehaviour
         else
             this.CurMax.text = LanguageConfig.GetLanguage(LanMainDefine.ProgressFull, curStr, maxStr);
 
-        if (_oldValue > 0 && _oldValue != curValue)
+        if (_oldValue > 0 && curValue > _oldValue)
         {
             int add = curValue - this._oldValue;
-            if (add > 0)
-                this._AddValue.text = UtilTools.combine("+", add);
-            else
-                this._AddValue.text = add.ToString();
-
+            this._AddValue.text = UtilTools.combine("+", add);
             this._AddValue.gameObject.SetActive(true);
-
             this.CurMax.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 2, 0).onComplete = () =>
             {
                 this._AddValue.gameObject.SetActive(false);

@@ -106,15 +106,11 @@ public class MainView : MonoBehaviour
         this._goldTxt.text = UtilTools.NumberFormat(curValue);
         int hourAdd = RoleProxy._instance.GetHourInCome(ItemKey.gold);
         this._goldHourAddTxt.text = LanguageConfig.GetLanguage(LanMainDefine.HourAdd, hourAdd);
-        if (_oldValue > 0 && _oldValue != curValue)
+        if (_oldValue > 0 && curValue > _oldValue)
         {
             int add = curValue - this._oldValue;
-            if (add > 0)
-                this._goldAddTxt.text = UtilTools.combine("+", add);
-            else
-                this._goldAddTxt.text = add.ToString();
+            this._goldAddTxt.text = UtilTools.combine("+", add);
             this._goldAddTxt.gameObject.SetActive(true);
-
             this._goldTxt.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 2, 0).onComplete = () =>
             {
                 this._goldAddTxt.gameObject.SetActive(false);

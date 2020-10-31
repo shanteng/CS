@@ -87,6 +87,18 @@ public class NotiDefine
     public const string RecruitArmyDo = "RecruitArmyDo";
     public const string RecruitArmyResp = "RecruitArmyResp";
 
+    public const string HarvestArmyDo = "HarvestArmyDo";
+    public const string HarvestArmyResp = "HarvestArmyResp";
+
+    public const string CancelArmyDo = "CancelArmyDo";
+    public const string CancelArmyResp = "CancelArmyResp";
+
+    public const string SpeedUpArmyDo = "SpeedUpArmyDo";
+    public const string SpeedUpArmyResp = "SpeedUpArmyResp";
+
+    public const string ArmyStateChange = "ArmyStateChange";
+
+
     public const string ArmyRecruitFinishedNoti = "ArmyRecruitFinishedNoti";
 
 
@@ -104,6 +116,10 @@ public class ErrorCode
     public const string CareerRecruitYet = "CareerRecruitYet";
     public const string CityArmyFull = "CityArmyFull";
     public const string CareerRecruitLimit = "CareerRecruitLimit";
+    public const string NoArmyCanHarvest = "NoArmyCanHarvest";
+    public const string NoArmyRecruit = "NoArmyRecruit";
+    public const string SpeedUpCostNotEnought = "SpeedUpCostNotEnought";
+    public const string FinishArmyRecruit = "FinishArmyRecruit";
 }
 
 public enum HeroBelong
@@ -117,6 +133,12 @@ public enum ItemTypeDefine
     RES = 1,
     DROP_BAG = 2,
     GIVE_FAVOR = 3,
+}
+
+public enum Layer
+{
+    DEFAULT = 0,
+    UI = 5,
 }
 
 public enum BuildingType
@@ -361,8 +383,10 @@ public class Army
     public int RecruitOneSces;//招募开始时每个招募所需的时间
     public long RecruitStartTime;//招募开始时间
     public long RecruitExpireTime;//招募到期时间
-    public int ReserveCount;//待领取的兵力
+    public int ReserveCount;//
     public int Injured;//伤病
+    public bool CanAccept;//是否可以领取了
+    public string TimeKey = "";
 
     public void Init(int id)
     {
@@ -373,6 +397,8 @@ public class Army
         this.RecruitStartTime = 0;
         this.ReserveCount = 0;
         this.Injured = 0;
+        this.CanAccept = false;
+        this.TimeKey = "";
     }
 }
 
@@ -479,7 +505,7 @@ public class CostData
     {
         string[] list = keyValueStr.Split(':');
         this.id = list[0];
-        this.count = Mathf.FloorToInt(UtilTools.ParseInt(list[1]) * mutil);
+        this.count = Mathf.RoundToInt(UtilTools.ParseFloat(list[1]) * mutil);
     }
 
     public void Init(CostData d)

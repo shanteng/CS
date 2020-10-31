@@ -54,6 +54,14 @@
     public const string NeedBuildingLevel = "NeedBuildingLevel";
     public const string GoToBuild = "GoToBuild";
 
+    public const string ArmyOverFlowHarvest = "ArmyOverFlowHarvest";
+    public const string ArmyHarvest = "ArmyHarvest";
+    public const string CancelArmyNotice = "CancelArmyNotice";
+    public const string SpeedUpNotice = "SpeedUpNotice";
+    public const string NeedCostValue = "NeedCostValue";
+
+    public const string Finished = "Finished";
+
 }
 
 public class ConstDefine
@@ -64,5 +72,7 @@ public class ConstDefine
     public const string IncomeShowValue = "IncomeShowValue";
     public const string TavernRefreshSecs = "TavernRefreshSecs";
     public const string RecruitSecs = "RecruitSecs";
+    public const string CancelArmyReturnRate = "CancelArmyReturnRate";
+    public const string SpeedUpOneSecsNeed = "SpeedUpOneSecsNeed";
 }
 
