@@ -93,7 +93,7 @@ public class SdkView : MonoBehaviour
         //返回登录
         GameIndex.UID = "";
         MediatorUtil.SendNotification(NotiDefine.GAME_RESET);
-        GameObject.Destroy(this.GetComponent<Camera>().gameObject);
+        GameObject.Destroy(UIRoot.Intance.camera.gameObject);
         SceneManager.LoadScene(SceneDefine.GameIndex);
     }
 
