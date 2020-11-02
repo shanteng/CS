@@ -58,6 +58,17 @@ public class HeroProxy : BaseRemoteProxy
             this.SendNotification(NotiDefine.HerosUpdated);
     }
 
+    public  FavorLevelConfig GetFaovrConfig(int favor)
+    {
+        Dictionary<int, FavorLevelConfig> dic = FavorLevelConfig.Instance.getDataArray();
+        foreach (FavorLevelConfig config in dic.Values)
+        {
+            if (favor >= config.FavorRange[0] && favor <= config.FavorRange[1])
+                return config;
+        }
+        return dic[0];
+    }
+
     public void LoadAllHeros()
     {
         this._datas.Clear();

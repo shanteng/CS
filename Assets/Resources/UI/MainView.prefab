@@ -1742,6 +1742,7 @@ GameObject:
   - component: {fileID: 1446736011708418573}
   - component: {fileID: 2869533372996510163}
   - component: {fileID: 3619053843639936803}
+  - component: {fileID: 165514187444185960}
   m_Layer: 5
   m_Name: metal
   m_TagString: Untagged
@@ -1810,6 +1811,21 @@ MonoBehaviour:
   CurMax: {fileID: 29252282545204377}
   Icon: {fileID: 361634306300264349}
   _AddValue: {fileID: 5323815246635892343}
+--- !u!114 &165514187444185960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412324874003018066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 141d903bb21078644a1d73b3733d7ba7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _param:
+    _key: 
+  key: metal
 --- !u!1 &1689030335335236978
 GameObject:
   m_ObjectHideFlags: 0
@@ -3013,6 +3029,7 @@ GameObject:
   - component: {fileID: 71348824115654881}
   - component: {fileID: 7528024207645649598}
   - component: {fileID: 6777883410365139733}
+  - component: {fileID: 2088988254031264159}
   m_Layer: 5
   m_Name: wood
   m_TagString: Untagged
@@ -3081,6 +3098,21 @@ MonoBehaviour:
   CurMax: {fileID: 8601933432515524531}
   Icon: {fileID: 8584000059425253598}
   _AddValue: {fileID: 9082072755313678545}
+--- !u!114 &2088988254031264159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037820566149242002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 141d903bb21078644a1d73b3733d7ba7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _param:
+    _key: 
+  key: wood
 --- !u!1 &3105579261506306611
 GameObject:
   m_ObjectHideFlags: 0
@@ -4997,6 +5029,7 @@ GameObject:
   - component: {fileID: 2551473333059906683}
   - component: {fileID: 2165817004247443380}
   - component: {fileID: 4944468521802723888}
+  - component: {fileID: 4320634022833855712}
   m_Layer: 5
   m_Name: stone
   m_TagString: Untagged
@@ -5065,6 +5098,21 @@ MonoBehaviour:
   CurMax: {fileID: 3060870962292166736}
   Icon: {fileID: 206147046245837504}
   _AddValue: {fileID: 6613842591420919216}
+--- !u!114 &4320634022833855712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5338762388596369636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 141d903bb21078644a1d73b3733d7ba7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _param:
+    _key: 
+  key: stone
 --- !u!1 &5594865695981474613
 GameObject:
   m_ObjectHideFlags: 0
@@ -5730,7 +5778,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 60, y: 0}
   m_SizeDelta: {x: 0, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7341603845501079074
@@ -5976,7 +6024,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 220, y: 0}
   m_SizeDelta: {x: 0, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2382722793112771921
@@ -6269,6 +6317,7 @@ GameObject:
   - component: {fileID: 4962059454764008828}
   - component: {fileID: 5087372705193086436}
   - component: {fileID: 1207667239202480038}
+  - component: {fileID: 588277915516394986}
   m_Layer: 5
   m_Name: food
   m_TagString: Untagged
@@ -6337,6 +6386,21 @@ MonoBehaviour:
   CurMax: {fileID: 8624723646328037229}
   Icon: {fileID: 1020465616396215577}
   _AddValue: {fileID: 2322482858985366064}
+--- !u!114 &588277915516394986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6347728635023348636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 141d903bb21078644a1d73b3733d7ba7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _param:
+    _key: 
+  key: food
 --- !u!1 &6528297562846666124
 GameObject:
   m_ObjectHideFlags: 0
@@ -7836,7 +7900,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 151.42, y: 0}
   m_SizeDelta: {x: 0, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7765845403126607974
@@ -7984,6 +8048,7 @@ GameObject:
   - component: {fileID: 7629473165913794603}
   - component: {fileID: 3422355022590258678}
   - component: {fileID: 9063250636206415401}
+  - component: {fileID: 726251229458303709}
   m_Layer: 5
   m_Name: gold
   m_TagString: Untagged
@@ -8034,7 +8099,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.92958224, b: 0.3726415, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -8067,6 +8132,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!114 &726251229458303709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8295564260846202827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 141d903bb21078644a1d73b3733d7ba7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _param:
+    _key: 
+  key: gold
 --- !u!1 &8299942383948069858
 GameObject:
   m_ObjectHideFlags: 0

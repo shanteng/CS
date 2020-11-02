@@ -25,9 +25,10 @@ public class JsonNameDefine
     public static string RoleLevel = "RoleLevel";
     public static string Hero = "Hero";
     public static string HeroLevel = "HeroLevel";
-    public static string PowerHeroLevel = "PowerHeroLevel";
+    public static string HeroStar = "HeroStar";
     public static string HeroPool = "HeroPool";
     public static string Army = "Army";
+    public static string FavorLevel = "FavorLevel";
 
 
 
@@ -127,49 +128,46 @@ public class HeroLevelConfig : Config<HeroLevelConfig>
 {
     public int Exp;
     public int BloodMax;
+    public float RangeRate;
 
     public HeroLevelConfig() : base(JsonNameDefine.HeroLevel) { }
+}
+
+public class FavorLevelConfig : Config<FavorLevelConfig>
+{
+    public string Name;
+    public int[] FavorRange;
+    public FavorLevelConfig() : base(JsonNameDefine.FavorLevel) { }
 }
 
 public class HeroConfig : Config<HeroConfig>
 {
     public string Name;
     public string Model;
-    public int Career;
+    public int[] CareerRates;
     public int Star;
+    public int InitLevel;
+    public int InitBelong;
     public string Element;
-    public float ElementValue;
-    public float Range;
-    public float MarchSpeed;
-    public string[] InitAttribute;
-    public string[] AttributeGrow;
-    public int Skill;
+      
+    public int[] Skills;
     public string[] Cost;
     
-
     public int NeedPower;//招募到达声望
-    public int NeedFavor;//招募或者好高度高于
+    public int FavorLevel;//招募或者好高度高于
     public int Fancy;//FancyDefine
 
     public HeroConfig() : base(JsonNameDefine.Hero) { }
 }
 
-public class PowerHeroLevelConfig : Config<PowerHeroLevelConfig>
+public class HeroStarConfig : Config<HeroStarConfig>
 {
-    public int[] PowerRange;
-    public int Level;
-
-    public PowerHeroLevelConfig() : base(JsonNameDefine.PowerHeroLevel) { }
-    public static int GetLevel(int power)
-    {
-        Dictionary<int, PowerHeroLevelConfig> dic = PowerHeroLevelConfig.Instance.getDataArray();
-        foreach (PowerHeroLevelConfig config in dic.Values)
-        {
-            if (power >= config.PowerRange[0] && power <= config.PowerRange[1])
-                return config.Level;
-        }
-        return 1;
-    }
+    public int BaseDemage;
+    public int GrowDemage;
+    public int ElementValue;
+    public float RangeBase;
+    public HeroStarConfig() : base(JsonNameDefine.HeroStar) { }
+  
 }
 
 public class HeroPoolConfig : Config<HeroPoolConfig>

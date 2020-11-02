@@ -14,7 +14,7 @@ public class BuildingUI : UIBase
     private int _needValueShow = 0;
     void Start()
     {
-        this.HideCD();
+        
     }
 
     public void DoCountDown(long expire, int totle)

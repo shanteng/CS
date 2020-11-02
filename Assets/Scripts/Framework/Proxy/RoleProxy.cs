@@ -215,6 +215,25 @@ public class RoleProxy : BaseRemoteProxy
             return 0;
         return canDoMin;
     }
+
+    public bool IsDedutStisfy(string[] costs, float mutil = 1)
+    {
+        List<CostData> awards = new List<CostData>();
+        int count = costs.Length;
+        for (int i = 0; i < count; ++i)
+        {
+            CostData data = new CostData();
+            data.Init(costs[i], mutil);
+            int myValue = this.GetNumberValue(data.id);
+            if (myValue < data.count)
+            {
+                return false;
+            }
+            data.count = -data.count;
+            awards.Add(data);
+        }
+        return true;
+    }
      
     public bool TryDeductCost(string[] costs,float mutil = 1f)
     {
@@ -248,6 +267,16 @@ public class RoleProxy : BaseRemoteProxy
             this.ChangeRoleNumberValue(awards);
         }
         return true;
+    }
+
+    public void GMAddValue(string key)
+    {
+        List<CostData> awards = new List<CostData>();
+        CostData data = new CostData();
+        data.id = key;
+        data.count = 5000;
+        awards.Add(data);
+        this.ChangeRoleNumberValue(awards);
     }
 
     public void TryAddNumValue(string[] costs, float mutil = 1f)

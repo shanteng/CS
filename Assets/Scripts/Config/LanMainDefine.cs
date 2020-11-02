@@ -17,6 +17,7 @@
     public const string OpInfo = "OpInfo";
     public const string OpUpgrade = "OpUpgrade";
     public const string OpCancel = "OpCancel";
+    public const string OpHeroRecruit = "OpHeroRecruit";
 
     public const string HourAdd = "HourAdd";
     public const string Progress = "Progress";
@@ -61,6 +62,8 @@
     public const string NeedCostValue = "NeedCostValue";
 
     public const string Finished = "Finished";
+    public const string CareerRate = "CareerRate";
+    public const string FavorCurrent = "FavorCurrent";
 
 }
 

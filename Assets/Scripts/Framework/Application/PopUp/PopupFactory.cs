@@ -11,6 +11,7 @@ public enum PopType
     NOTICE,
     BUILDING_UPGRADE,
     BUILDING_LEVEL_EFFECT,
+    CAREER_RATE,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -40,6 +41,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         data.param = param;
         data.userKey = userKey;
         this.ShowConfirmBy(data);
+    }
+
+    public void ShowCareerRate()
+    {
+        this.ShowPop(PopType.CAREER_RATE,0);
     }
 
     public void ShowBuildingInfo(string bdKey)
@@ -105,6 +111,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
                     _curShowWin = InitBuildingLevelEffect();
                     break;
                 }
+            case PopType.CAREER_RATE:
+                {
+                    _curShowWin = InitCareerRate();
+                    break;
+                }
         }
 
         this._curShowWin.setContent(content);
@@ -140,6 +151,15 @@ public class PopupFactory : SingletonFactory<PopupFactory>
     }
 
     protected Popup InitBuildingLevelEffect()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("BuildingLevelInfoPop");
+        Popup script = view.GetComponent<Popup>();
+
+        BuildLevelPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<BuildLevelPop>();
+        return scriptClone;
+    }
+
+    protected Popup InitCareerRate()
     {
         GameObject view = ResourcesManager.Instance.LoadPopupRes("BuildingLevelInfoPop");
         Popup script = view.GetComponent<Popup>();

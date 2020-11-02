@@ -84,6 +84,11 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
         return this.getAtlasSprite(AtlasDefine.Common, icon);
     }
 
+    public Sprite GetCommonSprite(string icon)
+    {
+        return this.getAtlasSprite(AtlasDefine.Common, icon);
+    }
+
     public Sprite GetCareerIcon(int career)
     {
         string icon = UtilTools.combine("ca", career);

@@ -1,4 +1,5 @@
 ﻿
+using Newtonsoft.Json.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -128,6 +129,13 @@ public enum HeroBelong
     My = -1,
 }
 
+public enum CareerRateDefine
+{
+    B = 1,
+    A = 2,
+    S = 3,
+}
+
 public enum ItemTypeDefine
 {
     RES = 1,
@@ -162,6 +170,7 @@ public enum MediatorDefine
     NONE,
     DATA_CENTER,
     LOGIN,
+
     HOME_LAND,
     SCENE_LOADER,
     MAIN,
@@ -414,25 +423,22 @@ public class Hero
     public int Id;//唯一标识
     public int Level;
     public int Exp;
-    public System.Collections.Generic.List<AttributeData> Attributes;
-    public float MarchSpeed;
-    public float ElementValue;
-    public int Blood;
-    public int MaxBlood;
-    public int Belong;//0-在野 1-我方  >0 为对应Npc君主的ID
+    public float ElementValue;//和稀有的挂钩
+    public int Blood;//当前兵力
+    public int MaxBlood;//带兵上限 等级和建筑计算
+    public int Belong;//0-在野 1-我方  >0 为对应Npc城市君主的ID
     public int TeamId;//上阵队伍ID 0-未上阵
     public int Favor;//好感度
     public Dictionary<string, int> GetItems;//获得过的馈赠
     public Dictionary<int, string> Equips;// EqupType 装备的部位和道具ID
   
-
     public void Create(HeroConfig config)
     {
         this.Id = config.ID;
-        this.Level = PowerHeroLevelConfig.GetLevel(RoleProxy._instance.Role.Power);
+        this.Level = config.InitLevel;
         this.Exp = 0;
         this.Blood = 0;
-        this.Belong = (int)HeroBelong.Wild;
+        this.Belong = config.InitBelong;
         this.TeamId = 0;
         this.Favor = 0;
         this.GetItems = new Dictionary<string, int>();
@@ -444,55 +450,27 @@ public class Hero
     {
         HeroConfig config = HeroConfig.Instance.GetData(this.Id);
         HeroLevelConfig configLv = HeroLevelConfig.Instance.GetData(this.Level);
-        if (this.Attributes == null)
-            this.Attributes = new System.Collections.Generic.List<AttributeData>();
-        else
-            this.Attributes.Clear();
-        Dictionary<string, float> initValueDic = AttributeData.InitAttributes(config.InitAttribute);
-        Dictionary<string, float> levelAddValueDic = AttributeData.InitAttributes(config.AttributeGrow);
+       
+     
         BuildingEffectsData bdAddData = WorldProxy._instance.GetBuildingEffects();
-
-        var it = initValueDic.Keys.GetEnumerator();
-
-        while (it.MoveNext())
-        {
-            string key = it.Current;
-            float curAdd = 0;
-            float initValue = initValueDic[key];
-            if (levelAddValueDic.TryGetValue(key, out curAdd))
-            {
-                float levelAdd = curAdd * (this.Level - 1);
-                //等级增加的属性
-                initValue += levelAdd;
-            }
-
-            if (bdAddData.CareerAttrAdds[config.Career].TryGetValue(key, out curAdd) && this.Belong == (int)HeroBelong.My)
-            {
-                //建筑属性增加只有自己的英雄计算
-                initValue += curAdd;
-            }
-
-            AttributeData data = new AttributeData();
-            data.Id = key;
-            data.Value = initValue;
-            this.Attributes.Add(data);
-        }
-        it.Dispose();
 
         if (this.Belong == (int)HeroBelong.My)
         {
-            this.MarchSpeed = config.MarchSpeed;
-            this.ElementValue = config.ElementValue + bdAddData.ElementAdds[config.Element];
+            this.ElementValue = 0+ bdAddData.ElementAdds[config.Element];
             this.MaxBlood = configLv.BloodMax + bdAddData.MaxBloodAdd;
         }
         else
         {
-            this.MarchSpeed = config.MarchSpeed ;
-            this.ElementValue = config.ElementValue;
+            this.ElementValue =0;//通过稀有的计算
             this.MaxBlood = configLv.BloodMax;
         }
-
     }//end function
+
+    public static string GetCareerRateName(int rate)
+    {
+        string key = UtilTools.combine(LanMainDefine.CareerRate, rate);
+        return LanguageConfig.GetLanguage(key);
+    }
 }
 
 

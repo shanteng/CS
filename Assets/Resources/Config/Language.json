@@ -113,7 +113,7 @@
     },
     {
         "IDs": "RecruitCondition",
-        "Value": "声望高于{0}或\n好感度大于{1}"
+        "Value": "声望高于{0}或\n{1}"
     },
     {
         "IDs": "OwnCount",
@@ -202,5 +202,21 @@
     {
         "IDs": "Finished",
         "Value": "已完成"
+    },
+    {
+        "IDs": "CareerRate1",
+        "Value": "B"
+    },
+    {
+        "IDs": "CareerRate2",
+        "Value": "A"
+    },
+    {
+        "IDs": "CareerRate3",
+        "Value": "S"
+    },
+    {
+        "IDs": "FavorCurrent",
+        "Value": "关系:{0}"
     }
 ]

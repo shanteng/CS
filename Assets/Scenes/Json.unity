@@ -189,8 +189,9 @@ MonoBehaviour:
     sheets:
     - Hero
     - HeroLevel
-    - PowerHeroLevel
+    - HeroStar
     - HeroPool
+    - FavorLevel
   - name: Army
     sheets:
     - Army

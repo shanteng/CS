@@ -22,7 +22,7 @@ public class CostBig : UIBase
         if (needMy)
         {
             int myCount = RoleProxy._instance.GetNumberValue(data.id);
-            string valueStr = UtilTools.NumberFormat(data.count);
+            string valueStr = UtilTools.NumberFormat(myCount);
             this._MyTxt.text = LanguageConfig.GetLanguage(LanMainDefine.OwnCount, valueStr);
             _NotEnoughtAni.enabled = myCount < data.count;
         }

@@ -37,7 +37,7 @@ public class RecruitMediator : BaseWindowMediator<RecruitView>
 
     protected override void DoInitializeInner()
     {
-        this.m_view.SetList();
+        this.m_view.SetCity((int)this.ShowData);
     }
 
 }//end class

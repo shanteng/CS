@@ -66,7 +66,7 @@ public class BuildCenterView : MonoBehaviour
             }
 
             BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(curData._config.ID, 1);
-            bool isCostEnough = RoleProxy._instance.TryDeductCost(configLv.Cost);
+            bool isCostEnough = RoleProxy._instance.IsDedutStisfy(configLv.Cost);
             if (isCostEnough == false)
             {
                 return;
