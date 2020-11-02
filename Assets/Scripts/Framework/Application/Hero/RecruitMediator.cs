@@ -16,15 +16,18 @@ public class RecruitMediator : BaseWindowMediator<RecruitView>
    
     protected override void InitListNotificationInterestsInner()
     {
-        //m_HideNoHandleNotifations.Add(NotiDefine.TEST_CALLBACK_NOTI);
+        m_HideNoHandleNotifations.Add(NotiDefine.GetHeroRefreshResp);
+        m_HideNoHandleNotifations.Add(NotiDefine.HeroTavernRefresh);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.TEST_CALLBACK_NOTI:
+            case NotiDefine.GetHeroRefreshResp:
+            case NotiDefine.HeroTavernRefresh:
                 {
+                    this.m_view.SetList();
                     break;
                 }
         }

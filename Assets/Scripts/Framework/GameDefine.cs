@@ -70,8 +70,19 @@ public class NotiDefine
     public const string LoadAllHeroDo = "LoadAllHeroDo";
     public const string LoadAllHeroResp = "LoadAllHeroResp";
 
+    public const string GetHeroRefreshDo = "GetHeroRefreshDo";
+    public const string GetHeroRefreshResp = "GetHeroRefreshResp";
+
+    public const string TalkToHeroDo = "TalkToHeroDo";
+    public const string TalkToHeroResp = "TalkToHeroResp";
+
+
     public const string ChangeHeroBelongDo = "ChangeHeroBelongDo";
- 
+
+    public const string HeroTavernRefreshReachedNoti = "HeroTavernRefreshReachedNoti";
+
+    public const string HeroTavernRefresh = "HeroTavernRefresh";
+
 
     public const string GetHeroNoti = "GetHeroNoti";
     public const string LosetHeroNoti = "LosetHeroNoti";
@@ -123,6 +134,12 @@ public class ErrorCode
     public const string FinishArmyRecruit = "FinishArmyRecruit";
 }
 
+public class CommonUINameDefine
+{
+    public const string DOWN_arrow = "DOWN_arrow";
+    public const string UP_arrow = "UP_arrow";
+}
+
 public enum HeroBelong
 {
     Wild= 0,
@@ -130,10 +147,11 @@ public enum HeroBelong
 }
 
 public enum CareerRateDefine
-{
-    B = 1,
-    A = 2,
-    S = 3,
+{ 
+    C = 1,
+    B = 2,
+    A = 3,
+    S = 4,
 }
 
 public enum ItemTypeDefine
@@ -333,6 +351,8 @@ public class BuildingEffectsData
     public float RecruitReduceRate = 0f;
     public int TroopNum = 0;//可以配置队伍数量
     public int ArmyLimit = 0;//整个城市的兵力上限
+    public int HeroRectuitLimit = 0;//酒馆刷新上限
+
     public Dictionary<int, int> RecruitVolume = new Dictionary<int, int>();//兵种每次招募的上限
     public Dictionary<string, IncomeData> IncomeDic = new Dictionary<string, IncomeData>();
 
@@ -418,6 +438,12 @@ public enum EquipType
     Horse = 3,
 };
 
+public class HeroRecruitRefreshData
+{
+    public List<int> IDs;
+    public long ExpireTime;
+}
+
 public class Hero
 {
     public int Id;//唯一标识
@@ -429,6 +455,8 @@ public class Hero
     public int Belong;//0-在野 1-我方  >0 为对应Npc城市君主的ID
     public int TeamId;//上阵队伍ID 0-未上阵
     public int Favor;//好感度
+    public long TalkExpire;//上次的聊天时间 HeroTalkGap 时间后俩天可以增加好感度
+
     public Dictionary<string, int> GetItems;//获得过的馈赠
     public Dictionary<int, string> Equips;// EqupType 装备的部位和道具ID
   
@@ -441,6 +469,7 @@ public class Hero
         this.Belong = config.InitBelong;
         this.TeamId = 0;
         this.Favor = 0;
+        this.TalkExpire = 0;
         this.GetItems = new Dictionary<string, int>();
         this.Equips = new Dictionary<int, string>();
         this.ComputeAttributes();

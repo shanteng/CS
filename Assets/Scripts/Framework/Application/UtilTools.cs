@@ -285,4 +285,30 @@ public class UtilTools
             trans.gameObject.layer = (int)layerValue;
         }
     }
+
+    public static List<T> GetRandomChilds<T>(List<T> list, int count)
+    {
+        List<T> tempList = new List<T>();
+        tempList.AddRange(list);
+        SortRandom<T>(tempList);
+        return tempList.GetRange(0, count);
+    }
+
+    public static List<T> SortRandom<T>(List<T> list)
+    {
+        int randomIndex;
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            randomIndex = UnityEngine.Random.Range(0, i);
+            Swap(list,randomIndex, i);
+        }
+        return list;
+    }
+
+    public static void Swap<T>(List<T> list, int index1, int index2)
+    {
+        T temp = list[index2];
+        list[index2] = list[index1];
+        list[index1] = temp;
+    }
 }

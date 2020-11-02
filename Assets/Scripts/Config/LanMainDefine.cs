@@ -64,7 +64,13 @@
     public const string Finished = "Finished";
     public const string CareerRate = "CareerRate";
     public const string FavorCurrent = "FavorCurrent";
+    public const string TavenRefresh = "TavenRefresh";
 
+    public const string HeroFavorUp = "HeroFavorUp";
+    public const string HeroFavorDown = "HeroFavorDown";
+
+    public const string AfterTimeTalk = "AfterTimeTalk";
+    public const string HeroFavorLevelChanged = "HeroFavorLevelChanged";
 }
 
 public class ConstDefine
@@ -77,5 +83,6 @@ public class ConstDefine
     public const string RecruitSecs = "RecruitSecs";
     public const string CancelArmyReturnRate = "CancelArmyReturnRate";
     public const string SpeedUpOneSecsNeed = "SpeedUpOneSecsNeed";
+    public const string HeroTalkGap = "HeroTalkGap";
 }
 

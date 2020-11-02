@@ -44,7 +44,7 @@ public class RecruitItemRender : ItemRender
 
     private void OnClickTalk(UIButton btn)
     {
-        
+        MediatorUtil.SendNotification(NotiDefine.TalkToHeroDo, this._id);
     }
 
     private void OnClickGive(UIButton btn)

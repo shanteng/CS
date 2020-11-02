@@ -20,6 +20,7 @@ public class SaveFileDefine
     public const string WorldSpot = "WorldSpot";
     public const string HeroDatas = "HeroDatas";
     public const string Army = "Army";
+    public const string HeroRecruitRefresh = "HeroRecruitRefresh";
 }
 
 public class CloudDataTool

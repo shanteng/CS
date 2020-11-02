@@ -10,6 +10,8 @@ using UnityEngine;
 public class HeroProxy : BaseRemoteProxy
 {
     private Dictionary<int, Hero> _datas = new Dictionary<int, Hero>();
+    private HeroRecruitRefreshData _refreshData = new HeroRecruitRefreshData();
+
     public static HeroProxy _instance;
     public HeroProxy() : base(ProxyNameDefine.HERO)
     {
@@ -69,6 +71,86 @@ public class HeroProxy : BaseRemoteProxy
         return dic[0];
     }
 
+    public void LoadRefreshData(bool isGenerate)
+    {
+        string fileName = UtilTools.combine(SaveFileDefine.HeroRecruitRefresh);
+        string json = CloudDataTool.LoadFile(fileName);
+        if (json.Equals(string.Empty) == false)
+        {
+            this._refreshData = Newtonsoft.Json.JsonConvert.DeserializeObject<HeroRecruitRefreshData>(json);
+            this.AddTimeCallBack();
+        }
+        else if(isGenerate)
+        {
+            this.GenerateRefresh();
+        }
+
+        MediatorUtil.SendNotification(NotiDefine.GetHeroRefreshResp);
+    }
+
+    public void OnRefreshTimeReachedNoti()
+    {
+        this.GenerateRefresh();
+        MediatorUtil.SendNotification(NotiDefine.HeroTavernRefresh);
+    }
+
+
+    private void GenerateRefresh()
+    {
+        this._refreshData = new HeroRecruitRefreshData();
+        BuildingEffectsData data = WorldProxy._instance.GetBuildingEffects();
+        int limitCount = data.HeroRectuitLimit;
+
+        if (limitCount == 0)
+            return;
+
+        List<int> wildHero = new List<int>();
+        foreach (Hero hero in this._datas.Values)
+        {
+            if (hero.Belong == (int)HeroBelong.Wild)
+                wildHero.Add(hero.Id);
+        }
+
+        if (limitCount > wildHero.Count)
+            limitCount = wildHero.Count;
+
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.TavernRefreshSecs);
+        int secs = cfgconst.IntValues[0];
+
+        this._refreshData.IDs = UtilTools.GetRandomChilds<int>(wildHero, limitCount);
+        this._refreshData.ExpireTime = GameIndex.ServerTime + secs;
+        this.DoSaveRefresh();
+        this.AddTimeCallBack();
+    }
+
+    public bool IsInMyTarvenHero(int id)
+    {
+        Hero he = this.GetHero(id);
+        return this._refreshData.IDs.Contains(id) && he.Belong == (int)HeroBelong.Wild;
+    }
+
+    public long GetTervenExpire()
+    {
+        return this._refreshData.ExpireTime;
+    }
+
+    private void AddTimeCallBack()
+    {
+        TimeCallData dataTime = new TimeCallData();
+        dataTime._key = UtilTools.GenerateUId();
+        dataTime._notifaction = NotiDefine.HeroTavernRefreshReachedNoti;
+        dataTime.TimeStep = this._refreshData.ExpireTime;
+        dataTime._param = "";
+        MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
+    }
+
+  
+
+    public void DoSaveRefresh()
+    {
+        CloudDataTool.SaveFile(SaveFileDefine.HeroRecruitRefresh, this._refreshData);
+    }
+
     public void LoadAllHeros()
     {
         this._datas.Clear();
@@ -97,7 +179,51 @@ public class HeroProxy : BaseRemoteProxy
         if (hasNewHero)
             this.DoSaveHeros();
 
+        LoadRefreshData(false);
         this.SendNotification(NotiDefine.LoadAllHeroResp);
+    }
+
+    public void TalkToHero(int id)
+    {
+        Hero hero = this.GetHero(id);
+        if (hero.TalkExpire > 0 && hero.TalkExpire > GameIndex.ServerTime)
+        {
+            string cdStr = UtilTools.GetCdStringExpire(hero.TalkExpire);
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.AfterTimeTalk, cdStr));
+            return;
+        }
+
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.HeroTalkGap);
+        hero.TalkExpire = GameIndex.ServerTime + cfgconst.IntValues[0];
+        FavorLevelConfig configLv = this.GetFaovrConfig(hero.Favor);
+        this.ChangeHeroFavor(id, configLv.TalkAdd);
+        this.SendNotification(NotiDefine.TalkToHeroResp);
+    }
+
+    public void ChangeHeroFavor(int id, int addOn)
+    {
+        Hero hero = this.GetHero(id);
+        int oldFavor = hero.Favor;
+        hero.Favor += addOn;
+
+        HeroConfig config = HeroConfig.Instance.GetData(id);
+        FavorLevelConfig configLvOld = this.GetFaovrConfig(oldFavor);
+        FavorLevelConfig configLv = this.GetFaovrConfig(hero.Favor);
+
+        if (configLvOld != configLv)
+        {
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.HeroFavorLevelChanged, config.Name, configLv.Name));
+        }
+        else if (hero.Favor > oldFavor)
+        {
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.HeroFavorUp, config.Name, configLv.Name), CommonUINameDefine.UP_arrow);
+        }
+        else if (hero.Favor < oldFavor)
+        {
+            PopupFactory.Instance.ShowNotice(LanMainDefine.HeroFavorDown);
+        }
+
+        this.DoSaveHeros();
     }
 
     public void ChangeHeroBelong(Dictionary<string, object> vo)

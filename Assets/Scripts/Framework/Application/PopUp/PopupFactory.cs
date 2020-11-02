@@ -66,9 +66,12 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.BUILDING_UPGRADE, bdKey);
     }
 
-    public void ShowNotice(string notice)
+    public void ShowNotice(string notice,string icon= "")
     {
-        this.ShowPop(PopType.NOTICE, notice);
+        StringKeyValue kv = new StringKeyValue();
+        kv.key = notice;
+        kv.value = icon;
+        this.ShowPop(PopType.NOTICE, kv);
     }
 
     public void ShowErrorNotice(string errorCode, params object[] paramName)

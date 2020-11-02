@@ -140,6 +140,7 @@
     <Compile Include="Assets\Scripts\Framework\Proxy\WorldProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\CostBig.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\CostItem.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\CountDownText.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\EquipItem.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\FullBg.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\GmAdd.cs" />

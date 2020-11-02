@@ -787,8 +787,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1552263085}
   - component: {fileID: 1552263080}
-  - component: {fileID: 1552263081}
   - component: {fileID: 1552263083}
+  - component: {fileID: 1552263081}
   m_Layer: 5
   m_Name: UICamera
   m_TagString: Untagged

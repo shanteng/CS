@@ -326,6 +326,8 @@ public class WorldProxy : BaseRemoteProxy
         int oldRange = this._Effects.BuildRange;
         this._Effects.Reset();
 
+        int oldRecruit = this._Effects.HeroRectuitLimit;
+
         Dictionary<string, float> dic = new Dictionary<string, float>();
         foreach (BuildingData data in this._WorldData.Datas)
         {
@@ -352,7 +354,7 @@ public class WorldProxy : BaseRemoteProxy
                 float addValue = UtilTools.ParseFloat(list[1]);
                 _Effects.ElementAdds[curElement] += addValue;
             }
-         
+
             else if (config.AddType.Equals(ValueAddType.HeroMaxBlood))
             {
                 int addValue = UtilTools.ParseInt(configLevel.AddValues[0]);
@@ -372,6 +374,10 @@ public class WorldProxy : BaseRemoteProxy
             {
                 _Effects.ArmyLimit = UtilTools.ParseInt(configLevel.AddValues[0]);
                 _Effects.TroopNum = UtilTools.ParseInt(configLevel.AddValues[1]);
+            }
+            else if (config.AddType.Equals(ValueAddType.HeroRecruit))
+            {
+                _Effects.HeroRectuitLimit = UtilTools.ParseInt(configLevel.AddValues[0]);
             }
             else if (config.AddType.Equals(ValueAddType.HourTax))
             {
@@ -395,7 +401,9 @@ public class WorldProxy : BaseRemoteProxy
         //处理监听
         RoleProxy._instance.ComputeBuildingEffect();
         HeroProxy._instance.ComputeBuildingEffect();
-        
+
+       
+
         //存储可以建筑的范围
         this.UpdateCanBuildSpot();
         if (oldRange != this._Effects.BuildRange && oldRange > 0)

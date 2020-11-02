@@ -137,6 +137,7 @@ public class FavorLevelConfig : Config<FavorLevelConfig>
 {
     public string Name;
     public int[] FavorRange;
+    public int TalkAdd;
     public FavorLevelConfig() : base(JsonNameDefine.FavorLevel) { }
 }
 

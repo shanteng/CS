@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class ColorFlash : MonoBehaviour
 {
     public Color _orignlColor = new Color(0.38f, 0.52f, 0.75f);
-    private Color _EndColor = new Color(1f, 0.32f, 0.32f, 0.6f);
+    private Color _EndColor = new Color(0.48f, 0.48f, 0.48f, 0.6f);
  
     private List<MeshRenderer> _allRenders;
     public float _Speed = 1f;

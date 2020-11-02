@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-
 public class BuildingUI : UIBase
 {
     public CountDownCanvas _CdUi;

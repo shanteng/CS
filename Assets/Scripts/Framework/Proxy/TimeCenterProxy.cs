@@ -25,6 +25,8 @@ public class TimeCenterProxy : BaseRemoteProxy
     private TimeCallData _latestCallData = null;
     private bool _isOver = false;
     private Coroutine _curCor;
+    private string Noti;
+    private object param;
      
     public TimeCenterProxy() : base(ProxyNameDefine.TIME_CENTER)
     {
@@ -96,18 +98,20 @@ public class TimeCenterProxy : BaseRemoteProxy
             }
             else
             {
+                this.CallBack();//通知回调;
+                this.DoLatestTimeCallBack();
                 this._isOver = true;
-                this.CallBack();//通知回调
-                yield return null;
+                
             }
         }
-        this.DoLatestTimeCallBack();//下一帧进行下一个
+        MediatorUtil.SendNotification(this.Noti, this.param);
     }//end func
 
-    private void CallBack()
+    void CallBack()
     {
         Debug.LogWarning("TimeCenter CallBack:" + this._latestCallData._notifaction+"--param:"+ this._latestCallData._param);
-        MediatorUtil.SendNotification(this._latestCallData._notifaction, this._latestCallData._param);
+        this.Noti = this._latestCallData._notifaction;
+        this.param = this._latestCallData._param;
         _sortCallList.Remove(this._latestCallData);
         this._latestCallData = null;
     }
