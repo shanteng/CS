@@ -376,7 +376,7 @@ public class RoleProxy : BaseRemoteProxy
             if (myValue < data.count)
             {
                 ItemInfoConfig cfg = ItemInfoConfig.Instance.GetData(data.id);
-                PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoArmyRecruit, cfg.Name);
+                PopupFactory.Instance.ShowErrorNotice(ErrorCode.SpeedUpCostNotEnought, cfg.Name);
                 return false;
             }
 

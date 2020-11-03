@@ -57,15 +57,15 @@ public class UIRoot : MonoBehaviour
         this.InstantiateUIInCenter(obj,WindowLayer.Sdk);
     }
 
-    public GameObject InstantiateUIInCenter(GameObject obj, WindowLayer layer, bool setAnchorCenter = true)
+    public GameObject InstantiateUIInCenter(GameObject obj, WindowLayer layer, bool NeedAnchor = true,bool NeedZDepth = true)
     {
         Transform parent = UIRoot.Intance.GetLayer(layer);
         GameObject view = GameObject.Instantiate(obj, parent, false);
-        this.ShowUIInCenter(view, setAnchorCenter);
+        this.ShowUIInCenter(view, NeedAnchor, NeedZDepth);
         return view;
     }
 
-    public void ShowUIInCenter(GameObject ui,bool setAnchorCenter)
+    public void ShowUIInCenter(GameObject ui,bool setAnchorCenter,bool NeedZDepth = false)
     {
         var rectForm = ui.GetComponent<RectTransform>();
         if (setAnchorCenter)
@@ -77,7 +77,15 @@ public class UIRoot : MonoBehaviour
         }
        
         rectForm.localScale = Vector3.one;
-        rectForm.localPosition = Vector3.zero;
+
+        if (NeedZDepth)
+        {
+            rectForm.localPosition = new Vector3(0, 0, -1000);
+        }
+        else
+        {
+            rectForm.localPosition = Vector3.zero;
+        }
 
         ui.SetActive(true);
     }

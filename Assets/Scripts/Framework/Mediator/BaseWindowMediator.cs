@@ -173,7 +173,7 @@ public abstract class BaseWindowMediator<T> : Mediator
         if (null == obj)
             return;
 
-        m_viewComponent = UIRoot.Intance.InstantiateUIInCenter(obj,this.m_eWindowLayer);
+        m_viewComponent = UIRoot.Intance.InstantiateUIInCenter(obj,this.m_eWindowLayer,true,false);
         this._viewObj = (GameObject)m_viewComponent;
         m_view = _viewObj.GetComponent<T>();
 

@@ -13,9 +13,9 @@ public class GmAdd : UIBase
 
     public void OnPointerClick(PointerEventData eventData)
     {
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
         RoleProxy._instance.GMAddValue(this.key);
-#endif
+//#endif
     }
 
 }

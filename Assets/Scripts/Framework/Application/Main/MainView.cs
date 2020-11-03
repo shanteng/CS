@@ -90,6 +90,8 @@ public class MainView : MonoBehaviour
 
     private void OnClickBuild(UIButton btn)
     {
+        SceneManager.LoadScene("Hero",LoadSceneMode.Additive);
+        return;
         HomeLandManager.GetInstance().ConfirmBuild(false);
         MediatorUtil.ShowMediator(MediatorDefine.BUILD_CENTER);
     }

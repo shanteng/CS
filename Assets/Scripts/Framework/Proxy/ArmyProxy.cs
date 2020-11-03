@@ -274,14 +274,14 @@ public class ArmyProxy : BaseRemoteProxy
         int totleCount = this.GetArmyTotleCount();
         BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
 
+        if (army.ReserveCount > 0)
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, army.ReserveCount, config.Name));
+
         army.Count += army.ReserveCount;
         army.RecruitExpireTime = 0;
         army.RecruitStartTime = 0;
         army.ReserveCount = 0;
         army.CanAccept = false;
-
-        if (army.ReserveCount > 0)
-            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, army.ReserveCount, config.Name));
 
         this.DoSave();
         MediatorUtil.SendNotification(NotiDefine.HarvestArmyResp, army.ReserveCount);

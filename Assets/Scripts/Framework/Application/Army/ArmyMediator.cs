@@ -28,6 +28,7 @@ public class ArmyMediator : BaseWindowMediator<ArmyView>
                     int id = (int)notification.Body;
                     ArmyConfig config = ArmyConfig.Instance.GetData(id);
                     this.m_view.UpdateState(config.Career);
+                    this.m_view.UpdateToggle();
                     break;
                 }
         }

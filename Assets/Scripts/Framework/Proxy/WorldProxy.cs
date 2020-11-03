@@ -486,8 +486,9 @@ public class WorldProxy : BaseRemoteProxy
         this.DoSaveWorldDatas();
     }
 
-    public void SpeedUpUpgrade(string key)
+    public void OnSpeedSure(object param)
     {
+        string key = (string)param;
         BuildingData data = this.GetBuilding(key);
         if (data == null || data._status == BuildingData.BuildingStatus.NORMAL || data._status == BuildingData.BuildingStatus.BUILD)
             return;
@@ -499,6 +500,16 @@ public class WorldProxy : BaseRemoteProxy
         ComputeEffects();//计算影响
         this.DoSaveWorldDatas();
         MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
+    }
+
+    public void SpeedUpUpgrade(string key)
+    {
+        BuildingData data = this.GetBuilding(key);
+        if (data == null || data._status == BuildingData.BuildingStatus.NORMAL || data._status == BuildingData.BuildingStatus.BUILD)
+            return;
+
+        long leftSecs = data._expireTime - GameIndex.ServerTime;
+        bool IsOk = RoleProxy._instance.TrySpeedUp((int)leftSecs, this.OnSpeedSure, key);
     }
     public void CancelUpgrade(string key)
     {

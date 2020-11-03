@@ -99,7 +99,7 @@ public class Building : MonoBehaviour
     {
         if (this._data._status == BuildingData.BuildingStatus.INIT)
         {
-            
+            this._Ui.HideCD();
         }
         else if (this._data._status == BuildingData.BuildingStatus.BUILD)
         {

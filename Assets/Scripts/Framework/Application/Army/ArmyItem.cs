@@ -19,7 +19,12 @@ public class ArmyItem : UIToggle
         ArmyConfig config = ArmyConfig.Instance.GetData(id);
         this._Star.text = config.Star.ToString();
         this._Icon.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Army, config.Model);
-        int currentCount = ArmyProxy._instance.GetArmyCountBy(id);
+        this.UpdateCount();
+    }
+
+    public void UpdateCount()
+    {
+        int currentCount = ArmyProxy._instance.GetArmyCountBy(_id);
         this.Label.text = currentCount.ToString();
     }
 }

@@ -163,7 +163,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b99d33b1e599c243b83d4add529b19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _toggleList: []
+  _toggleList:
+  - {fileID: 9192097110683691229}
+  - {fileID: 7213399077730049056}
+  - {fileID: 4858903041443794708}
+  - {fileID: 8185289172350559659}
   _hGrid: {fileID: 5027894379971071071}
 --- !u!1 &210159706745998132
 GameObject:
@@ -3187,7 +3191,7 @@ PrefabInstance:
     - target: {fileID: 822732666056884599, guid: 48456ee2a9efe1a419fbcc1df9868b9f,
         type: 3}
       propertyPath: m_RaycastTarget
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5241165580157468436, guid: 48456ee2a9efe1a419fbcc1df9868b9f,
         type: 3}

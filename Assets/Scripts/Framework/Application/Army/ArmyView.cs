@@ -203,5 +203,13 @@ public class ArmyView : MonoBehaviour
 
         this.SetData(list[0].ID);
     }
+
+    public void UpdateToggle()
+    {
+        foreach (ArmyItem item in this._toggleList)
+        {
+            item.UpdateCount();
+        }
+    }
   
 }
