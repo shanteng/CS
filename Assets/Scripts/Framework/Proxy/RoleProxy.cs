@@ -20,6 +20,8 @@ public class RoleInfo
     public List<CostData> ItemList;//属性道具
     public List<HourAwardData> AddUpAwards;//当前可以领取的数值
     public int ResValueLimit;//上限
+    public int Head;
+    public int Frame;
 }
 
 
@@ -77,12 +79,14 @@ public class RoleProxy : BaseRemoteProxy
     {
         BuildingEffectsData datas = WorldProxy._instance.GetBuildingEffects();
         RoleLevelConfig config = RoleLevelConfig.Instance.GetData(this._role.Level);
-        this._role.Power = config.Power + datas.PowerAdd;
+        int armyPower = ArmyProxy._instance.GetPower();
+        this._role.Power = config.Power + datas.PowerAdd + armyPower;
         if (save)
+        {
             this.DoSaveRole();
+            this.SendNotification(NotiDefine.PowerChanged);
+        }
     }
-
-   
 
     private void UpdateHourAward()
     {
@@ -445,41 +449,40 @@ public class RoleProxy : BaseRemoteProxy
         return 0;
     }
 
-    public void LoadOrGenerateRole()
+    public void DoCreateRole(Dictionary<string, object> vo)
     {
-        string json = CloudDataTool.LoadFile(SaveFileDefine.Role);
-        if (json.Equals(string.Empty) == false)
+        this._role = new RoleInfo();
+        this._role.UID = PlayerIdentityManager.Current.userId;
+        this._role.Name = (string)vo["name"];
+        this._role.Head = (int)vo["head"];
+        this.Role.Frame = 0;
+        this._role.Level = 1;
+        this._role.Exp = 0;
+        ConstConfig config = ConstConfig.Instance.GetData(ConstDefine.InitRes);
+        int count = config.StringValues.Length;
+        this._role.ItemList = new List<CostData>();
+
+        this._role.AddUpAwards = new List<HourAwardData>();
+        for (int i = 0; i < count; ++i)
         {
-            this._role = Newtonsoft.Json.JsonConvert.DeserializeObject<RoleInfo>(json);
+            CostData data = new CostData();
+            data.Init(config.StringValues[i]);
+            this._role.ItemList.Add(data);
+
+            HourAwardData hourAward = new HourAwardData();
+            hourAward.id = data.id;
+            hourAward.add_up_value = 0;
+            hourAward.base_secs_value = 0;
+            hourAward.generate_time = 0;
+            this._role.AddUpAwards.Add(hourAward);
         }
-        else
-        {
-            this._role = new RoleInfo();
-           ;
-            this._role.UID = PlayerIdentityManager.Current.userId;
-            this._role.Name = PlayerIdentityManager.Current.displayName;
-            this._role.Level = 1;
-            this._role.Exp = 0;
-            ConstConfig config = ConstConfig.Instance.GetData(ConstDefine.InitRes);
-            int count = config.StringValues.Length;
-            this._role.ItemList = new List<CostData>();
+        this.DoSaveRole();
+        this.SendNotification(NotiDefine.CreateRoleResp);
+        this.Login();
+    }
 
-            this._role.AddUpAwards = new List<HourAwardData>();
-            for (int i = 0; i < count; ++i)
-            {
-                CostData data = new CostData();
-                data.Init(config.StringValues[i]);
-                this._role.ItemList.Add(data);
-
-                HourAwardData hourAward = new HourAwardData();
-                hourAward.id = data.id;
-                hourAward.add_up_value = 0;
-                hourAward.base_secs_value = 0;
-                hourAward.generate_time = 0;
-                this._role.AddUpAwards.Add(hourAward);
-            }
-        }
-
+    private void Login()
+    {
         Dictionary<string, ItemInfoConfig> dic = ItemInfoConfig.Instance.getStrDataArray();
         foreach (ItemInfoConfig config in dic.Values)
         {
@@ -487,16 +490,28 @@ public class RoleProxy : BaseRemoteProxy
                 this._LimitValueKeys.Add(config.IDs);
         }
 
-
         this._role.UID = PlayerIdentityManager.Current.userId;
-        this._role.Name = PlayerIdentityManager.Current.displayName;
-
+     
         //初始化数据
         MediatorUtil.SendNotification(NotiDefine.LoadAllArmyDo);
         MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo, 1);
         MediatorUtil.SendNotification(NotiDefine.LoadAllHeroDo);
         //加载场景
         this.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);
+    }
+
+    public void DoEnterGame()
+    {
+        string json = CloudDataTool.LoadFile(SaveFileDefine.Role);
+        if (json.Equals(string.Empty))
+        {
+            MediatorUtil.ShowMediator(MediatorDefine.CREATE);
+        }
+        else
+        {
+            this._role = Newtonsoft.Json.JsonConvert.DeserializeObject<RoleInfo>(json);
+            this.Login();
+        }
     }//end func
 
     private void DoSaveRole()

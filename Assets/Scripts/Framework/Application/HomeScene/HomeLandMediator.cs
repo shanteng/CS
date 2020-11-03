@@ -30,6 +30,8 @@ public class HomeLandMediator : BaseNoWindowMediator
 
         m_lInterestNotifications.Add(NotiDefine.AcceptHourAwardResp);
         m_lInterestNotifications.Add(NotiDefine.GO_TO_SELEC_BUILDING_BY_ID);
+
+        m_lInterestNotifications.Add(NotiDefine.WINDOW_HAS_SHOW);
     }
 
     public override void HandleNotification(INotification notification)
@@ -115,6 +117,14 @@ public class HomeLandMediator : BaseNoWindowMediator
                     {
                         int id = (int)notification.Body;
                         this._LandManager.GotoSelectBuildingBy(id);
+                    }
+                    break;
+                }
+            case NotiDefine.WINDOW_HAS_SHOW:
+                {
+                    if (this._isHomeLoaded)
+                    {
+                        this._LandManager.SetCurrentSelectBuilding("");
                     }
                     break;
                 }

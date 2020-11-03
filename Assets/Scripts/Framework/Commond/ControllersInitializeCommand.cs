@@ -22,7 +22,8 @@ public class ControllersInitializeCommand : SimpleCommand
 
         Facade.RegisterCommand(NotiDefine.BuildingExpireReachedNoti, typeof(BuildingCommand));
         //RoleCommand
-        Facade.RegisterCommand(NotiDefine.LoadRoleDo, typeof(RoleCommand));
+        Facade.RegisterCommand(NotiDefine.CreateRoleDo, typeof(RoleCommand));
+        Facade.RegisterCommand(NotiDefine.EnterGameDo, typeof(RoleCommand));
         Facade.RegisterCommand(NotiDefine.AcceptHourAwardDo, typeof(RoleCommand));
     
         //HeroCommand
@@ -31,6 +32,7 @@ public class ControllersInitializeCommand : SimpleCommand
         Facade.RegisterCommand(NotiDefine.HeroTavernRefreshReachedNoti, typeof(HeroCommand));
         Facade.RegisterCommand(NotiDefine.GetHeroRefreshDo, typeof(HeroCommand));
         Facade.RegisterCommand(NotiDefine.TalkToHeroDo, typeof(HeroCommand));
+        Facade.RegisterCommand(NotiDefine.RecruitHeroDo, typeof(HeroCommand));
 
         //ArmyCommand
         Facade.RegisterCommand(NotiDefine.LoadAllArmyDo, typeof(ArmyCommand));

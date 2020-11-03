@@ -159,6 +159,7 @@ public abstract class BaseWindowMediator<T> : Mediator
             DoInitialize();
         }
         this.SendNotification(NotiDefine.WINDOW_HAS_SHOW, this.MediatorName);
+        
     }
 
     public T GetView()

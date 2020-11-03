@@ -16,8 +16,7 @@ public class LoginView : MonoBehaviour
 
     private void OnClickStart(UIButton btn)
     {
-        MediatorUtil.SendNotification(NotiDefine.LoadRoleDo);
-        //MediatorUtil.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);
+        MediatorUtil.SendNotification(NotiDefine.EnterGameDo);
     }
 
     private void OnClear(UIButton btn)

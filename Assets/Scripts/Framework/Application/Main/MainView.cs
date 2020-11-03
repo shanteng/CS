@@ -7,11 +7,13 @@ using UnityEngine;
 using UnityEngine.PlayerIdentity;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using TMPro;
 public class MainView : MonoBehaviour
 {
+    public RoleHead _head;
     public Text _nameTxt;
-    public Text _levelTxt;
+    public TextMeshProUGUI _levelTxt;
+    public Text _expTxt;
     public Slider _lvSlider;
     public UIButton _BtnBuild;
     public UIButton _BtnSdk;
@@ -22,6 +24,7 @@ public class MainView : MonoBehaviour
     public Text _goldTxt;
     public Text _goldHourAddTxt;
     public Text _goldAddTxt;
+    public TextMeshProUGUI _powerTxt;
 
     public MapUI _mapUI;
 
@@ -56,6 +59,13 @@ public class MainView : MonoBehaviour
         }
     }
 
+
+    public void SetPower()
+    {
+        RoleInfo role = RoleProxy._instance.Role;
+        this._powerTxt.text = role.Power.ToString();
+    }
+
     public void SetLevelExp()
     {
         RoleInfo role = RoleProxy._instance.Role;
@@ -66,12 +76,10 @@ public class MainView : MonoBehaviour
         float value = role.Exp / max;
         this._lvSlider.value = value;
 
-        if (configNext != null)
-            this._levelTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevelExp, role.Level, role.Exp, max);
-        else
-            this._levelTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevelExpFull, role.Level);
+        this._levelTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevel, role.Level);
+        this._expTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevelExp, role.Exp, max);
     }
-    
+
 
     private void OnSdk(UIButton btn)
     {
@@ -123,6 +131,7 @@ public class MainView : MonoBehaviour
 
     public void SetName()
     {
+        this._head.SetData(RoleProxy._instance.Role.Head);
         this._nameTxt.text = RoleProxy._instance.Role.Name;
     }
 }

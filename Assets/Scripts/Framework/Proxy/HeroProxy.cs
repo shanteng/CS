@@ -53,7 +53,6 @@ public class HeroProxy : BaseRemoteProxy
                 isChange = true;
                 hero.ComputeAttributes();
             }
-              
         }
         it.Dispose();
         if (isChange)
@@ -183,13 +182,57 @@ public class HeroProxy : BaseRemoteProxy
         this.SendNotification(NotiDefine.LoadAllHeroResp);
     }
 
+    public void RecruitHero(int id)
+    {
+        Hero hero = this.GetHero(id);
+        HeroConfig config = HeroConfig.Instance.GetData(id);
+        FavorLevelConfig configLv = HeroProxy._instance.GetFaovrConfig(hero.Favor);
+        FavorLevelConfig configNeed = FavorLevelConfig.Instance.GetData(config.FavorLevel);
+
+        int reputationNeed = config.NeedPower;
+        int myPower = RoleProxy._instance.Role.Power;
+
+        bool isConditonOk = myPower >= reputationNeed || configLv.ID >= configNeed.ID;
+        if (isConditonOk == false)
+        {
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroUnSatisfy));
+            return;
+        }
+
+        bool isCostEnough = RoleProxy._instance.TryDeductCost(config.Cost);
+        if (isCostEnough == false)
+        {
+            return;
+        }
+
+        this.ChangeHeroBelong(id, (int)HeroBelong.My);
+        this.SendNotification(NotiDefine.RecruitHeroResp);
+    }
+
+    public void ChangeHeroBelong(int id,int belong)
+    {
+        Hero hero = this.GetHero(id);
+        int oldBelong = hero.Belong;
+        hero.Belong = belong;
+        hero.Blood.Clear();
+        hero.ComputeAttributes();
+        this.DoSaveHeros();
+
+        if (oldBelong != hero.Belong && hero.Belong == (int)HeroBelong.My)
+        {
+            HeroConfig config = HeroConfig.Instance.GetData(id);
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroSuccess,config.Name));
+        }
+    }
+
     public void TalkToHero(int id)
     {
         Hero hero = this.GetHero(id);
         if (hero.TalkExpire > 0 && hero.TalkExpire > GameIndex.ServerTime)
         {
             string cdStr = UtilTools.GetCdStringExpire(hero.TalkExpire);
-            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.AfterTimeTalk, cdStr));
+            HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.AfterTimeTalk, config.Name, cdStr));
             return;
         }
 
@@ -212,6 +255,8 @@ public class HeroProxy : BaseRemoteProxy
 
         if (configLvOld != configLv)
         {
+            if (configLv.ID > configLvOld.ID)
+                this.SendNotification(NotiDefine.FavorLevelUpNoti, id);
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.HeroFavorLevelChanged, config.Name, configLv.Name));
         }
         else if (hero.Favor > oldFavor)
@@ -238,7 +283,7 @@ public class HeroProxy : BaseRemoteProxy
         if (oldBelong == belong)
             return;
         hero.Belong = belong;
-        hero.Blood = 0;//变更所有权后兵力归零
+        hero.Blood = new Dictionary<int, int>();
         if (belong == (int)HeroBelong.My)
             this.SendNotification(NotiDefine.GetHeroNoti, id);
         else 

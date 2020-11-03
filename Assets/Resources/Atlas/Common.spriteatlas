@@ -67,7 +67,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 144253
+    totalSpriteSurfaceArea: 171530
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -90,17 +90,21 @@ SpriteAtlas:
   - {fileID: 21300000, guid: d88c1e746c34882449fb0f3d3222f066, type: 3}
   - {fileID: 21300000, guid: 155a53a403bcf6943bdfaeef187be7dd, type: 3}
   - {fileID: 21300000, guid: 2b01c1c5a5834a34a9aa058ecaba500b, type: 3}
+  - {fileID: 21300000, guid: e8df9c16106014846812715b461b16c3, type: 3}
   - {fileID: 21300000, guid: 88da0326d6d9a2d49b27d82e8d3ad4fa, type: 3}
   - {fileID: 21300000, guid: 67c4d4464f0c29945860f45f632a4474, type: 3}
   - {fileID: 21300000, guid: b6ee9e968d2088741b5e7629401db193, type: 3}
   - {fileID: 21300000, guid: 023ea3a6116e2534c9f1f155c0a3e110, type: 3}
+  - {fileID: 21300000, guid: 1ab17ea61c99d374798fa6bf6e9744e5, type: 3}
   - {fileID: 21300000, guid: 5412f227a8527d542a5a8437992d2cbd, type: 3}
   - {fileID: 21300000, guid: aac48657c8af1e648aea489a158ca4bc, type: 3}
   - {fileID: 21300000, guid: 195d55878ab71ed43b15b0b68478319e, type: 3}
   - {fileID: 21300000, guid: 72d160a71e26ebd479d602b0072fde56, type: 3}
   - {fileID: 21300000, guid: d19860a7c8998b44686967944cdf2b17, type: 3}
   - {fileID: 21300000, guid: 37b9b918067717b439c1a276c03a7a4a, type: 3}
+  - {fileID: 21300000, guid: de36ec18a97e0bd48a690d8c208b79d3, type: 3}
   - {fileID: 21300000, guid: 14734a38a783a894286fd5572a961253, type: 3}
+  - {fileID: 21300000, guid: 8a0b287830dc5714db3cb1bf15c53061, type: 3}
   - {fileID: 21300000, guid: 28350ce8dbbcba6469c711632325a771, type: 3}
   - {fileID: 21300000, guid: b4e317a9ce179fe4d87a52b3c94e4167, type: 3}
   - {fileID: 21300000, guid: 5a2c5fd9d57c7404d8c134681cd80a9a, type: 3}
@@ -115,10 +119,13 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 90a0957c177b4544d9207712688217f1, type: 3}
   - {fileID: 21300000, guid: eb243e7cc414d9d48a974d41a66bb77f, type: 3}
   - {fileID: 21300000, guid: 78c21a8c51d924642a564593efb319d6, type: 3}
+  - {fileID: 21300000, guid: beeca70d4095c3e4eba27c161e20f8a9, type: 3}
   - {fileID: 21300000, guid: d41a529d7e86c94498aa87acffb0d895, type: 3}
   - {fileID: 21300000, guid: 2a4bbdbdab1563749b99792c8b11366f, type: 3}
   - {fileID: 21300000, guid: 4906a8dd527174a4ea21f62dbbe49ae5, type: 3}
+  - {fileID: 21300000, guid: 7ea8a42f6a3d98242b47f52bf029a140, type: 3}
   - {fileID: 21300000, guid: 27e9d93f675b22d4aa2042f042a88be6, type: 3}
+  - {fileID: 21300000, guid: e9e7db5fa6a9bd44187ffd46120e77f7, type: 3}
   - {fileID: 21300000, guid: e0a52d6fa30868f4db961e9a82b8f714, type: 3}
   - {fileID: 21300000, guid: 983f409f3d88ece4cb8e1edec06394d9, type: 3}
   - {fileID: 21300000, guid: de2d28eff3049184b8fa0542d46be064, type: 3}
@@ -143,17 +150,21 @@ SpriteAtlas:
   - Question1
   - ca3
   - close
+  - dice
   - metal
   - 0-STAR
   - UP_arrow
   - ball
+  - power
   - plus02
   - ItemFrame1
   - back
   - bg_frame
   - autograph
   - frame
+  - img_dot
   - food
+  - land
   - h_water
   - h_normal
   - building
@@ -168,10 +179,13 @@ SpriteAtlas:
   - position-arrow
   - stone
   - Water
+  - setting
   - SELECTED
   - Selectedbar
   - h_wind
+  - bg_input
   - h_fire
+  - default
   - wood
   - bgframe
   - circularSelected

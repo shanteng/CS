@@ -7,21 +7,43 @@ using UnityEngine.UI;
 public class BuildCenterView : MonoBehaviour
     , IScollItemClickListener
 {
+    public List<UIToggle> _toggleList;
     public DataGrid _hGrid;
-
-    void Start()
+    private BuildingType _type = BuildingType.Economy;
+    void Awake()
     {
-       
+        foreach (UIToggle item in this._toggleList)
+        {
+            item._param._value = UtilTools.ParseInt(item.gameObject.name);
+            item.AddEvent(OnSelectToggle);
+        }
     }
 
-    public void SetList()
+    private void OnSelectToggle(UIToggle btnSelf)
     {
+        this._type = (BuildingType)btnSelf._param._value;
+        this.SetList();
+    }
+
+    public void InitData()
+    {
+        _type = BuildingType.Economy;
+        this.SetList();
+    }
+
+    private void SetList()
+    {
+        foreach (UIToggle toggle in this._toggleList)
+        {
+            toggle.IsOn = (this._type == (BuildingType)toggle._param._value);
+        }
+
         Dictionary<int, BuildingConfig> dic =  BuildingConfig.Instance.getDataArray();
         _hGrid.Data.Clear();
 
         foreach (BuildingConfig config in dic.Values)
         {
-            if (config.Condition == null || config.Condition.Length == 0)
+            if (config.Condition == null || config.Condition.Length == 0 || config.Type != (int)this._type)
                 continue;
             BuidItemData data = new BuidItemData(config);
             this._hGrid.Data.Add(data);

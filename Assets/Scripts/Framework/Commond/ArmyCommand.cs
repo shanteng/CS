@@ -26,7 +26,7 @@ public class ArmyCommand : SimpleCommand
                 }
             case NotiDefine.HarvestArmyDo:
                 {
-                    proxy.HarvestArmy ((int)notification.Body);
+                    proxy.HarvestArmy((int)notification.Body);
                     break;
                 }
             case NotiDefine.CancelArmyDo:

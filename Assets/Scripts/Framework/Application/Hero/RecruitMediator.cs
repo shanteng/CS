@@ -18,6 +18,8 @@ public class RecruitMediator : BaseWindowMediator<RecruitView>
     {
         m_HideNoHandleNotifations.Add(NotiDefine.GetHeroRefreshResp);
         m_HideNoHandleNotifations.Add(NotiDefine.HeroTavernRefresh);
+        m_HideNoHandleNotifations.Add(NotiDefine.FavorLevelUpNoti);
+        m_HideNoHandleNotifations.Add(NotiDefine.RecruitHeroResp);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
@@ -26,8 +28,14 @@ public class RecruitMediator : BaseWindowMediator<RecruitView>
         {
             case NotiDefine.GetHeroRefreshResp:
             case NotiDefine.HeroTavernRefresh:
+            case NotiDefine.RecruitHeroResp:
                 {
                     this.m_view.SetList();
+                    break;
+                }
+            case NotiDefine.FavorLevelUpNoti:
+                {
+                    this.m_view.OnFavorUp((int)notification.Body);
                     break;
                 }
         }

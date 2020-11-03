@@ -372,7 +372,7 @@ public class WorldProxy : BaseRemoteProxy
             }
             else if (config.AddType.Equals(ValueAddType.CityTroop))
             {
-                _Effects.ArmyLimit = UtilTools.ParseInt(configLevel.AddValues[0]);
+                _Effects.DayBoxLimit = UtilTools.ParseInt(configLevel.AddValues[0]);
                 _Effects.TroopNum = UtilTools.ParseInt(configLevel.AddValues[1]);
             }
             else if (config.AddType.Equals(ValueAddType.HeroRecruit))
@@ -402,7 +402,6 @@ public class WorldProxy : BaseRemoteProxy
         RoleProxy._instance.ComputeBuildingEffect();
         HeroProxy._instance.ComputeBuildingEffect();
 
-       
 
         //存储可以建筑的范围
         this.UpdateCanBuildSpot();

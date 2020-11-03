@@ -29,7 +29,7 @@ public class JsonNameDefine
     public static string HeroPool = "HeroPool";
     public static string Army = "Army";
     public static string FavorLevel = "FavorLevel";
-
+    public static string CareerEvaluate = "CareerEvaluate";
 
 
     public static JArray JsonRead(string name)
@@ -139,6 +139,12 @@ public class FavorLevelConfig : Config<FavorLevelConfig>
     public int[] FavorRange;
     public int TalkAdd;
     public FavorLevelConfig() : base(JsonNameDefine.FavorLevel) { }
+}
+
+public class CareerEvaluateConfig : Config<CareerEvaluateConfig>
+{
+    public int Percent;
+    public CareerEvaluateConfig() : base(JsonNameDefine.CareerEvaluate) { }
 }
 
 public class HeroConfig : Config<HeroConfig>

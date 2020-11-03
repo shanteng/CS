@@ -311,4 +311,15 @@ public class UtilTools
         list[index2] = list[index1];
         list[index1] = temp;
     }
+
+    public static string GetPercentAddOn(int addon)
+    {
+        if (addon > 0)
+            return LanguageConfig.GetLanguage(LanMainDefine.PercentAdd, addon);
+
+        if (addon < 0)
+            return LanguageConfig.GetLanguage(LanMainDefine.PercentDes, addon);
+
+        return LanguageConfig.GetLanguage(LanMainDefine.PercentZeroAdd, addon);
+    }
 }

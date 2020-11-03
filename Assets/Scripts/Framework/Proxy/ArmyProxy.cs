@@ -169,12 +169,6 @@ public class ArmyProxy : BaseRemoteProxy
             return;
         }
 
-        int totleCount = this.GetArmyTotleCount();
-        if (totleCount >= effect.ArmyLimit)
-        {
-            PopupFactory.Instance.ShowErrorNotice(ErrorCode.CityArmyFull,effect.ArmyLimit);
-            return;
-        }
 
         //扣除消耗
         bool isCostEnough = RoleProxy._instance.TryDeductCost(config.Cost,count);
@@ -279,40 +273,38 @@ public class ArmyProxy : BaseRemoteProxy
 
         int totleCount = this.GetArmyTotleCount();
         BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
-        int afterCount = totleCount + army.ReserveCount;
-        int overFlow = afterCount - effect.ArmyLimit;
-        if (overFlow > 0 && ignorlOverflow == false)
-        {
-            PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.ArmyOverFlowHarvest, army.ReserveCount,overFlow), this, "HarvestArmyOverFlow", id);
-            return;
-        }
 
-        if (overFlow < 0)
-            overFlow = 0;
-
-        int addCount = army.ReserveCount - overFlow;
-        army.Count += addCount;
+        army.Count += army.ReserveCount;
         army.RecruitExpireTime = 0;
         army.RecruitStartTime = 0;
         army.ReserveCount = 0;
         army.CanAccept = false;
 
-        if (addCount > 0)
-            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, addCount, config.Name));
+        if (army.ReserveCount > 0)
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, army.ReserveCount, config.Name));
 
         this.DoSave();
-        MediatorUtil.SendNotification(NotiDefine.HarvestArmyResp, addCount);
+        MediatorUtil.SendNotification(NotiDefine.HarvestArmyResp, army.ReserveCount);
         MediatorUtil.SendNotification(NotiDefine.ArmyStateChange,id);
+        RoleProxy._instance.ComputePower(true);
+    }
+
+    public int GetPower()
+    {
+        int power = 0;
+        foreach (Army am in this._datas.Values)
+        {
+            ArmyConfig config = ArmyConfig.Instance.GetData(am.Id);
+            int cur = config.Power * am.Count;
+            power += cur;
+        }
+        return power;
     }
 
     public void OnConfirm(ConfirmData data)
     {
-        if (data.userKey.Equals("HarvestArmyOverFlow"))
-        {
-            int id = (int)data.param;
-            this.HarvestArmy(id, true);
-        }
-        else if (data.userKey.Equals("CancelRecruitArmy"))
+     
+        if (data.userKey.Equals("CancelRecruitArmy"))
         {
             int id = (int)data.param;
             this.CancelRecruitArmy(id, true);

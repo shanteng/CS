@@ -13,7 +13,6 @@ public class LoginMediator : BaseFullScreenWindowMediator<LoginView>
         
     }
 
-   
     protected override void InitListNotificationInterestsInner()
     {
         m_HideNoHandleNotifations.Add(NotiDefine.TEST_CALLBACK_NOTI);

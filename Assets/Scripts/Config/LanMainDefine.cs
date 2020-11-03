@@ -38,7 +38,7 @@
     public const string Infantry = "Infantry";
 
     public const string RoleLevelExp = "RoleLevelExp";
-    public const string RoleLevelExpFull = "RoleLevelExpFull";
+    public const string RoleLevel = "RoleLevel";
 
     public const string RecruitCondition = "RecruitCondition";
     public const string OwnCount = "OwnCount";
@@ -71,6 +71,14 @@
 
     public const string AfterTimeTalk = "AfterTimeTalk";
     public const string HeroFavorLevelChanged = "HeroFavorLevelChanged";
+    public const string CareerEvaluateDesc = "CareerEvaluateDesc";
+
+    public const string PercentAdd = "PercentAdd";
+    public const string PercentDes = "PercentDes";
+    public const string PercentZeroAdd = "PercentZeroAdd";
+
+    public const string RecruitHeroUnSatisfy = "RecruitHeroUnSatisfy";
+    public const string RecruitHeroSuccess = "RecruitHeroSuccess";
 }
 
 public class ConstDefine

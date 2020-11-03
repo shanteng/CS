@@ -9,9 +9,14 @@ public class RoleCommand : SimpleCommand
         RoleProxy proxy = Facade.RetrieveProxy(ProxyNameDefine.ROLE) as RoleProxy;
         switch (notification.Name)
         {
-            case NotiDefine.LoadRoleDo:
+            case NotiDefine.EnterGameDo:
                 {
-                    proxy.LoadOrGenerateRole();
+                    proxy.DoEnterGame();
+                    break;
+                }
+            case NotiDefine.CreateRoleDo:
+                {
+                    proxy.DoCreateRole(notification.Body as Dictionary<string, object>);
                     break;
                 }
             case NotiDefine.AcceptHourAwardDo:

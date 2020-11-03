@@ -55,10 +55,14 @@ public class NotiDefine
     public const string GenerateMySpotDo = "GenerateMySpotDo";
     public const string GenerateMySpotResp = "GenerateMySpotResp";
 
-    public const string LoadRoleDo = "LoadRoleDo";
-    public const string LoadRoleResp = "LoadRoleResp";
+    public const string EnterGameDo = "EnterGameDo";
+    public const string CreateRoleDo = "CreateRoleDo";
+    public const string CreateRoleResp = "CreateRoleResp";
 
-   
+
+    public const string PowerChanged = "PowerChanged";
+
+
     public const string AcceptHourAwardDo = "AcceptHourAwardDo";
     public const string AcceptHourAwardResp = "AcceptHourAwardResp";
 
@@ -75,6 +79,10 @@ public class NotiDefine
 
     public const string TalkToHeroDo = "TalkToHeroDo";
     public const string TalkToHeroResp = "TalkToHeroResp";
+    public const string FavorLevelUpNoti = "FavorLevelUpNoti";
+
+    public const string RecruitHeroDo = "RecruitHeroDo";
+    public const string RecruitHeroResp = "RecruitHeroResp";
 
 
     public const string ChangeHeroBelongDo = "ChangeHeroBelongDo";
@@ -194,7 +202,8 @@ public enum MediatorDefine
     MAIN,
     BUILD_CENTER,
     RECRUIT,
-    ARMY
+    ARMY,
+    CREATE,
 }
 
 public class StringKeyValue
@@ -350,7 +359,7 @@ public class BuildingEffectsData
     public int BuildRange = 0;
     public float RecruitReduceRate = 0f;
     public int TroopNum = 0;//可以配置队伍数量
-    public int ArmyLimit = 0;//整个城市的兵力上限
+    public int DayBoxLimit = 0;//每日宝箱次数上限
     public int HeroRectuitLimit = 0;//酒馆刷新上限
 
     public Dictionary<int, int> RecruitVolume = new Dictionary<int, int>();//兵种每次招募的上限
@@ -408,12 +417,13 @@ public class ItemKey
 public class Army
 {
     public int Id;//兵种ID
-    public int Count;//正常数量
+    public int Count;//可以使用的数量
+    public int Injured;//伤兵
     public int RecruitOneSces;//招募开始时每个招募所需的时间
     public long RecruitStartTime;//招募开始时间
     public long RecruitExpireTime;//招募到期时间
     public int ReserveCount;//
-    public int Injured;//伤病
+   
     public bool CanAccept;//是否可以领取了
     public string TimeKey = "";
 
@@ -450,7 +460,7 @@ public class Hero
     public int Level;
     public int Exp;
     public float ElementValue;//和稀有的挂钩
-    public int Blood;//当前兵力
+    public Dictionary<int,int> Blood;//当前兵种/兵力
     public int MaxBlood;//带兵上限 等级和建筑计算
     public int Belong;//0-在野 1-我方  >0 为对应Npc城市君主的ID
     public int TeamId;//上阵队伍ID 0-未上阵
@@ -465,7 +475,7 @@ public class Hero
         this.Id = config.ID;
         this.Level = config.InitLevel;
         this.Exp = 0;
-        this.Blood = 0;
+        this.Blood = new Dictionary<int, int>();
         this.Belong = config.InitBelong;
         this.TeamId = 0;
         this.Favor = 0;
@@ -479,8 +489,7 @@ public class Hero
     {
         HeroConfig config = HeroConfig.Instance.GetData(this.Id);
         HeroLevelConfig configLv = HeroLevelConfig.Instance.GetData(this.Level);
-       
-     
+
         BuildingEffectsData bdAddData = WorldProxy._instance.GetBuildingEffects();
 
         if (this.Belong == (int)HeroBelong.My)
@@ -495,7 +504,7 @@ public class Hero
         }
     }//end function
 
-    public static string GetCareerRateName(int rate)
+    public static string GetCareerEvaluateName(int rate)
     {
         string key = UtilTools.combine(LanMainDefine.CareerRate, rate);
         return LanguageConfig.GetLanguage(key);

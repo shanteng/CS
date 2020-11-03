@@ -122,6 +122,7 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         }
 
         this._curShowWin.setContent(content);
+        MediatorUtil.SendNotification(NotiDefine.WINDOW_HAS_SHOW);
     }
 
 
@@ -164,10 +165,10 @@ public class PopupFactory : SingletonFactory<PopupFactory>
 
     protected Popup InitCareerRate()
     {
-        GameObject view = ResourcesManager.Instance.LoadPopupRes("BuildingLevelInfoPop");
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("CareerEvaluatePop");
         Popup script = view.GetComponent<Popup>();
 
-        BuildLevelPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<BuildLevelPop>();
+        CareerEvaluatePop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<CareerEvaluatePop>();
         return scriptClone;
     }
 

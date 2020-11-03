@@ -89,6 +89,9 @@
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PlaneBase.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PlaneBuilder.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\SpotCube.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Login\CreateMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Login\CreateRoleItem.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Login\CreateView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Login\LoginMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Login\LoginView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Main\BuidItemRender.cs" />
@@ -104,6 +107,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildLevelRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingInfoPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingUpgradePop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\CareerEvaluatePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\ConfirmPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\NoticePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\Popup.cs" />
@@ -147,6 +151,7 @@
     <Compile Include="Assets\Scripts\Framework\UI\Common\HeroStar.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NonDrawingGraphic.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NumberAnimation.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\RoleHead.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\TextColorPingPong.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIBase.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIButton.cs" />

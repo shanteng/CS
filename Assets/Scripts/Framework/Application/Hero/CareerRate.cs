@@ -15,7 +15,7 @@ public class CareerRate : UIBase
     public  void SetData(int career,int rate)
     {
         this._Icon.sprite = ResourcesManager.Instance.GetCareerIcon(career);
-        this._rateTxt.text = Hero.GetCareerRateName(rate);
+        this._rateTxt.text = Hero.GetCareerEvaluateName(rate);
     }
 
     

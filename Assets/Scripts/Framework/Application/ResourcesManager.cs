@@ -14,6 +14,8 @@ public class AtlasDefine
     public static string Common = "Common";//
     public static string Item = "Item";//
     public static string Army = "Army";//
+    public static string Head = "Head";//
+    public static string HeadFrame = "HeadFrame";//
 }
 public class ResourcesManager : SingletonFactory<ResourcesManager>
 {
@@ -70,12 +72,18 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
         return this.getAtlasSprite(AtlasDefine.Item, config.Icon);
     }
 
+
     public Sprite GetItemFrameSprite(string itemKey)
     {
         ItemInfoConfig config = ItemInfoConfig.Instance.GetData(itemKey);
         if (config == null)
             return null;
         return this.GetCommonFrame(config.Quality);
+    }
+
+    public Sprite GetHeadSprite(int head)
+    {
+        return this.getAtlasSprite(AtlasDefine.Head, head.ToString());
     }
 
     public Sprite GetCommonFrame(int Quality)

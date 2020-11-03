@@ -37,7 +37,7 @@ public class BuildCenterMediator : BaseWindowMediator<BuildCenterView>
 
     protected override void DoInitializeInner()
     {
-        this.m_view.SetList();
+        this.m_view.InitData();
     }
 
 }//end class

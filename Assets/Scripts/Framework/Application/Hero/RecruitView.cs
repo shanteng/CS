@@ -35,6 +35,21 @@ public class RecruitView : MonoBehaviour
         //this.SetList(this._Element);
     }
 
+    public void OnFavorUp(int id)
+    {
+        foreach (ItemRender render in this._hGrid.ItemRenders)
+        {
+            RecruitItemRender rd = (RecruitItemRender)render;
+            if (rd.gameObject.activeSelf == false)
+                continue;
+            if (rd.ID == id)
+            {
+                rd.FavorLevelChange();
+                break;
+            }
+        }
+    }
+
     public void SetList()
     {
         foreach (UIToggle toggle in this._toggleList)
