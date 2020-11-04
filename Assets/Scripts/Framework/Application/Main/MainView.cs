@@ -14,7 +14,7 @@ public class MainView : MonoBehaviour
     public Text _nameTxt;
     public TextMeshProUGUI _levelTxt;
     public Text _expTxt;
-    public Slider _lvSlider;
+    public Image _lvSlider;
     public UIButton _BtnBuild;
     public UIButton _BtnSdk;
     public InfoCanvas _InfoUI;
@@ -25,6 +25,9 @@ public class MainView : MonoBehaviour
     public Text _goldHourAddTxt;
     public Text _goldAddTxt;
     public TextMeshProUGUI _powerTxt;
+    //mainbtn
+    public UIButton _btnBag;
+    public UIButton _btnHero;
 
     public MapUI _mapUI;
 
@@ -39,6 +42,11 @@ public class MainView : MonoBehaviour
         _dianLiangCount = 60;
         _BtnBuild.AddEvent(this.OnClickBuild);
         _BtnSdk.AddEvent(this.OnSdk);
+        _BtnBuild.AddEvent(this.OnClickBuild);
+
+        _btnBag.AddEvent(this.OnClickBag);
+        _btnHero.AddEvent(this.OnClickHero);
+
         this._InfoUI.gameObject.SetActive(false);
         StartCoroutine(CountDown()); 
     }
@@ -74,7 +82,7 @@ public class MainView : MonoBehaviour
         if (max == 0)
             max = 1;
         float value = role.Exp / max;
-        this._lvSlider.value = value;
+        this._lvSlider.fillAmount = value;
 
         this._levelTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevel, role.Level);
         this._expTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevelExp, role.Exp, max);
@@ -90,10 +98,19 @@ public class MainView : MonoBehaviour
 
     private void OnClickBuild(UIButton btn)
     {
-        SceneManager.LoadScene("Hero",LoadSceneMode.Additive);
-        return;
         HomeLandManager.GetInstance().ConfirmBuild(false);
         MediatorUtil.ShowMediator(MediatorDefine.BUILD_CENTER);
+    }
+
+    private void OnClickHero(UIButton btn)
+    {
+        SceneManager.LoadScene(SceneDefine.Hero, LoadSceneMode.Additive);
+        UIRoot.Intance.SetHomeSceneEnable(false);
+    }
+
+    private void OnClickBag(UIButton btn)
+    {
+        MediatorUtil.ShowMediator(MediatorDefine.BAG);
     }
 
     public void setDianLiang()

@@ -76,6 +76,12 @@
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\CareerRate.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroCareerRates.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroDetailsUI.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroItemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroQualityBG.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroScene.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitView.cs" />

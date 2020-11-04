@@ -74,16 +74,6 @@ public class ViewControllerLocal : MonoBehaviour
         Camera.main.orthographicSize = this._maxSize / 2f;
         this._StartPos = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 
-            // float halfRow = showRow / 2 - _overShowCount;//多显示5个范围
-        //float halfCol = showCol / 2 - _overShowCount;//多显示5个范围
-       // this.rightBorder.transform.position = new Vector3(halfRow, 1, halfCol);
-     //   this.topBorder.transform.position = new Vector3(-halfRow, 1, halfCol);
-     //   this.leftBorder.transform.position = new Vector3(-halfRow, 1, -halfCol);
-     //   this.bottomBorder.transform.position = new Vector3(halfRow, 1, -halfCol);
-
-        //this._xRightBorder = Camera.main.transform.InverseTransformPoint(rightBorder.position).x;
-        //this._yTopBorder = Camera.main.transform.InverseTransformPoint(topBorder.position).y;
-
         this.ComputeBorder();
     }
 
@@ -96,25 +86,12 @@ public class ViewControllerLocal : MonoBehaviour
     public void ComputeBorder()
     {
         //视口宽高
-     //   float halfHeight = Camera.main.orthographicSize;//正交相机高度的一半
-       // float _width = halfHeight * 2 * Camera.main.aspect;//正交相机的宽度
-       // float halfWidth = _width * 0.5f;
-
-        //左右边界相机空间局部坐标
-     //   float localMoveOffset = this._xRightBorder - halfWidth;
+ 
         this._xMax = GameIndex.ROW / 2 + this._StartPos.x;// localMoveOffset > 0 ? localMoveOffset : 0;
         this._xMin = this._StartPos.x - GameIndex.ROW / 2;// this._xLeftBorder + halfWidth < 0 ? this._xLeftBorder + halfWidth : 0;
 
-
-        //float desc = (this._maxSize - Camera.main.orthographicSize) / maxDesc * maxxiebian;
-       // float xiebian = desc / SinDegreeValue;
-      //  float offset = halfHeight * SinDegreeValue + this._constY+ desc;
-        //Debug.LogError(offset);
-     //   localMoveOffset = (this._yTopBorder - halfHeight) + offset;// + (this._maxSize - Camera.main.orthographicSize);
         this._yMax = GameIndex.COL / 2 + this._StartPos.z;// localMoveOffset > 0 ? localMoveOffset : 0;
         this._yMin = this._StartPos.z - GameIndex.COL / 2;
-        //localMoveOffset = (this._yBottomBorder + halfHeight);
-        //this._yMin = localMoveOffset < 0 ? localMoveOffset : 0;
 
 #if UNITY_EDITOR
         this._realDragSpeed = this._speed * (Camera.main.orthographicSize / this._maxSize);
@@ -123,8 +100,12 @@ public class ViewControllerLocal : MonoBehaviour
 #endif
     }
 
+    public void SetDoUpdateDrag(bool isdo)
+    {
+        this._DoUpdateDrag = isdo;
+    }
+
     private bool _isOverBuilding = false;
-   // private bool _isSelectBuilding = false;
     void Update()
     {
         if (Input.GetMouseButtonDown(0))

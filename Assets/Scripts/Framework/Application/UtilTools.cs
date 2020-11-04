@@ -181,6 +181,8 @@ public class UtilTools
 
     public static bool isFingerOverUI()
     {
+        if (GameIndex.InGame == false)
+            return false;
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
 #if UNITY_EDITOR
         pointerEventData.position = Input.mousePosition;
@@ -321,5 +323,35 @@ public class UtilTools
             return LanguageConfig.GetLanguage(LanMainDefine.PercentDes, addon);
 
         return LanguageConfig.GetLanguage(LanMainDefine.PercentZeroAdd, addon);
+    }
+
+    public static int compareInt(int intA, int intB)
+    {
+        return intA - intB;
+    }
+
+    public static long compareLong(long intA, long intB)
+    {
+        return intA - intB;
+    }
+
+    public static int compareBool(bool intA, bool intB)
+    {
+        if (intA && !intB)
+            return 1;
+        else if (!intA && intB)
+            return -1;
+        return 0;
+    }
+
+    public static int compareString(string x, string y)
+    {
+        return x.CompareTo(y);
+    }
+
+
+    public static int compareFloat(float intA, float intB)
+    {
+        return Mathf.CeilToInt(intA - intB);
     }
 }

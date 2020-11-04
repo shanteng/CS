@@ -16,6 +16,8 @@ public class AtlasDefine
     public static string Army = "Army";//
     public static string Head = "Head";//
     public static string HeadFrame = "HeadFrame";//
+    public static string Hero = "Hero";//
+    public static string HeroCard = "HeroCard";//
 }
 public class ResourcesManager : SingletonFactory<ResourcesManager>
 {
@@ -24,6 +26,7 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
     private string Popup_Path = "Popup/";
     private string Building = "Building/";
     private string Army = "Army/";
+    private string Model = "Model/";
 
     private Dictionary<string, SpriteAtlas> _atlasDic = new Dictionary<string, SpriteAtlas>();
     public GameObject LoadUIRes(string resName)
@@ -41,6 +44,12 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
     public GameObject LoadArmyModel(string model)
     {
         string path = UtilTools.combine(Army, model);
+        return Resources.Load<GameObject>(path);
+    }
+
+    public GameObject LoadHeroModel(string model)
+    {
+        string path = UtilTools.combine(Model, model);
         return Resources.Load<GameObject>(path);
     }
 
@@ -69,7 +78,23 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
         ItemInfoConfig config = ItemInfoConfig.Instance.GetData(itemKey);
         if (config == null)
             return null;
-        return this.getAtlasSprite(AtlasDefine.Item, config.Icon);
+        return this.getAtlasSprite(AtlasDefine.Hero, config.Icon);
+    }
+
+    public Sprite GetHeroSprite(int id)
+    {
+        HeroConfig config = HeroConfig.Instance.GetData(id);
+        if (config == null)
+            return null;
+        return this.getAtlasSprite(AtlasDefine.Hero, config.Model);
+    }
+
+    public Sprite GetHeroCardSprite(int id)
+    {
+        HeroConfig config = HeroConfig.Instance.GetData(id);
+        if (config == null)
+            return null;
+        return this.getAtlasSprite(AtlasDefine.HeroCard, config.Model);
     }
 
 

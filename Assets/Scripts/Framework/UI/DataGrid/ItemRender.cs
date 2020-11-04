@@ -45,10 +45,8 @@ public class ItemRender : UIBase,IPointerClickHandler
         {
             this.transform.DOKill();
             this.transform.localScale = Vector3.one;
-            this.transform.DOPunchScale(new Vector3(-0.05f, -0.05f, -0.05f), 0.3f, 2, 0).onComplete = () =>
-            {
-                this._listener.onClickScrollItem(this.m_renderData);
-            };
+            this.transform.DOPunchScale(new Vector3(-0.05f, -0.05f, -0.05f), 0.1f, 2, 0);
+            this._listener.onClickScrollItem(this.m_renderData);
         }
             
     }

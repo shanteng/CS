@@ -13,6 +13,7 @@ using UnityEngine.PlayerIdentity.Management;
 using UnityEngine.CloudSave;
 using Debug = UnityEngine.Debug;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public enum WindowLayer
 {
@@ -55,6 +56,15 @@ public class UIRoot : MonoBehaviour
     {
         GameObject obj = ResourcesManager.Instance.LoadUIRes("SdkView");
         this.InstantiateUIInCenter(obj,WindowLayer.Sdk);
+    }
+
+    public void SetHomeSceneEnable(bool isEnable)
+    {
+      //  Camera.main.enabled = isEnable;
+        ViewControllerLocal.GetInstance().gameObject.GetComponent<ViewControllerLocal>().enabled = isEnable;
+        ViewControllerLocal.GetInstance().gameObject.GetComponent<PhysicsRaycaster>().enabled = isEnable;
+        ViewControllerLocal.GetInstance().gameObject.GetComponent<ViewControllerLocal>().SetDoUpdateDrag(false);
+        this.GetLayer(WindowLayer.Main).gameObject.SetActive(isEnable);
     }
 
     public GameObject InstantiateUIInCenter(GameObject obj, WindowLayer layer, bool NeedAnchor = true,bool NeedZDepth = true)

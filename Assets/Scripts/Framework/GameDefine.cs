@@ -173,6 +173,7 @@ public enum Layer
 {
     DEFAULT = 0,
     UI = 5,
+    HeroScene = 17,
 }
 
 public enum BuildingType
@@ -204,6 +205,8 @@ public enum MediatorDefine
     RECRUIT,
     ARMY,
     CREATE,
+    HERO,
+    BAG,
 }
 
 public class StringKeyValue
@@ -243,6 +246,7 @@ public class SceneDefine
     public const string World = "World";
     public const string Home = "Home";
     public const string GameIndex = "GameIndex";
+    public const string Hero = "Hero";
 }
 
 public class ValueAddType
