@@ -539,6 +539,10 @@ public class Hero
         else
         {
             this.ElementValue = ComputeElementValue(this.Id);
+            if (configLv == null)
+            {
+                Debug.LogError("configLv");
+            }
             this.MaxBlood = configLv.BloodMax;
         }
     }//end function
