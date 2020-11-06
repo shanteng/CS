@@ -48,6 +48,7 @@ public class InfoCanvas : UIBase, IConfirmListener
    
     private Coroutine _cor;
     private string _addType;
+    private int _cityId;
     private void Start()
     {
         foreach (UIButton btn in this._btnFunList)
@@ -100,7 +101,7 @@ public class InfoCanvas : UIBase, IConfirmListener
             if (config.AddType.Equals(ValueAddType.RecruitVolume))
             {
                 int career = UtilTools.ParseInt(configLevel.AddValues[0]);
-                int doingCount = ArmyProxy._instance.GetCareerRecruitCount(career);
+                int doingCount = ArmyProxy._instance.GetCareerRecruitCount(career,this._cityId);
                 canUpgrade = doingCount == 0;
             }
 
@@ -157,6 +158,7 @@ public class InfoCanvas : UIBase, IConfirmListener
     private int _needValueShow = 0;
     public void SetBuildState(BuildingData data)
     {
+        this._cityId = data._city;
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.IncomeShowValue);
         _needValueShow = cfgconst.IntValues[0];
 
@@ -239,7 +241,11 @@ public class InfoCanvas : UIBase, IConfirmListener
         else if (this._addType.Equals(ValueAddType.RecruitVolume))
         {
             int career = (int)btn._param._value;
-            MediatorUtil.ShowMediator(MediatorDefine.ARMY, career);
+            VInt2 kv = new VInt2();
+            kv.x = this._cityId;
+            kv.y = career;
+            
+            MediatorUtil.ShowMediator(MediatorDefine.ARMY, kv);
         }
         else if (this._addType.Equals(ValueAddType.HeroRecruit))
         {

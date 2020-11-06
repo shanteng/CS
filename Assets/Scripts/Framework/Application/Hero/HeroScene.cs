@@ -8,17 +8,17 @@ using UnityEngine.Events;
 public class HeroScene : MonoBehaviour
 {
     public Camera _camera;
-    public Transform _root;
+    public Transform _evnTran;
+    public List<Transform> _roots;
+    private int _curIndex = 0;
 
-    public Transform _lookAtTrans;
     private Vector3 _orignal;
     private GameObject _curModel;
-    private bool _DoUpdateDrag = false;
-    private bool _enableDrag = true;
+
     private static HeroScene instance;
 
-    public float _speed = 100f;
-    public float _speedMobile = 2f;
+    public float _MaxX = 10f;
+    public float _MinX = 0f;
 
     public static HeroScene GetInstance()
     {
@@ -35,94 +35,66 @@ public class HeroScene : MonoBehaviour
         this._orignal.z = this._camera.transform.position.z;
 
         instance = this;
-        if(GameIndex.InGame)
-         MediatorUtil.ShowMediator(MediatorDefine.HERO);
     }
 
-
-    public void SetModel(string model)
+    private void LateUpdate()
     {
+        if (this._curModel != null)
+            this._curModel.transform.LookAt(this._camera.transform);
+    }
+
+    public void SetModel(string model,int direction)
+    {
+        if (direction == 0)
+        {
+            this._curIndex = 0;
+        }
+        else if (direction > 0)
+        {
+            this._curIndex += 1;
+            if (this._curIndex >= this._roots.Count)
+                this._curIndex = 0;
+        }
+        else
+        {
+            this._curIndex -= 1;
+            if (this._curIndex < 0)
+                this._curIndex = this._roots.Count-1;
+        }
+
+        Transform root = this._roots[this._curIndex];
+        float targetY = this._curIndex * 360 / this._roots.Count;
+        Vector3 target = new Vector3(0, targetY,0);
+        this._evnTran.DORotate(target, 0.4f);
         Destroy(this._curModel);
         GameObject prefab = ResourcesManager.Instance.LoadHeroModel(model);
-        this._curModel = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, this._root);
+        this._curModel = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, root);
         this._curModel.transform.localPosition = new Vector3(0, 0, 0);
         this._curModel.transform.localScale = Vector3.one;
         this._curModel.transform.localRotation = Quaternion.Euler(Vector3.zero);
         UtilTools.ChangeLayer(this._curModel, Layer.HeroScene);
     }
 
-
-    void Update()
+    public void DoBackToOrignal()
     {
-#if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
-        {
-            this._DoUpdateDrag = true;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            this._DoUpdateDrag = false;
-            _enableDrag = false;
-            this._camera.transform.DOMoveX(this._orignal.x, 0.2f).onComplete = () =>
-            {
-                _enableDrag = true;
-            };
-        }
-#else
-        if (Input.touchCount > 1)
-        {
-            this._DoUpdateDrag = true;
-        }
-        else if (Input.touchCount > 0)
-        {
-            if (this._DoUpdateDrag)
-            {
-                this._camera.transform.DOMoveX(this._orignal.x, 0.2f).onComplete = () =>
-                {
-                    _enableDrag = true;
-                };
-            }
-            this._DoUpdateDrag = false;
-            _enableDrag = false;
-        }
-#endif
+        this._camera.transform.DOMoveX(this._orignal.x, 0.3f);
     }
 
-
-    void LateUpdate()
-    {
-        this.JudgeDragMap();
-        this._camera.transform.LookAt(this._lookAtTrans);
-    }
-
- 
-    void JudgeDragMap()
-    {
-        bool doDrag = this._DoUpdateDrag && UtilTools.isFingerOverUI() == false && _enableDrag;
-#if UNITY_EDITOR
-        if (doDrag)
-        {
-            float xMove = -Input.GetAxisRaw("Mouse X") * Time.deltaTime * this._speed;
-            if (xMove != 0)
-                this.DoDrag(xMove);
-        }
-#else
-        if (doDrag)
-        {
-            // 单点触碰移动摄像机
-            if (Input.touches[0].phase == TouchPhase.Moved) //手指在屏幕上移动，移动摄像机
-            {
-                float xMove = -Input.touches[0].deltaPosition.x * Time.deltaTime * this._speedMobile;
-                if (xMove != 0 )
-                    this.DoDrag(xMove);
-            }
-        }
-#endif
-    }//end func
-
-    private void DoDrag(float x)
+    public void DoDrag(float x)
     {
         this._camera.transform.Translate(new Vector3(x, 0, 0), Space.World);
+        Vector3 pos = this._camera.transform.position;
+        if (pos.x >= this._MaxX)
+        {
+            pos.x = this._MaxX;
+            this._camera.transform.position = pos;
+
+        }
+        else if (pos.x <= this._MinX)
+        {
+            pos.x = this._MinX;
+            this._camera.transform.position = pos;
+        }
     }
     
 

@@ -10,21 +10,29 @@ public class ScrollData
 {
     public string _Key = "";
     public object _Param;
+    public bool _IsSelect = false;
 }
 
 //所有滑动列表单项的基类
 [RequireComponent(typeof(NonDrawingGraphic))]
 [RequireComponent(typeof(LayoutElement))]
-public class ItemRender : UIBase,IPointerClickHandler
+public class ItemRender : UIBase, IPointerClickHandler
 {
     public IScollItemClickListener _listener;
     public ScrollData m_renderData;
-    
+    public GameObject _Select;
+
+    public void SetSelectState()
+    {
+        if (this._Select != null)
+            this._Select.SetActive(this.m_renderData._IsSelect);
+    }
 
     public void SetData(ScrollData data)
     {
         m_renderData = data;
         this.setDataInner(data);
+        this.SetSelectState();
     }
 
     protected virtual void setDataInner(ScrollData data)

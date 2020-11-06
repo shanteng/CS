@@ -8,10 +8,10 @@ using UnityEngine;
 
 
 public class ArmyProxy : BaseRemoteProxy
-    ,IConfirmListener
+    , IConfirmListener
 {
-    private Dictionary<int, Army> _datas = new Dictionary<int, Army>();
-  
+    private Dictionary<int, Dictionary<int, Army>> _datas = new Dictionary<int, Dictionary<int, Army>>();
+
     public static ArmyProxy _instance;
     public ArmyProxy() : base(ProxyNameDefine.ARMY)
     {
@@ -23,17 +23,30 @@ public class ArmyProxy : BaseRemoteProxy
         CloudDataTool.SaveFile(SaveFileDefine.Army, this._datas);
     }
 
-    public Army GetArmy(int id)
+    public Dictionary<int, Army> GetCityArmys(int city)
     {
+        Dictionary<int, Army> armys;
+        this._datas.TryGetValue(city, out armys);
+        return armys;
+    }
+
+    public Army GetArmy(int id,int city)
+    {
+        Dictionary<int, Army> armys = this.GetCityArmys(city);
+        if (armys == null)
+            return null;
         Army army = null;
-        if (this._datas.TryGetValue(id, out army))
+        if (armys.TryGetValue(id, out army))
             return army;
         return null;
     }
 
-    public Army GetCareerDoingArmy(int career)
+    public Army GetCareerDoingArmy(int career,int cityid)
     {
-        foreach (Army army in this._datas.Values)
+        Dictionary<int, Army> armys = this.GetCityArmys(cityid);
+        if (armys == null)
+            return null;
+        foreach (Army army in armys.Values)
         {
             if (army.ReserveCount == 0)
                 continue;
@@ -46,17 +59,15 @@ public class ArmyProxy : BaseRemoteProxy
         return null;
     }
 
-    public Dictionary<int, Army> GeAllArmys()
-    {
-        return this._datas;
-    }
 
- 
-
-    public int GetCareerRecruitCount(int career)
+    public int GetCareerRecruitCount(int career,int cityid)
     {
+        Dictionary<int, Army> armys = this.GetCityArmys(cityid);
+        if (armys == null)
+            return 0;
+
         int count = 0;
-        foreach (Army army in this._datas.Values)
+        foreach (Army army in armys.Values)
         {
             if (army.ReserveCount == 0)
                 continue;
@@ -70,30 +81,19 @@ public class ArmyProxy : BaseRemoteProxy
         return count;
     }
 
-    public int GetArmyTotleCount(int career = 0)
-    {
-        int count = 0;
-        foreach (Army army in this._datas.Values)
-        {
-            if (army.ReserveCount == 0)
-                continue;
-            ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
-            if (config.Career == career || career == 0)
-            {
-                count += army.Count;
-            }
-        }
-        return count;
-    }
-
+ 
     public bool isArmyOpen(int id)
     {
         return true;
     }
 
-    public int GetArmyCountBy(int id)
+    public int GetArmyCountBy(int id,int cityid)
     {
-        foreach (Army army in this._datas.Values)
+        Dictionary<int, Army> armys = this.GetCityArmys(cityid);
+        if (armys == null)
+            return 0;
+
+        foreach (Army army in armys.Values)
         {
             ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
             if (config.ID == id)
@@ -104,26 +104,26 @@ public class ArmyProxy : BaseRemoteProxy
         return 0;
     }
 
-    public int GetCareerRecruitVolume(int career)
+    public int GetCareerRecruitVolume(int career,int city)
     {
-        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects(city);
         int CareerLimit = 0;
         if (effect.RecruitVolume.TryGetValue(career, out CareerLimit) == false)
             return 0;
         return CareerLimit;
     }
 
-    public VInt2 GetArmyCanRecruitCountBy(int id)
+    public VInt2 GetArmyCanRecruitCountBy(int id,int cityid)
     {
         VInt2 kv = new VInt2();
         ArmyConfig config = ArmyConfig.Instance.GetData(id);
-        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects(cityid);
 
-        int CareerLimit = this.GetCareerRecruitVolume(config.Career);
+        int CareerLimit = this.GetCareerRecruitVolume(config.Career, cityid);
         if (CareerLimit == 0)
             return kv;
         
-        int CareerDoingCount = this.GetCareerRecruitCount(config.Career);//正在招募
+        int CareerDoingCount = this.GetCareerRecruitCount(config.Career, cityid);//正在招募
         if (CareerDoingCount > 0)
             return kv;
 
@@ -134,9 +134,9 @@ public class ArmyProxy : BaseRemoteProxy
         return kv;
     }
 
-    public int GetOneRecruitSecs()
+    public int GetOneRecruitSecs(int cityid)
     {
-        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects(cityid);
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.RecruitSecs);
         int nSecs = cfgconst.IntValues[0];
         int RecruitOneSces = Mathf.FloorToInt(nSecs * (1f - effect.RecruitReduceRate));
@@ -145,7 +145,8 @@ public class ArmyProxy : BaseRemoteProxy
 
     public void RecruitArmy(Dictionary<string, object> vo)
     {
-        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
+        int cityid = (int)vo["cityid"];
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects(cityid);
         int id = (int)vo["id"];
         int count = (int)vo["count"];
 
@@ -153,7 +154,7 @@ public class ArmyProxy : BaseRemoteProxy
             return;
 
         ArmyConfig config = ArmyConfig.Instance.GetData(id);
-        int careerRecruitNow = this.GetCareerRecruitCount(config.Career);
+        int careerRecruitNow = this.GetCareerRecruitCount(config.Career, cityid);
         if (careerRecruitNow > 0)
         {
             string str = CareerDefine.GetName(config.Career);
@@ -161,7 +162,7 @@ public class ArmyProxy : BaseRemoteProxy
             return;
         }
 
-        int volume = this.GetCareerRecruitVolume(config.Career);
+        int volume = this.GetCareerRecruitVolume(config.Career, cityid);
         if (count > volume)
         {
             string str = CareerDefine.GetName(config.Career);
@@ -177,29 +178,36 @@ public class ArmyProxy : BaseRemoteProxy
             return;
         }
 
-        Army army = this.GetArmy(id);
+        Army army = this.GetArmy(id,cityid);
         if (army == null)
         {
             army = new Army();
             army.Init(id);
             army.TimeKey = UtilTools.GenerateUId();
-            this._datas[id] = army;
+            Dictionary<int, Army> armys = this.GetCityArmys(cityid);
+            if (armys == null)
+            {
+                armys = new Dictionary<int, Army>();
+                this._datas.Add(cityid, armys);
+            }
+            armys[id] = army;
         }
 
-        army.RecruitOneSces = this.GetOneRecruitSecs();
+        army.RecruitOneSces = this.GetOneRecruitSecs(cityid);
         army.RecruitStartTime = GameIndex.ServerTime;
         army.RecruitExpireTime = army.RecruitStartTime + army.RecruitOneSces * count;
         army.ReserveCount = count;
         army.CanAccept = false;
         this.AddOneTimeListener(army);
         this.DoSave();
-        MediatorUtil.SendNotification(NotiDefine.RecruitArmyResp, army.Id);
-        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, id);
+        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, army);
     }
 
-    public void SpeedUpRecruitArmy(int id, bool isIgnorlNotice = false)
+    public void SpeedUpRecruitArmy(VInt2 kv, bool isIgnorlNotice = false)
     {
-        Army army = this.GetArmy(id);
+        int cityid = kv.x;
+        int id = kv.y;
+        Army army = this.GetArmy(id, cityid);
         ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
         if (army == null || army.ReserveCount == 0)
         {
@@ -213,25 +221,21 @@ public class ArmyProxy : BaseRemoteProxy
             PopupFactory.Instance.ShowErrorNotice(ErrorCode.FinishArmyRecruit);
             return;
         }
-        bool IsOk = RoleProxy._instance.TrySpeedUp((int)leftSecs,this.OnSpeedSure,id);
+        bool IsOk = RoleProxy._instance.TrySpeedUp((int)leftSecs,this.OnSpeedSure, army);
     }
 
     public void OnSpeedSure(object param)
     {
-        int id = (int)param;
-        Army army = this.GetArmy(id);
+        Army army = (Army)param;
         //时间中心去掉
         MediatorUtil.SendNotification(NotiDefine.RemoveTimestepCallback, army.TimeKey);
-        this.OnRecruitExpireFinish(id);
+        this.OnRecruitExpireFinish(army);
         this.DoSave();
-        MediatorUtil.SendNotification(NotiDefine.SpeedUpArmyResp, id);
-        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, id);
-
     }
 
-    public void CancelRecruitArmy(int id, bool isIgnorlNotice = false)
+    public void CancelRecruitArmy(VInt2 kv, bool isIgnorlNotice = false)
     {
-        Army army = this.GetArmy(id);
+        Army army = this.GetArmy(kv.x,kv.y);
         ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
         if (army == null || army.ReserveCount == 0)
         {
@@ -243,7 +247,7 @@ public class ArmyProxy : BaseRemoteProxy
         int rate = cfgconst.IntValues[0];
         if (isIgnorlNotice == false)
         {
-            PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelArmyNotice, rate), this, "CancelRecruitArmy", id);
+            PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelArmyNotice, rate), this, "CancelRecruitArmy", kv);
             return;
         }
 
@@ -256,14 +260,17 @@ public class ArmyProxy : BaseRemoteProxy
         army.ReserveCount = 0;
         army.CanAccept = false;
         this.DoSave();
-        MediatorUtil.SendNotification(NotiDefine.CancelArmyResp,id);
-        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, id);
+        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, army);
     }
 
 
-    public void HarvestArmy(int id,bool ignorlOverflow = false)
+    public void HarvestArmy(VInt2 kv)
     {
-        Army army =  this.GetArmy(id);
+        int id = kv.x;
+        int city = kv.y;
+        Army army = this.GetArmy(id, city);
+        if (army == null)
+            return;
         ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
         if (army == null || army.CanAccept == false)
         {
@@ -271,8 +278,6 @@ public class ArmyProxy : BaseRemoteProxy
             return;
         }
 
-        int totleCount = this.GetArmyTotleCount();
-        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects();
 
         if (army.ReserveCount > 0)
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, army.ReserveCount, config.Name));
@@ -284,19 +289,21 @@ public class ArmyProxy : BaseRemoteProxy
         army.CanAccept = false;
 
         this.DoSave();
-        MediatorUtil.SendNotification(NotiDefine.HarvestArmyResp, army.ReserveCount);
-        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange,id);
+        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, army);
         RoleProxy._instance.ComputePower(true);
     }
 
     public int GetPower()
     {
         int power = 0;
-        foreach (Army am in this._datas.Values)
+        foreach (Dictionary<int,Army> armys in this._datas.Values)
         {
-            ArmyConfig config = ArmyConfig.Instance.GetData(am.Id);
-            int cur = config.Power * am.Count;
-            power += cur;
+            foreach (Army am in armys.Values)
+            {
+                ArmyConfig config = ArmyConfig.Instance.GetData(am.Id);
+                int cur = config.Power * am.Count;
+                power += cur;
+            }
         }
         return power;
     }
@@ -306,8 +313,8 @@ public class ArmyProxy : BaseRemoteProxy
      
         if (data.userKey.Equals("CancelRecruitArmy"))
         {
-            int id = (int)data.param;
-            this.CancelRecruitArmy(id, true);
+            VInt2 kv = (VInt2)data.param;
+            this.CancelRecruitArmy(kv, true);
         }
     }
 
@@ -317,38 +324,38 @@ public class ArmyProxy : BaseRemoteProxy
         string json = CloudDataTool.LoadFile(SaveFileDefine.Army);
         if (json.Equals(string.Empty) == false)
         {
-           this._datas = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Army>>(json);
+           this._datas = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, Army>>>(json);
         }
 
-        foreach (Army army in this._datas.Values)
+        foreach (Dictionary<int, Army> armys in this._datas.Values)
         {
-            if (army.ReserveCount == 0)
-                continue;
-            long leftSecs = army.RecruitExpireTime - GameIndex.ServerTime;
-            if (leftSecs <= 0)
+            foreach (Army army in armys.Values)
             {
-                this.OnRecruitExpireFinish(army.Id);
-            }
-            else
-            {
-                this.AddOneTimeListener(army);
+                if (army.ReserveCount == 0)
+                    continue;
+                long leftSecs = army.RecruitExpireTime - GameIndex.ServerTime;
+                if (leftSecs <= 0)
+                {
+                    this.OnRecruitExpireFinish(army);
+                }
+                else
+                {
+                    this.AddOneTimeListener(army);
+                }
             }
         }
         //添加招募的時間監聽
         this.SendNotification(NotiDefine.LoadAllArmyResp);
     }
 
-    public void OnRecruitExpireFinish(int id)
+    public void OnRecruitExpireFinish(Army army)
     {
-        Army army = this.GetArmy(id);
-        if (army == null)
-            return;
-        army.CanAccept = true;
-        army.RecruitExpireTime = 0;
-        army.RecruitStartTime = 0;
+        Army curArmy = this.GetArmy(army.Id, army.CityID);
+        curArmy.CanAccept = true;
+        curArmy.RecruitExpireTime = 0;
+        curArmy.RecruitStartTime = 0;
         this.DoSave();
-        this.SendNotification(NotiDefine.ArmyRecruitFinishedNoti, id);
-        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, id);
+        MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, army);
     }
 
     
@@ -358,7 +365,7 @@ public class ArmyProxy : BaseRemoteProxy
         dataTime._key = data.TimeKey;
         dataTime._notifaction = NotiDefine.ArmyRecruitExpireReachedNoti;
         dataTime.TimeStep = data.RecruitExpireTime;
-        dataTime._param = data.Id;
+        dataTime._param = data;
         MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
     }
 

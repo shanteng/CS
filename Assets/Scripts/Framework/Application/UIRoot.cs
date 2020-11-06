@@ -30,6 +30,7 @@ public class UIRoot : MonoBehaviour
 {
     [HideInInspector]
     public Camera camera;
+    public EventSystem _event;
     private List<Transform> _windowLayers;
     private AudioSource _audioSource;
     public static string CurFullWindow = string.Empty;

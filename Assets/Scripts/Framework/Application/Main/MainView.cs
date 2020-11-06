@@ -21,9 +21,7 @@ public class MainView : MonoBehaviour
     public Image _dianLiang;
     public Text _timeTxt;
     public List<IncomeItem> _incomeList;
-    public Text _goldTxt;
-    public Text _goldHourAddTxt;
-    public Text _goldAddTxt;
+
     public TextMeshProUGUI _powerTxt;
     //mainbtn
     public UIButton _btnBag;
@@ -34,7 +32,7 @@ public class MainView : MonoBehaviour
     private int _dianLiangCount = 60;
     private void Awake()
     {
-        _goldAddTxt.gameObject.SetActive(false);
+       
     }
 
     void Start()
@@ -42,8 +40,7 @@ public class MainView : MonoBehaviour
         _dianLiangCount = 60;
         _BtnBuild.AddEvent(this.OnClickBuild);
         _BtnSdk.AddEvent(this.OnSdk);
-        _BtnBuild.AddEvent(this.OnClickBuild);
-
+    
         _btnBag.AddEvent(this.OnClickBag);
         _btnHero.AddEvent(this.OnClickHero);
 
@@ -104,7 +101,7 @@ public class MainView : MonoBehaviour
 
     private void OnClickHero(UIButton btn)
     {
-        SceneManager.LoadScene(SceneDefine.Hero, LoadSceneMode.Additive);
+        MediatorUtil.ShowMediator(MediatorDefine.HERO);
         UIRoot.Intance.SetHomeSceneEnable(false);
     }
 
@@ -121,31 +118,13 @@ public class MainView : MonoBehaviour
         this._dianLiang.fillAmount = leftDianValue;
     }
 
-    private int _oldValue = -1;
+
     public void UpdateIncome()
     {
         foreach (IncomeItem item in this._incomeList)
         {
             item.UpdateValue();
         }
-
-        int curValue = RoleProxy._instance.GetNumberValue(ItemKey.gold);
-        this._goldTxt.text = UtilTools.NumberFormat(curValue);
-        int hourAdd = RoleProxy._instance.GetHourInCome(ItemKey.gold);
-        this._goldHourAddTxt.text = LanguageConfig.GetLanguage(LanMainDefine.HourAdd, hourAdd);
-        if (_oldValue > 0 && curValue > _oldValue)
-        {
-            int add = curValue - this._oldValue;
-            this._goldAddTxt.text = UtilTools.combine("+", add);
-            this._goldAddTxt.gameObject.SetActive(true);
-            this._goldTxt.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 2, 0).onComplete = () =>
-            {
-                this._goldAddTxt.gameObject.SetActive(false);
-            };
-
-
-        }
-        _oldValue = curValue;
     }
 
     public void SetName()

@@ -48,6 +48,7 @@
     public const string Horse = "Horse";
 
     public const string Level = "Level";
+    public const string FullLevel = "FullLevel";
     public const string Distance = "Distance";
     public const string BuildRange = "BuildRange";
     public const string CurNextValue = "CurNextValue";
@@ -79,6 +80,9 @@
 
     public const string RecruitHeroUnSatisfy = "RecruitHeroUnSatisfy";
     public const string RecruitHeroSuccess = "RecruitHeroSuccess";
+
+    public const string HeroMaxBlood = "HeroMaxBlood";
+
 }
 
 public class ConstDefine

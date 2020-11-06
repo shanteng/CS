@@ -25,10 +25,13 @@ public class ArmyMediator : BaseWindowMediator<ArmyView>
         {
             case NotiDefine.ArmyStateChange:
                 {
-                    int id = (int)notification.Body;
-                    ArmyConfig config = ArmyConfig.Instance.GetData(id);
-                    this.m_view.UpdateState(config.Career);
-                    this.m_view.UpdateToggle();
+                    Army army = (Army)notification.Body;
+                    if (army.CityID == this.m_view.City)
+                    {
+                        ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
+                        this.m_view.UpdateState(config.Career);
+                        this.m_view.UpdateToggle();
+                    }
                     break;
                 }
         }
@@ -41,7 +44,7 @@ public class ArmyMediator : BaseWindowMediator<ArmyView>
 
     protected override void DoInitializeInner()
     {
-        this.m_view.SetList((int)this.ShowData);
+        this.m_view.SetList((VInt2)this.ShowData);
     }
 
 }//end class

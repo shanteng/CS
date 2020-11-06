@@ -28,6 +28,12 @@ public class RecruitMediator : BaseWindowMediator<RecruitView>
         {
             case NotiDefine.GetHeroRefreshResp:
             case NotiDefine.HeroTavernRefresh:
+                {
+                    int cityid = (int)notification.Body;
+                    if(cityid == this.m_view.City)
+                        this.m_view.SetList();
+                    break;
+                }
             case NotiDefine.RecruitHeroResp:
                 {
                     this.m_view.SetList();

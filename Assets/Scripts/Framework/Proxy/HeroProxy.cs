@@ -9,8 +9,9 @@ using UnityEngine;
 
 public class HeroProxy : BaseRemoteProxy
 {
+    private Dictionary<int, Team> _teams = new Dictionary<int, Team>();
     private Dictionary<int, Hero> _datas = new Dictionary<int, Hero>();
-    private HeroRecruitRefreshData _refreshData = new HeroRecruitRefreshData();
+    private Dictionary<int, HeroRecruitRefreshData> _refreshData = new Dictionary<int, HeroRecruitRefreshData>();
 
     public static HeroProxy _instance;
     public HeroProxy() : base(ProxyNameDefine.HERO)
@@ -18,15 +19,30 @@ public class HeroProxy : BaseRemoteProxy
         _instance = this;
     }
 
+
+    public void DoSaveTeams()
+    {
+        CloudDataTool.SaveFile(SaveFileDefine.Team, this._teams);
+    }
+
+    public Team GetTeam(int id)
+    {
+        Team team = null;
+        if (this._teams.TryGetValue(id, out team))
+            return team;
+        return null;
+    }
+
+    public Dictionary<int, Team> GetTeams()
+    {
+        return this._teams;
+    }
+
     public void DoSaveHeros()
     {
-        List<Hero> list = new List<Hero>();
-        foreach (Hero data in this._datas.Values)
-        {
-            list.Add(data);
-        }
         CloudDataTool.SaveFile(SaveFileDefine.HeroDatas, this._datas);
     }
+
 
     public Hero GetHero(int id)
     {
@@ -36,25 +52,31 @@ public class HeroProxy : BaseRemoteProxy
         return null;
     }
 
-    public Dictionary<int, Hero> GeAllHeros()
+    public Dictionary<int, Hero> GetAllHeros()
     {
         return this._datas;
     }
 
-    public void ComputeBuildingEffect()
+    public void ComputeBuildingEffect(int city)
     {
         bool isChange = false;
         var it = this._datas.Values.GetEnumerator();
         while (it.MoveNext())
         {
             Hero hero = it.Current;
+          
             if (hero.Belong == (int)HeroBelong.My)
             {
-                isChange = true;
-                hero.ComputeAttributes();
+                int cityid = TeamProxy._instance.GetCity(hero.TeamId);
+                if (cityid == city)
+                {
+                    isChange = true;
+                    hero.ComputeAttributes();
+                }
             }
         }
         it.Dispose();
+
         if (isChange)
             this.SendNotification(NotiDefine.HerosUpdated);
     }
@@ -70,44 +92,77 @@ public class HeroProxy : BaseRemoteProxy
         return dic[0];
     }
 
-    public void LoadRefreshData(bool isGenerate)
+    public void GetHeroRefreshData(int city)
+    {
+        HeroRecruitRefreshData data = this.GetCityRefreshData(city);
+        if (data == null)
+        {
+            this.GenerateRefresh(city);
+        }
+        MediatorUtil.SendNotification(NotiDefine.GetHeroRefreshResp, city);
+    }
+
+    private void LoadRefreshData()
     {
         string fileName = UtilTools.combine(SaveFileDefine.HeroRecruitRefresh);
         string json = CloudDataTool.LoadFile(fileName);
         if (json.Equals(string.Empty) == false)
         {
-            this._refreshData = Newtonsoft.Json.JsonConvert.DeserializeObject<HeroRecruitRefreshData>(json);
-            this.AddTimeCallBack();
+            this._refreshData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int,HeroRecruitRefreshData>>(json);
+            foreach (int city in this._refreshData.Keys)
+            {
+                this.AddTimeCallBack(city);
+            }
         }
-        else if(isGenerate)
+    }
+
+    public void OnRefreshTimeReachedNoti(int city)
+    {
+        this.GenerateRefresh(city);
+        MediatorUtil.SendNotification(NotiDefine.HeroTavernRefresh, city);
+    }
+
+    public bool IsHeroInCityTarven(int id)
+    {
+        foreach (HeroRecruitRefreshData refresh in this._refreshData.Values)
         {
-            this.GenerateRefresh();
+            if (refresh.IDs.Contains(id))
+                return true;
         }
-
-        MediatorUtil.SendNotification(NotiDefine.GetHeroRefreshResp);
+        return false;
     }
 
-    public void OnRefreshTimeReachedNoti()
+    public HeroRecruitRefreshData GetCityRefreshData(int city)
     {
-        this.GenerateRefresh();
-        MediatorUtil.SendNotification(NotiDefine.HeroTavernRefresh);
+        HeroRecruitRefreshData cityRefresh;
+        if (this._refreshData.TryGetValue(city, out cityRefresh))
+            return cityRefresh;
+        return null;
     }
 
-
-    private void GenerateRefresh()
+    public void GenerateRefresh(int city)
     {
-        this._refreshData = new HeroRecruitRefreshData();
-        BuildingEffectsData data = WorldProxy._instance.GetBuildingEffects();
+        BuildingEffectsData data = WorldProxy._instance.GetBuildingEffects(city);
         int limitCount = data.HeroRectuitLimit;
-
         if (limitCount == 0)
             return;
+        HeroRecruitRefreshData cityRefresh = this.GetCityRefreshData(city);
+        if (cityRefresh == null)
+        {
+            cityRefresh = new HeroRecruitRefreshData();
+            cityRefresh.City = city;
+            this._refreshData.Add(city, cityRefresh);
+        }
 
         List<int> wildHero = new List<int>();
         foreach (Hero hero in this._datas.Values)
         {
             if (hero.Belong == (int)HeroBelong.Wild)
-                wildHero.Add(hero.Id);
+            {
+                bool isInTarven = this.IsHeroInCityTarven(hero.Id);
+                if(isInTarven == false)
+                    wildHero.Add(hero.Id);
+            }
         }
 
         if (limitCount > wildHero.Count)
@@ -116,34 +171,43 @@ public class HeroProxy : BaseRemoteProxy
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.TavernRefreshSecs);
         int secs = cfgconst.IntValues[0];
 
-        this._refreshData.IDs = UtilTools.GetRandomChilds<int>(wildHero, limitCount);
-        this._refreshData.ExpireTime = GameIndex.ServerTime + secs;
+        cityRefresh.IDs.Clear();
+        cityRefresh.IDs = UtilTools.GetRandomChilds<int>(wildHero, limitCount);
+        cityRefresh.ExpireTime = GameIndex.ServerTime + secs;
+       
         this.DoSaveRefresh();
-        this.AddTimeCallBack();
+        this.AddTimeCallBack(city);
     }
 
-    public bool IsInMyTarvenHero(int id)
+    public bool IsInTarvenHero(int id,int cityid)
     {
+        HeroRecruitRefreshData cityRefresh = this.GetCityRefreshData(cityid);
+        if (cityRefresh == null)
+            return false;
         Hero he = this.GetHero(id);
-        return this._refreshData.IDs.Contains(id) && he.Belong == (int)HeroBelong.Wild;
+        return cityRefresh.IDs.Contains(id) && he.Belong == (int)HeroBelong.Wild;
     }
 
-    public long GetTervenExpire()
+    public long GetTervenExpire(int city)
     {
-        return this._refreshData.ExpireTime;
+        HeroRecruitRefreshData cityRefresh = this.GetCityRefreshData(city);
+        if (cityRefresh == null)
+            return 0;
+        return cityRefresh.ExpireTime;
     }
 
-    private void AddTimeCallBack()
+    private void AddTimeCallBack(int city)
     {
+        HeroRecruitRefreshData data = this.GetCityRefreshData(city);
+        if (data == null)
+            return;
         TimeCallData dataTime = new TimeCallData();
         dataTime._key = UtilTools.GenerateUId();
         dataTime._notifaction = NotiDefine.HeroTavernRefreshReachedNoti;
-        dataTime.TimeStep = this._refreshData.ExpireTime;
-        dataTime._param = "";
+        dataTime.TimeStep = data.ExpireTime;
+        dataTime._param = data.City;
         MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
     }
-
-  
 
     public void DoSaveRefresh()
     {
@@ -178,7 +242,7 @@ public class HeroProxy : BaseRemoteProxy
         if (hasNewHero)
             this.DoSaveHeros();
 
-        LoadRefreshData(false);
+        LoadRefreshData();
         this.SendNotification(NotiDefine.LoadAllHeroResp);
     }
 

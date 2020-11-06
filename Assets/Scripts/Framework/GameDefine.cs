@@ -127,6 +127,15 @@ public class NotiDefine
     public const string GO_TO_SELEC_BUILDING_BY_ID = "GO_TO_SELEC_BUILDING_BY_ID";
 
 
+    public const string LoadAllTeamDo = "LoadAllTeamDo";
+    public const string LoadAllTeamResp = "LoadAllTeamResp";
+
+    public const string InitCityTeamDo = "InitCityTeamDo";
+    public const string InitCityTeamResp = "InitCityTeamResp";
+
+    public const string SetTeamHeroDo = "SetTeamHeroDo";
+    public const string SetTeamHeroResp = "SetTeamHeroResp";
+
 }
 
 public class ErrorCode
@@ -140,6 +149,8 @@ public class ErrorCode
     public const string NoArmyRecruit = "NoArmyRecruit";
     public const string SpeedUpCostNotEnought = "SpeedUpCostNotEnought";
     public const string FinishArmyRecruit = "FinishArmyRecruit";
+    public const string TeamNotIdle = "TeamNotIdle";
+    public const string TeamNotOpen = "TeamNotOpen";
 }
 
 public class CommonUINameDefine
@@ -239,6 +250,7 @@ class ProxyNameDefine
     public const string ROLE = "ROLE";
     public const string HERO = "HERO";
     public const string ARMY = "ARMY";
+    public const string TEAM = "TEAM";
 }
 
 public class SceneDefine
@@ -342,12 +354,10 @@ public class IncomeData
 {
     public string Key;
     public int Count;
-    public int StoreLimit;
     public IncomeData(string key)
     {
         this.Key = key;
         this.Count = 0;
-        this.StoreLimit = 0;
     }
 }
 
@@ -430,6 +440,7 @@ public class Army
    
     public bool CanAccept;//是否可以领取了
     public string TimeKey = "";
+    public int CityID;//所属城市
 
     public void Init(int id)
     {
@@ -452,16 +463,39 @@ public enum EquipType
     Horse = 3,
 };
 
+public enum TeamStatus
+{
+    Idle = 1,
+    March = 2,
+    Back = 3,
+    Fight = 3,
+};
+
 public class HeroRecruitRefreshData
 {
+    public int City;
     public List<int> IDs;
     public long ExpireTime;
+}
+
+public class Team
+{
+    public int Id;//BelongID*100+Index
+    public int Index;//序列
+    public int HeroID;//上阵英雄
+    public int Status;//0-空闲 1-行军 2-返回 3-战斗
+    public int BelongID;//0-主城，>0 Npc城市ID
+    public int FromID;//0-主城，>0 要塞ID
+    public int TargetID;//移动目标 0-主城 >0 Npc城市ID 
+    public long StartTime;//行军或者返回开始时间
+    public long ExpireTime;//行军或者返回的结束时间
 }
 
 public class Hero
 {
     public int Id;//唯一标识
     public int Level;
+    public int StarRank;//升星
     public int Exp;
     public float ElementValue;//和稀有的挂钩
     public Dictionary<int,int> Blood;//当前兵种/兵力
@@ -482,6 +516,7 @@ public class Hero
         this.Blood = new Dictionary<int, int>();
         this.Belong = config.InitBelong;
         this.TeamId = 0;
+        this.StarRank = 0;
         this.Favor = 0;
         this.TalkExpire = 0;
         this.GetItems = new Dictionary<string, int>();
@@ -493,20 +528,27 @@ public class Hero
     {
         HeroConfig config = HeroConfig.Instance.GetData(this.Id);
         HeroLevelConfig configLv = HeroLevelConfig.Instance.GetData(this.Level);
+        int cityid = TeamProxy._instance.GetCity(this.TeamId);
+        BuildingEffectsData bdAddData = WorldProxy._instance.GetBuildingEffects(cityid);
 
-        BuildingEffectsData bdAddData = WorldProxy._instance.GetBuildingEffects();
-
-        if (this.Belong == (int)HeroBelong.My)
+        if (bdAddData != null)
         {
-            this.ElementValue = 0+ bdAddData.ElementAdds[config.Element];
+            this.ElementValue = ComputeElementValue(this.Id) + bdAddData.ElementAdds[config.Element];
             this.MaxBlood = configLv.BloodMax + bdAddData.MaxBloodAdd;
         }
         else
         {
-            this.ElementValue =0;//通过稀有的计算
+            this.ElementValue = ComputeElementValue(this.Id);
             this.MaxBlood = configLv.BloodMax;
         }
     }//end function
+
+    public static int ComputeElementValue(int id)
+    {
+        HeroConfig config = HeroConfig.Instance.GetData(id);
+        HeroStarConfig configStar = HeroStarConfig.Instance.GetData(config.Star);
+        return configStar.ElementValue;
+    }
 
     public static string GetCareerEvaluateName(int rate)
     {

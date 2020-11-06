@@ -21,6 +21,7 @@ public class SaveFileDefine
     public const string HeroDatas = "HeroDatas";
     public const string Army = "Army";
     public const string HeroRecruitRefresh = "HeroRecruitRefresh";
+    public const string Team = "Team";
 }
 
 public class CloudDataTool
@@ -71,7 +72,7 @@ public class WorldBuildings
     public int World;
     public string MainCityKey;
     public VInt2 StartCordinates;//出生地中心点坐标
-    public List<BuildingData> Datas;
+    public Dictionary<int, List<BuildingData>> Datas;//key 城市ID 0-主城
 }
 
 public class WorldCanOprateSpot

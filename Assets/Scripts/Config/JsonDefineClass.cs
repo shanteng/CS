@@ -105,7 +105,7 @@ public class ArmyConfig : Config<ArmyConfig>
     public string Model;
     public int Career;
     public int Star;
-    public int MarchSpeedType;
+    public float SpeedRate;
     public int Blood;
     public int Load;
     public int Power;
@@ -156,7 +156,7 @@ public class HeroConfig : Config<HeroConfig>
     public int InitLevel;
     public int InitBelong;
     public string Element;
-      
+    public float Speed;//真实攻速为和Army的SpeedType相加得到
     public int[] Skills;
     public string[] Cost;
     

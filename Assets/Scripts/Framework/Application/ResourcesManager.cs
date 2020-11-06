@@ -18,6 +18,7 @@ public class AtlasDefine
     public static string HeadFrame = "HeadFrame";//
     public static string Hero = "Hero";//
     public static string HeroCard = "HeroCard";//
+    public static string HeroHead = "HeroHead";//
 }
 public class ResourcesManager : SingletonFactory<ResourcesManager>
 {
@@ -95,6 +96,14 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
         if (config == null)
             return null;
         return this.getAtlasSprite(AtlasDefine.HeroCard, config.Model);
+    }
+
+    public Sprite GetHeroHeadSprite(int id)
+    {
+        HeroConfig config = HeroConfig.Instance.GetData(id);
+        if (config == null)
+            return null;
+        return this.getAtlasSprite(AtlasDefine.HeroHead, config.Model);
     }
 
 

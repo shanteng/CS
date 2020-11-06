@@ -78,7 +78,9 @@ public class HomeLandMediator : BaseNoWindowMediator
                 {
                     if (this._isHomeLoaded)
                     {
-                        this._LandManager.SetMySpotRange();
+                        int city = (int)notification.Body;
+                        if (city == 0)
+                            this._LandManager.SetMainCityRange();
                     }
                     break;
                 }

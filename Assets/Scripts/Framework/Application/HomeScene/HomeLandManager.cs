@@ -292,12 +292,12 @@ public class HomeLandManager : MonoBehaviour
         this._HomePlane.transform.localScale = new Vector3(row, col, 1);
         this._HomePlane.material.SetVector("_MainTex_ST", new Vector4(row, col, 0, 0));
         this.GenerateMyCity();
-        this.SetMySpotRange();
+        this.SetMainCityRange();
     }
 
-    public void SetMySpotRange()
+    public void SetMainCityRange()
     {
-        int range = WorldProxy._instance.GetBuildingEffects().BuildRange;
+        int range = WorldProxy._instance.GetBuildingEffects(0).BuildRange;
         this._QuadCanBuild.transform.localScale = new Vector3(range, range, 1);
         this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(range, range, 0, 0));
         this._myLandCity.SetRange(range);

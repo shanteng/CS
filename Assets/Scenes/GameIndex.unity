@@ -555,6 +555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
+  _event: {fileID: 1545113559}
   _UIGray: {fileID: 2100000, guid: f6a8c4fc0e237644d9b810104acaba93, type: 2}
 --- !u!114 &1487272969
 MonoBehaviour:

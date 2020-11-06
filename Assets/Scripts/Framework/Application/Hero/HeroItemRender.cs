@@ -17,7 +17,6 @@ public class HeroItemRData : ScrollData
 
 public class HeroItemRender : ItemRender
 {
-    public GameObject _select;
     public HeroStar _Star;
     public Image _Icon;
     public Image _Element;

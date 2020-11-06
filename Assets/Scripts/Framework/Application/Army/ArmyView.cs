@@ -32,8 +32,11 @@ public class ArmyView : MonoBehaviour
     public UIModel _curModel;
 
     private int _id;
+    private int _cityid;
     private int _career;
     private int _oneSecs = 0;
+
+    public int City => this._cityid;
     void Awake()
     {
         foreach (ArmyItem item in this._toggleList)
@@ -54,6 +57,7 @@ public class ArmyView : MonoBehaviour
         Dictionary<string, object> vo = new Dictionary<string, object>();
         vo["id"] = this._id;
         vo["count"] = (int)this._recruitSlider.value;
+        vo["cityid"] = this._cityid;
         MediatorUtil.SendNotification(NotiDefine.RecruitArmyDo, vo);
     }
 
@@ -65,19 +69,28 @@ public class ArmyView : MonoBehaviour
     private void OnClickSpeed(UIButton btn)
     {
         int id = (int)btn._param._value;
-        MediatorUtil.SendNotification(NotiDefine.SpeedUpArmyDo, id);
+        VInt2 kv = new VInt2();
+        kv.x = this.City;
+        kv.y = id;
+        MediatorUtil.SendNotification(NotiDefine.SpeedUpArmyDo, kv);
     }
 
     private void OnClickCancel(UIButton btn)
     {
         int id = (int)btn._param._value;
-        MediatorUtil.SendNotification(NotiDefine.CancelArmyDo, id);
+        VInt2 kv = new VInt2();
+        kv.x = id;
+        kv.y = this._cityid;
+        MediatorUtil.SendNotification(NotiDefine.CancelArmyDo, kv);
     }
 
     private void OnClickHarvest(UIButton btn)
     {
         int id = (int)btn._param._value;
-        MediatorUtil.SendNotification(NotiDefine.HarvestArmyDo, id);
+        VInt2 kv = new VInt2();
+        kv.x = id;
+        kv.y = this._cityid;
+        MediatorUtil.SendNotification(NotiDefine.HarvestArmyDo, kv);
     }
 
     private void OnSelectToggle(UIToggle btnSelf)
@@ -91,7 +104,7 @@ public class ArmyView : MonoBehaviour
         if (career != this._career)
             return;
         ArmyConfig config = ArmyConfig.Instance.GetData(this._id);
-        Army armyDoing = ArmyProxy._instance.GetCareerDoingArmy(config.Career);
+        Army armyDoing = ArmyProxy._instance.GetCareerDoingArmy(config.Career,this._cityid);
         bool isDoing = armyDoing != null;
         bool isOpen = ArmyProxy._instance.isArmyOpen(_id);
 
@@ -137,8 +150,8 @@ public class ArmyView : MonoBehaviour
         }
         else
         {
-            this._oneSecs = ArmyProxy._instance.GetOneRecruitSecs();
-            VInt2 canDoKv = ArmyProxy._instance.GetArmyCanRecruitCountBy(this._id);
+            this._oneSecs = ArmyProxy._instance.GetOneRecruitSecs(this._cityid);
+            VInt2 canDoKv = ArmyProxy._instance.GetArmyCanRecruitCountBy(this._id,this._cityid);
             this._recruitSlider.minValue = 1;
             this._recruitSlider.maxValue = canDoKv.y;
             this._recruitSlider.value = canDoKv.x;
@@ -177,14 +190,15 @@ public class ArmyView : MonoBehaviour
         this._cdTxt.text = UtilTools.GetCdString(totleSecs);
     }
 
-    public void SetList(int career)
+    public void SetList(VInt2 kv)
     {
-        this._career = career;
+        this._cityid = kv.x;
+        this._career = kv.y;
         Dictionary<int, ArmyConfig> dic = ArmyConfig.Instance.getDataArray();
         List<ArmyConfig> list = new List<ArmyConfig>();
         foreach (ArmyConfig config in dic.Values)
         {
-            if (config.Career == career)
+            if (config.Career == this._career)
                 list.Add(config);
         }
 
@@ -198,7 +212,7 @@ public class ArmyView : MonoBehaviour
                 continue;
             }
             this._toggleList[i].Show();
-            this._toggleList[i].SetData(list[i].ID);
+            this._toggleList[i].SetData(list[i].ID,this.City);
         }
 
         this.SetData(list[0].ID);

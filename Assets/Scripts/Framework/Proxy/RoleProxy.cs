@@ -19,7 +19,6 @@ public class RoleInfo
     public int Power;//声望
     public List<CostData> ItemList;//属性道具
     public List<HourAwardData> AddUpAwards;//当前可以领取的数值
-    public int ResValueLimit;//上限
     public int Head;
     public int Frame;
 }
@@ -39,36 +38,28 @@ public class RoleProxy : BaseRemoteProxy
     }
 
     public RoleInfo Role => this._role;
-    public int ResValueLimit => this._role.ResValueLimit;
+ 
 
     public void ComputeIncome()
     {
         this.IncomeDic.Clear();
-
         //建筑加成
-        BuildingEffectsData datas = WorldProxy._instance.GetBuildingEffects();
-        foreach (string key in datas.IncomeDic.Keys)
+        Dictionary<int, BuildingEffectsData> Effects = WorldProxy._instance.CityEffects;
+        foreach (BuildingEffectsData datas in Effects.Values)
         {
-            int oldvalue = 0;
-            if (this.IncomeDic.TryGetValue(key, out oldvalue) == false)
-                oldvalue = 0;
-            this.IncomeDic[key] = datas.IncomeDic[key].Count+ oldvalue;
+            foreach (string key in datas.IncomeDic.Keys)
+            {
+                int oldvalue = 0;
+                if (this.IncomeDic.TryGetValue(key, out oldvalue) == false)
+                    oldvalue = 0;
+                this.IncomeDic[key] = datas.IncomeDic[key].Count + oldvalue;
+            }
         }
-
-        //占领的野外加成
-
     }
 
     public void ComputeBuildingEffect()
     {
-        //计算收益和可领取的收益
-        BuildingEffectsData datas = WorldProxy._instance.GetBuildingEffects();
         this.ComputeIncome();
-        
-        ConstConfig configCst = ConstConfig.Instance.GetData(ConstDefine.InitLimit);
-        this._role.ResValueLimit = configCst.ValueInt;
-        this._role.ResValueLimit += datas.ResLimitAdd;
-
         this.ComputePower(false);
         this.UpdateHourAward();
         this.DoSaveRole();
@@ -77,10 +68,16 @@ public class RoleProxy : BaseRemoteProxy
 
     public void ComputePower(bool save)
     {
-        BuildingEffectsData datas = WorldProxy._instance.GetBuildingEffects();
         RoleLevelConfig config = RoleLevelConfig.Instance.GetData(this._role.Level);
         int armyPower = ArmyProxy._instance.GetPower();
-        this._role.Power = config.Power + datas.PowerAdd + armyPower;
+        this._role.Power = config.Power  + armyPower;
+
+        Dictionary<int, BuildingEffectsData> Effects = WorldProxy._instance.CityEffects;
+        foreach (BuildingEffectsData datas in Effects.Values)
+        {
+            this._role.Power += datas.PowerAdd;
+        }
+           
         if (save)
         {
             this.DoSaveRole();
@@ -107,25 +104,7 @@ public class RoleProxy : BaseRemoteProxy
         }
     }
 
-    private int IsAddOverLimit(string key, int addValue)
-    {
-        int limit = RoleProxy._instance.ResValueLimit;
-        CostData currentValue = this.GetNumberValueData(key);
-        int afterValue = currentValue.count + addValue;
-        bool isOverLimit =  this._LimitValueKeys.Contains(key) && afterValue > limit;
-        if (isOverLimit)
-        {
-            if (currentValue.count >= limit)
-            {
-                string attrName = ItemKey.GetName(key);
-                PopupFactory.Instance.ShowErrorNotice(ErrorCode.ValueOutOfRange, attrName);
-                return -1;
-            }
-            int overNum = afterValue - limit;
-            return overNum;
-        }
-        return 0;
-    }
+ 
 
 
     public int GetHourAwardValue(string key)
@@ -147,7 +126,6 @@ public class RoleProxy : BaseRemoteProxy
     public void AcceptHourAward(string key)
     {
         //重新计算收益和可领取的收益
-        BuildingEffectsData effects = WorldProxy._instance.GetBuildingEffects();
         List<HourAwardData> AddUpAwards = this._role.AddUpAwards;
         List<CostData> awards = new List<CostData>();
         int count = AddUpAwards.Count;
@@ -159,31 +137,13 @@ public class RoleProxy : BaseRemoteProxy
                 int addValue = Mathf.CeilToInt(passSecs * AddUpAwards[i].base_secs_value) + AddUpAwards[i].add_up_value;
                 if (addValue > 0)
                 {
-                    IncomeData bdIncome;
-                    if (effects.IncomeDic.TryGetValue(key, out bdIncome) && addValue > bdIncome.StoreLimit)
-                    {
-                        //只领取存储上限
-                        addValue = bdIncome.StoreLimit;
-                    }
-                    
-                    //判断是否超过资源上限
-                    int overNum = this.IsAddOverLimit(key,addValue);
-                    if (overNum < 0)//资源本身已经到达上限
-                        return;
-
-                    int currentAdd = addValue;
-                    if (overNum > 0)//只领取未超出部分
-                        currentAdd -= overNum;
-
                     CostData data = new CostData();
                     data.id = AddUpAwards[i].id;
-                    data.count = currentAdd;
+                    data.count = addValue;
                     awards.Add(data);
 
                     //计算剩下的时间
-                    int leftValue = addValue - currentAdd;
-                    int LeftGeneratePassSecs = Mathf.CeilToInt(leftValue / AddUpAwards[i].base_secs_value);
-                    AddUpAwards[i].generate_time = GameIndex.ServerTime - LeftGeneratePassSecs;
+                    AddUpAwards[i].generate_time = GameIndex.ServerTime;
                     AddUpAwards[i].add_up_value = 0;
 
                     this.DoSaveRole();
@@ -317,11 +277,6 @@ public class RoleProxy : BaseRemoteProxy
             }
 
             data.count += addDatas[i].count;
-            int limit = RoleProxy._instance.ResValueLimit;
-            if (this._LimitValueKeys.Contains(key) && data.count > limit)
-                data.count = limit;//超过上限了
-            else if (data.count < 0)
-                data.count = 0;
 
             if (addDatas[i].count > 0)
             {

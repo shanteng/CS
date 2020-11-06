@@ -44,7 +44,7 @@ public class HeroMediator : BaseWindowMediator<HeroView>
 
     protected override void hideWindowInner() 
     {
-       SceneManager.UnloadSceneAsync(SceneDefine.Hero);
+        this.m_view.UnLoadCurrentScene();
         UIRoot.Intance.SetHomeSceneEnable(true);
     }
 

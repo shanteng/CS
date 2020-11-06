@@ -8,7 +8,6 @@ using DG.Tweening;
 
 public class IncomeItem : MonoBehaviour
 {
-    public Text HourAdd;
     public Text CurMax;
     public Image Icon;
     public Text _AddValue;
@@ -25,18 +24,12 @@ public class IncomeItem : MonoBehaviour
 
     public void UpdateValue()
     {
-        int hourAdd = RoleProxy._instance.GetHourInCome(this._key);
-        this.HourAdd.text = LanguageConfig.GetLanguage(LanMainDefine.HourAdd, hourAdd);
-        int maxLimit = RoleProxy._instance.ResValueLimit;
+       // int hourAdd = RoleProxy._instance.GetHourInCome(this._key);
+    //    this.HourAdd.text = LanguageConfig.GetLanguage(LanMainDefine.HourAdd, hourAdd);
+      
         int curValue = RoleProxy._instance.GetNumberValue(this._key);
         string curStr = UtilTools.NumberFormat(curValue);
-        string maxStr = UtilTools.NumberFormat(maxLimit);
-
-
-        if (curValue < maxLimit)
-            this.CurMax.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, curStr, maxStr);
-        else
-            this.CurMax.text = LanguageConfig.GetLanguage(LanMainDefine.ProgressFull, curStr, maxStr);
+        this.CurMax.text = curStr;
 
         if (_oldValue > 0 && curValue > _oldValue)
         {

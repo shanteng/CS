@@ -23,6 +23,7 @@ public class BuildingData
 
     public int _id;
     public string _key;
+    public int _city;//0-主城
       
     public int _UpgradeSecs = 0;//下一个等级所需时间
     public VInt2 _cordinate = new VInt2();//左下角的坐标
@@ -33,10 +34,11 @@ public class BuildingData
     public long _expireTime;//建造或者升级的到期时间
     public int _durability;//当前耐久度
 
-    public void Create(int id,int x,int z)
+    public void Create(int id,int x,int z,int city = 0)
     {
         this._key =  UtilTools.GenerateUId();
         this._id = id;
+        this._city = city;
         this._occupyCordinates = new List<VInt2>();
         this.SetCordinate(x, z);
     }
@@ -91,6 +93,8 @@ public class WorldProxy : BaseRemoteProxy
     
     private List<string> _canOperateSpots = new List<string>();//我可以操作的地块
     private WorldBuildings _WorldData;
+   
+    private Dictionary<int, BuildingEffectsData> _CityEffects = new Dictionary<int, BuildingEffectsData>();
     public WorldProxy() : base(ProxyNameDefine.WORLD)
     {
         _instance = this;
@@ -101,21 +105,12 @@ public class WorldProxy : BaseRemoteProxy
         return this._canOperateSpots;
     }
 
-    public bool IsBuildingByOverLevel(int id, int level)
-    {
-        foreach (BuildingData data in this._WorldData.Datas)
-        {
-            if (data._id == id && data._level >= level)
-                return true;
-        }
-        return false;
-    }
 
-
-    public int GetBuildingCount(int id)
+    public int GetBuildingCount(int id,int city = 0)
     {
+        List<BuildingData> list = this.GetCityBuildings(city);
         int count = 0;
-        foreach (BuildingData data in this._WorldData.Datas)
+        foreach (BuildingData data in list)
         {
             if (data._id == id)
                 count++;
@@ -137,8 +132,9 @@ public class WorldProxy : BaseRemoteProxy
 
     private void UpdateCanBuildSpot()
     {
+        BuildingEffectsData Effect = this.GetBuildingEffects(0);
         this._canOperateSpots.Clear();
-        int halfRange = this._Effects.BuildRange / 2;//必须为基数的格子数
+        int halfRange = Effect.BuildRange / 2;//必须为基数的格子数
         for (int row = -halfRange; row <= halfRange; ++row)
         {
             int corX = row;
@@ -161,6 +157,8 @@ public class WorldProxy : BaseRemoteProxy
         if (json.Equals(string.Empty))
         {
             //构造一个主城
+            this._WorldData.Datas = new Dictionary<int, List<BuildingData>>();
+
             BuildingData mainCity = new BuildingData();
             BuildingConfig config = BuildingConfig.Instance.GetData(BuildingData.MainCityID);
             int posx = (config.RowCount - 1) / 2;
@@ -171,8 +169,10 @@ public class WorldProxy : BaseRemoteProxy
             mainCity.Create(BuildingData.MainCityID,-posx, -posz);
             mainCity.SetLevel(1);
             mainCity.SetStatus(BuildingData.BuildingStatus.NORMAL);
-            this._WorldData.Datas = new List<BuildingData>();
-            this._WorldData.Datas.Add(mainCity);
+            
+            List<BuildingData> datas = new List<BuildingData>();
+            datas.Add(mainCity);
+            
             _WorldData.MainCityKey = mainCity._key;
 
             //构造一个城门
@@ -185,19 +185,24 @@ public class WorldProxy : BaseRemoteProxy
             wallData.Create(BuildingData.GateID, posx, posz);
             wallData.SetLevel(1);
             wallData.SetStatus(BuildingData.BuildingStatus.NORMAL);
-            this._WorldData.Datas.Add(wallData);
+            datas.Add(wallData);
+
+            this._WorldData.Datas.Add(0, datas);
 
             this.DoSaveWorldDatas();
         }
         else
         {
             _WorldData = Newtonsoft.Json.JsonConvert.DeserializeObject<WorldBuildings>(json);
-            foreach (BuildingData data in _WorldData.Datas)
+            foreach (List<BuildingData> datas in _WorldData.Datas.Values)
             {
-                if (data._status == BuildingData.BuildingStatus.BUILD ||
-                    data._status == BuildingData.BuildingStatus.UPGRADE)
+                foreach (BuildingData data in datas)
                 {
-                    this.AddOneTimeListener(data);
+                    if (data._status == BuildingData.BuildingStatus.BUILD ||
+                  data._status == BuildingData.BuildingStatus.UPGRADE)
+                    {
+                        this.AddOneTimeListener(data);
+                    }
                 }
             }
         }
@@ -211,11 +216,6 @@ public class WorldProxy : BaseRemoteProxy
         CloudDataTool.SaveFile(fileName, _WorldData);
     }
 
-
-    public List<BuildingData> GetAllBuilding()
-    {
-        return this._WorldData.Datas;
-    }
 
     public VInt2 GetBuildingMaxAndLimitCount(int id)
     {
@@ -268,13 +268,14 @@ public class WorldProxy : BaseRemoteProxy
     public WorldBuildings Data => this._WorldData;
 
      
-    public BuildingData GetBuilding(string key)
+    public BuildingData GetBuilding(string key,int cityid = 0)
     {
-        int count = this._WorldData.Datas.Count;
+        List<BuildingData> list = this.GetCityBuildings(cityid);
+        int count = list.Count;
         for (int i = 0; i < count; ++i)
         {
-            if (this._WorldData.Datas[i]._key.Equals(key))
-                return this._WorldData.Datas[i];
+            if (list[i]._key.Equals(key))
+                return list[i];
         }
         return null;
     }
@@ -291,56 +292,69 @@ public class WorldProxy : BaseRemoteProxy
         return bdNeed != null && bdNeed._level >= configNext.Condition[1];
     }
 
-    public BuildingData GetFirstBuilding(int id)
+    public List<BuildingData> GetCityBuildings(int city = 0)
     {
-        int count = this._WorldData.Datas.Count;
+        List<BuildingData> list;
+        if (this._WorldData.Datas.TryGetValue(city, out list))
+            return list;
+        return new List<BuildingData>();
+    }
+
+    public BuildingData GetFirstBuilding(int id,int cityid = 0)
+    {
+        List<BuildingData> list = this.GetCityBuildings(cityid);
+        int count = list.Count;
         for (int i = 0; i < count; ++i)
         {
-            if (this._WorldData.Datas[i]._id.Equals(id))
-                return this._WorldData.Datas[i];
+            if (list[i]._id.Equals(id))
+                return list[i];
         }
         return null;
     }
 
-    public BuildingData GetTopLevelBuilding(int id)
+    public BuildingData GetTopLevelBuilding(int id,int cityid=0)
     {
+        List<BuildingData> list = this.GetCityBuildings(cityid);
+
         BuildingData data = null;
         int curLevel = 0;
-        int count = this._WorldData.Datas.Count;
+        int count = list.Count;
         for (int i = 0; i < count; ++i)
         {
-            if (this._WorldData.Datas[i]._id.Equals(id) && this._WorldData.Datas[i]._level > curLevel)
+            if (list[i]._id.Equals(id) && list[i]._level > curLevel)
             {
-                data = this._WorldData.Datas[i];
+                data = list[i];
                 curLevel = data._level;
             }
         }
         return data;
     }
 
-    private BuildingEffectsData _Effects;
-    private void ComputeEffects()
+    private void ComputeCityEffects(int city)
     {
-        if (this._Effects == null)
-            _Effects = new BuildingEffectsData();
-        int oldRange = this._Effects.BuildRange;
-        this._Effects.Reset();
+        BuildingEffectsData Effect;
+        if (this._CityEffects.TryGetValue(city, out Effect) == false)
+        {
+            Effect = new BuildingEffectsData();
+            this._CityEffects[city] = Effect;
+        }
+        Effect.Reset();
 
-        int oldRecruit = this._Effects.HeroRectuitLimit;
+        int oldRange = Effect.BuildRange;
 
-        Dictionary<string, float> dic = new Dictionary<string, float>();
-        foreach (BuildingData data in this._WorldData.Datas)
+        List<BuildingData> buildings = this.GetCityBuildings(city);
+        foreach (BuildingData data in buildings)
         {
             if (data._status == BuildingData.BuildingStatus.BUILD || data._status == BuildingData.BuildingStatus.INIT)
                 continue;
             BuildingConfig config = BuildingConfig.Instance.GetData(data._id);
             BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(data._id, data._level);
-            this._Effects.PowerAdd += configLevel.Power;
+            Effect.PowerAdd += configLevel.Power;
 
             if (config.AddType.Equals(ValueAddType.AttributeAdd))
             {
                 int curCareer = UtilTools.ParseInt(configLevel.AddValues[0]);
-                Dictionary<string, float> attrDic = _Effects.CareerAttrAdds[curCareer];
+                Dictionary<string, float> attrDic = Effect.CareerAttrAdds[curCareer];
                 Dictionary<string, float> adds = AttributeData.InitAttributesBy(configLevel.AddValues[1]);
                 foreach (string attr in adds.Keys)
                 {
@@ -352,32 +366,32 @@ public class WorldProxy : BaseRemoteProxy
                 string[] list = configLevel.AddValues[0].Split(':');
                 string curElement = list[0];
                 float addValue = UtilTools.ParseFloat(list[1]);
-                _Effects.ElementAdds[curElement] += addValue;
+                Effect.ElementAdds[curElement] += addValue;
             }
 
             else if (config.AddType.Equals(ValueAddType.HeroMaxBlood))
             {
                 int addValue = UtilTools.ParseInt(configLevel.AddValues[0]);
-                _Effects.MaxBloodAdd += addValue;
+                Effect.MaxBloodAdd += addValue;
             }
             else if (config.AddType.Equals(ValueAddType.StoreLimit))
             {
-                _Effects.ResLimitAdd += UtilTools.ParseInt(configLevel.AddValues[0]);
+                Effect.ResLimitAdd += UtilTools.ParseInt(configLevel.AddValues[0]);
             }
             else if (config.AddType.Equals(ValueAddType.RecruitVolume))
             {
                 int career = UtilTools.ParseInt(configLevel.AddValues[0]);
                 int volume = UtilTools.ParseInt(configLevel.AddValues[1]);
-                this._Effects.RecruitVolume[career] = volume;
+                Effect.RecruitVolume[career] = volume;
             }
             else if (config.AddType.Equals(ValueAddType.CityTroop))
             {
-                _Effects.DayBoxLimit = UtilTools.ParseInt(configLevel.AddValues[0]);
-                _Effects.TroopNum = UtilTools.ParseInt(configLevel.AddValues[1]);
+                Effect.DayBoxLimit = UtilTools.ParseInt(configLevel.AddValues[0]);
+                Effect.TroopNum = UtilTools.ParseInt(configLevel.AddValues[1]);
             }
             else if (config.AddType.Equals(ValueAddType.HeroRecruit))
             {
-                _Effects.HeroRectuitLimit = UtilTools.ParseInt(configLevel.AddValues[0]);
+                Effect.HeroRectuitLimit = UtilTools.ParseInt(configLevel.AddValues[0]);
             }
             else if (config.AddType.Equals(ValueAddType.HourTax))
             {
@@ -385,27 +399,19 @@ public class WorldProxy : BaseRemoteProxy
                 CostData add = new CostData();
                 add.Init(configLevel.AddValues[0]);
                 int limit = UtilTools.ParseInt(configLevel.AddValues[1]);
-                _Effects.IncomeDic[add.id].Count += add.count;
-                _Effects.IncomeDic[add.id].StoreLimit = limit;
+                Effect.IncomeDic[add.id].Count += add.count;
             }
             else if (config.AddType.Equals(ValueAddType.BuildRange))
             {
-                this._Effects.BuildRange = UtilTools.ParseInt(configLevel.AddValues[0]);
+                Effect.BuildRange = UtilTools.ParseInt(configLevel.AddValues[0]);
             }
             else if (config.AddType.Equals(ValueAddType.RecruitSecs))
             {
-                this._Effects.RecruitReduceRate = UtilTools.ParseFloat(configLevel.AddValues[0]);
+                Effect.RecruitReduceRate = UtilTools.ParseFloat(configLevel.AddValues[0]);
             }
         }//end for
 
-        //处理监听
-        RoleProxy._instance.ComputeBuildingEffect();
-        HeroProxy._instance.ComputeBuildingEffect();
-
-
-        //存储可以建筑的范围
-        this.UpdateCanBuildSpot();
-        if (oldRange != this._Effects.BuildRange && oldRange > 0)
+        if (oldRange != Effect.BuildRange && oldRange > 0)
         {
             BuildingData data = this.GetFirstBuilding(BuildingData.GateID);
             if (data._id == BuildingData.GateID)
@@ -418,14 +424,43 @@ public class WorldProxy : BaseRemoteProxy
                 MediatorUtil.SendNotification(NotiDefine.BuildingRelocateResp, data._key);
                 this.DoSaveWorldDatas();
             }
-            this.SendNotification(NotiDefine.HomeRangeChanged);
+            this.SendNotification(NotiDefine.HomeRangeChanged, city);
         }
-            
+
+        HeroProxy._instance.ComputeBuildingEffect(city);
+        TeamProxy._instance.ComputeBuildingEffect(city);
+
+    }//end class
+    
+    private void ComputeEffects(int city = -1)
+    {
+        if (city < 0)
+        {
+            foreach (int cityid in this._WorldData.Datas.Keys)
+            {
+                this.ComputeCityEffects(cityid);
+            }//end for
+        }
+        else
+        {
+            this.ComputeCityEffects(city);
+        }
+
+
+        //处理监听
+        RoleProxy._instance.ComputeBuildingEffect();
+
+        //存储可以建筑的范围
+        if (city == 0)
+            this.UpdateCanBuildSpot();
     }
 
-    public BuildingEffectsData GetBuildingEffects()
+    public Dictionary<int, BuildingEffectsData> CityEffects => this.CityEffects;
+
+    public BuildingEffectsData GetBuildingEffects(int cityid)
     {
-        return this._Effects;
+        //根据
+        return this._CityEffects[cityid];
     }
 
     private void AddOneTimeListener(BuildingData data)
@@ -446,19 +481,19 @@ public class WorldProxy : BaseRemoteProxy
         int x = (int)vo["x"];
         int z = (int)vo["z"];
 
-
         BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(id, 1);
         bool isCostEnough = RoleProxy._instance.TryDeductCost(configLv.Cost);
         if (isCostEnough == false)
             return;
         
-
         BuildingData data = new BuildingData();
         data.Create(id, x, z);
         data.SetLevel(0);
         data.SetStatus(BuildingData.BuildingStatus.BUILD);
-        this._WorldData.Datas.Add(data);
-  
+
+        List<BuildingData> maincitylist = this.GetCityBuildings(0);
+        maincitylist.Add(data);
+     
         //通知时间中心添加一个监听
         this.AddOneTimeListener(data);
        
@@ -497,7 +532,7 @@ public class WorldProxy : BaseRemoteProxy
 
         data.SetStatus(BuildingData.BuildingStatus.NORMAL);
         data.SetLevel(data._level + 1);
-        ComputeEffects();//计算影响
+        ComputeEffects(data._city);//计算影响
         this.DoSaveWorldDatas();
         MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
     }
@@ -522,7 +557,8 @@ public class WorldProxy : BaseRemoteProxy
         if (data._status == BuildingData.BuildingStatus.BUILD)
         {
             //删除取消
-            this._WorldData.Datas.Remove(data);
+            List<BuildingData> maincitylist = this.GetCityBuildings(0);
+            maincitylist.Remove(data);
             MediatorUtil.SendNotification(NotiDefine.BuildingRemoveNoti, key);
         }
         else if (data._status == BuildingData.BuildingStatus.UPGRADE)
@@ -563,7 +599,7 @@ public class WorldProxy : BaseRemoteProxy
         {
             data.SetLevel(data._level + 1);//升级完成
             data.SetStatus(BuildingData.BuildingStatus.NORMAL);
-            ComputeEffects();//计算影响
+            ComputeEffects(data._city);//计算影响
         }
         
         this.SendNotification(NotiDefine.BuildingStatusChanged, key);

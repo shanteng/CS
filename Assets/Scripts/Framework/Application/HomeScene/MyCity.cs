@@ -70,8 +70,8 @@ public class MyCity : MonoBehaviour
         this._SpotHasOccupys = new List<string>();
         this._AllBuildings = new Dictionary<string, Building>();
         this._BuildingDic = new Dictionary<string, List<VInt2>>();
-        WorldBuildings worldData = WorldProxy._instance.Data;
-        foreach (BuildingData data in worldData.Datas)
+        List<BuildingData> datas = WorldProxy._instance.GetCityBuildings(0);
+        foreach (BuildingData data in datas)
         {
             this.CreateOneBuilding(data);
         }

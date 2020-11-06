@@ -16,7 +16,7 @@ public class ArmyCommand : SimpleCommand
                 }
             case NotiDefine.ArmyRecruitExpireReachedNoti:
                 {
-                    proxy.OnRecruitExpireFinish((int)notification.Body);
+                    proxy.OnRecruitExpireFinish((Army)notification.Body);
                     break;
                 }
             case NotiDefine.RecruitArmyDo:
@@ -26,17 +26,17 @@ public class ArmyCommand : SimpleCommand
                 }
             case NotiDefine.HarvestArmyDo:
                 {
-                    proxy.HarvestArmy((int)notification.Body);
+                    proxy.HarvestArmy((VInt2)notification.Body);
                     break;
                 }
             case NotiDefine.CancelArmyDo:
                 {
-                    proxy.CancelRecruitArmy((int)notification.Body);
+                    proxy.CancelRecruitArmy((VInt2)notification.Body);
                     break;
                 }
             case NotiDefine.SpeedUpArmyDo:
                 {
-                    proxy.SpeedUpRecruitArmy((int)notification.Body);
+                    proxy.SpeedUpRecruitArmy((VInt2)notification.Body);
                     break;
                 }
         }

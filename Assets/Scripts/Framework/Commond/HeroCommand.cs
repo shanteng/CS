@@ -16,7 +16,7 @@ public class HeroCommand : SimpleCommand
                 }
             case NotiDefine.GetHeroRefreshDo:
                 {
-                    proxy.LoadRefreshData(true);
+                    proxy.GetHeroRefreshData((int)notification.Body);
                     break;
                 }
             case NotiDefine.ChangeHeroBelongDo:
@@ -26,7 +26,7 @@ public class HeroCommand : SimpleCommand
                 }
             case NotiDefine.HeroTavernRefreshReachedNoti:
                 {
-                    proxy.OnRefreshTimeReachedNoti();
+                    proxy.OnRefreshTimeReachedNoti((int)notification.Body);
                     break;
                 }
             case NotiDefine.TalkToHeroDo:

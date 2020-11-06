@@ -11,9 +11,9 @@ public class ArmyItem : UIToggle
     public Text _Star;
     public Image _Icon;
     private int _id;
-
+    private int _city;
     public int ID => this._id;
-    public void SetData(int id)
+    public void SetData(int id,int city)
     {
         this._id = id;
         ArmyConfig config = ArmyConfig.Instance.GetData(id);
@@ -24,7 +24,7 @@ public class ArmyItem : UIToggle
 
     public void UpdateCount()
     {
-        int currentCount = ArmyProxy._instance.GetArmyCountBy(_id);
+        int currentCount = ArmyProxy._instance.GetArmyCountBy(_id,this._city);
         this.Label.text = currentCount.ToString();
     }
 }
