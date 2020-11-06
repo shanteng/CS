@@ -29,18 +29,22 @@ public class IncomeItem : MonoBehaviour
       
         int curValue = RoleProxy._instance.GetNumberValue(this._key);
         string curStr = UtilTools.NumberFormat(curValue);
-        this.CurMax.text = curStr;
 
         if (_oldValue > 0 && curValue > _oldValue)
         {
             int add = curValue - this._oldValue;
             this._AddValue.text = UtilTools.combine("+", add);
             this._AddValue.gameObject.SetActive(true);
-            this.CurMax.rectTransform.DOPunchScale(Vector3.one * 1.1f, 2f, 2, 0).onComplete = () =>
-            {
-                this._AddValue.gameObject.SetActive(false);
-            };
         }
+
+        this.CurMax.DOKill();
+        this.CurMax.DOText(curStr, 1f).onComplete = () =>
+        {
+            this.CurMax.rectTransform.localScale = Vector3.one;
+            this._AddValue.gameObject.SetActive(false);
+        };
+
+    
         _oldValue = curValue;
     }
 
