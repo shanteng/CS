@@ -178,8 +178,15 @@ public class ExcelToJsonToolEditor : Editor
                         break;
                     default:
                         Convert.ChangeType(collect[i][j], typeof(string));
-                        break; ;
+                        break;
                 }//end switch
+
+                if (memberName.Equals("ID") || memberName.Equals("IDs"))
+                {
+                    if (str.Equals(""))
+                        break;
+                }
+
                 postedJObject.Add(memberName, JToken.FromObject(value));
             }//end for j
 

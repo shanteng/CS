@@ -547,6 +547,10 @@ public class Hero
     {
         HeroConfig config = HeroConfig.Instance.GetData(id);
         HeroStarConfig configStar = HeroStarConfig.Instance.GetData(config.Star);
+        if (configStar == null)
+        {
+            return 0;
+        }
         return configStar.ElementValue;
     }
 

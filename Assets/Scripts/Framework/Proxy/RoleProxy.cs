@@ -29,7 +29,7 @@ public class RoleProxy : BaseRemoteProxy
      , IConfirmListener
 {
     private Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
-    private List<string> _LimitValueKeys = new List<string>();
+    
     private RoleInfo _role;
     public static RoleProxy _instance;
     public RoleProxy() : base(ProxyNameDefine.ROLE)
@@ -44,7 +44,7 @@ public class RoleProxy : BaseRemoteProxy
     {
         this.IncomeDic.Clear();
         //建筑加成
-        Dictionary<int, BuildingEffectsData> Effects = WorldProxy._instance.CityEffects;
+        Dictionary<int, BuildingEffectsData> Effects = WorldProxy._instance.AllEffects;
         foreach (BuildingEffectsData datas in Effects.Values)
         {
             foreach (string key in datas.IncomeDic.Keys)
@@ -72,7 +72,7 @@ public class RoleProxy : BaseRemoteProxy
         int armyPower = ArmyProxy._instance.GetPower();
         this._role.Power = config.Power  + armyPower;
 
-        Dictionary<int, BuildingEffectsData> Effects = WorldProxy._instance.CityEffects;
+        Dictionary<int, BuildingEffectsData> Effects = WorldProxy._instance.AllEffects;
         foreach (BuildingEffectsData datas in Effects.Values)
         {
             this._role.Power += datas.PowerAdd;
@@ -438,13 +438,6 @@ public class RoleProxy : BaseRemoteProxy
 
     private void Login()
     {
-        Dictionary<string, ItemInfoConfig> dic = ItemInfoConfig.Instance.getStrDataArray();
-        foreach (ItemInfoConfig config in dic.Values)
-        {
-            if (config.Type == (int)ItemTypeDefine.RES && config.isMaxLimit > 0)
-                this._LimitValueKeys.Add(config.IDs);
-        }
-
         this._role.UID = PlayerIdentityManager.Current.userId;
      
         //初始化数据

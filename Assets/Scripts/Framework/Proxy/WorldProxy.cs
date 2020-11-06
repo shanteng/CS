@@ -455,12 +455,14 @@ public class WorldProxy : BaseRemoteProxy
             this.UpdateCanBuildSpot();
     }
 
-    public Dictionary<int, BuildingEffectsData> CityEffects => this.CityEffects;
+    public Dictionary<int, BuildingEffectsData> AllEffects => this._CityEffects;
 
     public BuildingEffectsData GetBuildingEffects(int cityid)
     {
+        BuildingEffectsData effect;
+        this._CityEffects.TryGetValue(cityid, out effect);
         //根据
-        return this._CityEffects[cityid];
+        return effect;
     }
 
     private void AddOneTimeListener(BuildingData data)
