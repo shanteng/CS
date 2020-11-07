@@ -37,6 +37,10 @@
     public const string Archer = "Archer";
     public const string Infantry = "Infantry";
 
+    public const string FinishPatrol = "FinishPatrol";
+    public const string DoPatrol = "DoPatrol";
+
+
     public const string RoleLevelExp = "RoleLevelExp";
     public const string RoleLevel = "RoleLevel";
 
@@ -96,5 +100,6 @@ public class ConstDefine
     public const string CancelArmyReturnRate = "CancelArmyReturnRate";
     public const string SpeedUpOneSecsNeed = "SpeedUpOneSecsNeed";
     public const string HeroTalkGap = "HeroTalkGap";
+    public const string PatrolDeltaSces = "PatrolDeltaSces";
 }
 

@@ -212,13 +212,19 @@ public class UtilTools
 #endif
 
         List<RaycastResult> results = new List<RaycastResult>();
+
         PhysicsRaycaster graphicRaycaster = Camera.main.gameObject.GetComponent<PhysicsRaycaster>();
         graphicRaycaster.Raycast(pointerEventData, results);
-        if (results != null && results.Count > 0 && key.Equals("") == false)
+        if (results != null && results.Count > 0)
         {
-            return results[0].gameObject.name.Equals(key);
+            Vector3 rayPos =  results[0].worldPosition;
+            int x = Mathf.CeilToInt(rayPos.x);
+            int z = Mathf.CeilToInt(rayPos.z);
+            BuildingData bd = WorldProxy._instance.GetBuildingInRange(x, z);
+            return bd != null && bd._key.Equals(key);
         }
-        return results != null && results.Count > 0;
+
+        return false;
     }
 
 

@@ -1,5 +1,6 @@
 ﻿
 using Newtonsoft.Json.Utilities;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,6 +37,12 @@ public class NotiDefine
 
     public const string BuildingExpireReachedNoti = "BuildingExpireReachedNoti";
     public const string BuildingStatusChanged = "BuildingStatusChanged";
+    public const string PatrolExpireReachedNoti = "PatrolExpireReachedNoti";
+
+    public const string PatrolDo = "PatrolDo";
+    public const string PatrolResp = "PatrolResp";
+    public const string PatrolFinishNoti = "PatrolFinishNoti";
+
 
     public const string BuildingRelocateDo = "BuildingRelocateDo";
     public const string BuildingRelocateResp = "BuildingRelocateResp";
@@ -46,7 +53,7 @@ public class NotiDefine
     public const string BuildingSpeedUpDo = "BuildingSpeedUpDo";
 
     public const string HomeRangeChanged = "HomeRangeChanged";
-
+    public const string LandVisibleChanged = "LandVisibleChanged";
 
     public const string BuildingRemoveNoti = "BuildingRemoveNoti";
 
@@ -153,7 +160,86 @@ public class ErrorCode
     public const string FinishArmyRecruit = "FinishArmyRecruit";
     public const string TeamNotIdle = "TeamNotIdle";
     public const string TeamNotOpen = "TeamNotOpen";
+    public const string NoPatrol = "NoPatrol";
+    public const string NoVisibleNoPatrol = "NoVisibleNoPatrol";
+    public const string IsVisibleNoPatrol = "IsVisibleNoPatrol";
 }
+
+[Serializable]
+public class BuildingData
+{
+    public static int MainCityID = 1;
+    public static int GateID = 23;
+    public enum BuildingStatus
+    {
+        INIT = 0,//等待创建的状态
+        NORMAL,
+        BUILD,
+        UPGRADE,
+    }
+
+    public int _id;
+    public string _key;
+    public int _city;//0-主城
+
+    public int _UpgradeSecs = 0;//下一个等级所需时间
+    public VInt2 _cordinate = new VInt2();//左下角的坐标
+    public List<VInt2> _occupyCordinates;//占领的全部地块坐标
+
+    public int _level = 0;
+    public BuildingStatus _status = BuildingStatus.INIT;//建筑的状态
+    public long _expireTime;//建造或者升级的到期时间
+    public int _durability;//当前耐久度
+
+    public void Create(int id, int x, int z, int city = 0)
+    {
+        this._key = UtilTools.GenerateUId();
+        this._id = id;
+        this._city = city;
+        this._occupyCordinates = new List<VInt2>();
+        this.SetCordinate(x, z);
+    }
+
+    public void SetStatus(BuildingStatus state)
+    {
+        this._status = state;
+        this._expireTime = 0;
+        _UpgradeSecs = 0;
+        if (state == BuildingStatus.BUILD || state == BuildingStatus.UPGRADE)
+        {
+            BuildingUpgradeConfig nextConfig = BuildingUpgradeConfig.GetConfig(this._id, this._level + 1);
+            _UpgradeSecs = nextConfig == null ? 0 : nextConfig.NeedTime;
+            this._expireTime = UtilTools.GetExpireTime(_UpgradeSecs);
+        }
+    }
+
+    public void SetLevel(int newLevel)
+    {
+        this._level = newLevel;
+        BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(this._id, this._level);
+        if (configLevel != null)
+            this._durability = configLevel.Durability;
+    }
+
+    public void SetCordinate(int x, int z)
+    {
+        this._cordinate.x = x;
+        this._cordinate.y = z;
+        this._occupyCordinates.Clear();
+        BuildingConfig _config = BuildingConfig.Instance.GetData(this._id);
+
+        for (int row = 0; row < _config.RowCount; ++row)
+        {
+            int curX = this._cordinate.x + row;
+            for (int col = 0; col < _config.ColCount; ++col)
+            {
+                int curZ = this._cordinate.y + col;
+                VInt2 corNow = new VInt2(curX, curZ);
+                this._occupyCordinates.Add(corNow);
+            }
+        }
+    }
+}//end class
 
 public class CommonUINameDefine
 {
@@ -267,7 +353,7 @@ public class ValueAddType
 {
     public const string CityTroop = "CityTroop";
     public const string BuildRange = "BuildRange";
-    public const string StoreLimit = "StoreLimit";
+    public const string Patrol = "Patrol";
     public const string HourTax = "HourTax";
     public const string World = "World";
     public const string HeroMaxBlood = "HeroMaxBlood";
@@ -356,11 +442,26 @@ public class IncomeData
 {
     public string Key;
     public int Count;
+    public int LimitVolume;//容量
     public IncomeData(string key)
     {
         this.Key = key;
         this.Count = 0;
     }
+}
+
+public class PatrolData
+{
+    public string ID;
+    public int FromCIty;
+    public VInt2 Target = new VInt2();
+    public long ExpireTime;
+}
+
+public class VisibleData
+{
+    public int CityID;//0-主城
+    public int Range;
 }
 
 public class BuildingEffectsData
@@ -370,9 +471,11 @@ public class BuildingEffectsData
     public Dictionary<string, float> ElementAdds = new Dictionary<string, float>();
 
     public int MaxBloodAdd = 0;
-    public int ResLimitAdd = 0;
+
+    public int PatrolMax = 0;
     public int PowerAdd = 0;
     public int BuildRange = 0;
+    public VisibleData VisibleRangeData;
     public float RecruitReduceRate = 0f;
     public int TroopNum = 0;//可以配置队伍数量
     public int DayBoxLimit = 0;//每日宝箱次数上限
@@ -392,6 +495,7 @@ public class BuildingEffectsData
             this.CareerAttrAdds[i] = attrDic;
         }
 
+        this.VisibleRangeData = new VisibleData();
         this.ElementAdds[ElementDefine.Fire] = 0;
         this.ElementAdds[ElementDefine.Wind] = 0;
         this.ElementAdds[ElementDefine.Water] = 0;
@@ -406,8 +510,10 @@ public class BuildingEffectsData
         this.RecruitVolume[CareerDefine.Rider] = 0;
         this.RecruitVolume[CareerDefine.Infantry] = 0;
 
+        this.PatrolMax = 0;
+
         this.MaxBloodAdd = 0;
-        this.ResLimitAdd = 0;
+        this.PatrolMax = 0;
         this.PowerAdd = 0;
         this.BuildRange = 0;
     }

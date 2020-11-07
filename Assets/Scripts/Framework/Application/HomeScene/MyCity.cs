@@ -9,8 +9,6 @@ public class MyCity : MonoBehaviour
     public BuildingUI _uiPrefabs;
     public CityRange _Wall;
 
-
-    
     private Dictionary<string, Building> _AllBuildings;
     private List<string> _SpotHasOccupys;//key x|z,bool value
     private Dictionary<string, List<VInt2>> _BuildingDic;
@@ -18,6 +16,16 @@ public class MyCity : MonoBehaviour
     private void Awake()
     {
        
+    }
+
+    public void OnClickBuilding(string key)
+    {
+        return;
+        Building bd;
+        if (this._AllBuildings.TryGetValue(key, out bd))
+        {
+         //   bd.OnPointerClick();
+        }
     }
 
     public void UpdateIncome()
@@ -44,10 +52,7 @@ public class MyCity : MonoBehaviour
         foreach (Building bd in _AllBuildings.Values)
         {
             bool isCur = key.Equals(bd._data._key);
-           // if ((key.Equals("") == false && isCur == false) || isTryBuild)
-         //       bd.DoTransparent();
-        //    else
-                bd.SetSelect(isCur);
+            bd.SetSelect(isCur);
 
             if (isCur)
                 showBd = bd;

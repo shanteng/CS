@@ -13,7 +13,7 @@ public class IncomeItem : MonoBehaviour
     public Text _AddValue;
     public UIButton _btnAccept;
 
-    private string _key;
+    public string _key;
     private int _oldValue = -1;
     private int _needValueShow = 0;
     void Awake()

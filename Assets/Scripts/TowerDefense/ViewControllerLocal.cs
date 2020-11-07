@@ -116,14 +116,17 @@ public class ViewControllerLocal : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             this._DoUpdateDrag = false;
-            _isOverBuilding = UtilTools.IsFingerOverBuilding(HomeLandManager.GetInstance().CurrentKey) && HomeLandManager.GetInstance().CurrentKey.Length > 0;
+            /*  _isOverBuilding = UtilTools.IsFingerOverBuilding(HomeLandManager.GetInstance().CurrentKey) && HomeLandManager.GetInstance().CurrentKey.Length > 0;
             if (!HomeLandManager.GetInstance().IsDraging && !_isOverBuilding &&  !UtilTools.isFingerOverUI() && !HomeLandManager.GetInstance().isTryBuild)
-            {
-                HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
-            }
+             {
+                 HomeLandManager.GetInstance().SetCurrentSelectBuilding("");
+             }
+         */
         }
+
         if (HomeLandManager.GetInstance().IsDraging == false)
             this.JudgeScaleMap();
+       
     }
 
     private VInt2 _curPos = new VInt2();
@@ -134,7 +137,6 @@ public class ViewControllerLocal : MonoBehaviour
         return this._curPos;
     }
 
-   
 
     void LateUpdate()
     {
@@ -194,7 +196,7 @@ public class ViewControllerLocal : MonoBehaviour
     {
         VInt2 gamePos = UtilTools.WorldToGameCordinate(wolrdPos.x, wolrdPos.y);
 
-        if (gamePos.x <= 0 || gamePos.x > GameIndex.ROW || gamePos.y <= 0 || gamePos.y > GameIndex.COL)
+        if (gamePos.x < 0 || gamePos.x > GameIndex.ROW || gamePos.y < 0 || gamePos.y > GameIndex.COL)
         {
             return false;
         }
@@ -221,6 +223,7 @@ public class ViewControllerLocal : MonoBehaviour
     void JudgeDragMap()
     {
 #if UNITY_EDITOR
+        
         if (this._DoUpdateDrag && UtilTools.isFingerOverUI() == false && this._isOverBuilding == false && !this._isTryGoTo)
         {
             float xMove = -Input.GetAxisRaw("Mouse X") * Time.deltaTime * _realDragSpeed;

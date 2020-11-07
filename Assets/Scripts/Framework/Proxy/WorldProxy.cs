@@ -8,82 +8,6 @@ using SMVC.Patterns;
 using UnityEngine;
 
 
-[Serializable]
-public class BuildingData
-{
-    public static int MainCityID = 1;
-    public static int GateID = 23;
-    public enum BuildingStatus
-    {
-        INIT = 0,//等待创建的状态
-        NORMAL,
-        BUILD,
-        UPGRADE,
-    }
-
-    public int _id;
-    public string _key;
-    public int _city;//0-主城
-      
-    public int _UpgradeSecs = 0;//下一个等级所需时间
-    public VInt2 _cordinate = new VInt2();//左下角的坐标
-    public List<VInt2> _occupyCordinates;//占领的全部地块坐标
-  
-    public int _level = 0;
-    public BuildingStatus _status = BuildingStatus.INIT;//建筑的状态
-    public long _expireTime;//建造或者升级的到期时间
-    public int _durability;//当前耐久度
-
-    public void Create(int id,int x,int z,int city = 0)
-    {
-        this._key =  UtilTools.GenerateUId();
-        this._id = id;
-        this._city = city;
-        this._occupyCordinates = new List<VInt2>();
-        this.SetCordinate(x, z);
-    }
-
-    public void SetStatus(BuildingStatus state)
-    {
-        this._status = state;
-        this._expireTime = 0;
-        _UpgradeSecs = 0;
-        if (state == BuildingStatus.BUILD || state == BuildingStatus.UPGRADE)
-        {
-            BuildingUpgradeConfig nextConfig = BuildingUpgradeConfig.GetConfig(this._id, this._level + 1);
-            _UpgradeSecs = nextConfig == null ? 0 : nextConfig.NeedTime;
-            this._expireTime = UtilTools.GetExpireTime(_UpgradeSecs);
-        }
-    }
-
-    public void SetLevel(int newLevel)
-    {
-        this._level = newLevel;
-        BuildingUpgradeConfig configLevel = BuildingUpgradeConfig.GetConfig(this._id, this._level);
-        if (configLevel != null)
-            this._durability = configLevel.Durability;
-    }
-
-    public void SetCordinate(int x, int z)
-    {
-        this._cordinate.x = x;
-        this._cordinate.y = z;
-        this._occupyCordinates.Clear();
-        BuildingConfig _config = BuildingConfig.Instance.GetData(this._id);
-
-        for (int row = 0; row < _config.RowCount; ++row)
-        {
-            int curX = this._cordinate.x + row;
-            for (int col = 0; col < _config.ColCount; ++col)
-            {
-                int curZ = this._cordinate.y + col;
-                VInt2 corNow = new VInt2(curX, curZ);
-                this._occupyCordinates.Add(corNow);
-            }
-        }
-    }
-}//end class
-
 //时间戳回调管理
 public class WorldProxy : BaseRemoteProxy
 {
@@ -92,7 +16,9 @@ public class WorldProxy : BaseRemoteProxy
     private int _World;
     
     private List<string> _canOperateSpots = new List<string>();//我可以操作的地块
+    private Dictionary<string, VInt2> _VisibleSpots = new Dictionary<string, VInt2>();//我可以操作的地块
     private WorldBuildings _WorldData;
+    private Dictionary<string, PatrolData> _OutPatrolDic = new Dictionary<string, PatrolData>();
    
     private Dictionary<int, BuildingEffectsData> _CityEffects = new Dictionary<int, BuildingEffectsData>();
     public WorldProxy() : base(ProxyNameDefine.WORLD)
@@ -103,6 +29,11 @@ public class WorldProxy : BaseRemoteProxy
     public List<string> GetCanOperateSpots()
     {
         return this._canOperateSpots;
+    }
+
+    public Dictionary<string,VInt2> GetVisibleSpots()
+    {
+        return this._VisibleSpots;
     }
 
 
@@ -123,6 +54,7 @@ public class WorldProxy : BaseRemoteProxy
         //从数据库取出数据
         this._World = world;
         this._canOperateSpots.Clear();
+        this._OutPatrolDic.Clear();
         WorldProxy._config = WorldConfig.Instance.GetData(this._World);
         GameIndex.ROW = WorldProxy._config.MaxRowCount;
         GameIndex.COL = WorldProxy._config.MaxColCount;
@@ -130,6 +62,79 @@ public class WorldProxy : BaseRemoteProxy
         this.SendNotification(NotiDefine.GenerateMySpotResp);
     }//end func
 
+    public VInt2 GetCityCordinate(int cityid)
+    {
+        if (cityid == 0)
+            return new VInt2();
+        return new VInt2();//暂时写死，之后读取配置
+    }
+
+    private void ComputeCityVisibleSpot()
+    {
+        //城市
+        List<VInt2> addList = new List<VInt2>();
+        foreach (BuildingEffectsData Effect in this._CityEffects.Values)
+        {
+            if (Effect.VisibleRangeData == null)
+                continue;
+            VInt2 centerPos = this.GetCityCordinate(Effect.VisibleRangeData.CityID);
+            int halfRange = Effect.VisibleRangeData.Range;
+            int startX = centerPos.x - halfRange;
+            int endX = centerPos.x + halfRange;
+
+            int startZ = centerPos.y - halfRange;
+            int endZ = centerPos.y + halfRange;
+
+            for (int row = startX; row <= endX; ++row)
+            {
+                int corX = row;
+                for (int col = startZ; col <= endZ; ++col)
+                {
+                    int corZ = col;
+                    string key = UtilTools.combine(corX, "|", corZ);
+                    if (this._VisibleSpots.ContainsKey(key) == false)
+                    {
+                        VInt2 kv = new VInt2(corX, corZ);
+                        addList.Add(kv);
+                    }
+                }//end for col
+            }//end for row
+        }//end foreach
+
+        if (addList.Count > 0)
+        {
+            this.AddVisibleSpots(addList);
+        }
+    }
+
+    public bool IsSpotVisible(int x, int z)
+    {
+        string key = UtilTools.combine(x, "|", z);
+        return _VisibleSpots.ContainsKey(key);
+    }
+
+    public void AddVisibleSpots(List<VInt2> addList)
+    {
+        Dictionary<string, VInt2> NewAddVisibleList = new Dictionary<string, VInt2>();
+        foreach (VInt2 pos in addList)
+        {
+            string key = UtilTools.combine(pos.x, "|", pos.y);
+            if (this._VisibleSpots.ContainsKey(key) == false)
+            {
+                VInt2 kv = new VInt2(pos.x, pos.y);
+                NewAddVisibleList.Add(key, kv);
+                this._VisibleSpots.Add(key, kv);
+            }
+        }
+
+        if (NewAddVisibleList.Count > 0)
+        {
+            this.SendNotification(NotiDefine.LandVisibleChanged, NewAddVisibleList);
+            this.DoSaveVisibleSpot();
+        }
+    }
+
+    
     private void UpdateCanBuildSpot()
     {
         BuildingEffectsData Effect = this.GetBuildingEffects(0);
@@ -147,6 +152,19 @@ public class WorldProxy : BaseRemoteProxy
         }//end for
     }
 
+    public void LoadVisibleSpot()
+    {
+        string json = CloudDataTool.LoadFile(SaveFileDefine.VisibleSpot);
+        if (json.Equals(string.Empty) == false)
+        {
+            this._VisibleSpots = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, VInt2>>(json);
+        }
+        else
+        {
+            this._VisibleSpots = new Dictionary<string, VInt2>();
+            this.ComputeCityVisibleSpot();
+        }
+    }
 
     public void GenerateAllBuilding(int world)
     {
@@ -206,6 +224,7 @@ public class WorldProxy : BaseRemoteProxy
                 }
             }
         }
+        this.LoadVisibleSpot();//读取可视区域
         ComputeEffects();
     }
 
@@ -214,6 +233,12 @@ public class WorldProxy : BaseRemoteProxy
         //存储
         string fileName = UtilTools.combine(SaveFileDefine.WorldBuiding, this._World);
         CloudDataTool.SaveFile(fileName, _WorldData);
+    }
+
+    public void DoSaveVisibleSpot()
+    {
+        //存储
+        CloudDataTool.SaveFile(SaveFileDefine.VisibleSpot, this._VisibleSpots);
     }
 
 
@@ -267,7 +292,31 @@ public class WorldProxy : BaseRemoteProxy
 
     public WorldBuildings Data => this._WorldData;
 
-     
+    public BuildingData GetBuildingInRange(int x, int z)
+    {
+        
+        foreach (List<BuildingData> datas in this._WorldData.Datas.Values)
+        {
+            foreach (BuildingData bd in datas)
+            {
+                bool isIn = this.IsInBulildOccupy(bd,x,z);
+                if (isIn)
+                    return bd;
+            }
+        }
+        return null;
+    }
+
+    public bool IsInBulildOccupy(BuildingData bd,int x,int z)
+    {
+        foreach (VInt2 occupy in bd._occupyCordinates)
+        {
+            if (occupy.x == x && occupy.y == z)
+                return true;
+        }
+        return false;
+    }
+
     public BuildingData GetBuilding(string key,int cityid = 0)
     {
         List<BuildingData> list = this.GetCityBuildings(cityid);
@@ -376,9 +425,9 @@ public class WorldProxy : BaseRemoteProxy
                 int addValue = UtilTools.ParseInt(configLevel.AddValues[0]);
                 Effect.MaxBloodAdd += addValue;
             }
-            else if (config.AddType.Equals(ValueAddType.StoreLimit))
+            else if (config.AddType.Equals(ValueAddType.Patrol))
             {
-                Effect.ResLimitAdd += UtilTools.ParseInt(configLevel.AddValues[0]);
+                Effect.PatrolMax += UtilTools.ParseInt(configLevel.AddValues[0]);
             }
             else if (config.AddType.Equals(ValueAddType.RecruitVolume))
             {
@@ -402,10 +451,13 @@ public class WorldProxy : BaseRemoteProxy
                 add.Init(configLevel.AddValues[0]);
                 int limit = UtilTools.ParseInt(configLevel.AddValues[1]);
                 Effect.IncomeDic[add.id].Count += add.count;
+                Effect.IncomeDic[add.id].LimitVolume += limit;
             }
             else if (config.AddType.Equals(ValueAddType.BuildRange))
             {
                 Effect.BuildRange = UtilTools.ParseInt(configLevel.AddValues[0]);
+                Effect.VisibleRangeData.CityID = city;
+                Effect.VisibleRangeData.Range = UtilTools.ParseInt(configLevel.AddValues[1]);
             }
             else if (config.AddType.Equals(ValueAddType.RecruitSecs))
             {
@@ -452,7 +504,7 @@ public class WorldProxy : BaseRemoteProxy
             this.ComputeCityEffects(city);
         }
 
-
+        this.ComputeCityVisibleSpot();
         //处理监听
         RoleProxy._instance.ComputeBuildingEffect();
 
@@ -479,7 +531,125 @@ public class WorldProxy : BaseRemoteProxy
     }
 
 
-  
+    public VInt2 GetCityPatrolInfo(int cityid)
+    {
+        VInt2 kv = new VInt2();
+        BuildingEffectsData Effect = this.GetBuildingEffects(cityid);
+        if (Effect == null)
+            return kv;
+        foreach (PatrolData data in this._OutPatrolDic.Values)
+        {
+            if (data.FromCIty == cityid)
+                kv.x++;
+        }
+        kv.y = Effect.PatrolMax;
+        return kv;
+    }
+
+    public long GetMoveExpireTime(int fromX,int fromZ, int targetX, int targetZ,float deltaSecs)
+    {
+        int descX = fromX - targetX;
+        int descY = fromZ - targetZ;
+        float distance = Mathf.Sqrt(descX * descX + descY * descY);
+        long expireSces = GameIndex.ServerTime + Mathf.CeilToInt(deltaSecs * distance);
+        return expireSces;
+    }
+
+    public bool CanMoveTo(int x, int z)
+    {
+        int halfRange = 1;
+        int startX = x - halfRange;
+        int endX =x + halfRange;
+
+        int startZ = z - halfRange;
+        int endZ = z + halfRange;
+
+        for (int row = startX; row <= endX; ++row)
+        {
+            int corX = row;
+            for (int col = startZ; col <= endZ; ++col)
+            {
+                int corZ = col;
+                string key = UtilTools.combine(corX, "|", corZ);
+                if (this._VisibleSpots.ContainsKey(key) )
+                {
+                    return true;
+                }
+            }//end for col
+        }//end for row
+
+        return false;
+    }
+
+    public void DoPatrol(Dictionary<string, object> vo)
+    {
+        int city = (int)vo["city"];
+        int x = (int)vo["x"];
+        int z = (int)vo["z"];
+
+        bool canMove = this.CanMoveTo(x, z);
+        VInt2 gamePos = UtilTools.WorldToGameCordinate(x, z);
+        if (canMove == false)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoVisibleNoPatrol, gamePos.x, gamePos.y);
+            return;
+        }
+
+        bool isVisible = this.IsSpotVisible(x, z);
+        if (isVisible)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.IsVisibleNoPatrol, gamePos.x, gamePos.y);
+            return;
+        }
+
+        VInt2 kv = this.GetCityPatrolInfo(city);
+        if (kv.x >= kv.y)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoPatrol);
+            return;
+        }
+
+
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.PatrolDeltaSces);
+        int SecsDelta = cfgconst.IntValues[0];
+
+        VInt2 cityPos = this.GetCityCordinate(city);
+        PatrolData patrol = new PatrolData();
+        patrol.ID = UtilTools.GenerateUId();
+        patrol.FromCIty = city;
+        patrol.Target.x = x;
+        patrol.Target.y = z;
+        patrol.ExpireTime = this.GetMoveExpireTime(cityPos.x, cityPos.y, x, z, SecsDelta);
+        this._OutPatrolDic.Add(patrol.ID, patrol);
+
+        TimeCallData dataTime = new TimeCallData();
+        dataTime._key = patrol.ID;
+        dataTime._notifaction = NotiDefine.PatrolExpireReachedNoti;
+        dataTime.TimeStep = patrol.ExpireTime;
+        dataTime._param = patrol.ID;
+        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.DoPatrol, gamePos.x, gamePos.y));
+        MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
+        this.SendNotification(NotiDefine.PatrolResp);
+    }
+
+    public void OnPatrolExpireFinsih(string key)
+    {
+        PatrolData data;
+        if (this._OutPatrolDic.TryGetValue(key,out data) == false)
+            return;
+        //将新探索的点设置为可见
+        List<VInt2> addList = new List<VInt2>();
+        //根据科技计算范围，先写死当前坐标
+        VInt2 kv = new VInt2(data.Target.x,data.Target.y);
+        addList.Add(kv);
+        this.AddVisibleSpots(addList);
+
+        VInt2 gamePos = UtilTools.WorldToGameCordinate(data.Target.x, data.Target.y);
+        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, gamePos.x, gamePos.y));
+        this.SendNotification(NotiDefine.PatrolFinishNoti, data.Target);
+        this._OutPatrolDic.Remove(key);
+    }
+
     public void Create(Dictionary<string, object> vo)
     {
         int id = (int)vo["configid"];
@@ -619,6 +789,9 @@ public class WorldProxy : BaseRemoteProxy
         string AddType = config.AddType;
         if (AddType.Equals(""))
             return list;
+
+        if (level <= 0)
+            level = 1;
         BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(id, level);
 
       
@@ -671,7 +844,7 @@ public class WorldProxy : BaseRemoteProxy
 
             list.Add(kv);
         }
-        else if (ValueAddType.StoreLimit.Equals(AddType) ||
+        else if (ValueAddType.Patrol.Equals(AddType) ||
             ValueAddType.HeroMaxBlood.Equals(AddType) ||
             ValueAddType.Equipment.Equals(AddType) ||
             ValueAddType.Cure.Equals(AddType) ||
@@ -713,6 +886,13 @@ public class WorldProxy : BaseRemoteProxy
             kv = new StringKeyValue();
             kv.key = config.AddDescs[0];
             kv.value = LanguageConfig.GetLanguage(LanMainDefine.BuildRange, AddValues[0], AddValues[0]);
+            list.Add(kv);
+
+            int halfRange = UtilTools.ParseInt(AddValues[1]);
+            int range = halfRange * 2 + 1;
+            kv = new StringKeyValue();
+            kv.key = config.AddDescs[1];
+            kv.value = LanguageConfig.GetLanguage(LanMainDefine.BuildRange, range, range);
             list.Add(kv);
         }
 

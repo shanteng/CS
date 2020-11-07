@@ -12,6 +12,7 @@ public enum PopType
     BUILDING_UPGRADE,
     BUILDING_LEVEL_EFFECT,
     CAREER_RATE,
+    ATTRADD,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -74,6 +75,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.NOTICE, kv);
     }
 
+    public void ShowAttrAdd(AttrAddData data)
+    {
+        this.ShowPop(PopType.ATTRADD, data);
+    }
+
     public void ShowErrorNotice(string errorCode, params object[] paramName)
     {
         string notice =  LanErrorConfig.GetLanguage(errorCode,paramName);
@@ -117,6 +123,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
             case PopType.CAREER_RATE:
                 {
                     _curShowWin = InitCareerRate();
+                    break;
+                }
+            case PopType.ATTRADD:
+                {
+                    _curShowWin = InitAttrAdd();
                     break;
                 }
         }
@@ -178,7 +189,17 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         Popup script = view.GetComponent<Popup>();
 
         NoticePop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<NoticePop>();
-        GameObject.Destroy(scriptClone.gameObject, 1.5f);
+        GameObject.Destroy(scriptClone.gameObject, scriptClone._DestorySecs);
+        return scriptClone;
+    }
+
+    protected Popup InitAttrAdd()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("AttrAddPop");
+        Popup script = view.GetComponent<Popup>();
+
+        AttrAddPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<AttrAddPop>();
+        GameObject.Destroy(scriptClone.gameObject, scriptClone._DestorySecs);
         return scriptClone;
     }
 }//end class

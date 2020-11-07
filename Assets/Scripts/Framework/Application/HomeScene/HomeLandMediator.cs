@@ -27,6 +27,8 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.BuildingRemoveNoti);
         m_lInterestNotifications.Add(NotiDefine.TryBuildBuilding);
         m_lInterestNotifications.Add(NotiDefine.HomeRangeChanged);
+        m_lInterestNotifications.Add(NotiDefine.LandVisibleChanged);
+
 
         m_lInterestNotifications.Add(NotiDefine.AcceptHourAwardResp);
         m_lInterestNotifications.Add(NotiDefine.GO_TO_SELEC_BUILDING_BY_ID);
@@ -50,6 +52,15 @@ public class HomeLandMediator : BaseNoWindowMediator
                     if (name.Equals(SceneDefine.Home))
                     {
                         this.InitScene();
+                    }
+                    break;
+                }
+            case NotiDefine.LandVisibleChanged:
+                {
+                    if (this._isHomeLoaded)
+                    {
+                        Dictionary<string, VInt2> pos = (Dictionary<string, VInt2>)notification.Body;
+                        this._LandManager.GenerateVisibleSpot(pos);
                     }
                     break;
                 }

@@ -247,6 +247,7 @@ public class Building : MonoBehaviour
         }
 
         //选中当前地块
+        HomeLandManager.GetInstance().HideSelectSpot();
         HomeLandManager.GetInstance().SetCurrentSelectBuilding(this._data._key);
        
     }

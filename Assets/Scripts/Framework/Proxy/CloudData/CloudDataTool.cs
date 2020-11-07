@@ -22,6 +22,7 @@ public class SaveFileDefine
     public const string Army = "Army";
     public const string HeroRecruitRefresh = "HeroRecruitRefresh";
     public const string Team = "Team";
+    public const string VisibleSpot = "VisibleSpot";
 }
 
 public class CloudDataTool

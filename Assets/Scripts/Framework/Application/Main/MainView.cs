@@ -30,9 +30,27 @@ public class MainView : MonoBehaviour
     public MapUI _mapUI;
 
     private int _dianLiangCount = 60;
+    private static MainView instance;
+    public static MainView GetInstance()
+    {
+        return instance;
+    }
     private void Awake()
     {
-       
+        instance = this;
+    }
+
+    public Vector3 GetIncomePostion(string key)
+    {
+        foreach (IncomeItem item in this._incomeList)
+        {
+            if (item._key.Equals(key))
+            {
+                Vector3 pos =  UIRoot.Intance.GetLayer(WindowLayer.Popup).worldToLocalMatrix.MultiplyPoint3x4(item.Icon.GetComponent<RectTransform>().position);
+                return pos;
+            }
+        }
+        return Vector3.zero;
     }
 
     void Start()

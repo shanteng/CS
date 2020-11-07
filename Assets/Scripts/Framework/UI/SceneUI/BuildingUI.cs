@@ -7,12 +7,33 @@ public class BuildingUI : UIBase
 {
     public CountDownCanvas _CdUi;
     public Text _NameTxt;
-    public GameObject _AddCon;
+    public UIButton _AddCon;
     public Image _icon;
     private int _needValueShow = 0;
+    private string _key;
     void Start()
     {
-        
+        _AddCon.AddEvent(OnAccept);
+    }
+
+    private void OnAccept(UIButton btn)
+    {
+        Vector3 clickpos;
+#if UNITY_EDITOR
+        clickpos = Input.mousePosition;
+#else
+        if (Input.touchCount > 0)
+            clickpos = Input.GetTouch(0).position;
+#endif
+
+        Vector2 uiPos;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(UIRoot.Intance.transform.GetComponent<RectTransform>(), clickpos, UIRoot.Intance.camera, out uiPos))
+        {
+            AttrAddData data = new AttrAddData();
+            data.uiPos = uiPos;
+            data.Key = this._key;
+            PopupFactory.Instance.ShowAttrAdd(data);
+        }
     }
 
     public void DoCountDown(long expire, int totle)
@@ -43,7 +64,7 @@ public class BuildingUI : UIBase
         this._CdUi.GetComponent<RectTransform>().sizeDelta = new Vector2(20 * config.RowCount, 4);
 
         //税收
-        this._AddCon.SetActive(false);
+        this._AddCon.gameObject.SetActive(false);
         if (config.AddType.Equals(ValueAddType.HourTax) == false)
             return;
         BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(config.ID, 1);
@@ -61,7 +82,9 @@ public class BuildingUI : UIBase
     {
         int value = RoleProxy._instance.GetCanAcceptIncomeValue(key);
         bool isShow = value >= this._needValueShow;
-        this._AddCon.SetActive(isShow);
+        this._AddCon.gameObject.SetActive(isShow);
+        this._key = key;
+
         return isShow;
     }
 }

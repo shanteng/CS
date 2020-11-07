@@ -19,8 +19,10 @@ public class ControllersInitializeCommand : SimpleCommand
         Facade.RegisterCommand(NotiDefine.BuildingCancelDo, typeof(BuildingCommand));
         Facade.RegisterCommand(NotiDefine.UpgradeOneBuildingDo, typeof(BuildingCommand));
         Facade.RegisterCommand(NotiDefine.BuildingSpeedUpDo, typeof(BuildingCommand));
+        Facade.RegisterCommand(NotiDefine.PatrolDo, typeof(BuildingCommand));
 
         Facade.RegisterCommand(NotiDefine.BuildingExpireReachedNoti, typeof(BuildingCommand));
+        Facade.RegisterCommand(NotiDefine.PatrolExpireReachedNoti, typeof(BuildingCommand));
         //RoleCommand
         Facade.RegisterCommand(NotiDefine.CreateRoleDo, typeof(RoleCommand));
         Facade.RegisterCommand(NotiDefine.EnterGameDo, typeof(RoleCommand));

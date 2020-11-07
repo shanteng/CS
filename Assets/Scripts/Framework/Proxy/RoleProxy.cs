@@ -29,7 +29,8 @@ public class RoleProxy : BaseRemoteProxy
      , IConfirmListener
 {
     private Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
-    
+    private Dictionary<string, int> HourAwardLimitDic = new Dictionary<string, int>();
+
     private RoleInfo _role;
     public static RoleProxy _instance;
     public RoleProxy() : base(ProxyNameDefine.ROLE)
@@ -43,6 +44,7 @@ public class RoleProxy : BaseRemoteProxy
     public void ComputeIncome()
     {
         this.IncomeDic.Clear();
+        this.HourAwardLimitDic.Clear();
         //建筑加成
         Dictionary<int, BuildingEffectsData> Effects = WorldProxy._instance.AllEffects;
         foreach (BuildingEffectsData datas in Effects.Values)
@@ -53,6 +55,11 @@ public class RoleProxy : BaseRemoteProxy
                 if (this.IncomeDic.TryGetValue(key, out oldvalue) == false)
                     oldvalue = 0;
                 this.IncomeDic[key] = datas.IncomeDic[key].Count + oldvalue;
+
+                oldvalue = 0;
+                if (this.HourAwardLimitDic.TryGetValue(key, out oldvalue) == false)
+                    oldvalue = 0;
+                this.HourAwardLimitDic[key] = datas.IncomeDic[key].LimitVolume + oldvalue;
             }
         }
     }
@@ -137,6 +144,10 @@ public class RoleProxy : BaseRemoteProxy
                 int addValue = Mathf.CeilToInt(passSecs * AddUpAwards[i].base_secs_value) + AddUpAwards[i].add_up_value;
                 if (addValue > 0)
                 {
+                    int addVolume = this.GetHourAwardLimitVolume(key);//不能超过仓库上限
+                    if (addValue > addVolume)
+                        addValue = addVolume;
+
                     CostData data = new CostData();
                     data.id = AddUpAwards[i].id;
                     data.count = addValue;
@@ -378,15 +389,21 @@ public class RoleProxy : BaseRemoteProxy
         return 0;
     }
 
+    public int GetHourAwardLimitVolume(string key)
+    {
+        int value = 0;
+        if (this.HourAwardLimitDic.TryGetValue(key, out value))
+            return value;
+        return 0;
+    }
+
     public HourAwardData GetCanAcceptIncomeData(string key)
     {
-        List<HourAwardData> AddUpAwards = this._role.AddUpAwards;
-        int count = AddUpAwards.Count;
-        for (int i = 0; i < count; ++i)
+       foreach(HourAwardData data in this.Role.AddUpAwards)
         {
-            if (AddUpAwards[i].generate_time > 0 && AddUpAwards[i].id.Equals(key))
+            if (data.generate_time > 0 && data.id.Equals(key))
             {
-                return AddUpAwards[i];
+                return data;
             }
         }
         return null;

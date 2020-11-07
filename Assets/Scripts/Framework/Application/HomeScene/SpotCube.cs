@@ -1,37 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class SpotCube : MonoBehaviour
     , IPointerClickHandler
 {
-    private Vector3Int _cordinate = Vector3Int.zero;
-    public bool _isMy = false;
-    // Start is called before the first frame update
-    void Start()
+    private UnityAction<Vector3> _fun;
+    public void AddEvent(UnityAction<Vector3> callBack)
     {
-        
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void SetCordinate(int x, int z)
-    {
-        this._cordinate.x = x;
-        this._cordinate.z = z;
+        this._fun = callBack;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        //测试代码
-        if( UtilTools.isFingerOverUI() == false)
-            HomeLandManager.GetInstance().OnClickSpotCube(this._cordinate.x,this._cordinate.z);
+        if (UtilTools.isFingerOverUI() == false)
+        {
+            float distancex = (eventData.pressPosition.x - eventData.position.x) * (eventData.pressPosition.x - eventData.position.x);
+            float distancey = (eventData.pressPosition.y - eventData.position.y) * (eventData.pressPosition.y - eventData.position.y);
+
+            float distrance = Mathf.Sqrt(distancex * distancex + distancey * distancey);
+
+            if (distrance < 1)
+            {
+                //Debug.LogWarning("OnPointerClick:" + eventData.delta);
+                this._fun.Invoke(eventData.pointerCurrentRaycast.worldPosition);
+            }
+        }
     }
 
 
