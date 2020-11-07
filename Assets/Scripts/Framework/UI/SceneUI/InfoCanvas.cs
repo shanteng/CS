@@ -126,12 +126,13 @@ public class InfoCanvas : UIBase, IConfirmListener
         {
             case ValueAddType.HourTax:
                 {
-                    CostData add = new CostData();
+                  /*  CostData add = new CostData();
                     add.Init(configLevel.AddValues[0]);
                     int value = RoleProxy._instance.GetCanAcceptIncomeValue(add.id);
                     bool isEnable = value >= this._needValueShow;
                     data = new IntStrPair(OpType.Enter, "", add.id, isEnable, add.id);
                     btnTypeList.Add(data);
+                  */
                     break;
                 }
             case ValueAddType.RecruitVolume:

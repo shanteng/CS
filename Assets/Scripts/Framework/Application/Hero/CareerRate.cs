@@ -18,7 +18,7 @@ public class CareerRate : UIBase
         bool isUnSet = rate == 0;
         this._Icon.sprite = ResourcesManager.Instance.GetCareerIcon(career);
         this._rateTxt.text = Hero.GetCareerEvaluateName(rate);
-        this._rateTxt.gameObject.SetActive(isUnSet);
+        this._rateTxt.gameObject.SetActive(isUnSet == false);
         UIRoot.Intance.SetImageGray(this._Icon, isUnSet);
         if(this._bg != null)
             UIRoot.Intance.SetImageGray(this._Icon, isUnSet);

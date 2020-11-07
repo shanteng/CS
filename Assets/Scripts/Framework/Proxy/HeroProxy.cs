@@ -151,6 +151,7 @@ public class HeroProxy : BaseRemoteProxy
         {
             cityRefresh = new HeroRecruitRefreshData();
             cityRefresh.City = city;
+            cityRefresh.IDs = new List<int>();
             this._refreshData.Add(city, cityRefresh);
         }
 

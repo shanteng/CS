@@ -79,7 +79,7 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
         ItemInfoConfig config = ItemInfoConfig.Instance.GetData(itemKey);
         if (config == null)
             return null;
-        return this.getAtlasSprite(AtlasDefine.Hero, config.Icon);
+        return this.getAtlasSprite(AtlasDefine.Item, config.Icon);
     }
 
     public Sprite GetHeroSprite(int id)

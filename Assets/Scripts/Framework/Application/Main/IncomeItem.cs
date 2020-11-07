@@ -11,22 +11,37 @@ public class IncomeItem : MonoBehaviour
     public Text CurMax;
     public Image Icon;
     public Text _AddValue;
+    public UIButton _btnAccept;
 
     private string _key;
     private int _oldValue = -1;
-
+    private int _needValueShow = 0;
     void Awake()
     {
+        this._btnAccept.AddEvent(OnClickAccept);
         this._AddValue.gameObject.SetActive(false);
         this._key = this.gameObject.name;
         this.Icon.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Common, this.gameObject.name);
     }
 
+    private void OnClickAccept(UIButton btn)
+    {
+        MediatorUtil.SendNotification(NotiDefine.AcceptHourAwardDo, this._key);
+    }
+
+    public void JudgeIncome()
+    {
+        int value = RoleProxy._instance.GetCanAcceptIncomeValue(this._key);
+        bool isShow = value >= this._needValueShow;
+        this._btnAccept.gameObject.SetActive(isShow);
+    }
+
     public void UpdateValue()
     {
-       // int hourAdd = RoleProxy._instance.GetHourInCome(this._key);
-    //    this.HourAdd.text = LanguageConfig.GetLanguage(LanMainDefine.HourAdd, hourAdd);
-      
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.IncomeShowValue);
+        _needValueShow = cfgconst.IntValues[0];
+       
+
         int curValue = RoleProxy._instance.GetNumberValue(this._key);
         string curStr = UtilTools.NumberFormat(curValue);
 
@@ -46,6 +61,7 @@ public class IncomeItem : MonoBehaviour
 
     
         _oldValue = curValue;
+        this.JudgeIncome();
     }
 
     

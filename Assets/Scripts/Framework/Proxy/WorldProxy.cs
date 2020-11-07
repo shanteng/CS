@@ -338,9 +338,11 @@ public class WorldProxy : BaseRemoteProxy
             Effect = new BuildingEffectsData();
             this._CityEffects[city] = Effect;
         }
-        Effect.Reset();
 
         int oldRange = Effect.BuildRange;
+
+        Effect.Reset();
+
 
         List<BuildingData> buildings = this.GetCityBuildings(city);
         foreach (BuildingData data in buildings)
@@ -427,6 +429,10 @@ public class WorldProxy : BaseRemoteProxy
             this.SendNotification(NotiDefine.HomeRangeChanged, city);
         }
 
+        //存储可以建筑的范围
+        if (city == 0)
+            this.UpdateCanBuildSpot();
+
         HeroProxy._instance.ComputeBuildingEffect(city);
         TeamProxy._instance.ComputeBuildingEffect(city);
 
@@ -450,9 +456,6 @@ public class WorldProxy : BaseRemoteProxy
         //处理监听
         RoleProxy._instance.ComputeBuildingEffect();
 
-        //存储可以建筑的范围
-        if (city == 0)
-            this.UpdateCanBuildSpot();
     }
 
     public Dictionary<int, BuildingEffectsData> AllEffects => this._CityEffects;

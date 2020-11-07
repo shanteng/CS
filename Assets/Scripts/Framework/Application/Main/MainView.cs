@@ -127,6 +127,14 @@ public class MainView : MonoBehaviour
         }
     }
 
+    public void JudgeIncome()
+    {
+        foreach (IncomeItem item in this._incomeList)
+        {
+            item.JudgeIncome();
+        }
+    }
+
     public void SetName()
     {
         this._head.SetData(RoleProxy._instance.Role.Head);

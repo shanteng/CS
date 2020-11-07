@@ -328,6 +328,7 @@ public class HomeLandManager : MonoBehaviour
     public void UpdateIncome()
     {
         _myLandCity.UpdateIncome();
+        MediatorUtil.SendNotification(NotiDefine.JudgeIncome);
     }
 
     private string _gotoKey;

@@ -17,6 +17,8 @@ public class RecruitItemData : ScrollData
 
 public class RecruitItemRender : ItemRender
 {
+    public GameObject _Front;
+    public Image _HeadIcon;
     public Image _Frame;
     public Image _Element;
     public Text _nameTxt;
@@ -34,6 +36,9 @@ public class RecruitItemRender : ItemRender
     public UIButton _btnRecruit;
     public UIButton _btnInfo;
 
+    public GameObject _Back;
+    public UIButton _btnReturn;
+    public Image _Icon;
     private int _id;
 
     public int ID => this._id;
@@ -43,6 +48,7 @@ public class RecruitItemRender : ItemRender
         this._btnGive.AddEvent(OnClickGive);
         this._btnRecruit.AddEvent(OnClickRecruit);
         this._btnInfo.AddEvent(OnClickInfo);
+        this._btnReturn.AddEvent(OnClickReturn);
         this._FavorUp.gameObject.SetActive(false);
     }
 
@@ -63,8 +69,33 @@ public class RecruitItemRender : ItemRender
 
     private void OnClickInfo(UIButton btn)
     {
-        
+        this.DoRotate(true);
     }
+
+    private void OnClickReturn(UIButton btn)
+    {
+        this.DoRotate(false);
+    }
+
+    private void DoRotate(bool isToBack)
+    {
+        this._btnReturn.enabled = false;
+        this._btnInfo.enabled = false;
+
+        this.m_renderData._IsSelect = isToBack;
+        this.transform.DOLocalRotate(new Vector3(0, 90, 0), 0.5f).onComplete = () =>
+        {
+            this._Front.SetActive(this.m_renderData._IsSelect == false);
+            this._Back.SetActive(this.m_renderData._IsSelect);
+            this.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.5f).onComplete = () =>
+            {
+                this._btnInfo.enabled = true;
+                this._btnReturn.enabled = true;
+            };
+        };
+    }
+
+    
 
     public void FavorLevelChange()
     {
@@ -89,7 +120,7 @@ public class RecruitItemRender : ItemRender
         this._Frame.sprite = ResourcesManager.Instance.GetCommonFrame(config.Star);
         this._Element.sprite = ResourcesManager.Instance.GetCommonSprite(config.Element);
         this._starUI.SetData(curData._hero);
-        
+        this._HeadIcon.sprite = ResourcesManager.Instance.GetHeroSprite(this.ID);
 
         FavorLevelConfig configNeed = HeroProxy._instance.GetFaovrConfig(curData._hero.Favor);
 
@@ -100,6 +131,10 @@ public class RecruitItemRender : ItemRender
         this._conditionTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RecruitCondition, config.NeedPower, configNeed.Name, configNeed.Name);
         UtilTools.SetCostList(this._costs, config.Cost, true);
         this.SetRecruitState();
+
+        this._Front.SetActive(this.m_renderData._IsSelect == false);
+        this._Back.SetActive(this.m_renderData._IsSelect);
+        this._Icon.sprite = ResourcesManager.Instance.GetHeroCardSprite(this.ID);
     }
 
     public void SetRecruitState()

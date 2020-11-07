@@ -18,6 +18,7 @@ public class MainMediator : BaseWindowMediator<MainView>
     {
         this.m_HideNoHandleNotifations.Add(NotiDefine.NumberValueHasUpdated);
         this.m_HideNoHandleNotifations.Add(NotiDefine.ResLimitHasUpdated);
+        this.m_HideNoHandleNotifations.Add(NotiDefine.JudgeIncome);
         this.m_HideNoHandleNotifations.Add(NotiDefine.RoleLvExpHasUpdated);
         this.m_HideNoHandleNotifations.Add(NotiDefine.CordinateChange);
         this.m_HideNoHandleNotifations.Add(NotiDefine.PowerChanged);
@@ -31,6 +32,11 @@ public class MainMediator : BaseWindowMediator<MainView>
             case NotiDefine.ResLimitHasUpdated:
                 {
                     this.m_view.UpdateIncome();
+                    break;
+                }
+            case NotiDefine.JudgeIncome:
+                {
+                    this.m_view.JudgeIncome();
                     break;
                 }
             case NotiDefine.RoleLvExpHasUpdated:

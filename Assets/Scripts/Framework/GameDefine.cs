@@ -66,6 +66,8 @@ public class NotiDefine
     public const string AcceptHourAwardDo = "AcceptHourAwardDo";
     public const string AcceptHourAwardResp = "AcceptHourAwardResp";
 
+    public const string JudgeIncome = "JudgeIncome";
+
     public const string IncomeHasUpdated = "IncomeHasUpdated";
     public const string NumberValueHasUpdated = "NumberValueHasUpdated";
     public const string ResLimitHasUpdated = "ResLimitHasUpdated";
