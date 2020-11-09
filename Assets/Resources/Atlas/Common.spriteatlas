@@ -67,7 +67,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 221469
+    totalSpriteSurfaceArea: 222444
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -93,6 +93,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 988f3e329abd5234e96b105ce46c0fae, type: 3}
   - {fileID: 21300000, guid: 50df9062126c71d499b8bcb9dba4da9a, type: 3}
   - {fileID: 21300000, guid: 7aa35d92bfdf94b4b9144560b5d4a7ed, type: 3}
+  - {fileID: 21300000, guid: 4e64d6b2fbe898c458fd4eae69cd4217, type: 3}
   - {fileID: 21300000, guid: ffaa6bb2eff51a949a7813c72674baac, type: 3}
   - {fileID: 21300000, guid: 50cefcc252b1b3a44a1e0ce772f1c4a7, type: 3}
   - {fileID: 21300000, guid: 0b2dd1d2af4c0984c83b106490f7fcc9, type: 3}
@@ -191,6 +192,7 @@ SpriteAtlas:
   - OpCheckRole
   - ca1
   - optionsBG
+  - SceneArrow
   - OP_UPGRADE
   - Title-LIGHT
   - plus

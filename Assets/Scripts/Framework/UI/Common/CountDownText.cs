@@ -12,6 +12,7 @@ public class CountDownText : UIBase
     private Coroutine _curCor;
     private string _LanKey;
 
+
     private void Start()
     {
       
@@ -24,7 +25,7 @@ public class CountDownText : UIBase
             this.StopCoroutine(_curCor);
     }
 
-    public void DoCountDown(long expire,string lanKey)
+    public void DoCountDown(long expire,string lanKey = "")
     {
         this._LanKey = lanKey;
         this._expire = expire;
@@ -43,7 +44,10 @@ public class CountDownText : UIBase
     private void SetCD()
     {
         string cdStr = UtilTools.GetCdStringExpire(this._expire);
-        this._CDTxt.text = LanguageConfig.GetLanguage(this._LanKey, cdStr);
+        if (this._LanKey.Equals("") == false)
+            this._CDTxt.text = LanguageConfig.GetLanguage(this._LanKey, cdStr);
+        else
+            this._CDTxt.text = cdStr;
     }
 
     IEnumerator CountDown()

@@ -67,7 +67,7 @@ public class HeroScene : MonoBehaviour
         Vector3 target = new Vector3(0, targetY,0);
         this._evnTran.DORotate(target, 0.4f);
         Destroy(this._curModel);
-        GameObject prefab = ResourcesManager.Instance.LoadHeroModel(model);
+        GameObject prefab = ResourcesManager.Instance.LoadModel(model);
         this._curModel = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, root);
         this._curModel.transform.localPosition = new Vector3(0, 0, 0);
         this._curModel.transform.localScale = Vector3.one;

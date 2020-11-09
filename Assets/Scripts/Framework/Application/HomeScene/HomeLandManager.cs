@@ -16,6 +16,7 @@ public class HomeLandManager : MonoBehaviour
     public MeshRenderer _HomePlane;
     public MeshRenderer _QuadCanBuild;
 
+    public PathModel _pathModelPrefab;
     public VisibleSpot _VisibleSpotPrefab;
     public MyCity _cityPrefab;
     public BuildCanvas _BuildCanvas;
@@ -359,7 +360,22 @@ public class HomeLandManager : MonoBehaviour
         _VisibleSpots.Clear();
         Dictionary<string, VInt2> visibleSpots = WorldProxy._instance.GetVisibleSpots();
         this.GenerateVisibleSpot(visibleSpots);
+        this.GenerateAllPath();
+    }
 
+    private void GenerateAllPath()
+    {
+        foreach (PathModel mod in this._pathModels.Values)
+        {
+            GameObject.Destroy(mod.gameObject);
+        }
+        this._pathModels.Clear();
+
+        Dictionary<string, PathData> dic = PathProxy._instance.AllPaths;
+        foreach (PathData data in dic.Values)
+        {
+            this.AddOnePath(data);
+        }
     }
 
     public void SetMainCityRange()
@@ -369,6 +385,25 @@ public class HomeLandManager : MonoBehaviour
         this._QuadCanBuild.transform.localScale = new Vector3(range, range, 1);
         this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(range, range, 0, 0));
         city.SetRange(range);
+    }
+
+    private Dictionary<string, PathModel> _pathModels = new Dictionary<string, PathModel>();
+    public void AddOnePath(PathData path)
+    {
+        PathModel PathModel = GameObject.Instantiate<PathModel>(this._pathModelPrefab, Vector3.zero, Quaternion.identity, this.transform);
+        PathModel.name = UtilTools.combine("path-", path.ID);
+        PathModel.DoPath(path);
+        _pathModels.Add(path.ID, PathModel);
+    }
+
+    public void RemoveOnePath(string pathid)
+    {
+        PathModel model;
+        if (this._pathModels.TryGetValue(pathid, out model))
+        {
+            this._pathModels.Remove(pathid);
+            GameObject.Destroy(model.gameObject);
+        }
     }
 
 

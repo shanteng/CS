@@ -64,6 +64,19 @@ public class TimeCenterProxy : BaseRemoteProxy
             data.TimeStep = UtilTools.GetExpireTime(data._needSecs);
         this._sortCallList.Add(data);
         this._sortCallList.Sort(this.Compare);
+        if (this._curCor != null)
+        {
+            //等待下一帧再执行
+            CoroutineUtil.GetInstance().WaitTime(0, true, WaitInitEnd);
+        }
+        else
+        {
+            this.DoLatestTimeCallBack();
+        }
+    }
+
+    private void WaitInitEnd(object[] param)
+    {
         this.DoLatestTimeCallBack();
     }
 
@@ -99,20 +112,21 @@ public class TimeCenterProxy : BaseRemoteProxy
             else
             {
                 this.CallBack();//通知回调;
-                this.DoLatestTimeCallBack();
-                this._isOver = true;
-                
             }
         }
-        MediatorUtil.SendNotification(this.Noti, this.param);
     }//end func
 
     void CallBack()
     {
         Debug.LogWarning("TimeCenter CallBack:" + this._latestCallData._notifaction+"--param:"+ this._latestCallData._param);
+
         this.Noti = this._latestCallData._notifaction;
         this.param = this._latestCallData._param;
+        MediatorUtil.SendNotification(this.Noti, this.param);
+
         _sortCallList.Remove(this._latestCallData);
         this._latestCallData = null;
+        this.DoLatestTimeCallBack();
+       
     }
 }//end class

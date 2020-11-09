@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\HomeLandMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\MyCity.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\OccupyBase.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PathModel.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PlaneBase.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\PlaneBuilder.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\SpotCube.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Assets\Scripts\Framework\Proxy\BaseProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\CloudData\CloudDataTool.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\HeroProxy.cs" />
+    <Compile Include="Assets\Scripts\Framework\Proxy\PathProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\RoleProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\TeamProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\TimeCenterProxy.cs" />

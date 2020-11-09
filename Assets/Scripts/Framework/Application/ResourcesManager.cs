@@ -28,11 +28,18 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
     private string Building = "Building/";
     private string Army = "Army/";
     private string Model = "Model/";
+    private string Land = "Land/";
 
     private Dictionary<string, SpriteAtlas> _atlasDic = new Dictionary<string, SpriteAtlas>();
     public GameObject LoadUIRes(string resName)
     {
         string path = UtilTools.combine(UI_Path, resName);
+        return Resources.Load<GameObject>(path);
+    }
+
+    public GameObject LoadLandRes(string resName)
+    {
+        string path = UtilTools.combine(Land, resName);
         return Resources.Load<GameObject>(path);
     }
 
@@ -48,7 +55,7 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
         return Resources.Load<GameObject>(path);
     }
 
-    public GameObject LoadHeroModel(string model)
+    public GameObject LoadModel(string model)
     {
         string path = UtilTools.combine(Model, model);
         return Resources.Load<GameObject>(path);

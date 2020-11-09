@@ -145,6 +145,9 @@ public class NotiDefine
     public const string SetTeamHeroDo = "SetTeamHeroDo";
     public const string SetTeamHeroResp = "SetTeamHeroResp";
 
+    public const string PathAddNoti = "PathAddNoti";
+    public const string PathRemoveNoti = "PathRemoveNoti";
+
 }
 
 public class ErrorCode
@@ -163,6 +166,7 @@ public class ErrorCode
     public const string NoPatrol = "NoPatrol";
     public const string NoVisibleNoPatrol = "NoVisibleNoPatrol";
     public const string IsVisibleNoPatrol = "IsVisibleNoPatrol";
+    public const string HasSendPatrol = "HasSendPatrol";
 }
 
 [Serializable]
@@ -339,6 +343,7 @@ class ProxyNameDefine
     public const string HERO = "HERO";
     public const string ARMY = "ARMY";
     public const string TEAM = "TEAM";
+    public const string PATH = "PATH";
 }
 
 public class SceneDefine
@@ -450,12 +455,31 @@ public class IncomeData
     }
 }
 
+public class PathData
+{
+    public static int TYPE_PATROL;
+    public static int TYPE_TEAM;
+
+    public string ID;
+    public int Type;
+    public VInt2 Start = new VInt2();
+    public VInt2 Target = new VInt2();
+    public long StartTime;
+    public long ExpireTime;
+    public string Model;
+    public object Param;
+}
+
+
 public class PatrolData
 {
     public string ID;
     public int FromCIty;
+    public VInt2 Start = new VInt2();
     public VInt2 Target = new VInt2();
+    public long StartTime;
     public long ExpireTime;
+    public int Range;
 }
 
 public class VisibleData

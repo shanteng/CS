@@ -20,6 +20,8 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.LoadSceneFinish);
         m_lInterestNotifications.Add(NotiDefine.GAME_RESET);
 
+        m_lInterestNotifications.Add(NotiDefine.WINDOW_HAS_SHOW);
+
         m_lInterestNotifications.Add(NotiDefine.CreateOneBuildingResp);
         m_lInterestNotifications.Add(NotiDefine.BuildingRelocateResp);
         m_lInterestNotifications.Add(NotiDefine.BuildingStatusChanged);
@@ -33,7 +35,8 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.AcceptHourAwardResp);
         m_lInterestNotifications.Add(NotiDefine.GO_TO_SELEC_BUILDING_BY_ID);
 
-        m_lInterestNotifications.Add(NotiDefine.WINDOW_HAS_SHOW);
+        m_lInterestNotifications.Add(NotiDefine.PathAddNoti);
+        m_lInterestNotifications.Add(NotiDefine.PathRemoveNoti);
     }
 
     public override void HandleNotification(INotification notification)
@@ -138,6 +141,24 @@ public class HomeLandMediator : BaseNoWindowMediator
                     if (this._isHomeLoaded)
                     {
                         this._LandManager.SetCurrentSelectBuilding("");
+                    }
+                    break;
+                }
+            case NotiDefine.PathAddNoti:
+                {
+                    if (this._isHomeLoaded)
+                    {
+                        PathData data = (PathData)notification.Body;
+                        this._LandManager.AddOnePath(data);
+                    }
+                    break;
+                }
+            case NotiDefine.PathRemoveNoti:
+                {
+                    if (this._isHomeLoaded)
+                    {
+                        string ids = (string)notification.Body;
+                        this._LandManager.RemoveOnePath(ids);
                     }
                     break;
                 }

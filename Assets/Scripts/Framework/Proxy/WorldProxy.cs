@@ -14,12 +14,12 @@ public class WorldProxy : BaseRemoteProxy
     public static WorldProxy _instance;
     public static WorldConfig _config;
     private int _World;
-    
+
     private List<string> _canOperateSpots = new List<string>();//我可以操作的地块
     private Dictionary<string, VInt2> _VisibleSpots = new Dictionary<string, VInt2>();//我可以操作的地块
     private WorldBuildings _WorldData;
     private Dictionary<string, PatrolData> _OutPatrolDic = new Dictionary<string, PatrolData>();
-   
+
     private Dictionary<int, BuildingEffectsData> _CityEffects = new Dictionary<int, BuildingEffectsData>();
     public WorldProxy() : base(ProxyNameDefine.WORLD)
     {
@@ -31,13 +31,13 @@ public class WorldProxy : BaseRemoteProxy
         return this._canOperateSpots;
     }
 
-    public Dictionary<string,VInt2> GetVisibleSpots()
+    public Dictionary<string, VInt2> GetVisibleSpots()
     {
         return this._VisibleSpots;
     }
 
 
-    public int GetBuildingCount(int id,int city = 0)
+    public int GetBuildingCount(int id, int city = 0)
     {
         List<BuildingData> list = this.GetCityBuildings(city);
         int count = 0;
@@ -134,7 +134,7 @@ public class WorldProxy : BaseRemoteProxy
         }
     }
 
-    
+
     private void UpdateCanBuildSpot()
     {
         BuildingEffectsData Effect = this.GetBuildingEffects(0);
@@ -166,6 +166,41 @@ public class WorldProxy : BaseRemoteProxy
         }
     }
 
+    public void LoadPatrol()
+    {
+        string json = CloudDataTool.LoadFile(SaveFileDefine.Patrol);
+        if (json.Equals(string.Empty) == false)
+        {
+            this._OutPatrolDic = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, PatrolData>>(json);
+        }
+
+        List<string> finishs = new List<string>();
+        var it = this._OutPatrolDic.Values.GetEnumerator();
+        while (it.MoveNext())
+        {
+            PatrolData data = it.Current;
+            if (GameIndex.ServerTime >= data.ExpireTime)
+            {
+                finishs.Add(data.ID);
+            }
+            else
+            {
+                this.PatrolAction(data);
+            }
+        }
+        it.Dispose();
+
+        if (finishs.Count > 0)
+        {
+            foreach (string id in finishs)
+            {
+                this.OnPatrolExpireFinsih(id, false);
+            }
+            this.DoSaveOutPatrol();
+        }
+           
+    }
+
     public void GenerateAllBuilding(int world)
     {
         string fileName = UtilTools.combine(SaveFileDefine.WorldBuiding, world);
@@ -182,15 +217,15 @@ public class WorldProxy : BaseRemoteProxy
             int posx = (config.RowCount - 1) / 2;
             int posz = (config.ColCount - 1) / 2;
             _WorldData.StartCordinates = new VInt2();
-            _WorldData.StartCordinates.x =0;
+            _WorldData.StartCordinates.x = 0;
             _WorldData.StartCordinates.y = 0;
-            mainCity.Create(BuildingData.MainCityID,-posx, -posz);
+            mainCity.Create(BuildingData.MainCityID, -posx, -posz);
             mainCity.SetLevel(1);
             mainCity.SetStatus(BuildingData.BuildingStatus.NORMAL);
-            
+
             List<BuildingData> datas = new List<BuildingData>();
             datas.Add(mainCity);
-            
+
             _WorldData.MainCityKey = mainCity._key;
 
             //构造一个城门
@@ -225,6 +260,7 @@ public class WorldProxy : BaseRemoteProxy
             }
         }
         this.LoadVisibleSpot();//读取可视区域
+        this.LoadPatrol();
         ComputeEffects();
     }
 
@@ -239,6 +275,12 @@ public class WorldProxy : BaseRemoteProxy
     {
         //存储
         CloudDataTool.SaveFile(SaveFileDefine.VisibleSpot, this._VisibleSpots);
+    }
+
+    public void DoSaveOutPatrol()
+    {
+        //存储
+        CloudDataTool.SaveFile(SaveFileDefine.Patrol, this._OutPatrolDic);
     }
 
 
@@ -258,7 +300,7 @@ public class WorldProxy : BaseRemoteProxy
             {
                 kv.x = bdCount;
             }
-            
+
             if (bdCount > kv.y)
             {
                 kv.y = bdCount;
@@ -294,12 +336,12 @@ public class WorldProxy : BaseRemoteProxy
 
     public BuildingData GetBuildingInRange(int x, int z)
     {
-        
+
         foreach (List<BuildingData> datas in this._WorldData.Datas.Values)
         {
             foreach (BuildingData bd in datas)
             {
-                bool isIn = this.IsInBulildOccupy(bd,x,z);
+                bool isIn = this.IsInBulildOccupy(bd, x, z);
                 if (isIn)
                     return bd;
             }
@@ -307,7 +349,7 @@ public class WorldProxy : BaseRemoteProxy
         return null;
     }
 
-    public bool IsInBulildOccupy(BuildingData bd,int x,int z)
+    public bool IsInBulildOccupy(BuildingData bd, int x, int z)
     {
         foreach (VInt2 occupy in bd._occupyCordinates)
         {
@@ -317,7 +359,7 @@ public class WorldProxy : BaseRemoteProxy
         return false;
     }
 
-    public BuildingData GetBuilding(string key,int cityid = 0)
+    public BuildingData GetBuilding(string key, int cityid = 0)
     {
         List<BuildingData> list = this.GetCityBuildings(cityid);
         int count = list.Count;
@@ -332,7 +374,7 @@ public class WorldProxy : BaseRemoteProxy
     public bool IsUpgradeConditonStaisfy(string key)
     {
         BuildingData bd = WorldProxy._instance.GetBuilding(key);
-        BuildingUpgradeConfig configNext = BuildingUpgradeConfig.GetConfig(bd._id, bd._level+1);
+        BuildingUpgradeConfig configNext = BuildingUpgradeConfig.GetConfig(bd._id, bd._level + 1);
         if (configNext == null)
             return false;
         if (configNext.Condition.Length == 0)
@@ -349,7 +391,7 @@ public class WorldProxy : BaseRemoteProxy
         return new List<BuildingData>();
     }
 
-    public BuildingData GetFirstBuilding(int id,int cityid = 0)
+    public BuildingData GetFirstBuilding(int id, int cityid = 0)
     {
         List<BuildingData> list = this.GetCityBuildings(cityid);
         int count = list.Count;
@@ -361,7 +403,7 @@ public class WorldProxy : BaseRemoteProxy
         return null;
     }
 
-    public BuildingData GetTopLevelBuilding(int id,int cityid=0)
+    public BuildingData GetTopLevelBuilding(int id, int cityid = 0)
     {
         List<BuildingData> list = this.GetCityBuildings(cityid);
 
@@ -489,7 +531,7 @@ public class WorldProxy : BaseRemoteProxy
         TeamProxy._instance.ComputeBuildingEffect(city);
 
     }//end class
-    
+
     private void ComputeEffects(int city = -1)
     {
         if (city < 0)
@@ -546,7 +588,7 @@ public class WorldProxy : BaseRemoteProxy
         return kv;
     }
 
-    public long GetMoveExpireTime(int fromX,int fromZ, int targetX, int targetZ,float deltaSecs)
+    public long GetMoveExpireTime(int fromX, int fromZ, int targetX, int targetZ, float deltaSecs)
     {
         int descX = fromX - targetX;
         int descY = fromZ - targetZ;
@@ -559,7 +601,7 @@ public class WorldProxy : BaseRemoteProxy
     {
         int halfRange = 1;
         int startX = x - halfRange;
-        int endX =x + halfRange;
+        int endX = x + halfRange;
 
         int startZ = z - halfRange;
         int endZ = z + halfRange;
@@ -571,7 +613,7 @@ public class WorldProxy : BaseRemoteProxy
             {
                 int corZ = col;
                 string key = UtilTools.combine(corX, "|", corZ);
-                if (this._VisibleSpots.ContainsKey(key) )
+                if (this._VisibleSpots.ContainsKey(key))
                 {
                     return true;
                 }
@@ -609,6 +651,22 @@ public class WorldProxy : BaseRemoteProxy
             return;
         }
 
+        bool hasSendYet = false;
+        foreach (PatrolData data in this._OutPatrolDic.Values)
+        {
+            if (data.Target.x == x  && data.Target.y == z)
+            {
+                hasSendYet = true;
+                break;
+            }
+        }
+
+        if (hasSendYet)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.HasSendPatrol, gamePos.x, gamePos.y);
+            return;
+        }
+
 
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.PatrolDeltaSces);
         int SecsDelta = cfgconst.IntValues[0];
@@ -617,22 +675,47 @@ public class WorldProxy : BaseRemoteProxy
         PatrolData patrol = new PatrolData();
         patrol.ID = UtilTools.GenerateUId();
         patrol.FromCIty = city;
+        patrol.Start = this.GetCityCordinate(city);
         patrol.Target.x = x;
         patrol.Target.y = z;
-        patrol.ExpireTime = this.GetMoveExpireTime(cityPos.x, cityPos.y, x, z, SecsDelta);
+        patrol.StartTime = GameIndex.ServerTime;
+        patrol.ExpireTime = this.GetMoveExpireTime(cityPos.x, cityPos.y, x, z, 1);
+        patrol.Range = 2;
         this._OutPatrolDic.Add(patrol.ID, patrol);
 
+        this.PatrolAction(patrol);
+        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.DoPatrol, gamePos.x, gamePos.y));
+        this.SendNotification(NotiDefine.PatrolResp, patrol);
+        this.DoSaveOutPatrol();
+    }
+
+    private void PatrolAction(PatrolData patrol)
+    {
+        //测试
+     //   patrol.ExpireTime = GameIndex.ServerTime + 20;
+        //路线添加
+        PathData path = new PathData();
+        path.ID = patrol.ID;
+        path.Type = PathData.TYPE_PATROL;
+        path.Start = patrol.Start;
+        path.Target = patrol.Target;
+        path.StartTime = patrol.StartTime;
+        path.ExpireTime = patrol.ExpireTime;
+        path.Model = "PathModel";
+        path.Param = patrol;
+        PathProxy._instance.AddPath(path);
+
+        //时间监听
         TimeCallData dataTime = new TimeCallData();
         dataTime._key = patrol.ID;
         dataTime._notifaction = NotiDefine.PatrolExpireReachedNoti;
         dataTime.TimeStep = patrol.ExpireTime;
         dataTime._param = patrol.ID;
-        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.DoPatrol, gamePos.x, gamePos.y));
         MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
-        this.SendNotification(NotiDefine.PatrolResp);
+        this.DoSaveOutPatrol();
     }
 
-    public void OnPatrolExpireFinsih(string key)
+    public void OnPatrolExpireFinsih(string key,bool needSave = true)
     {
         PatrolData data;
         if (this._OutPatrolDic.TryGetValue(key,out data) == false)
@@ -640,14 +723,36 @@ public class WorldProxy : BaseRemoteProxy
         //将新探索的点设置为可见
         List<VInt2> addList = new List<VInt2>();
         //根据科技计算范围，先写死当前坐标
-        VInt2 kv = new VInt2(data.Target.x,data.Target.y);
-        addList.Add(kv);
+
+        int halfRange = data.Range;
+        for (int row = -halfRange; row <= halfRange; ++row)
+        {
+            int corX = data.Target.x + row;
+            for (int col = -halfRange; col <= halfRange; ++col)
+            {
+                int corZ = data.Target.y + col;
+                bool isVisible = WorldProxy._instance.IsSpotVisible(corX, corZ);
+                if (isVisible == false)
+                {
+                    VInt2 kv = new VInt2(corX, corZ);
+                    addList.Add(kv);
+                }
+            }
+        }//end for
+
         this.AddVisibleSpots(addList);
 
         VInt2 gamePos = UtilTools.WorldToGameCordinate(data.Target.x, data.Target.y);
-        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, gamePos.x, gamePos.y));
+       
         this.SendNotification(NotiDefine.PatrolFinishNoti, data.Target);
         this._OutPatrolDic.Remove(key);
+        PathProxy._instance.RemovePath(key);
+        if (needSave)
+        {
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, gamePos.x, gamePos.y));
+            this.DoSaveOutPatrol();
+        }
+           
     }
 
     public void Create(Dictionary<string, object> vo)

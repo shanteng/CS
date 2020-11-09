@@ -29,6 +29,7 @@ public class BuildingUI : UIBase
         Vector2 uiPos;
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(UIRoot.Intance.transform.GetComponent<RectTransform>(), clickpos, UIRoot.Intance.camera, out uiPos))
         {
+            this._AddCon.Hide();
             AttrAddData data = new AttrAddData();
             data.uiPos = uiPos;
             data.Key = this._key;

@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class AttrAddData
 {
     public Vector2 uiPos;
+
     public string Key;
 }
 
