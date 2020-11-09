@@ -233,20 +233,12 @@ public class HomeLandManager : MonoBehaviour
         }
     }
 
+   
+
     public void ShowBuildingInfoCanvas(Building bd)
     {
         if (bd == null)
-        {
-            this.HideInfoCanvas();
             return;
-        }
-
-        if (this._infoCanvas == null)
-        {
-            string name = MediatorUtil.GetName(MediatorDefine.MAIN);
-            MainMediator mediator = ApplicationFacade.instance.RetrieveMediator(name) as MainMediator;
-            this._infoCanvas = mediator.GetView()._InfoUI;
-        }
         _infoCanvas.Show();
         _infoCanvas.SetBuildState(bd._data);
     }
@@ -272,12 +264,20 @@ public class HomeLandManager : MonoBehaviour
 
 
 
-    public void SetCurrentSelectBuilding(string key)
+    public void SetCurrentSelectBuilding(string key,bool isHideInfoCanvas = true)
     {
         MyCity city = this.GetOwnCity(0);
         this._currentBuildKey = key;
         Building showBd = city.SetCurrentSelectBuilding(this._currentBuildKey, this.isTryBuild);
-        this.ShowBuildingInfoCanvas(showBd);
+        if (showBd == null && isHideInfoCanvas)
+        {
+            this.HideInfoCanvas();
+        }
+        else
+        {
+            this.ShowBuildingInfoCanvas(showBd);
+        }
+       
     }
 
     private bool _isDraging;
@@ -305,7 +305,6 @@ public class HomeLandManager : MonoBehaviour
         if (this.isTryBuild)
             return;
       
-       
         int x = Mathf.RoundToInt(pos.x);
         int z = Mathf.RoundToInt(pos.z);
 
@@ -315,13 +314,25 @@ public class HomeLandManager : MonoBehaviour
             return;
         }
 
-        this._SelectSpotTrans.JudegeShow(x, z);
-        this.SetCurrentSelectBuilding("");
-        Dictionary<string, object> vo = new Dictionary<string, object>();
-        vo["city"] = 0;
-        vo["x"] = x;
-        vo["z"] = z;
-        WorldProxy._instance.DoPatrol(vo);
+        bool isShow =  this._SelectSpotTrans.JudegeShow(x, z);
+
+        if (isShow)
+        {
+            _infoCanvas.Show();
+            _infoCanvas.SetCurrentPos(x, z);
+        }
+        else
+        {
+            _infoCanvas.Hide();
+        }
+        
+        this.SetCurrentSelectBuilding("",!isShow);
+
+     //   Dictionary<string, object> vo = new Dictionary<string, object>();
+     //   vo["city"] = 0;
+     //   vo["x"] = x;
+      //  vo["z"] = z;
+      //  WorldProxy._instance.DoPatrol(vo);
 
         /*   BuildingData bd = WorldProxy._instance.GetBuildingInRange(x, z);
 
@@ -361,6 +372,12 @@ public class HomeLandManager : MonoBehaviour
         Dictionary<string, VInt2> visibleSpots = WorldProxy._instance.GetVisibleSpots();
         this.GenerateVisibleSpot(visibleSpots);
         this.GenerateAllPath();
+
+
+        string name = MediatorUtil.GetName(MediatorDefine.MAIN);
+        MainMediator mediator = ApplicationFacade.instance.RetrieveMediator(name) as MainMediator;
+        this._infoCanvas = mediator.GetView()._InfoUI;
+
     }
 
     private void GenerateAllPath()

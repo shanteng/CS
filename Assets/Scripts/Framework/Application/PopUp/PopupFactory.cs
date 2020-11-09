@@ -133,7 +133,8 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         }
 
         this._curShowWin.setContent(content);
-        MediatorUtil.SendNotification(NotiDefine.WINDOW_HAS_SHOW);
+        if (this._curShowWin._DestorySecs == 0)
+            MediatorUtil.SendNotification(NotiDefine.WINDOW_HAS_SHOW);
     }
 
 

@@ -229,7 +229,7 @@
     },
     {
         "IDs": "HeroFavorUp",
-        "Value": "<color=#00ff00>和{0}的关系拉近了！</color>"
+        "Value": "英雄刷新剩余:{0}"
     },
     {
         "IDs": "HeroFavorDown",
@@ -282,5 +282,17 @@
     {
         "IDs": "DoPatrol",
         "Value": "已派出斥候侦察<color=#00ff00>({0},{1})</color>"
+    },
+    {
+        "IDs": "EmptyVisibleSpot",
+        "Value": "空地"
+    },
+    {
+        "IDs": "EmptyUnVisibleSpot",
+        "Value": "未探索地"
+    },
+    {
+        "IDs": "OpPatrol",
+        "Value": "侦察"
     }
 ]

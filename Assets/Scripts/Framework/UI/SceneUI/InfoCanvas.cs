@@ -12,6 +12,7 @@ public enum OpType
     Info,
     Upgrade,
     Cancel,
+    Patrol,
 }
 
 public class IntStrPair
@@ -49,6 +50,7 @@ public class InfoCanvas : UIBase, IConfirmListener
     private Coroutine _cor;
     private string _addType;
     private int _cityId;
+    private VInt2 _curPos = new VInt2();
     private void Start()
     {
         foreach (UIButton btn in this._btnFunList)
@@ -156,9 +158,48 @@ public class InfoCanvas : UIBase, IConfirmListener
 
     }
 
+    public void SetEmptySpot(int x, int z)
+    {
+        
+    }
+
+    public void SetCurrentPos(int x, int z)
+    {
+        this._curPos.x = x;
+        this._curPos.y = z;
+
+        bool isVisible = WorldProxy._instance.IsSpotVisible(this._curPos.x, this._curPos.y);
+        if(isVisible)
+            this._spotNameTxt.text = LanguageConfig.GetLanguage(LanMainDefine.EmptyVisibleSpot);
+        else
+            this._spotNameTxt.text = LanguageConfig.GetLanguage(LanMainDefine.EmptyUnVisibleSpot);
+
+        VInt2 kv = UtilTools.WorldToGameCordinate(this._curPos.x, this._curPos.y);
+        this._cordinateTxt.text = LanguageConfig.GetLanguage(LanMainDefine.SpotCordinate, kv.x, kv.y);
+
+        List<IntStrPair> btnTypeList;
+        this.GetSpotBtnList(out btnTypeList);
+        this.SetBtnState(btnTypeList);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_NameRect);
+        this._countDown.Hide();
+    }
+
+    private void GetSpotBtnList(out List<IntStrPair> btnTypeList)
+    {
+        bool isVisible = WorldProxy._instance.IsSpotVisible(this._curPos.x, this._curPos.y);
+        btnTypeList = new List<IntStrPair>();
+
+        if (isVisible == false)
+        {
+            IntStrPair data = new IntStrPair(OpType.Patrol, LanguageConfig.GetLanguage(LanMainDefine.OpPatrol));
+            btnTypeList.Add(data);
+        }
+    }
+
     private int _needValueShow = 0;
     public void SetBuildState(BuildingData data)
     {
+        this.SetCurrentPos(data._cordinate.x, data._cordinate.y);
         this._cityId = data._city;
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.IncomeShowValue);
         _needValueShow = cfgconst.IntValues[0];
@@ -182,6 +223,23 @@ public class InfoCanvas : UIBase, IConfirmListener
 
         List<IntStrPair> btnTypeList;
         this.GetBtnList(out btnTypeList);
+        this.SetBtnState(btnTypeList);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_NameRect);
+
+        bool isBuildUp = this._data._status == BuildingData.BuildingStatus.BUILD || this._data._status == BuildingData.BuildingStatus.UPGRADE;
+        this._cdCon.gameObject.SetActive(isBuildUp);
+        if (isBuildUp)
+        {
+            this.SetBuildUpgrade();
+        }
+        else
+        {
+            this._countDown.Stop();
+        }
+    }
+
+    private void SetBtnState(List<IntStrPair> btnTypeList)
+    {
         var len = btnTypeList.Count;
         int count = this._btnFunList.Count;
         for (int i = 0; i < count; ++i)
@@ -209,20 +267,6 @@ public class InfoCanvas : UIBase, IConfirmListener
             }
             this._btnFunList[i].IsEnable = btnTypeList[i].Enable;
             UIRoot.Intance.SetImageGray(this._btnFunList[i].Icon, !btnTypeList[i].Enable);
-        }
-
-      
-        LayoutRebuilder.ForceRebuildLayoutImmediate(_NameRect);
-
-        bool isBuildUp = this._data._status == BuildingData.BuildingStatus.BUILD || this._data._status == BuildingData.BuildingStatus.UPGRADE;
-        this._cdCon.gameObject.SetActive(isBuildUp);
-        if (isBuildUp)
-        {
-            this.SetBuildUpgrade();
-        }
-        else
-        {
-            this._countDown.Stop();
         }
     }
 

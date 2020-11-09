@@ -18,6 +18,7 @@
     public const string OpUpgrade = "OpUpgrade";
     public const string OpCancel = "OpCancel";
     public const string OpHeroRecruit = "OpHeroRecruit";
+    public const string OpPatrol = "OpPatrol";
 
     public const string HourAdd = "HourAdd";
     public const string Progress = "Progress";
@@ -86,6 +87,8 @@
     public const string RecruitHeroSuccess = "RecruitHeroSuccess";
 
     public const string HeroMaxBlood = "HeroMaxBlood";
+    public const string EmptyVisibleSpot = "EmptyVisibleSpot";
+    public const string EmptyUnVisibleSpot = "EmptyUnVisibleSpot";
 
 }
 

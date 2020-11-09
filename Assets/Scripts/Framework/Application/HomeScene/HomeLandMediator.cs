@@ -180,9 +180,12 @@ public class HomeLandMediator : BaseNoWindowMediator
             }
         }
 
+        MediatorUtil.ShowMediator(MediatorDefine.MAIN);
+
         if (this._LandManager != null)
             this._LandManager.InitScene();
-        MediatorUtil.ShowMediator(MediatorDefine.MAIN);
+        
+
         this._isHomeLoaded = true;
         GameIndex.InGame = true;
     }
