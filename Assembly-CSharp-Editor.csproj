@@ -63,8 +63,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Editor\DeleteMissingScripts.cs" />
     <Compile Include="Assets\Scripts\Editor\SceneUtil.cs" />
     <Compile Include="Assets\Scripts\Editor\TextureSetting.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Asset Types\Editor\AtlasAssetInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Asset Types\Editor\SkeletonDataAssetInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\AssetDatabaseAvailabilityDetector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\BoneFollowerInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\Menus.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\SkeletonAnimationInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\SkeletonAnimatorInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\SkeletonBaker.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\SkeletonBakingWindow.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\SkeletonDebugWindow.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\SkeletonRendererInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\SpineAttributeDrawers.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\SpineEditorUtilities.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Editor\SpineInspectorUtility.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\BoundingBoxFollower\Editor\BoundingBoxFollowerInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\CustomMaterials\Editor\SkeletonRendererCustomMaterialsInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\Ragdoll\Editor\SkeletonRagdoll2DInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\Ragdoll\Editor\SkeletonRagdollInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\Shaders\Sprite\Editor\SpineSpriteShaderGUI.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\SkeletonGraphic\Editor\BoneFollowerGraphicInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\SkeletonGraphic\Editor\SkeletonGraphicInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\SkeletonRenderSeparator\Editor\SkeletonPartsRendererInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\SkeletonRenderSeparator\Editor\SkeletonRenderSeparatorInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\Modules\SlotBlendModes\Editor\SlotBlendModesEditor.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\SkeletonUtility\Editor\SkeletonUtilityBoneInspector.cs" />
+    <Compile Include="Assets\Scripts\spine-unity\SkeletonUtility\Editor\SkeletonUtilityInspector.cs" />
+    <None Include="Assets\Scripts\spine-unity\Editor\Resources\SpineAssetDatabaseMarker.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

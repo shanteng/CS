@@ -1,0 +1,146 @@
+
+wuzetian.png
+size: 512,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: true
+  xy: 487, 46
+  size: 20, 7
+  orig: 20, 7
+  offset: 0, 0
+  index: -1
+fashi
+  rotate: true
+  xy: 319, 3
+  size: 55, 63
+  orig: 55, 63
+  offset: 0, 0
+  index: -1
+houdai
+  rotate: false
+  xy: 384, 4
+  size: 125, 24
+  orig: 125, 24
+  offset: 0, 0
+  index: -1
+hpufa
+  rotate: true
+  xy: 33, 3
+  size: 27, 29
+  orig: 27, 29
+  offset: 0, 0
+  index: -1
+piaodai
+  rotate: false
+  xy: 2, 32
+  size: 144, 90
+  orig: 144, 90
+  offset: 0, 0
+  index: -1
+shen
+  rotate: true
+  xy: 220, 59
+  size: 63, 97
+  orig: 63, 97
+  offset: 0, 0
+  index: -1
+tou
+  rotate: true
+  xy: 2, 2
+  size: 28, 29
+  orig: 28, 29
+  offset: 0, 0
+  index: -1
+yan
+  rotate: true
+  xy: 384, 38
+  size: 20, 5
+  orig: 20, 5
+  offset: 0, 0
+  index: -1
+youdabi
+  rotate: false
+  xy: 148, 7
+  size: 49, 47
+  orig: 49, 47
+  offset: 0, 0
+  index: -1
+youdai
+  rotate: true
+  xy: 148, 56
+  size: 66, 70
+  orig: 66, 70
+  offset: 0, 0
+  index: -1
+youdatui
+  rotate: false
+  xy: 435, 66
+  size: 29, 56
+  orig: 29, 56
+  offset: 0, 0
+  index: -1
+youjiao
+  rotate: false
+  xy: 199, 19
+  size: 18, 35
+  orig: 18, 35
+  offset: 0, 0
+  index: -1
+youxiaobi
+  rotate: false
+  xy: 220, 2
+  size: 81, 55
+  orig: 81, 55
+  offset: 0, 0
+  index: -1
+youxiaotui
+  rotate: false
+  xy: 391, 30
+  size: 42, 92
+  orig: 42, 92
+  offset: 0, 0
+  index: -1
+zuodabi
+  rotate: true
+  xy: 435, 30
+  size: 34, 50
+  orig: 34, 50
+  offset: 0, 0
+  index: -1
+zuodai
+  rotate: false
+  xy: 466, 68
+  size: 32, 54
+  orig: 32, 54
+  offset: 0, 0
+  index: -1
+zuodatui
+  rotate: true
+  xy: 95, 9
+  size: 21, 51
+  orig: 21, 51
+  offset: 0, 0
+  index: -1
+zuojiao
+  rotate: true
+  xy: 64, 6
+  size: 24, 29
+  orig: 24, 29
+  offset: 0, 0
+  index: -1
+zuoxiaobi
+  rotate: false
+  xy: 319, 60
+  size: 70, 62
+  orig: 70, 62
+  offset: 0, 0
+  index: -1
+zuoxiaotui
+  rotate: false
+  xy: 303, 17
+  size: 14, 40
+  orig: 14, 40
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,160 @@
+
+donghuangtaiyi.png
+size: 512,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: false
+  xy: 252, 77
+  size: 22, 6
+  orig: 22, 6
+  offset: 0, 0
+  index: -1
+fa
+  rotate: true
+  xy: 432, 136
+  size: 43, 39
+  orig: 43, 39
+  offset: 0, 0
+  index: -1
+houfa
+  rotate: false
+  xy: 110, 33
+  size: 39, 36
+  orig: 39, 36
+  offset: 0, 0
+  index: -1
+houling
+  rotate: false
+  xy: 99, 11
+  size: 31, 20
+  orig: 31, 20
+  offset: 0, 0
+  index: -1
+pifeng
+  rotate: false
+  xy: 252, 113
+  size: 178, 140
+  orig: 178, 140
+  offset: 0, 0
+  index: -1
+pifengqian
+  rotate: false
+  xy: 56, 33
+  size: 52, 36
+  orig: 52, 36
+  offset: 0, 0
+  index: -1
+shen
+  rotate: false
+  xy: 2, 2
+  size: 52, 67
+  orig: 52, 67
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 476, 219
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+wuqi
+  rotate: false
+  xy: 2, 71
+  size: 248, 182
+  orig: 248, 182
+  offset: 0, 0
+  index: -1
+yan
+  rotate: false
+  xy: 476, 183
+  size: 22, 5
+  orig: 22, 5
+  offset: 0, 0
+  index: -1
+youdabi
+  rotate: true
+  xy: 56, 6
+  size: 25, 41
+  orig: 25, 41
+  offset: 0, 0
+  index: -1
+youdatui
+  rotate: false
+  xy: 432, 181
+  size: 42, 72
+  orig: 42, 72
+  offset: 0, 0
+  index: -1
+youjiao
+  rotate: false
+  xy: 132, 9
+  size: 16, 22
+  orig: 16, 22
+  offset: 0, 0
+  index: -1
+youshou
+  rotate: true
+  xy: 150, 14
+  size: 15, 22
+  orig: 15, 22
+  offset: 0, 0
+  index: -1
+youxiaobi
+  rotate: true
+  xy: 374, 92
+  size: 19, 39
+  orig: 19, 39
+  offset: 0, 0
+  index: -1
+youxiaotui
+  rotate: true
+  xy: 323, 87
+  size: 24, 49
+  orig: 24, 49
+  offset: 0, 0
+  index: -1
+zuodabi
+  rotate: true
+  xy: 198, 51
+  size: 18, 33
+  orig: 18, 33
+  offset: 0, 0
+  index: -1
+zuodatui
+  rotate: true
+  xy: 252, 85
+  size: 26, 69
+  orig: 26, 69
+  offset: 0, 0
+  index: -1
+zuojiao
+  rotate: false
+  xy: 476, 190
+  size: 29, 27
+  orig: 29, 27
+  offset: 0, 0
+  index: -1
+zuoshou
+  rotate: true
+  xy: 151, 31
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: -1
+zuoxiaobi
+  rotate: true
+  xy: 432, 114
+  size: 20, 39
+  orig: 20, 39
+  offset: 0, 0
+  index: -1
+zuoxiaotui
+  rotate: true
+  xy: 151, 49
+  size: 20, 45
+  orig: 20, 45
+  offset: 0, 0
+  index: -1

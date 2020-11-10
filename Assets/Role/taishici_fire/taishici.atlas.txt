@@ -1,0 +1,223 @@
+
+taishici.png
+size: 1024,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: false
+  xy: 132, 3
+  size: 8, 5
+  orig: 8, 5
+  offset: 0, 0
+  index: -1
+gong
+  rotate: false
+  xy: 2, 37
+  size: 178, 89
+  orig: 178, 89
+  offset: 0, 0
+  index: -1
+jian
+  rotate: true
+  xy: 2, 24
+  size: 11, 103
+  orig: 11, 103
+  offset: 0, 0
+  index: -1
+kuimao
+  rotate: true
+  xy: 432, 2
+  size: 36, 43
+  orig: 36, 43
+  offset: 0, 0
+  index: -1
+lian
+  rotate: false
+  xy: 888, 102
+  size: 21, 24
+  orig: 21, 24
+  offset: 0, 0
+  index: -1
+lidatui
+  rotate: true
+  xy: 557, 70
+  size: 29, 59
+  orig: 29, 59
+  offset: 0, 0
+  index: -1
+lijiao
+  rotate: false
+  xy: 827, 104
+  size: 31, 22
+  orig: 31, 22
+  offset: 0, 0
+  index: -1
+limuzhi
+  rotate: false
+  xy: 168, 20
+  size: 9, 15
+  orig: 9, 15
+  offset: 0, 0
+  index: -1
+lishangbi
+  rotate: false
+  xy: 107, 2
+  size: 23, 33
+  orig: 23, 33
+  offset: 0, 0
+  index: -1
+lishouzhang
+  rotate: true
+  xy: 618, 87
+  size: 12, 20
+  orig: 12, 20
+  offset: 0, 0
+  index: -1
+lixiaobi
+  rotate: false
+  xy: 329, 2
+  size: 17, 27
+  orig: 17, 27
+  offset: 0, 0
+  index: -1
+lixiaotui
+  rotate: true
+  xy: 787, 105
+  size: 21, 38
+  orig: 21, 38
+  offset: 0, 0
+  index: -1
+piaodai
+  rotate: true
+  xy: 168, 2
+  size: 16, 36
+  orig: 16, 36
+  offset: 0, 0
+  index: -1
+piaodai01
+  rotate: true
+  xy: 700, 86
+  size: 15, 38
+  orig: 15, 38
+  offset: 0, 0
+  index: -1
+pifeng
+  rotate: true
+  xy: 182, 20
+  size: 106, 145
+  orig: 106, 145
+  offset: 0, 0
+  index: -1
+shangshen
+  rotate: true
+  xy: 470, 69
+  size: 57, 85
+  orig: 57, 85
+  offset: 0, 0
+  index: -1
+tong
+  rotate: false
+  xy: 383, 68
+  size: 85, 58
+  orig: 85, 58
+  offset: 0, 0
+  index: -1
+toukui
+  rotate: true
+  xy: 383, 2
+  size: 36, 47
+  orig: 36, 47
+  offset: 0, 0
+  index: -1
+waidabi
+  rotate: true
+  xy: 746, 101
+  size: 25, 39
+  orig: 25, 39
+  offset: 0, 0
+  index: -1
+waidatui
+  rotate: true
+  xy: 640, 85
+  size: 41, 58
+  orig: 41, 58
+  offset: 0, 0
+  index: -1
+waijianjia
+  rotate: false
+  xy: 132, 10
+  size: 34, 25
+  orig: 34, 25
+  offset: 0, 0
+  index: -1
+waijiao
+  rotate: false
+  xy: 860, 101
+  size: 26, 25
+  orig: 26, 25
+  offset: 0, 0
+  index: -1
+waimuzhi
+  rotate: false
+  xy: 40, 11
+  size: 7, 11
+  orig: 7, 11
+  offset: 0, 0
+  index: -1
+waishouzhang
+  rotate: true
+  xy: 206, 2
+  size: 16, 23
+  orig: 16, 23
+  offset: 0, 0
+  index: -1
+waixiaobi
+  rotate: true
+  xy: 911, 109
+  size: 17, 25
+  orig: 17, 25
+  offset: 0, 0
+  index: -1
+waixiaotui
+  rotate: true
+  xy: 700, 103
+  size: 23, 44
+  orig: 23, 44
+  offset: 0, 0
+  index: -1
+yan
+  rotate: false
+  xy: 2, 2
+  size: 8, 4
+  orig: 8, 4
+  offset: 0, 0
+  index: -1
+yaodai
+  rotate: false
+  xy: 2, 8
+  size: 36, 14
+  orig: 36, 14
+  offset: 0, 0
+  index: -1
+youpiaobai
+  rotate: true
+  xy: 557, 101
+  size: 25, 81
+  orig: 25, 81
+  offset: 0, 0
+  index: -1
+zhongbai
+  rotate: true
+  xy: 383, 40
+  size: 26, 81
+  orig: 26, 81
+  offset: 0, 0
+  index: -1
+zuopiaobai
+  rotate: false
+  xy: 329, 31
+  size: 52, 95
+  orig: 52, 95
+  offset: 0, 0
+  index: -1

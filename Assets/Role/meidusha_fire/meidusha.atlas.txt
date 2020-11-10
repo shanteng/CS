@@ -1,0 +1,188 @@
+
+meidusha.png
+size: 1024,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+fa
+  rotate: true
+  xy: 2, 10
+  size: 40, 58
+  orig: 40, 58
+  offset: 0, 0
+  index: -1
+fa1
+  rotate: false
+  xy: 588, 27
+  size: 20, 47
+  orig: 20, 47
+  offset: 0, 0
+  index: -1
+fa2
+  rotate: false
+  xy: 785, 61
+  size: 63, 65
+  orig: 63, 65
+  offset: 0, 0
+  index: -1
+gong
+  rotate: false
+  xy: 185, 53
+  size: 162, 73
+  orig: 162, 73
+  offset: 0, 0
+  index: -1
+houfa
+  rotate: true
+  xy: 488, 16
+  size: 58, 98
+  orig: 58, 98
+  offset: 0, 0
+  index: -1
+jian
+  rotate: false
+  xy: 618, 48
+  size: 82, 78
+  orig: 82, 78
+  offset: 0, 0
+  index: -1
+pifeng
+  rotate: true
+  xy: 349, 19
+  size: 107, 137
+  orig: 107, 137
+  offset: 0, 0
+  index: -1
+pijian
+  rotate: false
+  xy: 141, 19
+  size: 27, 31
+  orig: 27, 31
+  offset: 0, 0
+  index: -1
+pijian1
+  rotate: false
+  xy: 850, 83
+  size: 43, 43
+  orig: 43, 43
+  offset: 0, 0
+  index: -1
+she
+  rotate: false
+  xy: 214, 40
+  size: 32, 11
+  orig: 32, 11
+  offset: 0, 0
+  index: -1
+she1
+  rotate: false
+  xy: 895, 94
+  size: 43, 32
+  orig: 43, 32
+  offset: 0, 0
+  index: -1
+she2
+  rotate: false
+  xy: 107, 2
+  size: 44, 15
+  orig: 44, 15
+  offset: 0, 0
+  index: -1
+she3
+  rotate: false
+  xy: 107, 19
+  size: 32, 31
+  orig: 32, 31
+  offset: 0, 0
+  index: -1
+she4
+  rotate: true
+  xy: 988, 108
+  size: 18, 34
+  orig: 18, 34
+  offset: 0, 0
+  index: -1
+she5
+  rotate: true
+  xy: 488, 76
+  size: 50, 128
+  orig: 50, 128
+  offset: 0, 0
+  index: -1
+shen
+  rotate: true
+  xy: 2, 52
+  size: 74, 181
+  orig: 74, 181
+  offset: 0, 0
+  index: -1
+tou
+  rotate: true
+  xy: 214, 20
+  size: 18, 24
+  orig: 18, 24
+  offset: 0, 0
+  index: -1
+yao
+  rotate: true
+  xy: 170, 20
+  size: 30, 22
+  orig: 30, 22
+  offset: 0, 0
+  index: -1
+yao1
+  rotate: false
+  xy: 248, 40
+  size: 10, 11
+  orig: 10, 11
+  offset: 0, 0
+  index: -1
+youbai
+  rotate: false
+  xy: 62, 13
+  size: 43, 37
+  orig: 43, 37
+  offset: 0, 0
+  index: -1
+youbi
+  rotate: true
+  xy: 940, 110
+  size: 16, 46
+  orig: 16, 46
+  offset: 0, 0
+  index: -1
+youbi1
+  rotate: true
+  xy: 850, 63
+  size: 18, 37
+  orig: 18, 37
+  offset: 0, 0
+  index: -1
+zuobai
+  rotate: false
+  xy: 194, 21
+  size: 18, 30
+  orig: 18, 30
+  offset: 0, 0
+  index: -1
+zuobi
+  rotate: true
+  xy: 940, 89
+  size: 19, 36
+  orig: 19, 36
+  offset: 0, 0
+  index: -1
+zuobi1
+  rotate: false
+  xy: 702, 59
+  size: 81, 67
+  orig: 81, 67
+  offset: 0, 0
+  index: -1
+zuozhi
+  rotate: false
+  xy: 153, 4
+  size: 11, 13
+  orig: 11, 13
+  offset: 0, 0
+  index: -1

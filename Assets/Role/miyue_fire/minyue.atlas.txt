@@ -1,0 +1,146 @@
+
+minyue.png
+size: 512,64
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: true
+  xy: 20, 2
+  size: 7, 2
+  orig: 7, 2
+  offset: 0, 0
+  index: -1
+diaozhui
+  rotate: true
+  xy: 465, 50
+  size: 12, 43
+  orig: 12, 43
+  offset: 0, 0
+  index: -1
+diaozhui1
+  rotate: true
+  xy: 283, 2
+  size: 19, 39
+  orig: 19, 39
+  offset: 0, 0
+  index: -1
+diaozhui2
+  rotate: true
+  xy: 392, 49
+  size: 13, 71
+  orig: 13, 71
+  offset: 0, 0
+  index: -1
+diaozhui3
+  rotate: false
+  xy: 459, 25
+  size: 20, 22
+  orig: 20, 22
+  offset: 0, 0
+  index: -1
+diaozhui4
+  rotate: true
+  xy: 115, 9
+  size: 11, 59
+  orig: 11, 59
+  offset: 0, 0
+  index: -1
+fa
+  rotate: true
+  xy: 283, 23
+  size: 39, 55
+  orig: 39, 55
+  offset: 0, 0
+  index: -1
+fadi
+  rotate: false
+  xy: 459, 2
+  size: 19, 21
+  orig: 19, 21
+  offset: 0, 0
+  index: -1
+shen
+  rotate: true
+  xy: 115, 22
+  size: 40, 99
+  orig: 40, 99
+  offset: 0, 0
+  index: -1
+tou
+  rotate: true
+  xy: 216, 21
+  size: 41, 65
+  orig: 41, 65
+  offset: 0, 0
+  index: -1
+tui
+  rotate: true
+  xy: 2, 11
+  size: 51, 111
+  orig: 51, 111
+  offset: 0, 0
+  index: -1
+yanjing
+  rotate: true
+  xy: 275, 10
+  size: 9, 6
+  orig: 9, 6
+  offset: 0, 0
+  index: -1
+youbi
+  rotate: false
+  xy: 438, 19
+  size: 19, 28
+  orig: 19, 28
+  offset: 0, 0
+  index: -1
+youbi1
+  rotate: true
+  xy: 189, 3
+  size: 16, 46
+  orig: 16, 46
+  offset: 0, 0
+  index: -1
+youshou
+  rotate: false
+  xy: 176, 2
+  size: 11, 18
+  orig: 11, 18
+  offset: 0, 0
+  index: -1
+zipjian
+  rotate: true
+  xy: 237, 2
+  size: 17, 11
+  orig: 17, 11
+  offset: 0, 0
+  index: -1
+zuobi
+  rotate: false
+  xy: 392, 12
+  size: 44, 35
+  orig: 44, 35
+  offset: 0, 0
+  index: -1
+zuobi1
+  rotate: true
+  xy: 340, 17
+  size: 45, 50
+  orig: 45, 50
+  offset: 0, 0
+  index: -1
+zuoshou
+  rotate: true
+  xy: 250, 9
+  size: 10, 23
+  orig: 10, 23
+  offset: 0, 0
+  index: -1
+zuoxiu
+  rotate: false
+  xy: 2, 2
+  size: 16, 7
+  orig: 16, 7
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,286 @@
+
+lianpo.png
+size: 1024,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: false
+  xy: 14, 2
+  size: 7, 6
+  orig: 7, 6
+  offset: 0, 0
+  index: -1
+dao
+  rotate: true
+  xy: 319, 63
+  size: 63, 86
+  orig: 63, 86
+  offset: 0, 0
+  index: -1
+diaoshio
+  rotate: true
+  xy: 456, 52
+  size: 13, 15
+  orig: 13, 15
+  offset: 0, 0
+  index: -1
+diaoshio1
+  rotate: true
+  xy: 2, 2
+  size: 6, 10
+  orig: 6, 10
+  offset: 0, 0
+  index: -1
+diaoshio2
+  rotate: true
+  xy: 270, 2
+  size: 11, 16
+  orig: 11, 16
+  offset: 0, 0
+  index: -1
+diaoshio3
+  rotate: true
+  xy: 527, 94
+  size: 9, 17
+  orig: 9, 17
+  offset: 0, 0
+  index: -1
+diaoshio4
+  rotate: true
+  xy: 299, 5
+  size: 8, 12
+  orig: 8, 12
+  offset: 0, 0
+  index: -1
+houfa
+  rotate: true
+  xy: 859, 92
+  size: 34, 42
+  orig: 34, 42
+  offset: 0, 0
+  index: -1
+huajia1
+  rotate: true
+  xy: 365, 45
+  size: 16, 40
+  orig: 16, 40
+  offset: 0, 0
+  index: -1
+huajia2
+  rotate: true
+  xy: 319, 48
+  size: 13, 44
+  orig: 13, 44
+  offset: 0, 0
+  index: -1
+huajia3
+  rotate: false
+  xy: 233, 2
+  size: 35, 47
+  orig: 35, 47
+  offset: 0, 0
+  index: -1
+huajia4
+  rotate: true
+  xy: 656, 97
+  size: 29, 50
+  orig: 29, 50
+  offset: 0, 0
+  index: -1
+huajia5
+  rotate: true
+  xy: 527, 105
+  size: 21, 68
+  orig: 21, 68
+  offset: 0, 0
+  index: -1
+hujia
+  rotate: false
+  xy: 369, 2
+  size: 20, 19
+  orig: 20, 19
+  offset: 0, 0
+  index: -1
+hujiabu
+  rotate: false
+  xy: 473, 52
+  size: 14, 13
+  orig: 14, 13
+  offset: 0, 0
+  index: -1
+hujiabu1
+  rotate: false
+  xy: 437, 54
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+huzi
+  rotate: false
+  xy: 345, 23
+  size: 13, 23
+  orig: 13, 23
+  offset: 0, 0
+  index: -1
+pifeng
+  rotate: true
+  xy: 151, 51
+  size: 75, 166
+  orig: 75, 166
+  offset: 0, 0
+  index: -1
+pifeng1
+  rotate: true
+  xy: 2, 10
+  size: 116, 147
+  orig: 116, 147
+  offset: 0, 0
+  index: -1
+shen
+  rotate: false
+  xy: 407, 73
+  size: 48, 53
+  orig: 48, 53
+  offset: 0, 0
+  index: -1
+shui
+  rotate: false
+  xy: 165, 3
+  size: 9, 9
+  orig: 9, 9
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 316, 15
+  size: 27, 31
+  orig: 27, 31
+  offset: 0, 0
+  index: -1
+toukui
+  rotate: true
+  xy: 903, 91
+  size: 35, 41
+  orig: 35, 41
+  offset: 0, 0
+  index: -1
+yaodai
+  rotate: false
+  xy: 811, 101
+  size: 46, 25
+  orig: 46, 25
+  offset: 0, 0
+  index: -1
+yaodai1
+  rotate: false
+  xy: 360, 23
+  size: 21, 20
+  orig: 21, 20
+  offset: 0, 0
+  index: -1
+yaodai2
+  rotate: true
+  xy: 345, 2
+  size: 19, 22
+  orig: 19, 22
+  offset: 0, 0
+  index: -1
+yaodai3
+  rotate: false
+  xy: 270, 15
+  size: 44, 34
+  orig: 44, 34
+  offset: 0, 0
+  index: -1
+youbi
+  rotate: false
+  xy: 407, 50
+  size: 28, 21
+  orig: 28, 21
+  offset: 0, 0
+  index: -1
+youbi1
+  rotate: true
+  xy: 457, 67
+  size: 24, 43
+  orig: 24, 43
+  offset: 0, 0
+  index: -1
+youdai
+  rotate: false
+  xy: 151, 2
+  size: 12, 10
+  orig: 12, 10
+  offset: 0, 0
+  index: -1
+youjia
+  rotate: true
+  xy: 946, 95
+  size: 31, 38
+  orig: 31, 38
+  offset: 0, 0
+  index: -1
+youshou
+  rotate: false
+  xy: 383, 24
+  size: 13, 19
+  orig: 13, 19
+  offset: 0, 0
+  index: -1
+youtui
+  rotate: true
+  xy: 597, 95
+  size: 31, 57
+  orig: 31, 57
+  offset: 0, 0
+  index: -1
+youtui1
+  rotate: true
+  xy: 151, 14
+  size: 35, 80
+  orig: 35, 80
+  offset: 0, 0
+  index: -1
+youzhi
+  rotate: false
+  xy: 288, 2
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: -1
+zuodabi
+  rotate: true
+  xy: 986, 102
+  size: 24, 36
+  orig: 24, 36
+  offset: 0, 0
+  index: -1
+zuojia
+  rotate: false
+  xy: 502, 62
+  size: 20, 29
+  orig: 20, 29
+  offset: 0, 0
+  index: -1
+zuotui
+  rotate: true
+  xy: 760, 103
+  size: 23, 49
+  orig: 23, 49
+  offset: 0, 0
+  index: -1
+zuotui1
+  rotate: true
+  xy: 457, 93
+  size: 33, 68
+  orig: 33, 68
+  offset: 0, 0
+  index: -1
+zuoxiaobi
+  rotate: true
+  xy: 708, 101
+  size: 25, 50
+  orig: 25, 50
+  offset: 0, 0
+  index: -1

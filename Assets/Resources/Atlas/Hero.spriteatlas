@@ -283,13 +283,13 @@ SpriteAtlas:
   - bianque_fire
   - sunhao_fire
   - moushiduizhang_fire
-  - wukong_fire
+  - sunwukong_fire
   - caomao_fire
   - xiaoqiao_fire
   - lanlingwang_fire
   - baiqi_fire
   - shangshanqianxin_fire
-  - yishabeier_fire
+  - yisabeier_fire
   - zhitianxinchang_fire
   - meilin_fire
   - liubang_fire
@@ -303,6 +303,6 @@ SpriteAtlas:
   - gongbenwuzang_fire
   - zhuangzi_fire
   - sunshangxiang_fire
-  - daqiao
+  - daqiao_fire
   m_Tag: Hero
   m_IsVariant: 0

@@ -1,0 +1,146 @@
+
+wuxinggongnv.png
+size: 512,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: false
+  xy: 2, 2
+  size: 9, 6
+  orig: 9, 6
+  offset: 0, 0
+  index: -1
+bu1
+  rotate: true
+  xy: 355, 179
+  size: 26, 111
+  orig: 26, 111
+  offset: 0, 0
+  index: -1
+fasi1
+  rotate: false
+  xy: 332, 112
+  size: 26, 27
+  orig: 26, 27
+  offset: 0, 0
+  index: -1
+fasi2
+  rotate: true
+  xy: 203, 99
+  size: 23, 13
+  orig: 23, 13
+  offset: 0, 0
+  index: -1
+fazhan
+  rotate: true
+  xy: 449, 207
+  size: 7, 16
+  orig: 7, 16
+  offset: 0, 0
+  index: -1
+lian
+  rotate: false
+  xy: 127, 38
+  size: 37, 46
+  orig: 37, 46
+  offset: 0, 0
+  index: -1
+shanzi
+  rotate: false
+  xy: 166, 32
+  size: 29, 52
+  orig: 29, 52
+  offset: 0, 0
+  index: -1
+toushi1
+  rotate: true
+  xy: 354, 146
+  size: 19, 38
+  orig: 19, 38
+  offset: 0, 0
+  index: -1
+toushi2
+  rotate: true
+  xy: 354, 167
+  size: 10, 54
+  orig: 10, 54
+  offset: 0, 0
+  index: -1
+toushi3
+  rotate: false
+  xy: 332, 141
+  size: 20, 48
+  orig: 20, 48
+  offset: 0, 0
+  index: -1
+weijin
+  rotate: true
+  xy: 221, 191
+  size: 63, 132
+  orig: 63, 132
+  offset: 0, 0
+  index: -1
+xiong
+  rotate: true
+  xy: 449, 216
+  size: 38, 54
+  orig: 38, 54
+  offset: 0, 0
+  index: -1
+xiong2
+  rotate: true
+  xy: 2, 29
+  size: 69, 123
+  orig: 69, 123
+  offset: 0, 0
+  index: -1
+xiong3
+  rotate: true
+  xy: 2, 10
+  size: 17, 121
+  orig: 17, 121
+  offset: 0, 0
+  index: -1
+xiong4
+  rotate: false
+  xy: 129, 124
+  size: 90, 130
+  orig: 90, 130
+  offset: 0, 0
+  index: -1
+xiong5
+  rotate: true
+  xy: 221, 120
+  size: 69, 109
+  orig: 69, 109
+  offset: 0, 0
+  index: -1
+youdabi
+  rotate: false
+  xy: 468, 182
+  size: 22, 32
+  orig: 22, 32
+  offset: 0, 0
+  index: -1
+youxiaobi
+  rotate: true
+  xy: 355, 207
+  size: 47, 92
+  orig: 47, 92
+  offset: 0, 0
+  index: -1
+zuodabi
+  rotate: false
+  xy: 2, 100
+  size: 125, 154
+  orig: 125, 154
+  offset: 0, 0
+  index: -1
+zuoxiaobi
+  rotate: true
+  xy: 129, 86
+  size: 36, 72
+  orig: 36, 72
+  offset: 0, 0
+  index: -1
