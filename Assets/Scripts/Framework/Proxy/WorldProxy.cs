@@ -19,8 +19,8 @@ public class WorldProxy : BaseRemoteProxy
     private Dictionary<string, VInt2> _VisibleSpots = new Dictionary<string, VInt2>();//我可以操作的地块
     private WorldBuildings _WorldData;
     private Dictionary<string, PatrolData> _OutPatrolDic = new Dictionary<string, PatrolData>();
-
     private Dictionary<int, BuildingEffectsData> _CityEffects = new Dictionary<int, BuildingEffectsData>();
+    private List<int> _OwnCitys = new List<int>();
     public WorldProxy() : base(ProxyNameDefine.WORLD)
     {
         _instance = this;
@@ -198,7 +198,7 @@ public class WorldProxy : BaseRemoteProxy
             }
             this.DoSaveOutPatrol();
         }
-           
+
     }
 
     public void GenerateAllBuilding(int world)
@@ -211,7 +211,6 @@ public class WorldProxy : BaseRemoteProxy
         {
             //构造一个主城
             this._WorldData.Datas = new Dictionary<int, List<BuildingData>>();
-
             BuildingData mainCity = new BuildingData();
             BuildingConfig config = BuildingConfig.Instance.GetData(BuildingData.MainCityID);
             int posx = (config.RowCount - 1) / 2;
@@ -259,6 +258,9 @@ public class WorldProxy : BaseRemoteProxy
                 }
             }
         }
+
+        this._OwnCitys.Add(0);//添加主城，之后读取配置
+
         this.LoadVisibleSpot();//读取可视区域
         this.LoadPatrol();
         ComputeEffects();
@@ -572,6 +574,17 @@ public class WorldProxy : BaseRemoteProxy
         MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
     }
 
+    public List<int> GetAllOwnCity()
+    {
+        return this._OwnCitys;
+    }
+
+    public string GetCityName(int cityid)
+    {
+        if (cityid == 0)
+            return LanguageConfig.GetLanguage(LanMainDefine.MainCity);
+        return "";//读取配置
+    }
 
     public VInt2 GetCityPatrolInfo(int cityid)
     {
@@ -586,6 +599,17 @@ public class WorldProxy : BaseRemoteProxy
         }
         kv.y = Effect.PatrolMax;
         return kv;
+    }
+
+    public List<PatrolData> GetCItyPatrolDatas(int city)
+    {
+        List<PatrolData> datas = new List<PatrolData>();
+        foreach (PatrolData data in this._OutPatrolDic.Values)
+        {
+            if (data.FromCIty == city)
+                datas.Add(data);
+        }
+        return datas;
     }
 
     public long GetMoveExpireTime(int fromX, int fromZ, int targetX, int targetZ, float deltaSecs)
@@ -679,7 +703,7 @@ public class WorldProxy : BaseRemoteProxy
         patrol.Target.x = x;
         patrol.Target.y = z;
         patrol.StartTime = GameIndex.ServerTime;
-        patrol.ExpireTime = this.GetMoveExpireTime(cityPos.x, cityPos.y, x, z, 1);
+        patrol.ExpireTime = this.GetMoveExpireTime(cityPos.x, cityPos.y, x, z, 0.5f);
         patrol.Range = 2;
         this._OutPatrolDic.Add(patrol.ID, patrol);
 
@@ -744,11 +768,13 @@ public class WorldProxy : BaseRemoteProxy
 
         VInt2 gamePos = UtilTools.WorldToGameCordinate(data.Target.x, data.Target.y);
        
-        this.SendNotification(NotiDefine.PatrolFinishNoti, data.Target);
+     
         this._OutPatrolDic.Remove(key);
         PathProxy._instance.RemovePath(key);
+       
         if (needSave)
         {
+            this.SendNotification(NotiDefine.PatrolFinishNoti);
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, gamePos.x, gamePos.y));
             this.DoSaveOutPatrol();
         }

@@ -38,6 +38,8 @@ public class InfoCanvas : UIBase, IConfirmListener
     public RectTransform _NameRect;
     public Text _spotNameTxt;
     public TextMeshProUGUI _cordinateTxt;
+
+    public GameObject _btnCon;
     public List<UIButton> _btnFunList;
 
 
@@ -94,8 +96,6 @@ public class InfoCanvas : UIBase, IConfirmListener
 
         IntStrPair data = new IntStrPair(OpType.Info,LanguageConfig.GetLanguage(LanMainDefine.OpInfo));
         btnTypeList.Add(data);
-
-
 
         if (this._data._status == BuildingData.BuildingStatus.NORMAL && this._data._level < config.MaxLevel)
         {
@@ -160,16 +160,9 @@ public class InfoCanvas : UIBase, IConfirmListener
 
     public void SetEmptySpot(int x, int z)
     {
-        
-    }
-
-    public void SetCurrentPos(int x, int z)
-    {
-        this._curPos.x = x;
-        this._curPos.y = z;
-
+        this.SetCurrentPos(x, z);
         bool isVisible = WorldProxy._instance.IsSpotVisible(this._curPos.x, this._curPos.y);
-        if(isVisible)
+        if (isVisible)
             this._spotNameTxt.text = LanguageConfig.GetLanguage(LanMainDefine.EmptyVisibleSpot);
         else
             this._spotNameTxt.text = LanguageConfig.GetLanguage(LanMainDefine.EmptyUnVisibleSpot);
@@ -181,7 +174,13 @@ public class InfoCanvas : UIBase, IConfirmListener
         this.GetSpotBtnList(out btnTypeList);
         this.SetBtnState(btnTypeList);
         LayoutRebuilder.ForceRebuildLayoutImmediate(_NameRect);
-        this._countDown.Hide();
+        this._cdCon.gameObject.SetActive(false);
+    }
+
+    private void SetCurrentPos(int x, int z)
+    {
+        this._curPos.x = x;
+        this._curPos.y = z;
     }
 
     private void GetSpotBtnList(out List<IntStrPair> btnTypeList)
@@ -241,6 +240,7 @@ public class InfoCanvas : UIBase, IConfirmListener
     private void SetBtnState(List<IntStrPair> btnTypeList)
     {
         var len = btnTypeList.Count;
+        this._btnCon.SetActive(len > 0);
         int count = this._btnFunList.Count;
         for (int i = 0; i < count; ++i)
         {
@@ -324,6 +324,17 @@ public class InfoCanvas : UIBase, IConfirmListener
                         PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelUpgradeNotice), this, "Cancel");
                     else if (this._data._status == BuildingData.BuildingStatus.BUILD)
                         PopupFactory.Instance.ShowConfirm(LanguageConfig.GetLanguage(LanMainDefine.CancelBuildNotice), this, "Cancel");
+                    break;
+                }
+            case OpType.Patrol:
+                {
+                    VInt2 kv = WorldProxy._instance.GetCityPatrolInfo(0);
+                    if (kv.y == 0)
+                    {
+                        PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoPatroller);
+                        return;
+                    }
+                    PopupFactory.Instance.ShowPatrol(this._curPos);
                     break;
                 }
         }

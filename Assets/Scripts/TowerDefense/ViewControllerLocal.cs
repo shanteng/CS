@@ -195,7 +195,6 @@ public class ViewControllerLocal : MonoBehaviour
     public bool TryGoto(VInt2 wolrdPos,UnityAction<object> callBack = null,object param = null)
     {
         VInt2 gamePos = UtilTools.WorldToGameCordinate(wolrdPos.x, wolrdPos.y);
-
         if (gamePos.x < 0 || gamePos.x > GameIndex.ROW || gamePos.y < 0 || gamePos.y > GameIndex.COL)
         {
             return false;
@@ -209,9 +208,25 @@ public class ViewControllerLocal : MonoBehaviour
             this.SetMinMapPostion();
             this._isTryGoTo = false;
             MediatorUtil.SendNotification(NotiDefine.CordinateChange);
+
+            BuildingData bd = WorldProxy._instance.GetBuildingInRange(wolrdPos.x, wolrdPos.y);
+            if (bd != null && bd._city == 0)
+            {
+                HomeLandManager.GetInstance().SetCurrentSelectBuilding(bd._key);
+            }
+            else if (bd != null && bd._city > 0)
+            {
+                //占领的城市
+            }
+            else
+            {
+                HomeLandManager.GetInstance().OnClickSpot(new Vector3(wolrdPos.x, 0, wolrdPos.y));
+            }
+
             if (callBack != null)
                 callBack.Invoke(param);
         };
+        PopupFactory.Instance.Hide();
         this._translateX = wolrdPos.x;
         this._translateY = wolrdPos.y;
         return true;

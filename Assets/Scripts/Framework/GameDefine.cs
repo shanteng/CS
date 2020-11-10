@@ -167,6 +167,7 @@ public class ErrorCode
     public const string NoVisibleNoPatrol = "NoVisibleNoPatrol";
     public const string IsVisibleNoPatrol = "IsVisibleNoPatrol";
     public const string HasSendPatrol = "HasSendPatrol";
+    public const string NoPatroller = "NoPatroller";
 }
 
 [Serializable]

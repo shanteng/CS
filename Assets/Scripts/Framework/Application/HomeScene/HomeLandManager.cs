@@ -300,6 +300,7 @@ public class HomeLandManager : MonoBehaviour
         this._SelectSpotTrans.Hide();
     }
 
+   
     public void OnClickSpot(Vector3 pos)
     {
         if (this.isTryBuild)
@@ -310,42 +311,19 @@ public class HomeLandManager : MonoBehaviour
 
         VInt2 gamePos = UtilTools.WorldToGameCordinate(x, z);
         if (gamePos.x < 0 || gamePos.x > GameIndex.ROW || gamePos.y < 0 || gamePos.y > GameIndex.COL)
-        {
             return;
-        }
 
         bool isShow =  this._SelectSpotTrans.JudegeShow(x, z);
-
         if (isShow)
         {
             _infoCanvas.Show();
-            _infoCanvas.SetCurrentPos(x, z);
+            _infoCanvas.SetEmptySpot(x, z);
         }
         else
         {
             _infoCanvas.Hide();
         }
-        
         this.SetCurrentSelectBuilding("",!isShow);
-
-     //   Dictionary<string, object> vo = new Dictionary<string, object>();
-     //   vo["city"] = 0;
-     //   vo["x"] = x;
-      //  vo["z"] = z;
-      //  WorldProxy._instance.DoPatrol(vo);
-
-        /*   BuildingData bd = WorldProxy._instance.GetBuildingInRange(x, z);
-
-           if (bd != null && bd._city == 0)
-           {
-              // MyCity city = this.GetOwnCity(bd._city);
-             //  city.OnClickBuilding(bd._key);
-           }
-           else if (bd != null && bd._city > 0)
-           {
-               //占领的城市
-           }
-          */
     }
 
     public void InitScene()
@@ -476,15 +454,9 @@ public class HomeLandManager : MonoBehaviour
         if (data == null)
             return;
         this._gotoKey = key;
-        ViewControllerLocal.GetInstance().TryGoto(data._cordinate,this.OnGotoEnd,key);
-       
+        ViewControllerLocal.GetInstance().TryGoto(data._cordinate);
     }
 
-    public void OnGotoEnd(object param)
-    {
-        string key = (string)param;
-        this.SetCurrentSelectBuilding(key);
-    }
 
     public void GotoSelectBuildingBy(int id)
     {

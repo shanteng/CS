@@ -122,6 +122,8 @@
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\CareerEvaluatePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\ConfirmPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\NoticePop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\PatrolItemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\PatrolPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\Popup.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\PopupFactory.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\ResourcesManager.cs" />
@@ -170,6 +172,7 @@
     <Compile Include="Assets\Scripts\Framework\UI\Common\TextColorPingPong.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIBase.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIButton.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\UIClickHandler.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIDrag.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIDragRotation.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIMediatorHideHandler.cs" />

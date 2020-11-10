@@ -90,6 +90,13 @@
     public const string EmptyVisibleSpot = "EmptyVisibleSpot";
     public const string EmptyUnVisibleSpot = "EmptyUnVisibleSpot";
 
+    public const string LeftTime = "LeftTime";
+    public const string NeedTime = "NeedTime";
+
+    public const string FreePartoller = "FreePartoller";
+    public const string BusyPartoller = "BusyPartoller";
+
+    public const string MainCity = "MainCity"; 
 }
 
 public class ConstDefine

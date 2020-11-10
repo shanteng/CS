@@ -13,16 +13,16 @@ public class DataCenterMediator : BaseNoWindowMediator
 
     protected override void InitListNotificationInterestsInner()
     {
-        m_lInterestNotifications.Add(NotiDefine.MVC_STARTED);
+        m_lInterestNotifications.Add(NotiDefine.PatrolFinishNoti);
     }
 
     public override void HandleNotification(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.MVC_STARTED:
+            case NotiDefine.PatrolFinishNoti:
                 {
-                    
+                    PopupFactory.Instance.HandleNoti(notification);
                     break;
                 }
         }

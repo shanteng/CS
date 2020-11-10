@@ -915,6 +915,7 @@ MonoBehaviour:
   _NameRect: {fileID: 7291680759936080037}
   _spotNameTxt: {fileID: 6916496224919158303}
   _cordinateTxt: {fileID: 3398899605208820969}
+  _btnCon: {fileID: 6084172978875865133}
   _btnFunList:
   - {fileID: 2573699205426311939}
   - {fileID: 8941368021498140993}
@@ -951,8 +952,8 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 7
-  m_Spacing: 6
+  m_ChildAlignment: 4
+  m_Spacing: 10
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -7110,7 +7111,7 @@ GameObject:
   - component: {fileID: 3329049595235950947}
   - component: {fileID: 2380483740160979679}
   m_Layer: 5
-  m_Name: Layout
+  m_Name: BtnLayout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

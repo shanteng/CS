@@ -141,6 +141,7 @@ public class HomeLandMediator : BaseNoWindowMediator
                     if (this._isHomeLoaded)
                     {
                         this._LandManager.SetCurrentSelectBuilding("");
+                        this._LandManager.HideSelectSpot();
                     }
                     break;
                 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SMVC.Interfaces;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,6 +7,7 @@ using UnityEngine.UI;
 
 public enum PopType
 {
+    NONE = 0,
     COMFIRM,
     BUILDING,
     NOTICE,
@@ -13,11 +15,14 @@ public enum PopType
     BUILDING_LEVEL_EFFECT,
     CAREER_RATE,
     ATTRADD,
+    PATROL,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
 {
     private Popup _curShowWin = null;
+    private Popup _curDestoryShowWin = null;
+    private PopType _curShowType = PopType.NONE;
 
     public void Hide()
     {
@@ -25,10 +30,27 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         {
             GameObject.Destroy(this._curShowWin.gameObject);
             this._curShowWin = null;
+            _curShowType = PopType.NONE;
         }
-        
     }//end func
 
+
+    public void HandleNoti(INotification notification)
+    {
+        if (this._curShowWin == null || this._curShowWin.gameObject.activeSelf == false)
+            return;
+        switch (notification.Name)
+        {
+            case NotiDefine.PatrolFinishNoti:
+                {
+                    if (this._curShowType == PopType.PATROL)
+                    {
+                        (this._curShowWin as PatrolPop).SetList();
+                    }
+                    break;
+                }
+        }
+    }
     public void ShowConfirmBy(ConfirmData data)
     {
         this.ShowPop(PopType.COMFIRM, data);
@@ -54,6 +76,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.BUILDING, bdKey);
     }
 
+    public void ShowPatrol(VInt2 Target)
+    {
+        this.ShowPop(PopType.PATROL, Target);
+    }
+
     public void ShowBuildingLevelEffect(string bdKey, PopType lastPop)
     {
         Dictionary<string, object> vo = new Dictionary<string, object>();
@@ -72,12 +99,12 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         StringKeyValue kv = new StringKeyValue();
         kv.key = notice;
         kv.value = icon;
-        this.ShowPop(PopType.NOTICE, kv);
+        this.ShowDestoryPop(PopType.NOTICE, kv);
     }
 
     public void ShowAttrAdd(AttrAddData data)
     {
-        this.ShowPop(PopType.ATTRADD, data);
+        this.ShowDestoryPop(PopType.ATTRADD, data);
     }
 
     public void ShowErrorNotice(string errorCode, params object[] paramName)
@@ -87,12 +114,28 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         MediatorUtil.SendNotification(NotiDefine.ErrorCode, errorCode);
     }
 
+    private void ShowDestoryPop(PopType type, object content)
+    {
+        switch (type)
+        {
+            case PopType.NOTICE:
+                {
+                    _curDestoryShowWin = InitNotice();
+                    break;
+                }
+            case PopType.ATTRADD:
+                {
+                    _curDestoryShowWin = InitAttrAdd();
+                    break;
+                }
+        }
+        this._curDestoryShowWin.gameObject.SetActive(true);
+        this._curDestoryShowWin.setContent(content);
+    }
+
     private void ShowPop(PopType type, object content)
     {
-        if (this._curShowWin != null && this._curShowWin._DestorySecs == 0)
-        {
-            this.Hide();
-        }
+        this.Hide();
         switch (type)
         {
             case PopType.COMFIRM:
@@ -103,11 +146,6 @@ public class PopupFactory : SingletonFactory<PopupFactory>
             case PopType.BUILDING:
                 {
                     _curShowWin = InitBuilding();
-                    break;
-                }
-            case PopType.NOTICE:
-                {
-                    _curShowWin = InitNotice();
                     break;
                 }
             case PopType.BUILDING_UPGRADE:
@@ -125,16 +163,16 @@ public class PopupFactory : SingletonFactory<PopupFactory>
                     _curShowWin = InitCareerRate();
                     break;
                 }
-            case PopType.ATTRADD:
+            case PopType.PATROL:
                 {
-                    _curShowWin = InitAttrAdd();
+                    _curShowWin = InitPatrol();
                     break;
                 }
         }
-
+        this._curShowType = type;
+        this._curShowWin.gameObject.SetActive(true);
         this._curShowWin.setContent(content);
-        if (this._curShowWin._DestorySecs == 0)
-            MediatorUtil.SendNotification(NotiDefine.WINDOW_HAS_SHOW);
+        MediatorUtil.SendNotification(NotiDefine.WINDOW_HAS_SHOW);
     }
 
 
@@ -201,6 +239,14 @@ public class PopupFactory : SingletonFactory<PopupFactory>
 
         AttrAddPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<AttrAddPop>();
         GameObject.Destroy(scriptClone.gameObject, scriptClone._DestorySecs);
+        return scriptClone;
+    }
+
+    protected Popup InitPatrol()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("PatrolPop");
+        Popup script = view.GetComponent<Popup>();
+        PatrolPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<PatrolPop>();
         return scriptClone;
     }
 }//end class
