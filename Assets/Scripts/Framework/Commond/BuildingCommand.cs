@@ -49,6 +49,11 @@ public class BuildingCommand : SimpleCommand
                     proxy.OnPatrolExpireFinsih(notification.Body as string);
                     break;
                 }
+            case NotiDefine.QuestCityExpireReachedNoti:
+                {
+                    proxy.OnFinishQuestCity(notification.Body as string);
+                    break;
+                }
             case NotiDefine.PatrolDo:
                 {
                     proxy.DoPatrol(notification.Body as Dictionary<string, object>);

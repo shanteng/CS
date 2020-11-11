@@ -19,11 +19,7 @@ public class HeroCommand : SimpleCommand
                     proxy.GetHeroRefreshData((int)notification.Body);
                     break;
                 }
-            case NotiDefine.ChangeHeroBelongDo:
-                {
-                    proxy.ChangeHeroBelong(notification.Body as Dictionary<string, object>);
-                    break;
-                }
+          
             case NotiDefine.HeroTavernRefreshReachedNoti:
                 {
                     proxy.OnRefreshTimeReachedNoti((int)notification.Body);

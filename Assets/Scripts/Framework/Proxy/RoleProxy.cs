@@ -271,6 +271,23 @@ public class RoleProxy : BaseRemoteProxy
         }
     }
 
+    public void ChangeRoleNumberValueBy(CostData addData,bool NeedSave = true)
+    {
+        string key = addData.id;
+        CostData data = this.GetNumberValueData(key);
+        if (data == null)
+        {
+            data = new CostData();
+            data.id = key;
+            data.count = 0;
+            this._role.ItemList.Add(data);
+        }
+        data.count += addData.count;
+
+        if (NeedSave)
+            this.DoSaveRole();
+    }
+
     public void ChangeRoleNumberValue(List<CostData> addDatas)
     {
         Dictionary<string, int> ShowAdds = new Dictionary<string, int>();
@@ -278,17 +295,7 @@ public class RoleProxy : BaseRemoteProxy
         for (int i = 0; i < count; ++i)
         {
             string key = addDatas[i].id;
-            CostData data = this.GetNumberValueData(key);
-            if (data == null)
-            {
-                data = new CostData();
-                data.id = key;
-                data.count = 0;
-                this._role.ItemList.Add(data);
-            }
-
-            data.count += addDatas[i].count;
-
+            this.ChangeRoleNumberValueBy(addDatas[i],false);
             if (addDatas[i].count > 0)
             {
                 int oldValue = 0;

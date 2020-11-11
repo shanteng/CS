@@ -36,7 +36,7 @@ public class HeroItemRender : ItemRender
         this._id = hero.Id;
         HeroConfig config = HeroConfig.Instance.GetData(_id);
         this._Bg.SetData(config.Star);
-        bool isMy = hero.Belong == (int)HeroBelong.My;
+        bool isMy = hero.IsMy;
         this._Bg.gameObject.SetActive(isMy);
         this._levelTxt.gameObject.SetActive(isMy);
         UIRoot.Intance.SetImageGray(this._Icon, !isMy);

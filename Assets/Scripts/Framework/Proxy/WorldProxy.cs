@@ -20,7 +20,7 @@ public class WorldProxy : BaseRemoteProxy
     private WorldBuildings _WorldData;
     private Dictionary<string, PatrolData> _OutPatrolDic = new Dictionary<string, PatrolData>();
     private Dictionary<int, BuildingEffectsData> _CityEffects = new Dictionary<int, BuildingEffectsData>();
-
+    private Dictionary<string, QuestCityData> _QuestCityDic = new Dictionary<string, QuestCityData>();
     private Dictionary<int, CityData> _AllCityDatas = new Dictionary<int, CityData>();
 
     public Dictionary<int, CityData> AllCitys => this._AllCityDatas;
@@ -398,6 +398,12 @@ public class WorldProxy : BaseRemoteProxy
         CloudDataTool.SaveFile(SaveFileDefine.Patrol, this._OutPatrolDic);
     }
 
+    public void DoSaveQuestCity()
+    {
+        //存储
+        CloudDataTool.SaveFile(SaveFileDefine.QuestCity, this._QuestCityDic);
+    }
+
 
     public VInt2 GetBuildingMaxAndLimitCount(int id)
     {
@@ -695,6 +701,13 @@ public class WorldProxy : BaseRemoteProxy
         return false;
     }
 
+    public CityData GetCity(int city)
+    {
+        CityData data;
+        if (this.AllCitys.TryGetValue(city, out data))
+            return data;
+        return null;
+    }
     public List<int> GetAllOwnCity()
     {
         List<int> citys = new List<int>();
@@ -748,9 +761,8 @@ public class WorldProxy : BaseRemoteProxy
         return expireSces;
     }
 
-    public bool CanMoveTo(int x, int z)
+    public bool CanMoveTo(int x, int z,int halfRange = 1)
     {
-        int halfRange = 1;
         int startX = x - halfRange;
         int endX = x + halfRange;
 
@@ -780,6 +792,7 @@ public class WorldProxy : BaseRemoteProxy
         int x = (int)vo["x"];
         int z = (int)vo["z"];
 
+       
         bool canMove = this.CanMoveTo(x, z);
         VInt2 gamePos = UtilTools.WorldToGameCordinate(x, z);
         if (canMove == false)
@@ -830,7 +843,7 @@ public class WorldProxy : BaseRemoteProxy
         patrol.Target.x = x;
         patrol.Target.y = z;
         patrol.StartTime = GameIndex.ServerTime;
-        patrol.ExpireTime = this.GetMoveExpireTime(cityPos.x, cityPos.y, x, z, 0.5f);
+        patrol.ExpireTime = this.GetMoveExpireTime(cityPos.x, cityPos.y, x, z, SecsDelta);
         patrol.Range = 2;
         this._OutPatrolDic.Add(patrol.ID, patrol);
 
@@ -865,6 +878,7 @@ public class WorldProxy : BaseRemoteProxy
         MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
         this.DoSaveOutPatrol();
     }
+
 
     public void OnPatrolExpireFinsih(string key,bool needSave = true)
     {
@@ -906,6 +920,134 @@ public class WorldProxy : BaseRemoteProxy
             this.DoSaveOutPatrol();
         }
            
+    }
+
+    public void DoQuestCity(Dictionary<string, object> vo)
+    {
+        int HeroID = (int)vo["HeroID"];
+        int TargetCity = (int)vo["TargetCity"];
+        Hero hero = HeroProxy._instance.GetHero(HeroID);
+        HeroConfig confighe = HeroConfig.Instance.GetData(HeroID);
+        if (hero.TeamId > 0)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.HeroInTeamNoQuest, confighe.Name);
+            return;
+        }
+
+        VInt2 targetPos = this.GetCityCordinate(TargetCity);
+
+        CityConfig config = CityConfig.Instance.GetData(TargetCity);
+        bool canMove = this.CanMoveTo(targetPos.x, targetPos.y,config.Range[0]);
+        VInt2 gamePos = UtilTools.WorldToGameCordinate(targetPos.x, targetPos.y);
+        if (canMove == false)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoVisibleNoQuest, config.Name);
+            return;
+        }
+
+        CityData city = this.GetCity(TargetCity);
+        if (city.QuestIndex.Count >= config.QuestDrops.Length)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.CityNoQuestDrop, config.Name);
+            return;
+        }
+
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.QuestDeltaSces);
+        int SecsDelta = cfgconst.IntValues[0];
+
+        QuestCityData quest = new QuestCityData();
+        quest.ID = UtilTools.GenerateUId();
+        quest.HeroID = HeroID;
+        quest.TargetCity = TargetCity;
+        quest.Start = this.GetCityCordinate(hero.Belong);
+        quest.Target.x = targetPos.x;
+        quest.Target.y = targetPos.y;
+        quest.StartTime = GameIndex.ServerTime;
+        quest.ExpireTime = this.GetMoveExpireTime(quest.Start.x, quest.Start.y, quest.Target.x, quest.Target.y, SecsDelta);
+        this._QuestCityDic.Add(quest.ID, quest);
+
+        this.QuestCityAction(quest);
+        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.DoQuestCity, confighe.Name,config.Name));
+        this.SendNotification(NotiDefine.QuestCityResp, quest);
+        this.DoSaveQuestCity();
+    }
+
+    private void QuestCityAction(QuestCityData quest)
+    {
+        //路线添加
+        PathData path = new PathData();
+        path.ID = quest.ID;
+        path.Type = PathData.TYPE_QUEST_CITY;
+        path.Start = quest.Start;
+        path.Target = quest.Target;
+        path.StartTime = quest.StartTime;
+        path.ExpireTime = quest.ExpireTime;
+        path.Model = "PathModel";//后面读取英灵模型，暂时写死
+        path.Param = quest;
+        PathProxy._instance.AddPath(path);
+
+        //时间监听
+        TimeCallData dataTime = new TimeCallData();
+        dataTime._key = quest.ID;
+        dataTime._notifaction = NotiDefine.QuestCityExpireReachedNoti;
+        dataTime.TimeStep = quest.ExpireTime;
+        dataTime._param = quest.ID;
+        MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
+        this.DoSaveQuestCity();
+    }
+
+    public void OnFinishQuestCity(string questid)
+    {
+        QuestCityData data;
+        if (this._QuestCityDic.TryGetValue(questid, out data) == false)
+            return;
+        int city = data.TargetCity;
+        CityData cityInfo = this.GetCity(city);
+        if (cityInfo == null)
+            return;
+
+        HeroProxy._instance.ChangeHeroTeam(data.HeroID, -1);
+        this._QuestCityDic.Remove(questid);
+        this.DoSaveQuestCity();
+
+        //抽奖
+        CityConfig config = CityConfig.Instance.GetData(city);
+        List<string> questDrops = new List<string>(config.QuestDrops);
+
+        List<string> LastAwards = new List<string>();
+        int count = questDrops.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            if (cityInfo.QuestIndex.Contains(i))
+                continue;//已经获取过了
+            LastAwards.Add(questDrops[i]);
+        }
+
+        if (LastAwards.Count == 0)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.CityNoQuestDrop,config.Name);
+            return;
+        }
+
+        string awards = UtilTools.GetRandomChilds<string>(LastAwards, 1)[0];
+        int indexof = questDrops.IndexOf(awards);
+        if (cityInfo.QuestIndex.Contains(indexof) == false)
+            cityInfo.QuestIndex.Add(indexof);
+        //发放奖励
+        string[] list = awards.Split('|');
+        if (list[0].Equals("Item"))
+        {
+            CostData cost = new CostData();
+            cost.Init(list[1]);
+            RoleProxy._instance.ChangeRoleNumberValueBy(cost);
+        }
+        else if (list[0].Equals("Hero"))
+        {
+            int heroid = UtilTools.ParseInt(list[1]);
+            HeroProxy._instance.ChangeHeroBelong(heroid, true);
+        }
+
+        this.DoSaveCitys();
     }
 
     public void Create(Dictionary<string, object> vo)

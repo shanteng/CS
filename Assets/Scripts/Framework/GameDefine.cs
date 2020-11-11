@@ -38,11 +38,14 @@ public class NotiDefine
     public const string BuildingExpireReachedNoti = "BuildingExpireReachedNoti";
     public const string BuildingStatusChanged = "BuildingStatusChanged";
     public const string PatrolExpireReachedNoti = "PatrolExpireReachedNoti";
+    public const string QuestCityExpireReachedNoti = "QuestCityExpireReachedNoti";
 
     public const string PatrolDo = "PatrolDo";
     public const string PatrolResp = "PatrolResp";
     public const string PatrolFinishNoti = "PatrolFinishNoti";
 
+    public const string QuestCityDo = "QuestCityDo";
+    public const string QuestCityResp = "QuestCityResp";
 
     public const string BuildingRelocateDo = "BuildingRelocateDo";
     public const string BuildingRelocateResp = "BuildingRelocateResp";
@@ -94,7 +97,7 @@ public class NotiDefine
     public const string RecruitHeroResp = "RecruitHeroResp";
 
 
-    public const string ChangeHeroBelongDo = "ChangeHeroBelongDo";
+   
 
     public const string HeroTavernRefreshReachedNoti = "HeroTavernRefreshReachedNoti";
 
@@ -170,6 +173,9 @@ public class ErrorCode
     public const string IsVisibleNoPatrol = "IsVisibleNoPatrol";
     public const string HasSendPatrol = "HasSendPatrol";
     public const string NoPatroller = "NoPatroller";
+    public const string CityNoQuestDrop = "CityNoQuestDrop";
+    public const string NoVisibleNoQuest = "NoVisibleNoQuest";
+    public const string HeroInTeamNoQuest = "HeroInTeamNoQuest";
 }
 
 [Serializable]
@@ -260,12 +266,12 @@ public class CityData
     public int ID;
     public bool Visible;
     public bool IsOwn;
+    public List<int> QuestIndex;//探索的奖励下标
 }
 
 public enum HeroBelong
 {
     Wild= 0,
-    My = -1,
 }
 
 public enum CareerRateDefine
@@ -470,6 +476,7 @@ public class PathData
 {
     public static int TYPE_PATROL;
     public static int TYPE_TEAM;
+    public static int TYPE_QUEST_CITY;
 
     public string ID;
     public int Type;
@@ -491,6 +498,17 @@ public class PatrolData
     public long StartTime;
     public long ExpireTime;
     public int Range;
+}
+
+public class QuestCityData
+{
+    public string ID;
+    public int HeroID;
+    public int TargetCity;
+    public VInt2 Start = new VInt2();
+    public VInt2 Target = new VInt2();
+    public long StartTime;
+    public long ExpireTime;
 }
 
 public class VisibleData
@@ -643,8 +661,9 @@ public class Hero
     public float ElementValue;//和稀有的挂钩
     public Dictionary<int,int> Blood;//当前兵种/兵力
     public int MaxBlood;//带兵上限 等级和建筑计算
-    public int Belong;//0-在野 1-我方  >0 为对应Npc城市君主的ID
-    public int TeamId;//上阵队伍ID 0-未上阵
+    public int Belong;//-1-在野  >=0 为对应城市ID
+    public bool IsMy;//是否为我方
+    public int TeamId;//上阵队伍ID 0-未上阵 -1-探索
     public int Favor;//好感度
     public long TalkExpire;//上次的聊天时间 HeroTalkGap 时间后俩天可以增加好感度
 
@@ -671,7 +690,7 @@ public class Hero
     {
         HeroConfig config = HeroConfig.Instance.GetData(this.Id);
         HeroLevelConfig configLv = HeroLevelConfig.Instance.GetData(this.Level);
-        int cityid = TeamProxy._instance.GetCity(this.TeamId);
+        int cityid = TeamProxy._instance.GetTeamCity(this.TeamId);
         BuildingEffectsData bdAddData = WorldProxy._instance.GetBuildingEffects(cityid);
 
         if (bdAddData != null)

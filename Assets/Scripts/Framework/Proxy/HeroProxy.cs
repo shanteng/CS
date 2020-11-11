@@ -64,10 +64,9 @@ public class HeroProxy : BaseRemoteProxy
         while (it.MoveNext())
         {
             Hero hero = it.Current;
-          
-            if (hero.Belong == (int)HeroBelong.My)
+            if (hero.IsMy)
             {
-                int cityid = TeamProxy._instance.GetCity(hero.TeamId);
+                int cityid = TeamProxy._instance.GetTeamCity(hero.TeamId);
                 if (cityid == city)
                 {
                     isChange = true;
@@ -270,20 +269,31 @@ public class HeroProxy : BaseRemoteProxy
             return;
         }
 
-        this.ChangeHeroBelong(id, (int)HeroBelong.My);
+        this.ChangeHeroBelong(id, true);
         this.SendNotification(NotiDefine.RecruitHeroResp);
     }
 
-    public void ChangeHeroBelong(int id,int belong)
+    public void ChangeHeroTeam(int id,int teamid)
     {
         Hero hero = this.GetHero(id);
-        int oldBelong = hero.Belong;
-        hero.Belong = belong;
+        hero.TeamId = teamid;
+        this.DoSaveHeros();
+    }
+
+    public void ChangeHeroBelong(int id,bool isMy,int belong= 0)
+    {
+        Hero hero = this.GetHero(id);
+        bool oldMy = hero.IsMy;
+
+        if (belong != 0)
+            hero.Belong = belong;
+
+        hero.IsMy = isMy;
         hero.Blood.Clear();
         hero.ComputeAttributes();
         this.DoSaveHeros();
 
-        if (oldBelong != hero.Belong && hero.Belong == (int)HeroBelong.My)
+        if (oldMy != hero.IsMy && hero.IsMy)
         {
             HeroConfig config = HeroConfig.Instance.GetData(id);
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroSuccess,config.Name));
@@ -335,27 +345,5 @@ public class HeroProxy : BaseRemoteProxy
 
         this.DoSaveHeros();
     }
-
-    public void ChangeHeroBelong(Dictionary<string, object> vo)
-    {
-        int id = (int)vo["id"];
-        int belong = (int)vo["belong"];
-
-        Hero hero = this.GetHero(id);
-        if (hero == null) 
-            return;
-        int oldBelong = hero.Belong;
-        if (oldBelong == belong)
-            return;
-        hero.Belong = belong;
-        hero.Blood = new Dictionary<int, int>();
-        if (belong == (int)HeroBelong.My)
-            this.SendNotification(NotiDefine.GetHeroNoti, id);
-        else 
-            this.SendNotification(NotiDefine.LosetHeroNoti, id);
-
-        this.DoSaveHeros();
-    }
-
 
 }//end class

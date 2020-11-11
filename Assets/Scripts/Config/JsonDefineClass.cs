@@ -135,7 +135,8 @@ public class CityConfig : Config<CityConfig>
     public int[] Position;
     public string[] Buildings;
     public int Power;//
-   
+    public string[] QuestDrops;
+
     public CityConfig() : base(JsonNameDefine.City) { }
 
     public static BuildingUpgradeConfig GetConfig(int id, int level)

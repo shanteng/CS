@@ -40,6 +40,7 @@
 
     public const string FinishPatrol = "FinishPatrol";
     public const string DoPatrol = "DoPatrol";
+    public const string DoQuestCity = "DoQuestCity";
 
 
     public const string RoleLevelExp = "RoleLevelExp";
@@ -113,5 +114,6 @@ public class ConstDefine
     public const string SpeedUpOneSecsNeed = "SpeedUpOneSecsNeed";
     public const string HeroTalkGap = "HeroTalkGap";
     public const string PatrolDeltaSces = "PatrolDeltaSces";
+    public const string QuestDeltaSces = "QuestDeltaSces";
 }
 

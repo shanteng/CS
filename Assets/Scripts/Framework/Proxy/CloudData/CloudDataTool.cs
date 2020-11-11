@@ -25,6 +25,7 @@ public class SaveFileDefine
     public const string VisibleSpot = "VisibleSpot";
     public const string Patrol = "Patrol";
     public const string Citys = "Citys";
+    public const string QuestCity = "QuestCity";
 }
 
 public class CloudDataTool

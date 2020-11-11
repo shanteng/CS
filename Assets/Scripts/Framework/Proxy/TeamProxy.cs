@@ -23,9 +23,9 @@ public class TeamProxy : BaseRemoteProxy
         CloudDataTool.SaveFile(SaveFileDefine.Team, this._teams);
     }
 
-    public int GetCity(int teamid)
+    public int GetTeamCity(int teamid)
     {
-        if (teamid == 0)
+        if (teamid <= 0)
             return -1;
         Team team = this.GetTeam(teamid);
         return team.BelongID;

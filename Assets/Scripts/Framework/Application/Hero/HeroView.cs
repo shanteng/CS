@@ -171,7 +171,7 @@ public class HeroView : MonoBehaviour
             HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
             if (config.Element.Equals(this._Element) || this._Element.Equals(""))
             {
-                if (hero.Belong == (int)HeroBelong.My)
+                if (hero.IsMy)
                     owns.Add(hero);
                 else
                     others.Add(hero);
