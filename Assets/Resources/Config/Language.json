@@ -314,5 +314,13 @@
     {
         "IDs": "MainCity",
         "Value": "主城"
+    },
+    {
+        "IDs": "FindCity",
+        "Value": "斥候探索发现了<color=#00ff00>{0}</color>"
+    },
+    {
+        "IDs": "OwnCityName",
+        "Value": "<color=#00ff00>{0}</color>"
     }
 ]

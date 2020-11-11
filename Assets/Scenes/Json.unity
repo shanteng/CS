@@ -176,6 +176,7 @@ MonoBehaviour:
   - name: World
     sheets:
     - World
+    - City
   - name: ItemInfo
     sheets:
     - ItemInfo

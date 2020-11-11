@@ -96,7 +96,9 @@
     public const string FreePartoller = "FreePartoller";
     public const string BusyPartoller = "BusyPartoller";
 
-    public const string MainCity = "MainCity"; 
+    public const string MainCity = "MainCity";
+    public const string FindCity = "FindCity";
+    public const string OwnCityName = "OwnCityName";
 }
 
 public class ConstDefine

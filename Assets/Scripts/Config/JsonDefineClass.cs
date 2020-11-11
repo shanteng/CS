@@ -30,6 +30,7 @@ public class JsonNameDefine
     public static string Army = "Army";
     public static string FavorLevel = "FavorLevel";
     public static string CareerEvaluate = "CareerEvaluate";
+    public static string City = "City";
 
 
     public static JArray JsonRead(string name)
@@ -122,6 +123,26 @@ public class RoleLevelConfig : Config<RoleLevelConfig>
     public int Power;
 
     public RoleLevelConfig() : base(JsonNameDefine.RoleLevel) { }
+}
+
+public class CityConfig : Config<CityConfig>
+{
+    public int Type;
+    public string Name;
+    public int SubType;
+    public int[] Range;
+    public string Model;
+    public int[] Position;
+    public string[] Buildings;
+    public int Power;//
+   
+    public CityConfig() : base(JsonNameDefine.City) { }
+
+    public static BuildingUpgradeConfig GetConfig(int id, int level)
+    {
+        int levelid = id * 100 + level;
+        return BuildingUpgradeConfig.Instance.GetData(levelid);
+    }
 }
 
 public class HeroLevelConfig : Config<HeroLevelConfig>

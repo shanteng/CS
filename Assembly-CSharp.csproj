@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\TeamHeroItem.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\Building.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\HomeScene\City.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\CityRange.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\ClickSpot.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\HomeScene\ColorFlash.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Assets\Scripts\Framework\UI\DataGrid\ItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\SceneUI\BuildCanvas.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\SceneUI\BuildingUI.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\SceneUI\CityUI.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\SceneUI\CountDownCanvas.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\SceneUI\InfoCanvas.cs" />
     <Compile Include="Assets\Scripts\TinyMVC\Core\Controller.cs" />

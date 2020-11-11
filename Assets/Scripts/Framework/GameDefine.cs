@@ -148,6 +148,8 @@ public class NotiDefine
     public const string PathAddNoti = "PathAddNoti";
     public const string PathRemoveNoti = "PathRemoveNoti";
 
+    public const string NewCitysVisbleNoti = "NewCitysVisbleNoti";
+
 }
 
 public class ErrorCode
@@ -250,6 +252,14 @@ public class CommonUINameDefine
 {
     public const string DOWN_arrow = "DOWN_arrow";
     public const string UP_arrow = "UP_arrow";
+}
+
+
+public class CityData
+{
+    public int ID;
+    public bool Visible;
+    public bool IsOwn;
 }
 
 public enum HeroBelong

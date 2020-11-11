@@ -18,16 +18,7 @@ public class MyCity : MonoBehaviour
        
     }
 
-    public void OnClickBuilding(string key)
-    {
-        return;
-        Building bd;
-        if (this._AllBuildings.TryGetValue(key, out bd))
-        {
-         //   bd.OnPointerClick();
-        }
-    }
-
+ 
     public void UpdateIncome()
     {
         foreach (Building bd in this._AllBuildings.Values)

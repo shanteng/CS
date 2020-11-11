@@ -20,7 +20,10 @@ public class WorldProxy : BaseRemoteProxy
     private WorldBuildings _WorldData;
     private Dictionary<string, PatrolData> _OutPatrolDic = new Dictionary<string, PatrolData>();
     private Dictionary<int, BuildingEffectsData> _CityEffects = new Dictionary<int, BuildingEffectsData>();
-    private List<int> _OwnCitys = new List<int>();
+
+    private Dictionary<int, CityData> _AllCityDatas = new Dictionary<int, CityData>();
+
+    public Dictionary<int, CityData> AllCitys => this._AllCityDatas;
     public WorldProxy() : base(ProxyNameDefine.WORLD)
     {
         _instance = this;
@@ -66,8 +69,68 @@ public class WorldProxy : BaseRemoteProxy
     {
         if (cityid == 0)
             return new VInt2();
-        return new VInt2();//暂时写死，之后读取配置
+
+        CityConfig config = CityConfig.Instance.GetData(cityid);
+        VInt2 pos = new VInt2(config.Position[0], config.Position[1]);
+        return pos;
     }
+
+    private void ComputeCityShowState(bool judgeSave)
+    {
+        //根据当前探索的区域来确定当前是否有新的City可见
+        bool isChange = false;
+        List<int> news = new List<int>();
+        foreach (CityData city in this._AllCityDatas.Values)
+        {
+            if (city.IsOwn || city.Visible)
+                continue;
+            bool isInCityRange = this.IsInCityVisibleRange(city.ID);
+            if (isInCityRange)
+            {
+                if (judgeSave == false)
+                {
+                    CityConfig config = CityConfig.Instance.GetData(city.ID);
+                    PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.FindCity, config.Name));
+                }
+                
+                isChange = true;
+                city.Visible = true;
+                news.Add(city.ID);
+            }
+        }//end foreach
+
+        if (judgeSave || isChange)
+            this.DoSaveCitys();
+        if (isChange)
+            MediatorUtil.SendNotification(NotiDefine.NewCitysVisbleNoti, news);//更新地图
+    }
+
+    public bool IsInCityVisibleRange(int cityid)
+    {
+        CityConfig config = CityConfig.Instance.GetData(cityid);
+        VInt2 centerPos = this.GetCityCordinate(cityid);
+        int halfRange = config.Range[1];
+
+        int startX = centerPos.x - halfRange;
+        int endX = centerPos.x + halfRange;
+
+        int startZ = centerPos.y - halfRange;
+        int endZ = centerPos.y + halfRange;
+
+        for (int row = startX; row <= endX; ++row)
+        {
+            int corX = row;
+            for (int col = startZ; col <= endZ; ++col)
+            {
+                int corZ = col;
+                bool isVisible = this.IsSpotVisible(corX, corZ);
+                if (isVisible)
+                    return true;
+            }//end for col
+        }//end for row
+        return false;
+    }
+
 
     private void ComputeCityVisibleSpot()
     {
@@ -79,6 +142,7 @@ public class WorldProxy : BaseRemoteProxy
                 continue;
             VInt2 centerPos = this.GetCityCordinate(Effect.VisibleRangeData.CityID);
             int halfRange = Effect.VisibleRangeData.Range;
+
             int startX = centerPos.x - halfRange;
             int endX = centerPos.x + halfRange;
 
@@ -129,6 +193,8 @@ public class WorldProxy : BaseRemoteProxy
 
         if (NewAddVisibleList.Count > 0)
         {
+            //计算是否有新的城市可见
+            this.ComputeCityShowState(false);
             this.SendNotification(NotiDefine.LandVisibleChanged, NewAddVisibleList);
             this.DoSaveVisibleSpot();
         }
@@ -165,6 +231,46 @@ public class WorldProxy : BaseRemoteProxy
             this.ComputeCityVisibleSpot();
         }
     }
+
+    public void LoadAllCitys()
+    {
+        string json = CloudDataTool.LoadFile(SaveFileDefine.Citys);
+        if (json.Equals(string.Empty) == false)
+        {
+            this._AllCityDatas = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, CityData>>(json);
+        }
+        else
+        {
+            this._AllCityDatas = new Dictionary<int, CityData>();
+            //添加主城
+            CityData data = new CityData();
+            data.ID = 0;
+            data.Visible = true;
+            data.IsOwn = true;
+            this._AllCityDatas.Add(data.ID, data);
+        }
+
+        int oldCount = this._AllCityDatas.Count;
+
+        //全部的城市
+        Dictionary<int, CityConfig> dic = CityConfig.Instance.getDataArray();
+        foreach (CityConfig config in dic.Values)
+        {
+            if (this._AllCityDatas.ContainsKey(config.ID))
+                continue;
+            CityData data = new CityData();
+            data.ID = config.ID;
+            data.Visible = false;
+            data.IsOwn = false;
+            this._AllCityDatas.Add(data.ID, data);
+        }
+
+        if (oldCount != this._AllCityDatas.Count)
+        {
+            this.ComputeCityShowState(true);
+        }
+    }
+
 
     public void LoadPatrol()
     {
@@ -259,10 +365,11 @@ public class WorldProxy : BaseRemoteProxy
             }
         }
 
-        this._OwnCitys.Add(0);//添加主城，之后读取配置
 
         this.LoadVisibleSpot();//读取可视区域
         this.LoadPatrol();
+        this.LoadAllCitys();
+
         ComputeEffects();
     }
 
@@ -271,6 +378,12 @@ public class WorldProxy : BaseRemoteProxy
         //存储
         string fileName = UtilTools.combine(SaveFileDefine.WorldBuiding, this._World);
         CloudDataTool.SaveFile(fileName, _WorldData);
+    }
+
+    public void DoSaveCitys()
+    {
+        //存储
+        CloudDataTool.SaveFile(SaveFileDefine.Citys, this._AllCityDatas);
     }
 
     public void DoSaveVisibleSpot()
@@ -574,9 +687,23 @@ public class WorldProxy : BaseRemoteProxy
         MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
     }
 
+    public bool IsOwnCity(int city)
+    {
+        CityData data;
+        if (this.AllCitys.TryGetValue(city, out data))
+            return data.IsOwn;
+        return false;
+    }
+
     public List<int> GetAllOwnCity()
     {
-        return this._OwnCitys;
+        List<int> citys = new List<int>();
+        foreach (CityData city in this._AllCityDatas.Values)
+        {
+            if (city.IsOwn)
+                citys.Add(city.ID);
+        }
+        return citys;
     }
 
     public string GetCityName(int cityid)

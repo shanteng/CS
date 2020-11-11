@@ -21,7 +21,8 @@ public class HomeLandManager : MonoBehaviour
     public MyCity _cityPrefab;
     public BuildCanvas _BuildCanvas;
 
-    private Dictionary<int, MyCity> _OwnCityDic = new Dictionary<int, MyCity>();
+    private MyCity _MyCity;
+    private Dictionary<int, City> _ShowCitys = new Dictionary<int, City>();
   
 
     public bool isTryBuild => this._TryBuildScript != null;
@@ -52,7 +53,7 @@ public class HomeLandManager : MonoBehaviour
 
     public bool canBuildInSpot(string key, int posX, int posZ, int rowCount, int colCount)
     {
-        MyCity city = this.GetOwnCity(0);
+        MyCity city = _MyCity;
 
         for (int row = 0; row < rowCount; ++row)
         {
@@ -83,7 +84,6 @@ public class HomeLandManager : MonoBehaviour
 
     public void OnCreateResp(BuildingData data)
     {
-        MyCity city = this.GetOwnCity(0);
 
         if (this._TryBuildScript == null)
             return;
@@ -92,20 +92,18 @@ public class HomeLandManager : MonoBehaviour
         building._data = data;
         building.name = building._data._key;
         building.SetCurrentState();
-        city.AddOneBuilding(data._key, building);
-        city.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
+        _MyCity.AddOneBuilding(data._key, building);
+        _MyCity.RecordBuildOccupy(building._data._key, building._data._occupyCordinates);
         this.SetCurrentSelectBuilding(data._key);
         this._TryBuildScript = null;
     }
 
     public void OnRelocateResp(string key)
     {
-        MyCity city = this.GetOwnCity(0);
-
-        Building curBuild = city.GetBuilding(key);
+        Building curBuild = _MyCity.GetBuilding(key);
         if (curBuild != null)
         {
-            city.RecordBuildOccupy(curBuild._data._key, curBuild._data._occupyCordinates);
+            _MyCity.RecordBuildOccupy(curBuild._data._key, curBuild._data._occupyCordinates);
             this.SetCurrentSelectBuilding("");
            //this.ShowBuildingInfoCanvas(curBuild);
         }
@@ -113,8 +111,7 @@ public class HomeLandManager : MonoBehaviour
 
     public void OnBuildingStateChanged(string key)
     {
-        MyCity city = this.GetOwnCity(0);
-        Building curBuild = city.GetBuilding(key);
+        Building curBuild = _MyCity.GetBuilding(key);
         if (curBuild != null)
         {
             curBuild.SetCurrentState();
@@ -125,13 +122,11 @@ public class HomeLandManager : MonoBehaviour
 
     public void OnRemoveBuild(string key)
     {
-        MyCity city = this.GetOwnCity(0);
-
         this.HideInfoCanvas();
-        Building curBuild = city.GetBuilding(key);
+        Building curBuild = _MyCity.GetBuilding(key);
         if (curBuild != null)
         {
-            city.ClearBuildOccupy(key);
+            _MyCity.ClearBuildOccupy(key);
             GameObject.Destroy(curBuild.gameObject);
             curBuild = null;
         }
@@ -153,26 +148,15 @@ public class HomeLandManager : MonoBehaviour
     }
 
 
- 
-
-    public MyCity GetOwnCity(int cityid)
-    {
-        MyCity city;
-        this._OwnCityDic.TryGetValue(cityid, out city);
-        return city;
-    }
-
-
     public void TryBuild(int configid, int x, int z)
     {
-        MyCity city = this.GetOwnCity(0);
         this.SetCurrentSelectBuilding("");
-        city.SetOtherTransparent(this._currentBuildKey, true);
+        _MyCity.SetOtherTransparent(this._currentBuildKey, true);
 
         BuildingConfig config = BuildingConfig.Instance.GetData(configid);
         if (config == null)
             return;
-        Building building = city.InitOneBuild(configid, x, z);
+        Building building = _MyCity.InitOneBuild(configid, x, z);
         building._data = new BuildingData();
         building._data.Create(configid, x, z);
         building.SetCurrentState();
@@ -266,9 +250,8 @@ public class HomeLandManager : MonoBehaviour
 
     public void SetCurrentSelectBuilding(string key,bool isHideInfoCanvas = true)
     {
-        MyCity city = this.GetOwnCity(0);
         this._currentBuildKey = key;
-        Building showBd = city.SetCurrentSelectBuilding(this._currentBuildKey, this.isTryBuild);
+        Building showBd = _MyCity.SetCurrentSelectBuilding(this._currentBuildKey, this.isTryBuild);
         if (showBd == null && isHideInfoCanvas)
         {
             this.HideInfoCanvas();
@@ -283,9 +266,8 @@ public class HomeLandManager : MonoBehaviour
     private bool _isDraging;
     public void SetDraging(bool isDrag)
     {
-        MyCity city = this.GetOwnCity(0);
         this._isDraging = isDrag;
-        city.SetOtherTransparent(this._currentBuildKey,isDrag || this.isTryBuild);
+        _MyCity.SetOtherTransparent(this._currentBuildKey,isDrag || this.isTryBuild);
     }
 
     public void SetQuadVisible(bool show)
@@ -339,6 +321,7 @@ public class HomeLandManager : MonoBehaviour
 
         this.GenerateMyCity();
         this.SetMainCityRange();
+        this.GenerateNpcCity();
 
         //可视化范围
         int count = this._VisibleSpots.Count;
@@ -375,11 +358,10 @@ public class HomeLandManager : MonoBehaviour
 
     public void SetMainCityRange()
     {
-        MyCity city = this.GetOwnCity(0);
         int range = WorldProxy._instance.GetBuildingEffects(0).BuildRange;
         this._QuadCanBuild.transform.localScale = new Vector3(range, range, 1);
         this._QuadCanBuild.material.SetVector("_MainTex_ST", new Vector4(range, range, 0, 0));
-        city.SetRange(range);
+        _MyCity.SetRange(range);
     }
 
     private Dictionary<string, PathModel> _pathModels = new Dictionary<string, PathModel>();
@@ -404,13 +386,50 @@ public class HomeLandManager : MonoBehaviour
 
     private void GenerateMyCity()
     {
-        this._OwnCityDic.Clear();
         WorldBuildings worldData = WorldProxy._instance.Data;
-        MyCity city = GameObject.Instantiate<MyCity>(this._cityPrefab, new Vector3(worldData.StartCordinates.x, 0, worldData.StartCordinates.y), Quaternion.identity, this.transform);
-        city.name = "MyCity";
-        city.CreateMyCity();
-        this._OwnCityDic.Add(0, city);
+        _MyCity = GameObject.Instantiate<MyCity>(this._cityPrefab, new Vector3(worldData.StartCordinates.x, 0, worldData.StartCordinates.y), Quaternion.identity, this.transform);
+        _MyCity.name = "MyCity";
+        _MyCity.CreateMyCity();
         StartCoroutine(InComeCountDown());
+    }
+
+    private void GenerateNpcCity()
+    {
+        foreach (City city in this._ShowCitys.Values)
+        {
+            GameObject.Destroy(city.gameObject);
+        }
+        this._ShowCitys.Clear();
+
+        Dictionary<int, CityData> dic = WorldProxy._instance.AllCitys;
+        foreach (CityData data in dic.Values)
+        {
+            if (data.Visible)
+                this.AddOneNpcShowCity(data.ID);
+        }
+    }
+
+    public void NewCitysVisible(List<int> news)
+    {
+        foreach (int city in news)
+        {
+            this.AddOneNpcShowCity(city);
+        }
+    }
+
+    public void AddOneNpcShowCity(int cityid)
+    {
+        if (this._ShowCitys.ContainsKey(cityid) || cityid == 0)
+            return;
+        CityConfig config = CityConfig.Instance.GetData(cityid);
+        GameObject prefab = ResourcesManager.Instance.LoadCityRes(config.Model);
+        GameObject obj = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, this.transform);
+        City building = obj.GetComponent<City>();
+        building.transform.localPosition = new Vector3(config.Position[0], 0, config.Position[1]);
+        building.gameObject.name = UtilTools.combine("City", cityid);
+        building.SetCity(cityid);
+        
+        this._ShowCitys.Add(cityid, building);
     }
 
     public void GenerateVisibleSpot(Dictionary<string, VInt2> list)
@@ -441,8 +460,7 @@ public class HomeLandManager : MonoBehaviour
 
     public void UpdateIncome()
     {
-        MyCity city = this.GetOwnCity(0);
-        city.UpdateIncome();
+        _MyCity.UpdateIncome();
         MediatorUtil.SendNotification(NotiDefine.JudgeIncome);
     }
 
