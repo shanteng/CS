@@ -574,7 +574,7 @@ MonoBehaviour:
   _speed: 200
   _speedMobile: 2
   _minFollowTran: {fileID: 995033074}
-  _maxSize: 18
+  _maxSize: 15
   _minSize: 3
   _overShowCount: 0
   _constY: 36
@@ -880,11 +880,11 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 80
+  orthographic size: 100
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 513
+    m_Bits: 262657
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: feb322217eb4a024082cd33fa912b4c1, type: 2}
   m_TargetDisplay: 0
@@ -1216,7 +1216,7 @@ Transform:
   m_GameObject: {fileID: 6345931030371521652}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.52, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 7, y: 7, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8

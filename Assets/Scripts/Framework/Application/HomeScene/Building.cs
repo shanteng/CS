@@ -37,6 +37,7 @@ public class Building : MonoBehaviour
 
     void Awake()
     {
+        this.transform.Find("00").gameObject.SetActive(false);
         _collider = this.transform.GetComponent<BoxCollider>();
         _flashBase = this.transform.Find("FlashBase").GetComponent<PlaneBase>();
         _occupyBase = this.transform.Find("OccupyBase").GetComponent<OccupyBase>();
@@ -116,7 +117,10 @@ public class Building : MonoBehaviour
 
         this.UpdateIncome();
 
-        this._isDisableDrag = this._data._id.Equals(BuildingData.GateID);
+        this._isDisableDrag = 
+            this._data._id.Equals(BuildingData.MainCityID) ||
+             this._data._id.Equals(BuildingData.GateID)
+            ;
    
         //设置显示parts
         int level = this._data._level > 0 ? this._data._level : 1;

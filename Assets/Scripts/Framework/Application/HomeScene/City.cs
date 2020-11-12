@@ -28,6 +28,11 @@ public class City : MonoBehaviour
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.LogError("OnPointerClick:" + this.ID);
+        //Debug.LogError("OnPointerClick:" + this.ID);
+        HomeLandManager.GetInstance().OnClickNpcCity(this.ID);
+        //Dictionary<string, object> vo = new Dictionary<string, object>();
+        //vo["HeroID"] = 105;
+        //vo["TargetCity"] = this.ID;
+        //WorldProxy._instance.DoQuestCity(vo);
     }
 }

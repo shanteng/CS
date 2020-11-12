@@ -13,6 +13,10 @@ public enum OpType
     Upgrade,
     Cancel,
     Patrol,
+    QuestCity,
+    NpcCityInfo,
+    NpcCityEnter,
+    Attack,
 }
 
 public class IntStrPair
@@ -53,6 +57,8 @@ public class InfoCanvas : UIBase, IConfirmListener
     private string _addType;
     private int _cityId;
     private VInt2 _curPos = new VInt2();
+
+    public int City => this._cityId;
     private void Start()
     {
         foreach (UIButton btn in this._btnFunList)
@@ -78,6 +84,7 @@ public class InfoCanvas : UIBase, IConfirmListener
     {
         this._animator.SetTrigger("MoveOut");
         _cor =  CoroutineUtil.GetInstance().WaitTime(0.4f, true, WaitInitEnd);
+        this._cityId = -1;
     }
 
     private void WaitInitEnd(object[] param)
@@ -94,7 +101,7 @@ public class InfoCanvas : UIBase, IConfirmListener
 
         btnTypeList = new List<IntStrPair>();
 
-        IntStrPair data = new IntStrPair(OpType.Info,LanguageConfig.GetLanguage(LanMainDefine.OpInfo));
+        IntStrPair data = new IntStrPair(OpType.Info,LanguageConfig.GetLanguage(LanMainDefine.OpInfo), "OpDetails");
         btnTypeList.Add(data);
 
         if (this._data._status == BuildingData.BuildingStatus.NORMAL && this._data._level < config.MaxLevel)
@@ -109,13 +116,13 @@ public class InfoCanvas : UIBase, IConfirmListener
 
             if (canUpgrade)
             {
-                data = new IntStrPair(OpType.Upgrade, LanguageConfig.GetLanguage(LanMainDefine.OpUpgrade));
+                data = new IntStrPair(OpType.Upgrade, LanguageConfig.GetLanguage(LanMainDefine.OpUpgrade), "OP_UPGRADE");
                 btnTypeList.Add(data);
             }
         }
         else if (this._data._status == BuildingData.BuildingStatus.UPGRADE)
         {
-            data = new IntStrPair(OpType.Cancel, LanguageConfig.GetLanguage(LanMainDefine.OpCancel));
+            data = new IntStrPair(OpType.Cancel, LanguageConfig.GetLanguage(LanMainDefine.OpCancel), "Op_cancel");
             btnTypeList.Add(data);
         }
       
@@ -143,14 +150,14 @@ public class InfoCanvas : UIBase, IConfirmListener
                     {
                         string icon = UtilTools.combine("ca", configLevel.AddValues[0]);
                         int career = UtilTools.ParseInt(configLevel.AddValues[0]);
-                        data = new IntStrPair(OpType.Enter, "", icon, true, career);
+                        data = new IntStrPair(OpType.Enter, LanguageConfig.GetLanguage(LanMainDefine.OpEnter), icon, true, career);
                         btnTypeList.Add(data);
                     }
                     break;
                 }
             case ValueAddType.HeroRecruit:
                 {
-                    data = new IntStrPair(OpType.Enter, LanguageConfig.GetLanguage(LanMainDefine.OpEnter));
+                    data = new IntStrPair(OpType.Enter, LanguageConfig.GetLanguage(LanMainDefine.OpEnter), "OpClientCityTroop");
                     btnTypeList.Add(data);
                     break;
                 }
@@ -158,8 +165,29 @@ public class InfoCanvas : UIBase, IConfirmListener
 
     }
 
+    public void SetNpcCity(int city)
+    {
+        this._cityId = city;
+        this._curPos = WorldProxy._instance.GetCityCordinate(city);
+        bool isOwn = WorldProxy._instance.IsOwnCity(this._cityId);
+        CityConfig config = CityConfig.Instance.GetData(city);
+        if (isOwn)
+            this._spotNameTxt.text = LanguageConfig.GetLanguage(LanMainDefine.OwnOccupyCityName, config.Name);
+        else
+            this._spotNameTxt.text = config.Name;
+
+        VInt2 kv = UtilTools.WorldToGameCordinate(this._curPos.x, this._curPos.y);
+        this._cordinateTxt.text = LanguageConfig.GetLanguage(LanMainDefine.SpotCordinate, kv.x, kv.y);
+        List<IntStrPair> btnTypeList;
+        this.GetNpcCityBtnList(out btnTypeList);
+        this.SetBtnState(btnTypeList);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_NameRect);
+        this._cdCon.gameObject.SetActive(false);
+    }
+
     public void SetEmptySpot(int x, int z)
     {
+        this._cityId = -1;
         this.SetCurrentPos(x, z);
         bool isVisible = WorldProxy._instance.IsSpotVisible(this._curPos.x, this._curPos.y);
         if (isVisible)
@@ -183,6 +211,29 @@ public class InfoCanvas : UIBase, IConfirmListener
         this._curPos.y = z;
     }
 
+    private void GetNpcCityBtnList(out List<IntStrPair> btnTypeList)
+    {
+        bool isOwn = WorldProxy._instance.IsOwnCity(this._cityId);
+        btnTypeList = new List<IntStrPair>();
+
+        IntStrPair data = new IntStrPair(OpType.NpcCityInfo, LanguageConfig.GetLanguage(LanMainDefine.OpCityInfo), "OpCheckRole");
+        btnTypeList.Add(data);
+
+        if (isOwn)
+        {
+            data = new IntStrPair(OpType.QuestCity, LanguageConfig.GetLanguage(LanMainDefine.OpQuestCity), "OP_DIG");
+            btnTypeList.Add(data);
+
+            data = new IntStrPair(OpType.NpcCityEnter, LanguageConfig.GetLanguage(LanMainDefine.OpEnter), "OpDetails");
+            btnTypeList.Add(data);
+        }
+        else
+        {
+            data = new IntStrPair(OpType.Attack, LanguageConfig.GetLanguage(LanMainDefine.OpAttack), "OP_ATK");
+            btnTypeList.Add(data);
+        }
+    }
+
     private void GetSpotBtnList(out List<IntStrPair> btnTypeList)
     {
         bool isVisible = WorldProxy._instance.IsSpotVisible(this._curPos.x, this._curPos.y);
@@ -190,7 +241,7 @@ public class InfoCanvas : UIBase, IConfirmListener
 
         if (isVisible == false)
         {
-            IntStrPair data = new IntStrPair(OpType.Patrol, LanguageConfig.GetLanguage(LanMainDefine.OpPatrol));
+            IntStrPair data = new IntStrPair(OpType.Patrol, LanguageConfig.GetLanguage(LanMainDefine.OpPatrol), "Op_Patrol");
             btnTypeList.Add(data);
         }
     }
@@ -255,15 +306,12 @@ public class InfoCanvas : UIBase, IConfirmListener
 
             bool hasIcon = btnTypeList[i].Icon.Equals("") == false;
             this._btnFunList[i].Icon.gameObject.SetActive(hasIcon);
-            this._btnFunList[i].Label.gameObject.SetActive(hasIcon == false);
+            this._btnFunList[i].Label.text = btnTypeList[i].BtnName;
+            //this._btnFunList[i].Label.gameObject.SetActive(hasIcon == false);
             if (hasIcon)
             {
                 this._btnFunList[i].Icon.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Common, btnTypeList[i].Icon);
                 this._btnFunList[i].Icon.SetNativeSize();
-            }
-            else
-            {
-                this._btnFunList[i].Label.text = btnTypeList[i].BtnName;
             }
             this._btnFunList[i].IsEnable = btnTypeList[i].Enable;
             UIRoot.Intance.SetImageGray(this._btnFunList[i].Icon, !btnTypeList[i].Enable);
@@ -278,23 +326,26 @@ public class InfoCanvas : UIBase, IConfirmListener
 
     private void OnEnterClick(UIButton btn)
     {
-        if (this._addType.Equals(ValueAddType.HourTax))
+        if (this._cityId == 0)
         {
-            string attrKey = (string)btn._param._value;
-            MediatorUtil.SendNotification(NotiDefine.AcceptHourAwardDo, attrKey);
-        }
-        else if (this._addType.Equals(ValueAddType.RecruitVolume))
-        {
-            int career = (int)btn._param._value;
-            VInt2 kv = new VInt2();
-            kv.x = this._cityId;
-            kv.y = career;
-            
-            MediatorUtil.ShowMediator(MediatorDefine.ARMY, kv);
-        }
-        else if (this._addType.Equals(ValueAddType.HeroRecruit))
-        {
-            MediatorUtil.ShowMediator(MediatorDefine.RECRUIT, 0);
+            if (this._addType.Equals(ValueAddType.HourTax))
+            {
+                string attrKey = (string)btn._param._value;
+                MediatorUtil.SendNotification(NotiDefine.AcceptHourAwardDo, attrKey);
+            }
+            else if (this._addType.Equals(ValueAddType.RecruitVolume))
+            {
+                int career = (int)btn._param._value;
+                VInt2 kv = new VInt2();
+                kv.x = this._cityId;
+                kv.y = career;
+
+                MediatorUtil.ShowMediator(MediatorDefine.ARMY, kv);
+            }
+            else if (this._addType.Equals(ValueAddType.HeroRecruit))
+            {
+                MediatorUtil.ShowMediator(MediatorDefine.RECRUIT, 0);
+            }
         }
     }
 
@@ -335,6 +386,21 @@ public class InfoCanvas : UIBase, IConfirmListener
                         return;
                     }
                     PopupFactory.Instance.ShowPatrol(this._curPos);
+                    break;
+                }
+            case OpType.QuestCity:
+                {
+                    PopupFactory.Instance.ShowQuestNpcCity(this._cityId);
+                    break;
+                }
+            case OpType.NpcCityInfo:
+                {
+                    PopupFactory.Instance.ShowNpcCityInfo(this._cityId);
+                    break;
+                }
+            case OpType.NpcCityEnter:
+                {
+                    PopupFactory.Instance.ShowNpcCityEnter(this._cityId);
                     break;
                 }
         }

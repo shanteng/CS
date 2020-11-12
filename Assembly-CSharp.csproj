@@ -343,6 +343,7 @@
     <None Include="Assets\Role\zhaoyun_fire\zhaoyun.atlas.txt" />
     <None Include="Assets\Role\panfeng_fire\panfeng.atlas.txt" />
     <None Include="Assets\Scripts\spine-unity\Modules\Shaders\Sprite\CameraNormalsTexture.shader" />
+    <None Include="Assets\Shaders\Feather.shader" />
     <None Include="Assets\Role\lanlingwang_fire\lanlingwang.atlas.txt" />
     <None Include="Assets\Role\sunquan_fire\sunquan.atlas.txt" />
     <None Include="Assets\Role\weijier_fire\weijier.atlas.txt" />

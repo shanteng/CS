@@ -269,7 +269,7 @@ public class HeroProxy : BaseRemoteProxy
             return;
         }
 
-        this.ChangeHeroBelong(id, true);
+        this.ChangeHeroBelong(id, true,(int)HeroBelong.MainCity);
         this.SendNotification(NotiDefine.RecruitHeroResp);
     }
 
@@ -280,14 +280,11 @@ public class HeroProxy : BaseRemoteProxy
         this.DoSaveHeros();
     }
 
-    public void ChangeHeroBelong(int id,bool isMy,int belong= 0)
+    public void ChangeHeroBelong(int id, bool isMy, int belong)
     {
         Hero hero = this.GetHero(id);
         bool oldMy = hero.IsMy;
-
-        if (belong != 0)
-            hero.Belong = belong;
-
+        hero.Belong = (int)belong;
         hero.IsMy = isMy;
         hero.Blood.Clear();
         hero.ComputeAttributes();

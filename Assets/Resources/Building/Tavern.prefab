@@ -48,8 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac4308176a98dbc45a5c7f33992b298b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _orignColor: {r: 1, g: 1, b: 1, a: 1}
-  _EndColor: {r: 0.509434, g: 0.509434, b: 0.509434, a: 0}
+  _orignlColor: {r: 0.38, g: 0.52, b: 0.75, a: 1}
   _Speed: 2
 --- !u!1 &1014938293662515928
 GameObject:
@@ -68,7 +67,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3239431240792861049
 Transform:
   m_ObjectHideFlags: 0
@@ -510,6 +509,7 @@ MonoBehaviour:
   _data:
     _id: 0
     _key: 
+    _city: 0
     _UpgradeSecs: 0
     _level: 0
     _status: 0

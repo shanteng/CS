@@ -19,6 +19,9 @@
     public const string OpCancel = "OpCancel";
     public const string OpHeroRecruit = "OpHeroRecruit";
     public const string OpPatrol = "OpPatrol";
+    public const string OpQuestCity = "OpQuestCity";
+    public const string OpCityInfo = "OpCityInfo";
+    public const string OpAttack = "OpAttack";
 
     public const string HourAdd = "HourAdd";
     public const string Progress = "Progress";
@@ -79,6 +82,10 @@
     public const string AfterTimeTalk = "AfterTimeTalk";
     public const string HeroFavorLevelChanged = "HeroFavorLevelChanged";
     public const string CareerEvaluateDesc = "CareerEvaluateDesc";
+    public const string ItemCount = "ItemCount";
+
+    public const string QuestCityHasAward = "QuestCityHasAward";
+    public const string QuestCityNoAward = "QuestCityNoAward";
 
     public const string PercentAdd = "PercentAdd";
     public const string PercentDes = "PercentDes";
@@ -90,6 +97,8 @@
     public const string HeroMaxBlood = "HeroMaxBlood";
     public const string EmptyVisibleSpot = "EmptyVisibleSpot";
     public const string EmptyUnVisibleSpot = "EmptyUnVisibleSpot";
+
+    public const string OwnOccupyCityName = "OwnOccupyCityName";
 
     public const string LeftTime = "LeftTime";
     public const string NeedTime = "NeedTime";

@@ -16,6 +16,9 @@ public enum PopType
     CAREER_RATE,
     ATTRADD,
     PATROL,
+    CITY_INFO,
+    CITY_ENTER,
+    QUEST_CITY,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -69,6 +72,21 @@ public class PopupFactory : SingletonFactory<PopupFactory>
     public void ShowCareerRate()
     {
         this.ShowPop(PopType.CAREER_RATE,0);
+    }
+
+    public void ShowQuestNpcCity(int city)
+    {
+        this.ShowPop(PopType.QUEST_CITY, city);
+    }
+
+    public void ShowNpcCityEnter(int city)
+    {
+        this.ShowPop(PopType.CITY_ENTER, city);
+    }
+
+    public void ShowNpcCityInfo(int city)
+    {
+        this.ShowPop(PopType.CITY_INFO, city);
     }
 
     public void ShowBuildingInfo(string bdKey)

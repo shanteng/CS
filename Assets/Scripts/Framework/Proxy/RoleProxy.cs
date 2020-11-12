@@ -273,6 +273,7 @@ public class RoleProxy : BaseRemoteProxy
 
     public void ChangeRoleNumberValueBy(CostData addData,bool NeedSave = true)
     {
+        Dictionary<string, int> ShowAdds = new Dictionary<string, int>();
         string key = addData.id;
         CostData data = this.GetNumberValueData(key);
         if (data == null)
@@ -281,11 +282,16 @@ public class RoleProxy : BaseRemoteProxy
             data.id = key;
             data.count = 0;
             this._role.ItemList.Add(data);
+            ShowAdds[key] = addData.count;
         }
         data.count += addData.count;
 
         if (NeedSave)
+        {
+            this.SendNotification(NotiDefine.NumberValueHasUpdated, ShowAdds);
             this.DoSaveRole();
+        }
+           
     }
 
     public void ChangeRoleNumberValue(List<CostData> addDatas)

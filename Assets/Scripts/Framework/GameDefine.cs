@@ -271,7 +271,8 @@ public class CityData
 
 public enum HeroBelong
 {
-    Wild= 0,
+    MainCity = 0,
+    Wild = -1,
 }
 
 public enum CareerRateDefine
@@ -474,9 +475,9 @@ public class IncomeData
 
 public class PathData
 {
-    public static int TYPE_PATROL;
-    public static int TYPE_TEAM;
-    public static int TYPE_QUEST_CITY;
+    public static int TYPE_PATROL = 1;
+    public static int TYPE_TEAM = 2;
+    public static int TYPE_QUEST_CITY = 3;
 
     public string ID;
     public int Type;
@@ -624,6 +625,14 @@ public enum EquipType
     Horse = 3,
 };
 
+public enum HeroTeamState
+{
+    //>0再队伍中
+    NoTeam = 0,
+    QuestCity = -1,
+   
+};
+
 public enum TeamStatus
 {
     Idle = 1,
@@ -677,6 +686,7 @@ public class Hero
         this.Exp = 0;
         this.Blood = new Dictionary<int, int>();
         this.Belong = config.InitBelong;
+        this.IsMy = this.Belong == 0;
         this.TeamId = 0;
         this.StarRank = 0;
         this.Favor = 0;

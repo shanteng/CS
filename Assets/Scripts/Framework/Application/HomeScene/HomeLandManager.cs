@@ -282,6 +282,29 @@ public class HomeLandManager : MonoBehaviour
         this._SelectSpotTrans.Hide();
     }
 
+    public void OnClickNpcCity(int city)
+    {
+        if (this.isTryBuild)
+            return;
+        bool isVisible = this._infoCanvas.gameObject.activeSelf;
+        bool isShow = isVisible == false || (this._infoCanvas.City != city);
+       
+        if (isShow)
+        {
+            CityConfig config = CityConfig.Instance.GetData(city);
+            this._SelectSpotTrans.ShowInPostion(config.Position[0], config.Position[1]);
+            this._SelectSpotTrans.transform.localScale = new Vector3(config.Range[0], config.Range[0], 1);
+            _infoCanvas.Show();
+            _infoCanvas.SetNpcCity(city);
+        }
+        else
+        {
+            this.HideSelectSpot();
+            this.HideInfoCanvas();
+        }
+
+        this.SetCurrentSelectBuilding("", !isShow);
+    }
    
     public void OnClickSpot(Vector3 pos)
     {
@@ -295,15 +318,16 @@ public class HomeLandManager : MonoBehaviour
         if (gamePos.x < 0 || gamePos.x > GameIndex.ROW || gamePos.y < 0 || gamePos.y > GameIndex.COL)
             return;
 
-        bool isShow =  this._SelectSpotTrans.JudegeShow(x, z);
+        bool isShow =  this._SelectSpotTrans.JudegeSpotShow(x, z);
         if (isShow)
         {
+            this._SelectSpotTrans.transform.localScale = Vector3.one;
             _infoCanvas.Show();
             _infoCanvas.SetEmptySpot(x, z);
         }
         else
         {
-            _infoCanvas.Hide();
+            this.HideInfoCanvas();
         }
         this.SetCurrentSelectBuilding("",!isShow);
     }
@@ -316,7 +340,7 @@ public class HomeLandManager : MonoBehaviour
         ViewControllerLocal.GetInstance().InitBorder(row, col);
 
         this._HomePlane.transform.localScale = new Vector3(row, col, 1);
-        this._HomePlane.material.SetVector("_MainTex_ST", new Vector4(row, col, 0, 0));
+        this._HomePlane.material.SetVector("_MainTex_ST", new Vector4(1, 1, 0, 0));
         this._HomePlane.GetComponent<SpotCube>().AddEvent(this.OnClickSpot);
 
         this.GenerateMyCity();
@@ -444,6 +468,29 @@ public class HomeLandManager : MonoBehaviour
             spot.transform.localPosition = pos;
             spot.transform.localEulerAngles = new Vector3(90, 0, 0);
             spot.name = key;
+
+        //    float zValue = 0.5f;
+       //     float wValue = 0.5f;
+
+       //     int x = list[key].x;
+      //      int z = list[key].y;
+
+       /*     bool isLeftVisible = WorldProxy._instance.IsSpotVisible(x-1,z);
+            bool isRightVisible = WorldProxy._instance.IsSpotVisible(x + 1, z);
+            if (isLeftVisible == false)
+                zValue = 1f;
+            else if (isRightVisible == false)
+                zValue = 0f;
+
+            bool isTopVisble = WorldProxy._instance.IsSpotVisible(x, z+1);
+            bool isBottomVible = WorldProxy._instance.IsSpotVisible(x, z-1);
+            if (isTopVisble == false)
+                wValue = 0f;
+            else if (isBottomVible == false)
+                wValue = 1f;
+
+            spot.GetComponent<MeshRenderer>().material.SetVector("_size", new Vector4(1, 1, zValue, wValue));
+       */
             this._VisibleSpots.Add(key,spot);
         }
     }
