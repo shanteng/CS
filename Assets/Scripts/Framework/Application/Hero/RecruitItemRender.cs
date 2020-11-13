@@ -17,13 +17,12 @@ public class RecruitItemData : ScrollData
 
 public class RecruitItemRender : ItemRender
 {
-    public GameObject _Front;
-    public Image _HeadIcon;
     public Image _Frame;
-    public Image _Element;
-    public Text _nameTxt;
     public HeroStar _starUI;
+
+    public GameObject _Back;
     public HeroCareerRates _rateUi;
+    public HeroTalents _talentUi;
 
     public Text _FavorTxt;
     public Transform _FavorUp;
@@ -36,8 +35,11 @@ public class RecruitItemRender : ItemRender
     public UIButton _btnRecruit;
     public UIButton _btnInfo;
 
-    public GameObject _Back;
+    public GameObject _Front;
     public UIButton _btnReturn;
+    public Image _Element;
+    public Image _NameFrame;
+    public Text _nameTxt;
     public Image _Icon;
     private int _id;
 
@@ -69,12 +71,12 @@ public class RecruitItemRender : ItemRender
 
     private void OnClickInfo(UIButton btn)
     {
-        this.DoRotate(true);
+        this.DoRotate(false);
     }
 
     private void OnClickReturn(UIButton btn)
     {
-        this.DoRotate(false);
+        this.DoRotate(true);
     }
 
     private void DoRotate(bool isToBack)
@@ -119,9 +121,11 @@ public class RecruitItemRender : ItemRender
         this._nameTxt.text = config.Name;
         this._Frame.sprite = ResourcesManager.Instance.GetCommonFrame(config.Star);
         this._Element.sprite = ResourcesManager.Instance.GetCommonSprite(config.Element);
-        this._starUI.SetData(curData._hero);
-        this._HeadIcon.sprite = ResourcesManager.Instance.GetHeroSprite(this.ID);
+        this._NameFrame.sprite = ResourcesManager.Instance.GetCommonSprite(UtilTools.combine("Name",config.Star));
 
+
+        this._starUI.SetData(curData._hero);
+        this._talentUi.SetData(this.ID);
         FavorLevelConfig configNeed = HeroProxy._instance.GetFaovrConfig(curData._hero.Favor);
 
         this._FavorTxt.text = LanguageConfig.GetLanguage(LanMainDefine.FavorCurrent, configNeed.Name);

@@ -1,0 +1,146 @@
+
+jingke.png
+size: 512,64
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bai
+  rotate: true
+  xy: 169, 3
+  size: 59, 64
+  orig: 59, 64
+  offset: 0, 0
+  index: -1
+biyan
+  rotate: false
+  xy: 275, 8
+  size: 23, 3
+  orig: 23, 3
+  offset: 0, 0
+  index: -1
+fa
+  rotate: true
+  xy: 474, 44
+  size: 18, 33
+  orig: 18, 33
+  offset: 0, 0
+  index: -1
+mawei
+  rotate: false
+  xy: 275, 13
+  size: 44, 49
+  orig: 44, 49
+  offset: 0, 0
+  index: -1
+shen
+  rotate: true
+  xy: 102, 25
+  size: 37, 65
+  orig: 37, 65
+  offset: 0, 0
+  index: -1
+tou
+  rotate: true
+  xy: 381, 23
+  size: 39, 43
+  orig: 39, 43
+  offset: 0, 0
+  index: -1
+wuqi
+  rotate: true
+  xy: 2, 31
+  size: 31, 98
+  orig: 31, 98
+  offset: 0, 0
+  index: -1
+wuqi1
+  rotate: false
+  xy: 321, 33
+  size: 58, 29
+  orig: 58, 29
+  offset: 0, 0
+  index: -1
+yan
+  rotate: true
+  xy: 502, 19
+  size: 23, 8
+  orig: 23, 8
+  offset: 0, 0
+  index: -1
+youdabi
+  rotate: true
+  xy: 470, 2
+  size: 13, 23
+  orig: 13, 23
+  offset: 0, 0
+  index: -1
+youdatui
+  rotate: true
+  xy: 2, 4
+  size: 25, 58
+  orig: 25, 58
+  offset: 0, 0
+  index: -1
+youjiao
+  rotate: true
+  xy: 474, 17
+  size: 25, 26
+  orig: 25, 26
+  offset: 0, 0
+  index: -1
+youxiaobi
+  rotate: true
+  xy: 426, 12
+  size: 22, 42
+  orig: 22, 42
+  offset: 0, 0
+  index: -1
+youxiaotui
+  rotate: true
+  xy: 130, 10
+  size: 13, 34
+  orig: 13, 34
+  offset: 0, 0
+  index: -1
+zuodabi
+  rotate: true
+  xy: 62, 9
+  size: 20, 34
+  orig: 20, 34
+  offset: 0, 0
+  index: -1
+zuodatui
+  rotate: false
+  xy: 235, 3
+  size: 38, 59
+  orig: 38, 59
+  offset: 0, 0
+  index: -1
+zuojiao
+  rotate: true
+  xy: 98, 2
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+zuoling
+  rotate: false
+  xy: 495, 3
+  size: 15, 12
+  orig: 15, 12
+  offset: 0, 0
+  index: -1
+zuoxiaobi
+  rotate: true
+  xy: 426, 36
+  size: 26, 46
+  orig: 26, 46
+  offset: 0, 0
+  index: -1
+zuoxiaotui
+  rotate: true
+  xy: 321, 11
+  size: 20, 46
+  orig: 20, 46
+  offset: 0, 0
+  index: -1

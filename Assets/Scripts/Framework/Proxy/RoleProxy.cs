@@ -30,7 +30,7 @@ public class RoleProxy : BaseRemoteProxy
 {
     private Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
     private Dictionary<string, int> HourAwardLimitDic = new Dictionary<string, int>();
-
+    private List<LogData> _LogDatas = new List<LogData>();
     private RoleInfo _role;
     public static RoleProxy _instance;
     public RoleProxy() : base(ProxyNameDefine.ROLE)
@@ -39,7 +39,22 @@ public class RoleProxy : BaseRemoteProxy
     }
 
     public RoleInfo Role => this._role;
- 
+
+    public void AddLog(LogType type,string Content,object Param=null)
+    {
+        LogData data = new LogData();
+        data.Type = type;
+        data.Content = Content;
+        data.Param = Param;
+        data.Time = GameIndex.ServerTime;
+        this._LogDatas.Add(data);
+        this.SendNotification(NotiDefine.NewLogNoti);
+    }
+
+    public List<LogData> GetLogs()
+    {
+        return this._LogDatas;
+    }
 
     public void ComputeIncome()
     {

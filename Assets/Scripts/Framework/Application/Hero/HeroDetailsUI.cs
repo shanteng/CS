@@ -15,14 +15,23 @@ public class HeroDetailsUI : UIBase
     public HeroStar _StarUi;
     public UIButton _btnStar;
     public HeroCareerRates _rateUi;
+
+    public Slider _EnegrySlider;
+    public GameObject _EnegryTxtCon;
+    public Text _EnegryTxt;
+
+    public GameObject _expCon;
     public Slider _expSlider;
     public UIButton _btnExp;
     public TextMeshProUGUI _expTxt;
     public TextMeshProUGUI _lvTxt;
     public Text _MaxBloodTxt;
 
+    public HeroTalents _talentUi;
+
+
     private int _id;
-    public  void SetData(int id)
+    public void SetData(int id)
     {
         this._id = id;
         Hero hero = HeroProxy._instance.GetHero(id);
@@ -46,6 +55,17 @@ public class HeroDetailsUI : UIBase
             this._expSlider.value = (float)hero.Exp / configNext.Exp;
         }
         this._MaxBloodTxt.text = LanguageConfig.GetLanguage(LanMainDefine.HeroMaxBlood,hero.MaxBlood);
+
+        this._EnegryTxt.text = LanguageConfig.GetLanguage(LanMainDefine.EnegryCurMax, hero.GetEnegry(), hero.MaxEnegry);
+        this._EnegrySlider.value = (float)hero.GetEnegry() / (float)hero.MaxEnegry;
+
+        this._StarUi.gameObject.SetActive(hero.IsMy);
+        this._expCon.SetActive(hero.IsMy);
+        this._EnegryTxtCon.SetActive(hero.IsMy);
+        if (hero.IsMy == false)
+            this._EnegrySlider.value = 1f;
+
+        this._talentUi.SetData(this._id);
     }
 
     

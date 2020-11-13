@@ -53,6 +53,12 @@ public class UIButton : UIBase
         set
         {
             this._btn.interactable = value;
+            if (this._text != null)
+            {
+                Color orcolor = this._text.color;
+                orcolor.a = value ? 1 : 0.5f;
+                this._text.color = orcolor;
+            }
         }
     }
 

@@ -15,7 +15,6 @@ public enum OpType
     Patrol,
     QuestCity,
     NpcCityInfo,
-    NpcCityEnter,
     Attack,
 }
 
@@ -224,8 +223,7 @@ public class InfoCanvas : UIBase, IConfirmListener
             data = new IntStrPair(OpType.QuestCity, LanguageConfig.GetLanguage(LanMainDefine.OpQuestCity), "OP_DIG");
             btnTypeList.Add(data);
 
-            data = new IntStrPair(OpType.NpcCityEnter, LanguageConfig.GetLanguage(LanMainDefine.OpEnter), "OpDetails");
-            btnTypeList.Add(data);
+
         }
         else
         {
@@ -396,11 +394,6 @@ public class InfoCanvas : UIBase, IConfirmListener
             case OpType.NpcCityInfo:
                 {
                     PopupFactory.Instance.ShowNpcCityInfo(this._cityId);
-                    break;
-                }
-            case OpType.NpcCityEnter:
-                {
-                    PopupFactory.Instance.ShowNpcCityEnter(this._cityId);
                     break;
                 }
         }

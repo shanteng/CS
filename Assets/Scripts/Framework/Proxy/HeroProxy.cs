@@ -44,6 +44,36 @@ public class HeroProxy : BaseRemoteProxy
     }
 
 
+    public bool JudegeTalentResult(int type, int value, int heroid)
+    {
+        HeroConfig heroCoinfig = HeroConfig.Instance.GetData(heroid);
+        int heroValue = 0;
+        for (int i = 0; i < heroCoinfig.Talents.Length; ++i)
+        {
+            string[] testTalent = heroCoinfig.Talents[i].Split(':');
+            int talentType = UtilTools.ParseInt(testTalent[0]);
+            int talentValue = UtilTools.ParseInt(testTalent[1]);
+            if (talentType == type)
+            {
+                heroValue = talentValue;
+                break;
+            }
+        }//end for
+
+        if (heroValue > value)
+            return true;
+        if (heroValue == value)
+        {
+            //根据幸运值判断
+            int curLucky = UtilTools.RangeInt(0, 100);
+            return heroCoinfig.Lucky >= curLucky;
+        }
+
+        int curLowLucky = UtilTools.RangeInt(0, 100);
+        int luckLow = Mathf.CeilToInt((float)heroCoinfig.Lucky * (float)heroValue / 100f);
+        return luckLow >= curLowLucky;
+    }
+
     public Hero GetHero(int id)
     {
         Hero hero = null;
@@ -157,8 +187,10 @@ public class HeroProxy : BaseRemoteProxy
         List<int> wildHero = new List<int>();
         foreach (Hero hero in this._datas.Values)
         {
-            if (hero.Belong == (int)HeroBelong.Wild)
+            HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
+            if (hero.Belong == (int)HeroBelong.Wild && config.DarkSide == 0)
             {
+                //心魔不会刷出来
                 bool isInTarven = this.IsHeroInCityTarven(hero.Id);
                 if(isInTarven == false)
                     wildHero.Add(hero.Id);
@@ -280,6 +312,13 @@ public class HeroProxy : BaseRemoteProxy
         this.DoSaveHeros();
     }
 
+    public void ChangeHeroEnegry(int id, int addValue)
+    {
+        Hero hero = this.GetHero(id);
+        hero.ChangeEnegry(addValue);
+        this.DoSaveHeros();
+    }
+
     public void ChangeHeroBelong(int id, bool isMy, int belong)
     {
         Hero hero = this.GetHero(id);
@@ -294,6 +333,8 @@ public class HeroProxy : BaseRemoteProxy
         {
             HeroConfig config = HeroConfig.Instance.GetData(id);
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroSuccess,config.Name));
+
+            RoleProxy._instance.AddLog(LogType.RecruitHeroSuccess, LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroSuccess, config.Name), id);
         }
     }
 
@@ -330,14 +371,19 @@ public class HeroProxy : BaseRemoteProxy
             if (configLv.ID > configLvOld.ID)
                 this.SendNotification(NotiDefine.FavorLevelUpNoti, id);
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.HeroFavorLevelChanged, config.Name, configLv.Name));
+
+            RoleProxy._instance.AddLog(LogType.HeroFavorLevel, LanguageConfig.GetLanguage(LanMainDefine.HeroFavorLevelChanged, config.Name, configLv.Name), id);
         }
         else if (hero.Favor > oldFavor)
         {
-            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.HeroFavorUp, config.Name, configLv.Name), CommonUINameDefine.UP_arrow);
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.HeroFavorUp, config.Name), CommonUINameDefine.UP_arrow);
+
+            RoleProxy._instance.AddLog(LogType.HeroFavorChange, LanguageConfig.GetLanguage(LanMainDefine.HeroFavorUp, config.Name), id);
         }
         else if (hero.Favor < oldFavor)
         {
-            PopupFactory.Instance.ShowNotice(LanMainDefine.HeroFavorDown);
+            PopupFactory.Instance.ShowNotice(LanMainDefine.HeroFavorDown,config.Name);
+            RoleProxy._instance.AddLog(LogType.HeroFavorChange, LanguageConfig.GetLanguage(LanMainDefine.HeroFavorDown, config.Name), id);
         }
 
         this.DoSaveHeros();

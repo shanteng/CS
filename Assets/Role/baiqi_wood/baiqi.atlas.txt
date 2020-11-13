@@ -1,0 +1,132 @@
+
+baiqi.png
+size: 512,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+baiqi1
+  rotate: false
+  xy: 293, 199
+  size: 40, 55
+  orig: 40, 55
+  offset: 0, 0
+  index: -1
+baiqi10
+  rotate: true
+  xy: 368, 237
+  size: 17, 50
+  orig: 17, 50
+  offset: 0, 0
+  index: -1
+baiqi11
+  rotate: false
+  xy: 368, 215
+  size: 27, 20
+  orig: 27, 20
+  offset: 0, 0
+  index: -1
+baiqi12
+  rotate: false
+  xy: 293, 142
+  size: 22, 55
+  orig: 22, 55
+  offset: 0, 0
+  index: -1
+baiqi13
+  rotate: false
+  xy: 267, 117
+  size: 23, 20
+  orig: 23, 20
+  offset: 0, 0
+  index: -1
+baiqi14
+  rotate: false
+  xy: 214, 47
+  size: 24, 41
+  orig: 24, 41
+  offset: 0, 0
+  index: -1
+baiqi15
+  rotate: false
+  xy: 224, 26
+  size: 9, 19
+  orig: 9, 19
+  offset: 0, 0
+  index: -1
+baiqi16
+  rotate: false
+  xy: 201, 9
+  size: 21, 36
+  orig: 21, 36
+  offset: 0, 0
+  index: -1
+baiqi17
+  rotate: false
+  xy: 2, 20
+  size: 163, 234
+  orig: 163, 234
+  offset: 0, 0
+  index: -1
+baiqi18
+  rotate: true
+  xy: 420, 242
+  size: 12, 18
+  orig: 12, 18
+  offset: 0, 0
+  index: -1
+baiqi2
+  rotate: false
+  xy: 214, 90
+  size: 30, 47
+  orig: 30, 47
+  offset: 0, 0
+  index: -1
+baiqi3
+  rotate: false
+  xy: 335, 209
+  size: 31, 45
+  orig: 31, 45
+  offset: 0, 0
+  index: -1
+baiqi4
+  rotate: false
+  xy: 167, 2
+  size: 32, 43
+  orig: 32, 43
+  offset: 0, 0
+  index: -1
+baiqi5
+  rotate: false
+  xy: 317, 178
+  size: 14, 19
+  orig: 14, 19
+  offset: 0, 0
+  index: -1
+baiqi6
+  rotate: true
+  xy: 2, 4
+  size: 14, 25
+  orig: 14, 25
+  offset: 0, 0
+  index: -1
+baiqi7
+  rotate: false
+  xy: 246, 101
+  size: 19, 36
+  orig: 19, 36
+  offset: 0, 0
+  index: -1
+baiqi8
+  rotate: false
+  xy: 167, 47
+  size: 45, 90
+  orig: 45, 90
+  offset: 0, 0
+  index: -1
+baiqi9
+  rotate: false
+  xy: 167, 139
+  size: 124, 115
+  orig: 124, 115
+  offset: 0, 0
+  index: -1

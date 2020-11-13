@@ -67,16 +67,40 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 965ae48662ef7f74787662b8fcd7e4ec, type: 3}
-    totalSpriteSurfaceArea: 10092
+    totalSpriteSurfaceArea: 61440
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: cd6c4129dcf32e443841671b483a8900, type: 3}
-  - {fileID: 21300000, guid: 8587d16b669409f4f90e628386e03afa, type: 3}
-  - {fileID: 21300000, guid: 4de925de59d7862488b464cd0dfa750a, type: 3}
+  - {fileID: 21300000, guid: d4e9255266ae1bd4d90250553313c437, type: 3}
+  - {fileID: 21300000, guid: 1f30948347ab08e4ba75e884ad07d800, type: 3}
+  - {fileID: 21300000, guid: 9f372c24f61efc34c9a7d5602fc0058e, type: 3}
+  - {fileID: 21300000, guid: 27f70e955e3432a438a58373d0725e5f, type: 3}
+  - {fileID: 21300000, guid: 7a41db571b95f97408c6e5095f0885da, type: 3}
+  - {fileID: 21300000, guid: 1d81f668f36704a4886eff72ff5685d6, type: 3}
+  - {fileID: 21300000, guid: cac1cab89a254a246863c48bed4047f3, type: 3}
+  - {fileID: 21300000, guid: 77a4066a4a458474382f5839b08162b3, type: 3}
+  - {fileID: 21300000, guid: 84626a5b12bc23342b2c54f4b5908cae, type: 3}
+  - {fileID: 21300000, guid: 5de91cbb03916ad4d84191d2466dfe37, type: 3}
+  - {fileID: 21300000, guid: 6f6bb9cbcdb63a2418c9f1fbd7398e3f, type: 3}
+  - {fileID: 21300000, guid: 23b433eb254aacb42b00e9d2fd8b6661, type: 3}
+  - {fileID: 21300000, guid: 74d59d9d93312ee4f9e489138a63f4d0, type: 3}
+  - {fileID: 21300000, guid: 05cbd38ed80e2e14690ea2d12759cf7d, type: 3}
+  - {fileID: 21300000, guid: d53e4acf8a4d8c44280d4a18053e26a1, type: 3}
   m_PackedSpriteNamesToIndex:
-  - QiBing
-  - GongBing
-  - BuBing
+  - BuBing5
+  - GongBing2
+  - BuBing1
+  - GongBing4
+  - QiBing3
+  - BuBing3
+  - QiBing5
+  - GongBing1
+  - GongBing5
+  - QiBing1
+  - QiBing2
+  - BuBing2
+  - GongBing3
+  - QiBing4
+  - BuBing4
   m_Tag: Army
   m_IsVariant: 0

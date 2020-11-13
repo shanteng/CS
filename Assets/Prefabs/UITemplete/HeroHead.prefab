@@ -210,6 +210,7 @@ MonoBehaviour:
   _EleValueTxt: {fileID: 2575242889216809697}
   _ElementBar: {fileID: 1647734760596601154}
   _nameTxt: {fileID: 7937800304035130500}
+  _lvCon: {fileID: 6542668330090331276}
   _levelTxt: {fileID: 1660774019084369334}
 --- !u!1 &5715038845339416683
 GameObject:
@@ -634,7 +635,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 59, y: 21}
+  m_SizeDelta: {x: 72, y: 21}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &5022893692349475588
 CanvasRenderer:

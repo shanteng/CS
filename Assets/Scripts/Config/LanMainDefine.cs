@@ -48,6 +48,7 @@
 
     public const string RoleLevelExp = "RoleLevelExp";
     public const string RoleLevel = "RoleLevel";
+    public const string EnegryCurMax = "EnegryCurMax";
 
     public const string RecruitCondition = "RecruitCondition";
     public const string OwnCount = "OwnCount";
@@ -83,6 +84,13 @@
     public const string HeroFavorLevelChanged = "HeroFavorLevelChanged";
     public const string CareerEvaluateDesc = "CareerEvaluateDesc";
     public const string ItemCount = "ItemCount";
+    public const string QuestTarget = "QuestTarget";
+
+
+    public const string LuckyValue = "LuckyValue";
+
+    public const string HeroTalentDesc = "HeroTalentDesc";
+    public const string LuckyDesc = "LuckyDesc";
 
     public const string QuestCityHasAward = "QuestCityHasAward";
     public const string QuestCityNoAward = "QuestCityNoAward";
@@ -109,6 +117,14 @@
     public const string MainCity = "MainCity";
     public const string FindCity = "FindCity";
     public const string OwnCityName = "OwnCityName";
+
+    public const string TalentFail = "TalentFail";
+    public const string TalentSuccess = "TalentSuccess";
+    public const string Talent = "Talent";
+
+    public const string BuildFinish = "BuildFinish";
+    public const string UpgradeBuildFinish = "UpgradeBuildFinish";
+
 }
 
 public class ConstDefine
@@ -124,5 +140,9 @@ public class ConstDefine
     public const string HeroTalkGap = "HeroTalkGap";
     public const string PatrolDeltaSces = "PatrolDeltaSces";
     public const string QuestDeltaSces = "QuestDeltaSces";
+
+    public const string HeroEnegry = "HeroEnegry";
+    public const string HeroCostEnegry = "HeroCostEnegry";
+    public const string HeroEnegryRecoverDelta = "HeroEnegryRecoverDelta";
 }
 

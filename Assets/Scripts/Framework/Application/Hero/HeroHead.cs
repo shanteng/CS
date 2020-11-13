@@ -13,6 +13,7 @@ public class HeroHead : UIBase
     public TextMeshProUGUI _EleValueTxt;
     public Image _ElementBar;
     public Text _nameTxt;
+    public GameObject _lvCon;
     public Text _levelTxt;
    
     private int _id;

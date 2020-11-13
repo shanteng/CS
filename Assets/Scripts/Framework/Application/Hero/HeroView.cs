@@ -173,14 +173,14 @@ public class HeroView : MonoBehaviour
             {
                 if (hero.IsMy)
                     owns.Add(hero);
-                else
+                else if(config.DarkSide == 0)
                     others.Add(hero);
             }
         }
 
 
         owns.Sort(this.Compare);
-        others.Sort(this.Compare);
+        others.Sort(this.CompareID);
 
         this._TotleCount = owns.Count + others.Count;
 
@@ -211,5 +211,10 @@ public class HeroView : MonoBehaviour
         if (compare != 0)
             return compare;
         return UtilTools.compareInt(b.Level, a.Level);
+    }
+
+    private int CompareID(Hero a, Hero b)
+    {
+        return UtilTools.compareInt(a.Id, a.Id);
     }
 }

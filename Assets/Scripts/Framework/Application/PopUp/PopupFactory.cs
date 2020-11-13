@@ -17,8 +17,8 @@ public enum PopType
     ATTRADD,
     PATROL,
     CITY_INFO,
-    CITY_ENTER,
     QUEST_CITY,
+    HERO_TALENT,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -69,6 +69,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowConfirmBy(data);
     }
 
+    public void ShowHeroTalent(int id)
+    {
+        this.ShowPop(PopType.HERO_TALENT, id);
+    }
+
     public void ShowCareerRate()
     {
         this.ShowPop(PopType.CAREER_RATE,0);
@@ -79,11 +84,7 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.QUEST_CITY, city);
     }
 
-    public void ShowNpcCityEnter(int city)
-    {
-        this.ShowPop(PopType.CITY_ENTER, city);
-    }
-
+ 
     public void ShowNpcCityInfo(int city)
     {
         this.ShowPop(PopType.CITY_INFO, city);
@@ -186,6 +187,16 @@ public class PopupFactory : SingletonFactory<PopupFactory>
                     _curShowWin = InitPatrol();
                     break;
                 }
+            case PopType.HERO_TALENT:
+                {
+                    _curShowWin = InitTalent();
+                    break;
+                }
+            case PopType.QUEST_CITY:
+                {
+                    _curShowWin = InitQuestCity();
+                    break;
+                }
         }
         this._curShowType = type;
         this._curShowWin.gameObject.SetActive(true);
@@ -265,6 +276,22 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         GameObject view = ResourcesManager.Instance.LoadPopupRes("PatrolPop");
         Popup script = view.GetComponent<Popup>();
         PatrolPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<PatrolPop>();
+        return scriptClone;
+    }
+
+    protected Popup InitTalent()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("TalentPop");
+        Popup script = view.GetComponent<Popup>();
+        TalentPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<TalentPop>();
+        return scriptClone;
+    }
+
+    protected Popup InitQuestCity()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("QuestCityPop");
+        Popup script = view.GetComponent<Popup>();
+        QuestCityPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<QuestCityPop>();
         return scriptClone;
     }
 }//end class

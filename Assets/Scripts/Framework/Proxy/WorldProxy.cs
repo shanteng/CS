@@ -91,6 +91,7 @@ public class WorldProxy : BaseRemoteProxy
                 {
                     CityConfig config = CityConfig.Instance.GetData(city.ID);
                     PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.FindCity, config.Name));
+                    RoleProxy._instance.AddLog(LogType.PatroFindCity, LanguageConfig.GetLanguage(LanMainDefine.FindCity, config.Name), city.ID);
                 }
                 
                 isChange = true;
@@ -848,6 +849,10 @@ public class WorldProxy : BaseRemoteProxy
 
         this.PatrolAction(patrol);
         PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.DoPatrol, gamePos.x, gamePos.y));
+
+        VInt2 worldPos = new VInt2(x, z);
+        RoleProxy._instance.AddLog(LogType.DoPatrol, LanguageConfig.GetLanguage(LanMainDefine.DoPatrol, gamePos.x, gamePos.y), worldPos);
+
         this.SendNotification(NotiDefine.PatrolResp, patrol);
         this.DoSaveOutPatrol();
     }
@@ -917,46 +922,80 @@ public class WorldProxy : BaseRemoteProxy
         {
             this.SendNotification(NotiDefine.PatrolFinishNoti);
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, gamePos.x, gamePos.y));
+
+            VInt2 worldPos = new VInt2(data.Target.x, data.Target.y);
+            RoleProxy._instance.AddLog(LogType.FinishPatrol, LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, gamePos.x, gamePos.y), worldPos);
+
             this.DoSaveOutPatrol();
         }
            
     }
 
-    public void DoQuestCity(Dictionary<string, object> vo)
+    public bool DoQuestCity(Dictionary<string, object> vo)
     {
         int HeroID = (int)vo["HeroID"];
         int TargetCity = (int)vo["TargetCity"];
+        CityConfig config = CityConfig.Instance.GetData(TargetCity);
+
+        int hasGoneHeroID = 0;
+        foreach (QuestCityData data in this._QuestCityDic.Values)
+        {
+            if (data.TargetCity == TargetCity)
+            {
+                hasGoneHeroID = data.HeroID;
+                break;
+            }
+        }
+
+        if (hasGoneHeroID > 0)
+        {
+            HeroConfig configGone = HeroConfig.Instance.GetData(hasGoneHeroID);
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.HeroHasQuest, configGone.Name,config.Name);
+            return false;
+        }
+
+
         Hero hero = HeroProxy._instance.GetHero(HeroID);
         HeroConfig confighe = HeroConfig.Instance.GetData(HeroID);
         if (hero.TeamId > 0)
         {
             PopupFactory.Instance.ShowErrorNotice(ErrorCode.HeroInTeamNoQuest, confighe.Name);
-            return;
+            return false;
         }
 
         VInt2 targetPos = this.GetCityCordinate(TargetCity);
 
-        CityConfig config = CityConfig.Instance.GetData(TargetCity);
+       
         int borderRange = config.Range[0] / 2 + 1;
         bool canMove = this.CanMoveTo(targetPos.x, targetPos.y, borderRange);
         VInt2 gamePos = UtilTools.WorldToGameCordinate(targetPos.x, targetPos.y);
         if (canMove == false)
         {
             PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoVisibleNoQuest, config.Name);
-            return;
+            return false;
         }
 
         CityData city = this.GetCity(TargetCity);
         if (city.QuestIndex != null && city.QuestIndex.Count >= config.QuestDrops.Length)
         {
             PopupFactory.Instance.ShowErrorNotice(ErrorCode.CityNoQuestDrop, config.Name);
-            return;
+            return false;
+        }
+
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.QuestDeltaSces);
+        int needEnegry = cfgconst.IntValues[0];
+        if (hero.GetEnegry() < needEnegry)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.HeroNoEnegry, needEnegry);
+            return false;
         }
 
         HeroProxy._instance.ChangeHeroTeam(HeroID, (int)HeroTeamState.QuestCity);
+        HeroProxy._instance.ChangeHeroEnegry(HeroID, needEnegry);
 
-        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.QuestDeltaSces);
+        cfgconst = ConstConfig.Instance.GetData(ConstDefine.HeroCostEnegry);
         int SecsDelta = cfgconst.IntValues[0];
+        float HeroSecs = (float)SecsDelta / (float)confighe.Speed;
 
         QuestCityData quest = new QuestCityData();
         quest.ID = UtilTools.GenerateUId();
@@ -966,13 +1005,18 @@ public class WorldProxy : BaseRemoteProxy
         quest.Target.x = targetPos.x;
         quest.Target.y = targetPos.y;
         quest.StartTime = GameIndex.ServerTime;
-        quest.ExpireTime = this.GetMoveExpireTime(quest.Start.x, quest.Start.y, quest.Target.x, quest.Target.y, SecsDelta);
+        quest.ExpireTime = this.GetMoveExpireTime(quest.Start.x, quest.Start.y, quest.Target.x, quest.Target.y, HeroSecs);
         this._QuestCityDic.Add(quest.ID, quest);
 
         this.QuestCityAction(quest);
         PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.DoQuestCity, confighe.Name,config.Name));
+
+        RoleProxy._instance.AddLog(LogType.QuestCity, LanguageConfig.GetLanguage(LanMainDefine.DoQuestCity, confighe.Name, config.Name), TargetCity);
+
+
         this.SendNotification(NotiDefine.QuestCityResp, quest);
         this.DoSaveQuestCity();
+        return true;
     }
 
     private void QuestCityAction(QuestCityData quest)
@@ -1021,50 +1065,67 @@ public class WorldProxy : BaseRemoteProxy
         //抽奖
         HeroConfig heroCoinfig = HeroConfig.Instance.GetData(data.HeroID);
         CityConfig config = CityConfig.Instance.GetData(city);
-        List<string> questDrops = new List<string>(config.QuestDrops);
 
-        List<string> LastAwards = new List<string>();
-        int count = questDrops.Count;
-        for (int i = 0; i < count; ++i)
+        //判断是否成功
+        List<string> talents = new List<string>(config.QuestTalents);
+        string[] testTalent = UtilTools.GetRandomChilds<string>(talents, 1)[0].Split(':');
+        int talentType = UtilTools.ParseInt(testTalent[0]);
+        int talentValue = UtilTools.ParseInt(testTalent[1]);
+        bool isSuccess = HeroProxy._instance.JudegeTalentResult(talentType, talentValue, data.HeroID);
+        string Notice;
+        if (isSuccess == false)
         {
-            if (cityInfo.QuestIndex.Contains(i))
-                continue;//已经获取过了
-            LastAwards.Add(questDrops[i]);
+            //提升失败
+            string lanKey = UtilTools.combine(LanMainDefine.TalentFail, talentType);
+            Notice = LanguageConfig.GetLanguage(lanKey, heroCoinfig.Name, config.Name, talentValue);
         }
-
-        if (LastAwards.Count == 0)
-        {
-            PopupFactory.Instance.ShowErrorNotice(ErrorCode.CityNoQuestDrop,config.Name);
-            return;
-        }
-
-        string awards = UtilTools.GetRandomChilds<string>(LastAwards, 1)[0];
-        int indexof = questDrops.IndexOf(awards);
-
-        if (cityInfo.QuestIndex.Contains(indexof) == false)
-            cityInfo.QuestIndex.Add(indexof);
-        //发放奖励
-        string GetName = "";
-        string[] list = awards.Split('|');
-        if (list[0].Equals("Item"))
-        {
-            CostData cost = new CostData();
-            cost.Init(list[1]);
-            RoleProxy._instance.ChangeRoleNumberValueBy(cost);
-            string name = ItemInfoConfig.Instance.GetData(cost.id).Name;
-            GetName = LanguageConfig.GetLanguage(LanMainDefine.ItemCount, name, cost.count);
-        }
-        else if (list[0].Equals("Hero"))
-        {
-            int heroid = UtilTools.ParseInt(list[1]);
-            HeroProxy._instance.ChangeHeroBelong(heroid, true,(int)HeroBelong.MainCity);
-            GetName = HeroConfig.Instance.GetData(heroid).Name;
-        }
-
-        if (GetName.Equals("") == false)
-            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.QuestCityHasAward, heroCoinfig.Name, config.Name, GetName));
         else
-            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.QuestCityNoAward, heroCoinfig.Name, config.Name));
+        {
+            //发奖励
+            List<string> questDrops = new List<string>(config.QuestDrops);
+            List<string> LastAwards = new List<string>();
+            int count = questDrops.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                if (cityInfo.QuestIndex.Contains(i))
+                    continue;//已经获取过了
+                LastAwards.Add(questDrops[i]);
+            }
+
+            if (LastAwards.Count == 0)
+            {
+                PopupFactory.Instance.ShowErrorNotice(ErrorCode.CityNoQuestDrop, config.Name);
+                return;
+            }
+
+            string awards = UtilTools.GetRandomChilds<string>(LastAwards, 1)[0];
+            int indexof = questDrops.IndexOf(awards);
+            if (cityInfo.QuestIndex.Contains(indexof) == false)
+                cityInfo.QuestIndex.Add(indexof);
+            //发放奖励
+            string GetName = "";
+            string[] list = awards.Split('|');
+            if (list[0].Equals("Item"))
+            {
+                CostData cost = new CostData();
+                cost.Init(list[1]);
+                RoleProxy._instance.ChangeRoleNumberValueBy(cost);
+                string name = ItemInfoConfig.Instance.GetData(cost.id).Name;
+                GetName = LanguageConfig.GetLanguage(LanMainDefine.ItemCount, name, cost.count);
+            }
+            else if (list[0].Equals("Hero"))
+            {
+                int heroid = UtilTools.ParseInt(list[1]);
+                HeroProxy._instance.ChangeHeroBelong(heroid, true, (int)HeroBelong.MainCity);
+                GetName = HeroConfig.Instance.GetData(heroid).Name;
+            }
+
+            string lanKey = UtilTools.combine(LanMainDefine.TalentSuccess, talentType);
+            Notice = LanguageConfig.GetLanguage(lanKey, heroCoinfig.Name, config.Name, GetName);
+        }
+
+        PopupFactory.Instance.ShowNotice(Notice);
+        RoleProxy._instance.AddLog(LogType.QuestCityResult, Notice, city);
 
         this.DoSaveCitys();
     }
@@ -1192,8 +1253,24 @@ public class WorldProxy : BaseRemoteProxy
         data._status == BuildingData.BuildingStatus.BUILD)
         {
             data.SetLevel(data._level + 1);//升级完成
+
+            VInt2 pos = new VInt2(data._cordinate.x, data._cordinate.y);
+            VInt2 gamePos = UtilTools.WorldToGameCordinate(pos.x, pos.y);
+            string notice;
+            if (data._status == BuildingData.BuildingStatus.BUILD)
+                notice = LanguageConfig.GetLanguage(LanMainDefine.BuildFinish, config.Name, gamePos.x, gamePos.y);
+            else
+                notice = LanguageConfig.GetLanguage(LanMainDefine.UpgradeBuildFinish, config.Name, data._level, gamePos.x, gamePos.y);
+
+            RoleProxy._instance.AddLog(LogType.BuildUp, notice, pos);
+
+
             data.SetStatus(BuildingData.BuildingStatus.NORMAL);
             ComputeEffects(data._city);//计算影响
+
+
+
+            
         }
         
         this.SendNotification(NotiDefine.BuildingStatusChanged, key);

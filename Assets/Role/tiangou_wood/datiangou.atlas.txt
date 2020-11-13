@@ -1,0 +1,307 @@
+
+datiangou.png
+size: 1024,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bianfa01
+  rotate: false
+  xy: 280, 2
+  size: 26, 51
+  orig: 26, 51
+  offset: 0, 0
+  index: -1
+bianfa02
+  rotate: false
+  xy: 111, 2
+  size: 15, 68
+  orig: 15, 68
+  offset: 0, 0
+  index: -1
+bianfa03
+  rotate: false
+  xy: 184, 5
+  size: 38, 44
+  orig: 38, 44
+  offset: 0, 0
+  index: -1
+bianfa04
+  rotate: true
+  xy: 224, 55
+  size: 71, 87
+  orig: 71, 87
+  offset: 0, 0
+  index: -1
+biyan
+  rotate: false
+  xy: 746, 70
+  size: 7, 5
+  orig: 7, 5
+  offset: 0, 0
+  index: -1
+chibang01
+  rotate: false
+  xy: 134, 51
+  size: 88, 75
+  orig: 88, 75
+  offset: 0, 0
+  index: -1
+chibang011
+  rotate: true
+  xy: 2, 13
+  size: 57, 107
+  orig: 57, 107
+  offset: 0, 0
+  index: -1
+chibang02
+  rotate: true
+  xy: 313, 65
+  size: 61, 84
+  orig: 61, 84
+  offset: 0, 0
+  index: -1
+chibang021
+  rotate: true
+  xy: 546, 82
+  size: 44, 80
+  orig: 44, 80
+  offset: 0, 0
+  index: -1
+houfa
+  rotate: true
+  xy: 2, 72
+  size: 54, 130
+  orig: 54, 130
+  offset: 0, 0
+  index: -1
+lian
+  rotate: false
+  xy: 686, 49
+  size: 26, 26
+  orig: 26, 26
+  offset: 0, 0
+  index: -1
+lidabi
+  rotate: true
+  xy: 452, 3
+  size: 18, 25
+  orig: 18, 25
+  offset: 0, 0
+  index: -1
+lidatui
+  rotate: true
+  xy: 546, 47
+  size: 33, 56
+  orig: 33, 56
+  offset: 0, 0
+  index: -1
+lijian
+  rotate: false
+  xy: 659, 48
+  size: 25, 30
+  orig: 25, 30
+  offset: 0, 0
+  index: -1
+limuzhi
+  rotate: true
+  xy: 2, 3
+  size: 8, 15
+  orig: 8, 15
+  offset: 0, 0
+  index: -1
+lishouzhang
+  rotate: true
+  xy: 313, 51
+  size: 12, 17
+  orig: 12, 17
+  offset: 0, 0
+  index: -1
+lishouzhi
+  rotate: false
+  xy: 332, 53
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+litui
+  rotate: false
+  xy: 995, 99
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: -1
+lixiaobi
+  rotate: false
+  xy: 757, 71
+  size: 57, 55
+  orig: 57, 55
+  offset: 0, 0
+  index: -1
+lixiaobihoubai
+  rotate: false
+  xy: 346, 17
+  size: 42, 46
+  orig: 42, 46
+  offset: 0, 0
+  index: -1
+lixiaotui
+  rotate: true
+  xy: 875, 84
+  size: 42, 60
+  orig: 42, 60
+  offset: 0, 0
+  index: -1
+mianju
+  rotate: false
+  xy: 627, 48
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+naofa
+  rotate: false
+  xy: 390, 20
+  size: 40, 42
+  orig: 40, 42
+  offset: 0, 0
+  index: -1
+qiandabi
+  rotate: false
+  xy: 604, 44
+  size: 21, 36
+  orig: 21, 36
+  offset: 0, 0
+  index: -1
+qianefa
+  rotate: true
+  xy: 397, 3
+  size: 15, 26
+  orig: 15, 26
+  offset: 0, 0
+  index: -1
+qianehoufa
+  rotate: true
+  xy: 816, 54
+  size: 22, 53
+  orig: 22, 53
+  offset: 0, 0
+  index: -1
+qianshou
+  rotate: true
+  xy: 399, 64
+  size: 62, 71
+  orig: 62, 71
+  offset: 0, 0
+  index: -1
+qianshouzhang
+  rotate: true
+  xy: 378, 2
+  size: 13, 17
+  orig: 13, 17
+  offset: 0, 0
+  index: -1
+qianxiaobihoubai
+  rotate: true
+  xy: 128, 5
+  size: 44, 54
+  orig: 44, 54
+  offset: 0, 0
+  index: -1
+qianzhangzhimu
+  rotate: false
+  xy: 425, 8
+  size: 5, 10
+  orig: 5, 10
+  offset: 0, 0
+  index: -1
+shan
+  rotate: false
+  xy: 628, 80
+  size: 66, 46
+  orig: 66, 46
+  offset: 0, 0
+  index: -1
+shangshen
+  rotate: true
+  xy: 816, 78
+  size: 48, 57
+  orig: 48, 57
+  offset: 0, 0
+  index: -1
+waidatui
+  rotate: true
+  xy: 696, 77
+  size: 49, 59
+  orig: 49, 59
+  offset: 0, 0
+  index: -1
+waijian
+  rotate: true
+  xy: 714, 55
+  size: 20, 30
+  orig: 20, 30
+  offset: 0, 0
+  index: -1
+waijiao
+  rotate: true
+  xy: 995, 74
+  size: 23, 27
+  orig: 23, 27
+  offset: 0, 0
+  index: -1
+waixiaotui
+  rotate: true
+  xy: 472, 71
+  size: 55, 72
+  orig: 55, 72
+  offset: 0, 0
+  index: -1
+weifa
+  rotate: false
+  xy: 308, 2
+  size: 36, 43
+  orig: 36, 43
+  offset: 0, 0
+  index: -1
+wuqi
+  rotate: false
+  xy: 937, 81
+  size: 56, 45
+  orig: 56, 45
+  offset: 0, 0
+  index: -1
+xiashen
+  rotate: false
+  xy: 432, 23
+  size: 35, 39
+  orig: 35, 39
+  offset: 0, 0
+  index: -1
+xiashenbai01
+  rotate: true
+  xy: 346, 2
+  size: 13, 30
+  orig: 13, 30
+  offset: 0, 0
+  index: -1
+xiashenbai02
+  rotate: false
+  xy: 224, 2
+  size: 54, 51
+  orig: 54, 51
+  offset: 0, 0
+  index: -1
+xiashenzhongbai
+  rotate: true
+  xy: 432, 2
+  size: 19, 18
+  orig: 19, 18
+  offset: 0, 0
+  index: -1
+yan
+  rotate: false
+  xy: 875, 79
+  size: 7, 3
+  orig: 7, 3
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,146 @@
+
+sunbin.png
+size: 512,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: false
+  xy: 137, 125
+  size: 7, 3
+  orig: 7, 3
+  offset: 0, 0
+  index: -1
+che
+  rotate: false
+  xy: 2, 124
+  size: 133, 130
+  orig: 133, 130
+  offset: 0, 0
+  index: -1
+che1
+  rotate: true
+  xy: 322, 204
+  size: 50, 78
+  orig: 50, 78
+  offset: 0, 0
+  index: -1
+fa
+  rotate: false
+  xy: 125, 45
+  size: 6, 24
+  orig: 6, 24
+  offset: 0, 0
+  index: -1
+fa1
+  rotate: false
+  xy: 259, 165
+  size: 11, 18
+  orig: 11, 18
+  offset: 0, 0
+  index: -1
+hua
+  rotate: false
+  xy: 322, 187
+  size: 22, 15
+  orig: 22, 15
+  offset: 0, 0
+  index: -1
+huzi
+  rotate: false
+  xy: 23, 5
+  size: 15, 18
+  orig: 15, 18
+  offset: 0, 0
+  index: -1
+huzi1
+  rotate: true
+  xy: 505, 245
+  size: 9, 5
+  orig: 9, 5
+  offset: 0, 0
+  index: -1
+huzi2
+  rotate: false
+  xy: 505, 240
+  size: 5, 3
+  orig: 5, 3
+  offset: 0, 0
+  index: -1
+lun
+  rotate: false
+  xy: 2, 25
+  size: 96, 97
+  orig: 96, 97
+  offset: 0, 0
+  index: -1
+maozi
+  rotate: false
+  xy: 186, 136
+  size: 38, 25
+  orig: 38, 25
+  offset: 0, 0
+  index: -1
+shen
+  rotate: false
+  xy: 137, 163
+  size: 91, 91
+  orig: 91, 91
+  offset: 0, 0
+  index: -1
+shen1
+  rotate: false
+  xy: 230, 185
+  size: 90, 69
+  orig: 90, 69
+  offset: 0, 0
+  index: -1
+shu
+  rotate: true
+  xy: 137, 130
+  size: 31, 47
+  orig: 31, 47
+  offset: 0, 0
+  index: -1
+songsu
+  rotate: false
+  xy: 2, 2
+  size: 19, 21
+  orig: 19, 21
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 230, 159
+  size: 27, 24
+  orig: 27, 24
+  offset: 0, 0
+  index: -1
+youbi
+  rotate: false
+  xy: 100, 25
+  size: 23, 44
+  orig: 23, 44
+  offset: 0, 0
+  index: -1
+youshou
+  rotate: true
+  xy: 402, 200
+  size: 54, 56
+  orig: 54, 56
+  offset: 0, 0
+  index: -1
+zuobi
+  rotate: false
+  xy: 100, 71
+  size: 31, 51
+  orig: 31, 51
+  offset: 0, 0
+  index: -1
+zuoshou
+  rotate: false
+  xy: 460, 195
+  size: 43, 59
+  orig: 43, 59
+  offset: 0, 0
+  index: -1

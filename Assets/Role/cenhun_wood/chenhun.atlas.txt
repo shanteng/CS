@@ -1,0 +1,139 @@
+
+chenhun.png
+size: 512,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: true
+  xy: 197, 18
+  size: 11, 8
+  orig: 11, 8
+  offset: 0, 0
+  index: -1
+guashi
+  rotate: false
+  xy: 319, 66
+  size: 8, 31
+  orig: 8, 31
+  offset: 0, 0
+  index: -1
+guashi1
+  rotate: true
+  xy: 292, 55
+  size: 9, 26
+  orig: 9, 26
+  offset: 0, 0
+  index: -1
+jiao
+  rotate: false
+  xy: 292, 66
+  size: 25, 31
+  orig: 25, 31
+  offset: 0, 0
+  index: -1
+jiao1
+  rotate: false
+  xy: 146, 16
+  size: 33, 28
+  orig: 33, 28
+  offset: 0, 0
+  index: -1
+qun
+  rotate: false
+  xy: 2, 8
+  size: 85, 118
+  orig: 85, 118
+  offset: 0, 0
+  index: -1
+shen
+  rotate: true
+  xy: 337, 77
+  size: 49, 70
+  orig: 49, 70
+  offset: 0, 0
+  index: -1
+shu
+  rotate: true
+  xy: 181, 18
+  size: 26, 14
+  orig: 26, 14
+  offset: 0, 0
+  index: -1
+tou
+  rotate: true
+  xy: 89, 8
+  size: 36, 55
+  orig: 36, 55
+  offset: 0, 0
+  index: -1
+yibai
+  rotate: true
+  xy: 89, 71
+  size: 55, 134
+  orig: 55, 134
+  offset: 0, 0
+  index: -1
+yibai1
+  rotate: true
+  xy: 89, 46
+  size: 23, 114
+  orig: 23, 114
+  offset: 0, 0
+  index: -1
+yibai2
+  rotate: true
+  xy: 225, 99
+  size: 27, 110
+  orig: 27, 110
+  offset: 0, 0
+  index: -1
+youbi
+  rotate: true
+  xy: 225, 30
+  size: 21, 35
+  orig: 21, 35
+  offset: 0, 0
+  index: -1
+youbi1
+  rotate: false
+  xy: 409, 69
+  size: 65, 57
+  orig: 65, 57
+  offset: 0, 0
+  index: -1
+youbi2
+  rotate: true
+  xy: 181, 2
+  size: 14, 26
+  orig: 14, 26
+  offset: 0, 0
+  index: -1
+youbi3
+  rotate: true
+  xy: 476, 78
+  size: 48, 28
+  orig: 48, 28
+  offset: 0, 0
+  index: -1
+youzhi
+  rotate: false
+  xy: 207, 18
+  size: 5, 11
+  orig: 5, 11
+  offset: 0, 0
+  index: -1
+zuobi
+  rotate: false
+  xy: 205, 31
+  size: 18, 38
+  orig: 18, 38
+  offset: 0, 0
+  index: -1
+zuobi1
+  rotate: true
+  xy: 225, 53
+  size: 44, 65
+  orig: 44, 65
+  offset: 0, 0
+  index: -1

@@ -360,4 +360,11 @@ public class UtilTools
     {
         return Mathf.CeilToInt(intA - intB);
     }
+
+    public static int RangeInt(int min, int max)
+    {
+        if (max <= min)
+            return min;
+        return UnityEngine.Random.Range(min, max);
+    }
 }

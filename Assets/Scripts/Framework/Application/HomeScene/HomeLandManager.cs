@@ -536,6 +536,4 @@ public class HomeLandManager : MonoBehaviour
         this.GotoSelectBuilding(data._key);
     }
 
-
-
-}//end cloass
+}//end class

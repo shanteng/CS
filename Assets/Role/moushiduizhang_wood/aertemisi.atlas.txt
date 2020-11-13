@@ -1,0 +1,132 @@
+
+aertemisi.png
+size: 256,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: true
+  xy: 250, 103
+  size: 23, 2
+  orig: 23, 2
+  offset: 0, 0
+  index: -1
+fa
+  rotate: false
+  xy: 206, 95
+  size: 42, 31
+  orig: 42, 31
+  offset: 0, 0
+  index: -1
+fa1
+  rotate: true
+  xy: 203, 50
+  size: 9, 19
+  orig: 9, 19
+  offset: 0, 0
+  index: -1
+houfa
+  rotate: false
+  xy: 2, 28
+  size: 62, 98
+  orig: 62, 98
+  offset: 0, 0
+  index: -1
+shen
+  rotate: false
+  xy: 66, 47
+  size: 60, 79
+  orig: 60, 79
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 165, 88
+  size: 39, 38
+  orig: 39, 38
+  offset: 0, 0
+  index: -1
+wuqi
+  rotate: false
+  xy: 157, 13
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: -1
+yan
+  rotate: false
+  xy: 213, 61
+  size: 24, 8
+  orig: 24, 8
+  offset: 0, 0
+  index: -1
+youdabi
+  rotate: true
+  xy: 128, 43
+  size: 17, 32
+  orig: 17, 32
+  offset: 0, 0
+  index: -1
+youdatui
+  rotate: true
+  xy: 2, 4
+  size: 22, 60
+  orig: 22, 60
+  offset: 0, 0
+  index: -1
+youjiao
+  rotate: false
+  xy: 87, 3
+  size: 26, 19
+  orig: 26, 19
+  offset: 0, 0
+  index: -1
+youxiabi
+  rotate: false
+  xy: 117, 20
+  size: 38, 21
+  orig: 38, 21
+  offset: 0, 0
+  index: -1
+youxiaotui
+  rotate: true
+  xy: 162, 42
+  size: 17, 39
+  orig: 17, 39
+  offset: 0, 0
+  index: -1
+zuodabi
+  rotate: true
+  xy: 213, 71
+  size: 22, 35
+  orig: 22, 35
+  offset: 0, 0
+  index: -1
+zuodatui
+  rotate: false
+  xy: 128, 62
+  size: 35, 64
+  orig: 35, 64
+  offset: 0, 0
+  index: -1
+zuojiao
+  rotate: true
+  xy: 64, 2
+  size: 20, 21
+  orig: 20, 21
+  offset: 0, 0
+  index: -1
+zuoxiabi
+  rotate: true
+  xy: 66, 24
+  size: 21, 49
+  orig: 21, 49
+  offset: 0, 0
+  index: -1
+zuoxiaotui
+  rotate: true
+  xy: 165, 61
+  size: 25, 46
+  orig: 25, 46
+  offset: 0, 0
+  index: -1

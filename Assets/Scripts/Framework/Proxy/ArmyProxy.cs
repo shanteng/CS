@@ -280,7 +280,12 @@ public class ArmyProxy : BaseRemoteProxy
 
 
         if (army.ReserveCount > 0)
+        {
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, army.ReserveCount, config.Name));
+
+            RoleProxy._instance.AddLog(LogType.HarvestArmy, LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, army.ReserveCount, config.Name));
+        }
+            
 
         army.Count += army.ReserveCount;
         army.RecruitExpireTime = 0;

@@ -71,6 +71,7 @@ public class NotiDefine
 
 
     public const string PowerChanged = "PowerChanged";
+    public const string NewLogNoti = "NewLogNoti";
 
 
     public const string AcceptHourAwardDo = "AcceptHourAwardDo";
@@ -176,6 +177,8 @@ public class ErrorCode
     public const string CityNoQuestDrop = "CityNoQuestDrop";
     public const string NoVisibleNoQuest = "NoVisibleNoQuest";
     public const string HeroInTeamNoQuest = "HeroInTeamNoQuest";
+    public const string HeroHasQuest = "HeroHasQuest";
+    public const string HeroNoEnegry = "HeroNoEnegry";
 }
 
 [Serializable]
@@ -269,6 +272,28 @@ public class CityData
     public List<int> QuestIndex;//探索的奖励下标
 }
 
+public class LogData
+{
+    public LogType Type;
+    public long Time;
+    public string Content;
+    public object Param;
+}
+
+public enum LogType
+{
+     HeroFavorLevel,
+     HeroFavorChange,
+    HarvestArmy,
+    DoPatrol,
+    FinishPatrol,
+    QuestCity,
+    QuestCityResult,
+    PatroFindCity,
+    BuildUp,
+    RecruitHeroSuccess,
+}
+
 public enum HeroBelong
 {
     MainCity = 0,
@@ -305,7 +330,15 @@ public enum BuildingType
     Wild = 4,
 }
 
-public enum FancyDefine
+public enum TalentDefine
+{
+    KOU_CAI = 1,
+    QIE_CUO = 2,
+    QI_YI = 3,
+    WEN_CAI = 4,
+}
+
+public enum  FancyDefine
 {
     WINE = 1,
     DRAWING = 2,
@@ -668,17 +701,19 @@ public class Hero
     public int StarRank;//升星
     public int Exp;
     public float ElementValue;//和稀有的挂钩
-    public Dictionary<int,int> Blood;//当前兵种/兵力
+    public Dictionary<int, int> Blood;//当前兵种/兵力
     public int MaxBlood;//带兵上限 等级和建筑计算
     public int Belong;//-1-在野  >=0 为对应城市ID
     public bool IsMy;//是否为我方
     public int TeamId;//上阵队伍ID 0-未上阵 -1-探索
     public int Favor;//好感度
     public long TalkExpire;//上次的聊天时间 HeroTalkGap 时间后俩天可以增加好感度
+    public long EnegryFullExpire;//体力恢复满的时间
+    public int MaxEnegry;
 
     public Dictionary<string, int> GetItems;//获得过的馈赠
     public Dictionary<int, string> Equips;// EqupType 装备的部位和道具ID
-  
+
     public void Create(HeroConfig config)
     {
         this.Id = config.ID;
@@ -691,9 +726,33 @@ public class Hero
         this.StarRank = 0;
         this.Favor = 0;
         this.TalkExpire = 0;
+        this.EnegryFullExpire = 0;
+        this.MaxEnegry = ConstConfig.Instance.GetData(ConstDefine.HeroEnegry).IntValues[0];
         this.GetItems = new Dictionary<string, int>();
         this.Equips = new Dictionary<int, string>();
         this.ComputeAttributes();
+    }
+
+    public int GetEnegry()
+    {
+        long leftSecs = this.EnegryFullExpire - GameIndex.ServerTime;
+        if (leftSecs <= 0)
+            return this.MaxEnegry;
+
+        int EnegryDelta = ConstConfig.Instance.GetData(ConstDefine.HeroEnegryRecoverDelta).IntValues[0];
+        int curEnergy = this.MaxEnegry - Mathf.CeilToInt((float)leftSecs / (float)EnegryDelta);
+        return curEnergy;
+    }
+
+    public void ChangeEnegry(int addEnegry)
+    {
+        int EnegryDelta = ConstConfig.Instance.GetData(ConstDefine.HeroEnegryRecoverDelta).IntValues[0];
+        int TotleSecs = EnegryDelta * addEnegry;
+        long leftSecs = this.EnegryFullExpire - GameIndex.ServerTime;
+        if (leftSecs <= 0)
+            this.EnegryFullExpire = GameIndex.ServerTime + TotleSecs;
+        else
+            this.EnegryFullExpire +=  TotleSecs;
     }
 
     public void ComputeAttributes()

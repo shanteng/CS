@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using TMPro;
 
 
 
@@ -11,7 +11,7 @@ public class CareerRate : UIBase
 {
     public Image _bg;
     public Image _Icon;
-    public Text _rateTxt;
+    public TextMeshProUGUI _rateTxt;
 
     public  void SetData(int career,int rate)
     {

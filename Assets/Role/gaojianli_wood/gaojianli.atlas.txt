@@ -1,0 +1,139 @@
+
+gaojianli.png
+size: 1024,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bai
+  rotate: true
+  xy: 136, 67
+  size: 59, 141
+  orig: 59, 141
+  offset: 0, 0
+  index: -1
+bai1
+  rotate: true
+  xy: 402, 89
+  size: 37, 139
+  orig: 37, 139
+  offset: 0, 0
+  index: -1
+bai2
+  rotate: true
+  xy: 136, 39
+  size: 26, 112
+  orig: 26, 112
+  offset: 0, 0
+  index: -1
+fa
+  rotate: true
+  xy: 2, 2
+  size: 25, 59
+  orig: 25, 59
+  offset: 0, 0
+  index: -1
+fa1
+  rotate: false
+  xy: 250, 51
+  size: 16, 14
+  orig: 16, 14
+  offset: 0, 0
+  index: -1
+fa2
+  rotate: true
+  xy: 136, 29
+  size: 8, 57
+  orig: 8, 57
+  offset: 0, 0
+  index: -1
+guashi
+  rotate: false
+  xy: 268, 54
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: -1
+guashi1
+  rotate: false
+  xy: 145, 15
+  size: 10, 12
+  orig: 10, 12
+  offset: 0, 0
+  index: -1
+guashi2
+  rotate: true
+  xy: 803, 80
+  size: 8, 38
+  orig: 8, 38
+  offset: 0, 0
+  index: -1
+houfa
+  rotate: true
+  xy: 279, 62
+  size: 64, 121
+  orig: 64, 121
+  offset: 0, 0
+  index: -1
+leshi
+  rotate: true
+  xy: 105, 6
+  size: 21, 38
+  orig: 21, 38
+  offset: 0, 0
+  index: -1
+shen
+  rotate: true
+  xy: 678, 79
+  size: 47, 64
+  orig: 47, 64
+  offset: 0, 0
+  index: -1
+shen1
+  rotate: true
+  xy: 2, 29
+  size: 97, 132
+  orig: 97, 132
+  offset: 0, 0
+  index: -1
+shou
+  rotate: true
+  xy: 744, 76
+  size: 50, 57
+  orig: 50, 57
+  offset: 0, 0
+  index: -1
+shou1
+  rotate: true
+  xy: 63, 2
+  size: 25, 40
+  orig: 25, 40
+  offset: 0, 0
+  index: -1
+shou2
+  rotate: true
+  xy: 803, 90
+  size: 36, 65
+  orig: 36, 65
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 870, 97
+  size: 26, 29
+  orig: 26, 29
+  offset: 0, 0
+  index: -1
+yueqi
+  rotate: false
+  xy: 543, 89
+  size: 133, 37
+  orig: 133, 37
+  offset: 0, 0
+  index: -1
+zuobi
+  rotate: true
+  xy: 402, 72
+  size: 15, 33
+  orig: 15, 33
+  offset: 0, 0
+  index: -1

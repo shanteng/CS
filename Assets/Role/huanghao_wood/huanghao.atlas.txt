@@ -1,0 +1,125 @@
+
+huanghao.png
+size: 512,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: false
+  xy: 76, 16
+  size: 7, 4
+  orig: 7, 4
+  offset: 0, 0
+  index: -1
+dai
+  rotate: true
+  xy: 376, 60
+  size: 35, 42
+  orig: 35, 42
+  offset: 0, 0
+  index: -1
+jiao
+  rotate: false
+  xy: 242, 33
+  size: 28, 23
+  orig: 28, 23
+  offset: 0, 0
+  index: -1
+jiao1
+  rotate: true
+  xy: 459, 100
+  size: 24, 29
+  orig: 24, 29
+  offset: 0, 0
+  index: -1
+maozi
+  rotate: true
+  xy: 315, 64
+  size: 31, 59
+  orig: 31, 59
+  offset: 0, 0
+  index: -1
+maozi1
+  rotate: true
+  xy: 419, 97
+  size: 27, 38
+  orig: 27, 38
+  offset: 0, 0
+  index: -1
+maozi2
+  rotate: true
+  xy: 2, 2
+  size: 8, 23
+  orig: 8, 23
+  offset: 0, 0
+  index: -1
+maozi3
+  rotate: false
+  xy: 272, 39
+  size: 13, 17
+  orig: 13, 17
+  offset: 0, 0
+  index: -1
+qianbai
+  rotate: true
+  xy: 315, 97
+  size: 27, 102
+  orig: 27, 102
+  offset: 0, 0
+  index: -1
+shen
+  rotate: true
+  xy: 160, 19
+  size: 43, 60
+  orig: 43, 60
+  offset: 0, 0
+  index: -1
+shen1
+  rotate: false
+  xy: 2, 12
+  size: 72, 112
+  orig: 72, 112
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 490, 101
+  size: 19, 23
+  orig: 19, 23
+  offset: 0, 0
+  index: -1
+wuqi
+  rotate: false
+  xy: 76, 22
+  size: 82, 102
+  orig: 82, 102
+  offset: 0, 0
+  index: -1
+youbi
+  rotate: true
+  xy: 420, 73
+  size: 22, 36
+  orig: 22, 36
+  offset: 0, 0
+  index: -1
+youbi1
+  rotate: false
+  xy: 242, 58
+  size: 71, 66
+  orig: 71, 66
+  offset: 0, 0
+  index: -1
+zuobi
+  rotate: false
+  xy: 222, 33
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: -1
+zuobi1
+  rotate: false
+  xy: 160, 64
+  size: 80, 60
+  orig: 80, 60
+  offset: 0, 0
+  index: -1

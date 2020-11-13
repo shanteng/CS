@@ -1,0 +1,174 @@
+
+huamulan.png
+size: 1024,64
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bai
+  rotate: true
+  xy: 334, 36
+  size: 26, 64
+  orig: 26, 64
+  offset: 0, 0
+  index: -1
+biyan
+  rotate: true
+  xy: 187, 23
+  size: 6, 1
+  orig: 6, 1
+  offset: 0, 0
+  index: -1
+fa
+  rotate: true
+  xy: 464, 38
+  size: 24, 55
+  orig: 24, 55
+  offset: 0, 0
+  index: -1
+houfa
+  rotate: true
+  xy: 2, 6
+  size: 56, 95
+  orig: 56, 95
+  offset: 0, 0
+  index: -1
+qun
+  rotate: false
+  xy: 274, 14
+  size: 58, 48
+  orig: 58, 48
+  offset: 0, 0
+  index: -1
+shen
+  rotate: true
+  xy: 193, 23
+  size: 39, 79
+  orig: 39, 79
+  offset: 0, 0
+  index: -1
+tou
+  rotate: true
+  xy: 521, 25
+  size: 37, 47
+  orig: 37, 47
+  offset: 0, 0
+  index: -1
+tui
+  rotate: true
+  xy: 400, 34
+  size: 28, 62
+  orig: 28, 62
+  offset: 0, 0
+  index: -1
+tui1
+  rotate: true
+  xy: 166, 2
+  size: 19, 48
+  orig: 19, 48
+  offset: 0, 0
+  index: -1
+tui2
+  rotate: true
+  xy: 570, 2
+  size: 23, 27
+  orig: 23, 27
+  offset: 0, 0
+  index: -1
+tui3
+  rotate: true
+  xy: 99, 10
+  size: 19, 65
+  orig: 19, 65
+  offset: 0, 0
+  index: -1
+tui4
+  rotate: true
+  xy: 334, 21
+  size: 13, 41
+  orig: 13, 41
+  offset: 0, 0
+  index: -1
+tui5
+  rotate: false
+  xy: 593, 37
+  size: 24, 25
+  orig: 24, 25
+  offset: 0, 0
+  index: -1
+wuqi
+  rotate: false
+  xy: 99, 31
+  size: 92, 31
+  orig: 92, 31
+  offset: 0, 0
+  index: -1
+yan
+  rotate: false
+  xy: 177, 23
+  size: 8, 6
+  orig: 8, 6
+  offset: 0, 0
+  index: -1
+youbi
+  rotate: true
+  xy: 216, 6
+  size: 15, 34
+  orig: 15, 34
+  offset: 0, 0
+  index: -1
+youbi1
+  rotate: false
+  xy: 619, 38
+  size: 12, 24
+  orig: 12, 24
+  offset: 0, 0
+  index: -1
+youshou
+  rotate: true
+  xy: 377, 22
+  size: 12, 16
+  orig: 12, 16
+  offset: 0, 0
+  index: -1
+youzhi
+  rotate: false
+  xy: 365, 11
+  size: 10, 8
+  orig: 10, 8
+  offset: 0, 0
+  index: -1
+zhou
+  rotate: false
+  xy: 334, 2
+  size: 29, 17
+  orig: 29, 17
+  offset: 0, 0
+  index: -1
+zuobi
+  rotate: false
+  xy: 570, 27
+  size: 21, 35
+  orig: 21, 35
+  offset: 0, 0
+  index: -1
+zuobi1
+  rotate: false
+  xy: 599, 2
+  size: 15, 33
+  orig: 15, 33
+  offset: 0, 0
+  index: -1
+zuodi
+  rotate: false
+  xy: 166, 23
+  size: 9, 6
+  orig: 9, 6
+  offset: 0, 0
+  index: -1
+zuoshou
+  rotate: false
+  xy: 633, 40
+  size: 13, 22
+  orig: 13, 22
+  offset: 0, 0
+  index: -1

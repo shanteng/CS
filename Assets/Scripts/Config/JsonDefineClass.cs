@@ -136,7 +136,7 @@ public class CityConfig : Config<CityConfig>
     public string[] Buildings;
     public int Power;//
     public string[] QuestDrops;
-
+    public string[] QuestTalents;//TalentDefine
     public CityConfig() : base(JsonNameDefine.City) { }
 
     public static BuildingUpgradeConfig GetConfig(int id, int level)
@@ -185,6 +185,10 @@ public class HeroConfig : Config<HeroConfig>
     public int NeedPower;//招募到达声望
     public int FavorLevel;//招募或者好高度高于
     public int Fancy;//FancyDefine
+
+    public string[] Talents;//TalentDefine
+    public int Lucky;//
+    public int DarkSide;//是否为心魔
 
     public HeroConfig() : base(JsonNameDefine.Hero) { }
 }
