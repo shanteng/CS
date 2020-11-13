@@ -44,6 +44,7 @@
     public const string FinishPatrol = "FinishPatrol";
     public const string DoPatrol = "DoPatrol";
     public const string DoQuestCity = "DoQuestCity";
+    public const string OwnCitySuccess = "OwnCitySuccess";
 
 
     public const string RoleLevelExp = "RoleLevelExp";

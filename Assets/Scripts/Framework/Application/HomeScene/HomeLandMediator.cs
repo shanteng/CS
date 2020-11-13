@@ -38,6 +38,7 @@ public class HomeLandMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.PathAddNoti);
         m_lInterestNotifications.Add(NotiDefine.PathRemoveNoti);
         m_lInterestNotifications.Add(NotiDefine.NewCitysVisbleNoti);
+        m_lInterestNotifications.Add(NotiDefine.DoOwnCityResp);
     }
 
     public override void HandleNotification(INotification notification)
@@ -170,6 +171,15 @@ public class HomeLandMediator : BaseNoWindowMediator
                     {
                         List<int> ids = (List<int>)notification.Body;
                         this._LandManager.NewCitysVisible(ids);
+                    }
+                    break;
+                }
+            case NotiDefine.DoOwnCityResp:
+                {
+                    if (this._isHomeLoaded)
+                    {
+                        int cityid= (int)notification.Body;
+                        this._LandManager.SetCityOwn(cityid);
                     }
                     break;
                 }

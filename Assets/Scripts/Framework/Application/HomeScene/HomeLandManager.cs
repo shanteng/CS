@@ -441,6 +441,18 @@ public class HomeLandManager : MonoBehaviour
         }
     }
 
+    public void SetCityOwn(int cityid)
+    {
+        foreach (City city in this._ShowCitys.Values)
+        {
+            if (city.ID == cityid)
+            {
+                city.UpdateOwn();
+                break;
+            }
+        }
+    }
+
     public void AddOneNpcShowCity(int cityid)
     {
         if (this._ShowCitys.ContainsKey(cityid) || cityid == 0)

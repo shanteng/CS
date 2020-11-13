@@ -47,6 +47,9 @@ public class NotiDefine
     public const string QuestCityDo = "QuestCityDo";
     public const string QuestCityResp = "QuestCityResp";
 
+    public const string DoOwnCityDo = "DoOwnCityDo";
+    public const string DoOwnCityResp = "DoOwnCityResp";
+
     public const string BuildingRelocateDo = "BuildingRelocateDo";
     public const string BuildingRelocateResp = "BuildingRelocateResp";
 
@@ -179,6 +182,7 @@ public class ErrorCode
     public const string HeroInTeamNoQuest = "HeroInTeamNoQuest";
     public const string HeroHasQuest = "HeroHasQuest";
     public const string HeroNoEnegry = "HeroNoEnegry";
+    public const string NoOwnNoQuest = "NoOwnNoQuest";
 }
 
 [Serializable]
@@ -292,6 +296,7 @@ public enum LogType
     PatroFindCity,
     BuildUp,
     RecruitHeroSuccess,
+    OwnCityResp,
 }
 
 public enum HeroBelong

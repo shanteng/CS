@@ -21,6 +21,7 @@ public class ControllersInitializeCommand : SimpleCommand
         Facade.RegisterCommand(NotiDefine.BuildingSpeedUpDo, typeof(BuildingCommand));
         Facade.RegisterCommand(NotiDefine.PatrolDo, typeof(BuildingCommand));
         Facade.RegisterCommand(NotiDefine.QuestCityDo, typeof(BuildingCommand));
+        Facade.RegisterCommand(NotiDefine.DoOwnCityDo, typeof(BuildingCommand));
 
         Facade.RegisterCommand(NotiDefine.BuildingExpireReachedNoti, typeof(BuildingCommand));
         Facade.RegisterCommand(NotiDefine.PatrolExpireReachedNoti, typeof(BuildingCommand));

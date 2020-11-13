@@ -132,7 +132,6 @@ public class WorldProxy : BaseRemoteProxy
         return false;
     }
 
-
     private void ComputeCityVisibleSpot()
     {
         //城市
@@ -911,13 +910,9 @@ public class WorldProxy : BaseRemoteProxy
         }//end for
 
         this.AddVisibleSpots(addList);
-
         VInt2 gamePos = UtilTools.WorldToGameCordinate(data.Target.x, data.Target.y);
-       
-     
         this._OutPatrolDic.Remove(key);
      
-       
         if (needSave)
         {
             this.SendNotification(NotiDefine.PatrolFinishNoti);
@@ -931,10 +926,30 @@ public class WorldProxy : BaseRemoteProxy
            
     }
 
+    public void DoOwnCity(int cityid)
+    {
+        CityData city = this.GetCity(cityid);
+        if (city == null || city.Visible == false)
+        {
+            return;
+        }
+
+        VInt2 cityPos = this.GetCityCordinate(cityid);
+        city.IsOwn = true;
+        VInt2 gamePos = UtilTools.WorldToGameCordinate(cityPos.x, cityPos.y);
+
+        
+        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.OwnCitySuccess, gamePos.x, gamePos.y));
+        RoleProxy._instance.AddLog(LogType.OwnCityResp, LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, gamePos.x, gamePos.y), cityPos);
+        this.SendNotification(NotiDefine.DoOwnCityResp, city);
+    }
+
     public bool DoQuestCity(Dictionary<string, object> vo)
     {
         int HeroID = (int)vo["HeroID"];
         int TargetCity = (int)vo["TargetCity"];
+
+
         CityConfig config = CityConfig.Instance.GetData(TargetCity);
 
         int hasGoneHeroID = 0;
@@ -976,6 +991,11 @@ public class WorldProxy : BaseRemoteProxy
         }
 
         CityData city = this.GetCity(TargetCity);
+        if (city.IsOwn == false)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoOwnNoQuest, config.Name);
+            return false;
+        }
         if (city.QuestIndex != null && city.QuestIndex.Count >= config.QuestDrops.Length)
         {
             PopupFactory.Instance.ShowErrorNotice(ErrorCode.CityNoQuestDrop, config.Name);

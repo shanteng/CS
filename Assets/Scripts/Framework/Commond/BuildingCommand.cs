@@ -64,6 +64,11 @@ public class BuildingCommand : SimpleCommand
                     proxy.DoQuestCity(notification.Body as Dictionary<string, object>);
                     break;
                 }
+            case NotiDefine.DoOwnCityDo:
+                {
+                    proxy.DoOwnCity((int)notification.Body);
+                    break;
+                }
         }
     }//end func
 }
