@@ -30,7 +30,7 @@ public class RoleProxy : BaseRemoteProxy
 {
     private Dictionary<string, int> IncomeDic = new Dictionary<string, int>();
     private Dictionary<string, int> HourAwardLimitDic = new Dictionary<string, int>();
-    private List<LogData> _LogDatas = new List<LogData>();
+    private Queue<LogData> _LogDatas = new Queue<LogData>();
     private RoleInfo _role;
     public static RoleProxy _instance;
     public RoleProxy() : base(ProxyNameDefine.ROLE)
@@ -40,18 +40,38 @@ public class RoleProxy : BaseRemoteProxy
 
     public RoleInfo Role => this._role;
 
-    public void AddLog(LogType type,string Content,object Param=null)
+    public void AddLog(LogType type,string Content, VInt2 Position = null)
     {
         LogData data = new LogData();
+        data.New = true;
+        data.ID = UtilTools.GenerateUId();
         data.Type = type;
         data.Content = Content;
-        data.Param = Param;
+        if (Position != null)
+            data.Position = Position;
         data.Time = GameIndex.ServerTime;
-        this._LogDatas.Add(data);
-        this.SendNotification(NotiDefine.NewLogNoti);
+        this._LogDatas.Enqueue(data);
+
+        if (this._LogDatas.Count > 300)
+        {
+            this._LogDatas.Dequeue();
+        }
+
+        this.DoSaveLog();
+
+        this.SendNotification(NotiDefine.NewLogNoti,data);
     }
 
-    public List<LogData> GetLogs()
+    public void SetLogOld()
+    {
+        foreach (LogData log in this._LogDatas)
+        {
+            log.New = false;
+        }
+        this.DoSaveLog();
+    }
+
+    public Queue<LogData> GetLogs()
     {
         return this._LogDatas;
     }
@@ -180,6 +200,10 @@ public class RoleProxy : BaseRemoteProxy
 
         if (awards.Count > 0)
         {
+            string name = ItemInfoConfig.Instance.GetData(awards[0].id).Name;
+            string Notice = LanguageConfig.GetLanguage(LanMainDefine.GetHourTax, awards[0].count, name);
+            RoleProxy._instance.AddLog(LogType.HourTax, Notice);
+
             this.ChangeRoleNumberValue(awards);
             this.SendNotification(NotiDefine.AcceptHourAwardResp);
         }
@@ -489,6 +513,9 @@ public class RoleProxy : BaseRemoteProxy
         MediatorUtil.SendNotification(NotiDefine.LoadAllArmyDo);
         MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo, 1);
         MediatorUtil.SendNotification(NotiDefine.LoadAllHeroDo);
+        TeamProxy._instance.LoadAllTeam();
+        WorldProxy._instance.LoadPatrol();
+        WorldProxy._instance.LoadQuestCity();
         //加载场景
         this.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);
     }
@@ -505,6 +532,16 @@ public class RoleProxy : BaseRemoteProxy
             this._role = Newtonsoft.Json.JsonConvert.DeserializeObject<RoleInfo>(json);
             this.Login();
         }
+
+        json = CloudDataTool.LoadFile(SaveFileDefine.Log);
+        if (json.Equals(string.Empty))
+        {
+            this._LogDatas.Clear();
+        }
+        else
+        {
+            this._LogDatas = Newtonsoft.Json.JsonConvert.DeserializeObject<Queue<LogData>>(json);
+        }
     }//end func
 
     private void DoSaveRole()
@@ -513,7 +550,12 @@ public class RoleProxy : BaseRemoteProxy
         CloudDataTool.SaveFile(SaveFileDefine.Role, _role);
     }
 
- 
+
+    private void DoSaveLog()
+    {
+        //存储
+        CloudDataTool.SaveFile(SaveFileDefine.Log, this._LogDatas);
+    }
 
 
 }//end class

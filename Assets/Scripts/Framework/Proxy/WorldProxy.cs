@@ -68,7 +68,10 @@ public class WorldProxy : BaseRemoteProxy
     public VInt2 GetCityCordinate(int cityid)
     {
         if (cityid == 0)
-            return new VInt2();
+        {
+            BuildingData bd = this.GetFirstBuilding(BuildingData.MainCityID,cityid);
+            return bd._cordinate;
+        }
 
         CityConfig config = CityConfig.Instance.GetData(cityid);
         VInt2 pos = new VInt2(config.Position[0], config.Position[1]);
@@ -91,7 +94,7 @@ public class WorldProxy : BaseRemoteProxy
                 {
                     CityConfig config = CityConfig.Instance.GetData(city.ID);
                     PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.FindCity, config.Name));
-                    RoleProxy._instance.AddLog(LogType.PatroFindCity, LanguageConfig.GetLanguage(LanMainDefine.FindCity, config.Name), city.ID);
+                    RoleProxy._instance.AddLog(LogType.PatroFindCity, LanguageConfig.GetLanguage(LanMainDefine.FindCity, config.Name));
                 }
                 
                 isChange = true;
@@ -106,11 +109,39 @@ public class WorldProxy : BaseRemoteProxy
             MediatorUtil.SendNotification(NotiDefine.NewCitysVisbleNoti, news);//更新地图
     }
 
-    public bool IsInCityVisibleRange(int cityid)
+    public void SetCityRangeSpotVisible(int cityid)
     {
         CityConfig config = CityConfig.Instance.GetData(cityid);
         VInt2 centerPos = this.GetCityCordinate(cityid);
         int halfRange = config.Range[1];
+        int startX = centerPos.x - halfRange;
+        int endX = centerPos.x + halfRange;
+        int startZ = centerPos.y - halfRange;
+        int endZ = centerPos.y + halfRange;
+        List<VInt2> newAdds = new List<VInt2>();
+        for (int row = startX; row <= endX; ++row)
+        {
+            int corX = row;
+            for (int col = startZ; col <= endZ; ++col)
+            {
+                int corZ = col;
+                bool isVisible = this.IsSpotVisible(corX, corZ);
+                if (isVisible == false)
+                {
+                    VInt2 kv = new VInt2(corX, corZ);
+                    newAdds.Add(kv);
+                }
+            }//end for col
+        }//end for row
+
+        this.AddVisibleSpots(newAdds);
+    }
+
+    public bool IsInCityRange(int cityid,int x,int y)
+    {
+        CityConfig config = CityConfig.Instance.GetData(cityid);
+        VInt2 centerPos = this.GetCityCordinate(cityid);
+        int halfRange = config.Range[0]/2;
 
         int startX = centerPos.x - halfRange;
         int endX = centerPos.x + halfRange;
@@ -118,6 +149,30 @@ public class WorldProxy : BaseRemoteProxy
         int startZ = centerPos.y - halfRange;
         int endZ = centerPos.y + halfRange;
 
+        for (int row = startX; row <= endX; ++row)
+        {
+            int corX = row;
+            for (int col = startZ; col <= endZ; ++col)
+            {
+                int corZ = col;
+                if (corX == x && corZ == y)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool IsInCityVisibleRange(int cityid)
+    {
+        CityConfig config = CityConfig.Instance.GetData(cityid);
+        VInt2 centerPos = this.GetCityCordinate(cityid);
+        int halfRange = config.Range[1];
+        int startX = centerPos.x - halfRange;
+        int endX = centerPos.x + halfRange;
+
+        int startZ = centerPos.y - halfRange;
+        int endZ = centerPos.y + halfRange;
         for (int row = startX; row <= endX; ++row)
         {
             int corX = row;
@@ -271,6 +326,39 @@ public class WorldProxy : BaseRemoteProxy
         }
     }
 
+    public void LoadQuestCity()
+    {
+        string json = CloudDataTool.LoadFile(SaveFileDefine.QuestCity);
+        if (json.Equals(string.Empty) == false)
+        {
+            this._QuestCityDic = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, QuestCityData>>(json);
+        }
+
+        List<string> finishs = new List<string>();
+        var it = this._QuestCityDic.Values.GetEnumerator();
+        while (it.MoveNext())
+        {
+            QuestCityData data = it.Current;
+            if (GameIndex.ServerTime >= data.ExpireTime)
+            {
+                finishs.Add(data.ID);
+            }
+            else
+            {
+                this.QuestCityAction(data);
+            }
+        }
+        it.Dispose();
+
+        if (finishs.Count > 0)
+        {
+            foreach (string id in finishs)
+            {
+                this.OnFinishQuestCity(id, false);
+            }
+            this.DoSaveQuestCity();
+        }
+    }
 
     public void LoadPatrol()
     {
@@ -304,7 +392,6 @@ public class WorldProxy : BaseRemoteProxy
             }
             this.DoSaveOutPatrol();
         }
-
     }
 
     public void GenerateAllBuilding(int world)
@@ -367,8 +454,9 @@ public class WorldProxy : BaseRemoteProxy
 
 
         this.LoadVisibleSpot();//读取可视区域
-        this.LoadPatrol();
         this.LoadAllCitys();
+        //this.LoadPatrol();
+        //this.LoadQuestCity();
 
         ComputeEffects();
     }
@@ -701,6 +789,23 @@ public class WorldProxy : BaseRemoteProxy
         return false;
     }
 
+    public CityData GetCityDataInPostionRange(int x,int y)
+    {
+        //获取坐标是否再Npc城市的范围内
+        foreach (CityData data in this.AllCitys.Values)
+        {
+            if (data.ID == 0)
+                continue;//主城不计算
+            VInt2 pos = this.GetCityCordinate(data.ID);
+            bool isInCityRange = this.IsInCityRange(data.ID,x,y);
+            if (isInCityRange)
+                return data;
+            
+        }
+        return null;
+    }
+
+
     public CityData GetCity(int city)
     {
         CityData data;
@@ -869,6 +974,7 @@ public class WorldProxy : BaseRemoteProxy
         path.StartTime = patrol.StartTime;
         path.ExpireTime = patrol.ExpireTime;
         path.Model = "PathModel";
+        path.Picture = "default";
         path.Param = patrol;
         PathProxy._instance.AddPath(path);
 
@@ -935,20 +1041,31 @@ public class WorldProxy : BaseRemoteProxy
         }
 
         VInt2 cityPos = this.GetCityCordinate(cityid);
+        CityConfig config = CityConfig.Instance.GetData(cityid);
+        int borderRange = config.Range[0] / 2 + 1;
+        bool canMove = this.CanMoveTo(cityPos.x, cityPos.y, borderRange);
+        if (canMove == false)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoVisibleNoAttack, config.Name);
+            return;
+        }
+
         city.IsOwn = true;
         VInt2 gamePos = UtilTools.WorldToGameCordinate(cityPos.x, cityPos.y);
+        this.DoSaveCitys();
 
-        
-        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.OwnCitySuccess, gamePos.x, gamePos.y));
-        RoleProxy._instance.AddLog(LogType.OwnCityResp, LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, gamePos.x, gamePos.y), cityPos);
-        this.SendNotification(NotiDefine.DoOwnCityResp, city);
+        //设置新的迷雾解锁
+        SetCityRangeSpotVisible(cityid);
+
+        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.OwnCitySuccess, config.Name, gamePos.x, gamePos.y));
+        RoleProxy._instance.AddLog(LogType.OwnCityResp, LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, config.Name, gamePos.x, gamePos.y), cityPos);
+        this.SendNotification(NotiDefine.DoOwnCityResp, cityid);
     }
 
     public bool DoQuestCity(Dictionary<string, object> vo)
     {
         int HeroID = (int)vo["HeroID"];
         int TargetCity = (int)vo["TargetCity"];
-
 
         CityConfig config = CityConfig.Instance.GetData(TargetCity);
 
@@ -1002,7 +1119,7 @@ public class WorldProxy : BaseRemoteProxy
             return false;
         }
 
-        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.QuestDeltaSces);
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.HeroCostEnegry);
         int needEnegry = cfgconst.IntValues[0];
         if (hero.GetEnegry() < needEnegry)
         {
@@ -1010,10 +1127,11 @@ public class WorldProxy : BaseRemoteProxy
             return false;
         }
 
-        HeroProxy._instance.ChangeHeroTeam(HeroID, (int)HeroTeamState.QuestCity);
-        HeroProxy._instance.ChangeHeroEnegry(HeroID, needEnegry);
-
-        cfgconst = ConstConfig.Instance.GetData(ConstDefine.HeroCostEnegry);
+        hero.TeamId = (int)HeroTeamState.QuestCity;
+        hero.ChangeEnegry(needEnegry);
+        HeroProxy._instance.DoSaveHeros();
+       
+        cfgconst = ConstConfig.Instance.GetData(ConstDefine.QuestDeltaSces);
         int SecsDelta = cfgconst.IntValues[0];
         float HeroSecs = (float)SecsDelta / (float)confighe.Speed;
 
@@ -1031,8 +1149,7 @@ public class WorldProxy : BaseRemoteProxy
         this.QuestCityAction(quest);
         PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.DoQuestCity, confighe.Name,config.Name));
 
-        RoleProxy._instance.AddLog(LogType.QuestCity, LanguageConfig.GetLanguage(LanMainDefine.DoQuestCity, confighe.Name, config.Name), TargetCity);
-
+        RoleProxy._instance.AddLog(LogType.QuestCity, LanguageConfig.GetLanguage(LanMainDefine.DoQuestCity, confighe.Name, config.Name), targetPos);
 
         this.SendNotification(NotiDefine.QuestCityResp, quest);
         this.DoSaveQuestCity();
@@ -1050,6 +1167,7 @@ public class WorldProxy : BaseRemoteProxy
         path.StartTime = quest.StartTime;
         path.ExpireTime = quest.ExpireTime;
         path.Model = "PathModel";//后面读取英灵模型，暂时写死
+        path.Picture = HeroConfig.Instance.GetData(quest.HeroID).Model;
         path.Param = quest;
         PathProxy._instance.AddPath(path);
 
@@ -1063,7 +1181,7 @@ public class WorldProxy : BaseRemoteProxy
         this.DoSaveQuestCity();
     }
 
-    public void OnFinishQuestCity(string questid)
+    public void OnFinishQuestCity(string questid,bool needSave = true)
     {
         PathProxy._instance.RemovePath(questid);
         QuestCityData data;
@@ -1079,8 +1197,9 @@ public class WorldProxy : BaseRemoteProxy
 
         HeroProxy._instance.ChangeHeroTeam(data.HeroID, (int)HeroTeamState.NoTeam);
         this._QuestCityDic.Remove(questid);
-        
-        this.DoSaveQuestCity();
+
+        if (needSave)
+            this.DoSaveQuestCity();
 
         //抽奖
         HeroConfig heroCoinfig = HeroConfig.Instance.GetData(data.HeroID);
@@ -1091,11 +1210,11 @@ public class WorldProxy : BaseRemoteProxy
         string[] testTalent = UtilTools.GetRandomChilds<string>(talents, 1)[0].Split(':');
         int talentType = UtilTools.ParseInt(testTalent[0]);
         int talentValue = UtilTools.ParseInt(testTalent[1]);
-        bool isSuccess = HeroProxy._instance.JudegeTalentResult(talentType, talentValue, data.HeroID);
+        int isSuccess = HeroProxy._instance.JudegeTalentResult(talentType, talentValue, data.HeroID);
         string Notice;
-        if (isSuccess == false)
+        if (isSuccess == 0)
         {
-            //提升失败
+            //失败
             string lanKey = UtilTools.combine(LanMainDefine.TalentFail, talentType);
             Notice = LanguageConfig.GetLanguage(lanKey, heroCoinfig.Name, config.Name, talentValue);
         }
@@ -1140,14 +1259,24 @@ public class WorldProxy : BaseRemoteProxy
                 GetName = HeroConfig.Instance.GetData(heroid).Name;
             }
 
-            string lanKey = UtilTools.combine(LanMainDefine.TalentSuccess, talentType);
+            string lanKey;
+            if (isSuccess == 2)
+            {
+                //幸运
+                lanKey = UtilTools.combine(LanMainDefine.LuckyTalentSuccess, talentType);
+            }
+            else
+            {
+                lanKey = UtilTools.combine(LanMainDefine.TalentSuccess, talentType);
+            }
+
             Notice = LanguageConfig.GetLanguage(lanKey, heroCoinfig.Name, config.Name, GetName);
         }
 
         PopupFactory.Instance.ShowNotice(Notice);
-        RoleProxy._instance.AddLog(LogType.QuestCityResult, Notice, city);
 
-        this.DoSaveCitys();
+        VInt2 cityInfoPos = this.GetCityCordinate(city);
+        RoleProxy._instance.AddLog(LogType.QuestCityResult, Notice, cityInfoPos);
     }
 
     public void Create(Dictionary<string, object> vo)
@@ -1204,12 +1333,14 @@ public class WorldProxy : BaseRemoteProxy
             return;
         //时间中心去掉
         MediatorUtil.SendNotification(NotiDefine.RemoveTimestepCallback, key);
+        this.OnBuildExpireFinsih(key);
 
-        data.SetStatus(BuildingData.BuildingStatus.NORMAL);
+        /*data.SetStatus(BuildingData.BuildingStatus.NORMAL);
         data.SetLevel(data._level + 1);
         ComputeEffects(data._city);//计算影响
         this.DoSaveWorldDatas();
         MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
+        */
     }
 
     public void SpeedUpUpgrade(string key)
@@ -1282,15 +1413,11 @@ public class WorldProxy : BaseRemoteProxy
             else
                 notice = LanguageConfig.GetLanguage(LanMainDefine.UpgradeBuildFinish, config.Name, data._level, gamePos.x, gamePos.y);
 
+            PopupFactory.Instance.ShowNotice(notice);
             RoleProxy._instance.AddLog(LogType.BuildUp, notice, pos);
-
 
             data.SetStatus(BuildingData.BuildingStatus.NORMAL);
             ComputeEffects(data._city);//计算影响
-
-
-
-            
         }
         
         this.SendNotification(NotiDefine.BuildingStatusChanged, key);

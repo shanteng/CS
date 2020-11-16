@@ -26,6 +26,7 @@ public class SaveFileDefine
     public const string Patrol = "Patrol";
     public const string Citys = "Citys";
     public const string QuestCity = "QuestCity";
+    public const string Log = "Log";
 }
 
 public class CloudDataTool

@@ -9,6 +9,7 @@ public class PathModel : MonoBehaviour
     public Transform _modelRoot;
     public CountDownText _cdTxt;
     public Transform _Flag;
+    public GameObject _SelectFlag;
 
     public Transform _PatrolRoot;
     public GameObject _patrolSpotPrefab;
@@ -31,6 +32,7 @@ public class PathModel : MonoBehaviour
   
 
     private PathData _data;
+    public string ID => this._data.ID;
     private void Awake()
     {
 
@@ -93,14 +95,20 @@ public class PathModel : MonoBehaviour
 
         Vector3 lookAt = new Vector3(_endPos.x, this._modelRoot.position.y, _endPos.z);
         this._modelRoot.LookAt(lookAt);
-
+        this.SetSelect(false);
         this._camTran = Camera.main.transform;
 
         this._cdTxt.DoCountDown(this._data.ExpireTime);
         Vector3 targetPos = this._cdTxt.transform.position + _camTran.rotation * Vector3.forward;
         Vector3 targetOrientation = _camTran.rotation * Vector3.up;
         this._cdTxt.transform.LookAt(targetPos, targetOrientation);
+        this._SelectFlag.transform.LookAt(targetPos, targetOrientation);
         this._isStart = true;
+    }
+
+    public void SetSelect(bool isSelect)
+    {
+        this._SelectFlag.SetActive(isSelect);
     }
 
     private void Update()

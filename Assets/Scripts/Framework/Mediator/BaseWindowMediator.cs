@@ -70,6 +70,7 @@ public abstract class BaseWindowMediator<T> : Mediator
         m_lInterestNotifications.Add(m_sShowNoity);
         m_lInterestNotifications.Add(m_sHideNoity);
         m_lInterestNotifications.Add(NotiDefine.FULLSCREEN_WINDOW_SHOW);
+        m_lInterestNotifications.Add(NotiDefine.WorldGoToStart);
         m_lInterestNotifications.Add(NotiDefine.GAME_RESET);
         InitListNotificationInterestsInner();
         m_lInterestNotifications.AddRange(this.m_HideNoHandleNotifations);
@@ -95,6 +96,16 @@ public abstract class BaseWindowMediator<T> : Mediator
                 case NotiDefine.FULLSCREEN_WINDOW_SHOW:
                     {
                         OnFullScreenWindowShow(notification.Body);
+                    }
+                    break;
+                case NotiDefine.WorldGoToStart:
+                    {
+                        if (WindowLayer.Window == this.m_eWindowLayer ||
+                            WindowLayer.FullScreen == this.m_eWindowLayer)
+                        {
+                            //全屏界面打开时关闭所有已经打开过的窗口
+                            HideWindow();
+                        }
                     }
                     break;
                 case NotiDefine.GAME_RESET:

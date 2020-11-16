@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
+
+
 public class TeamHeroItem : ItemRender
 {
     public Text _teamIdTxt;
@@ -17,23 +19,99 @@ public class TeamHeroItem : ItemRender
     public Slider _SliderBlood;
     public UIButton _BtnArmy;
     public Image _IconArmy;
+    public GameObject _plusArmy;
     public UITexts _troopTxt;
 
-    public UITexts _AttackTxt;
-    public UITexts _DefenseTxt;
-    public UITexts _SpeedTxt;
+    public TeamAttributeUi _TeamAttrUi;
+    public GameObject _Mask;
 
     public UITexts _StateTxt;
     private int _teamID;
-    
+    private bool _isOpen;
 
     public int ID => this._teamID;
 
+    private void Start()
+    {
+        this._BtnArmy.AddEvent(OnArmyClick);
+        this._BtnHero.AddEvent(OnHeroClick);
+    }
+
+    private void OnArmyClick(UIButton btn)
+    {
+        if (this._isOpen == false)
+            return;
+        PopupFactory.Instance.ShowTeamSet(this.ID);
+    }
+
+    private void OnHeroClick(UIButton btn)
+    {
+        if (this._isOpen == false)
+            return;
+        PopupFactory.Instance.ShowTeamSet(this.ID);
+    }
+
+    protected override void setDataInner(ScrollData data)
+    {
+        this.SetData((int)data._Param);
+    }
+
     public void SetData(int id)
     {
+        this._teamID = id;
+        this._teamIdTxt.text = id.ToString();
+        Team team =  TeamProxy._instance.GetTeam(id);
+        int openLevel = 0;
+        _isOpen = TeamProxy._instance.IsTeamOpen(id, out openLevel);
+        int heroID = team.HeroID;
+        Hero hero = HeroProxy._instance.GetHero(heroID);
+
+        bool isIdleState = _isOpen && team.Status == (int)TeamStatus.Idle;
+
+        this._lockTxt.gameObject.SetActive(_isOpen == false);
+        this._HeadUi.gameObject.SetActive(_isOpen && hero != null);
+        this._Plus.SetActive(_isOpen && hero==null);
+
+        this._BtnArmy.IsEnable = isIdleState;
+        this._BtnHero.IsEnable = isIdleState;
+
        
-        
-    }
+        this._TeamAttrUi.gameObject.SetActive(_isOpen && hero != null);
+        int blood = 0;
+        int maxBlood = 1;
+        int armyId = 0;
+        if (_isOpen == false)
+        {
+            this._lockTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.TeamOpenCondition, openLevel);
+            this._rateUi.SetUnSet();
+        }
+        else if (_isOpen && hero != null)
+        {
+            this._rateUi.SetData(heroID);
+            this._HeadUi.SetData(heroID);
+            blood = hero.Blood;
+            armyId = hero.ArmyTypeID;
+            maxBlood = hero.MaxBlood;
+        }
+        else
+        {
+            this._rateUi.SetUnSet();
+        }
+
+        this._SliderBlood.value = (float)blood / (float)maxBlood;
+        this._troopTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.TeamBlood, blood,maxBlood);
+        this._troopTxt.FirstLabel.gameObject.SetActive(maxBlood > 1);
+        this._IconArmy.gameObject.SetActive(armyId > 0 && _isOpen);
+        this._plusArmy.SetActive(armyId == 0 && _isOpen);
+        if (armyId > 0)
+            this._IconArmy.sprite = ResourcesManager.Instance.GetArmySprite(armyId);
+
+        this._TeamAttrUi.SetData(heroID, armyId, blood);
+        this._TeamAttrUi.gameObject.SetActive(_isOpen);
+        this._StateTxt.gameObject.SetActive(team.Status != (int)TeamStatus.Idle);
+        this._StateTxt.FirstLabel.text = LanErrorConfig.GetLanguage(UtilTools.combine(LanMainDefine.TeamStatus, team.Status));
+        this._Mask.SetActive(isIdleState == false);
+    }//end func
 
 }
 

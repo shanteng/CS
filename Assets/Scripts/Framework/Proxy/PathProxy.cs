@@ -17,6 +17,7 @@ public class PathProxy : BaseRemoteProxy
         _instance = this;
     }
 
+
     public Dictionary<string, PathData> AllPaths => this._paths;
 
     public void AddPath(PathData path)

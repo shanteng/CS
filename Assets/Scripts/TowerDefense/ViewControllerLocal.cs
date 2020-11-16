@@ -192,6 +192,26 @@ public class ViewControllerLocal : MonoBehaviour
         }
     }
 
+    public bool TryGotoWorldPostion(Vector3 wolrdPos, UnityAction<object> callBack = null, object param = null)
+    {
+        Vector3 cameraPos = new Vector3(this._StartPos.x + wolrdPos.x, this._StartPos.y, this._StartPos.z + wolrdPos.z);
+        this._isTryGoTo = true;
+        MediatorUtil.SendNotification(NotiDefine.WorldGoToStart);
+        this.transform.DOMove(cameraPos, 1f).onComplete = () =>
+        {
+            this.SetMinMapPostion();
+            this._isTryGoTo = false;
+            MediatorUtil.SendNotification(NotiDefine.CordinateChange);
+            if (callBack != null)
+                callBack.Invoke(param);
+        };
+
+        PopupFactory.Instance.Hide();
+        this._translateX = wolrdPos.x;
+        this._translateY = wolrdPos.y;
+        return true;
+    }
+
     public bool TryGoto(VInt2 wolrdPos,UnityAction<object> callBack = null,object param = null)
     {
         VInt2 gamePos = UtilTools.WorldToGameCordinate(wolrdPos.x, wolrdPos.y);
@@ -203,26 +223,32 @@ public class ViewControllerLocal : MonoBehaviour
         Vector3 cameraPos = new Vector3(this._StartPos.x + wolrdPos.x, this._StartPos.y, this._StartPos.z + wolrdPos.y);
         //this.transform.position = cameraPos;
         this._isTryGoTo = true;
+        MediatorUtil.SendNotification(NotiDefine.WorldGoToStart);
         this.transform.DOMove(cameraPos, 1f).onComplete = () =>
         {
             this.SetMinMapPostion();
             this._isTryGoTo = false;
             MediatorUtil.SendNotification(NotiDefine.CordinateChange);
-
+            
             BuildingData bd = WorldProxy._instance.GetBuildingInRange(wolrdPos.x, wolrdPos.y);
             if (bd != null && bd._city == 0)
             {
                 HomeLandManager.GetInstance().SetCurrentSelectBuilding(bd._key);
             }
-            else if (bd != null && bd._city > 0)
-            {
-                //占领的城市
-            }
             else
             {
-                HomeLandManager.GetInstance().OnClickSpot(new Vector3(wolrdPos.x, 0, wolrdPos.y));
+                //占领的城市
+                CityData cityInfo = WorldProxy._instance.GetCityDataInPostionRange(wolrdPos.x, wolrdPos.y);
+                if (cityInfo != null && cityInfo.Visible)
+                {
+                    HomeLandManager.GetInstance().OnClickNpcCity(cityInfo.ID);
+                }
+                else if (cityInfo == null)
+                {
+                    HomeLandManager.GetInstance().OnClickSpot(new Vector3(wolrdPos.x, 0, wolrdPos.y));
+                }
             }
-
+         
             if (callBack != null)
                 callBack.Invoke(param);
         };

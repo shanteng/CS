@@ -19,6 +19,7 @@ public enum PopType
     CITY_INFO,
     QUEST_CITY,
     HERO_TALENT,
+    TEAM_SET,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -67,6 +68,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         data.param = param;
         data.userKey = userKey;
         this.ShowConfirmBy(data);
+    }
+
+    public void ShowTeamSet(int teamid)
+    {
+        this.ShowPop(PopType.TEAM_SET, teamid);
     }
 
     public void ShowHeroTalent(int id)

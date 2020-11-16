@@ -16,9 +16,10 @@ public class AtlasDefine
     public static string Army = "Army";//
     public static string Head = "Head";//
     public static string HeadFrame = "HeadFrame";//
-    public static string Hero = "Hero";//
+    public static string HeroSmall = "HeroSmall";//
     public static string HeroCard = "HeroCard";//
     public static string HeroHead = "HeroHead";//
+
 }
 public class ResourcesManager : SingletonFactory<ResourcesManager>
 {
@@ -103,13 +104,24 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
         return this.getAtlasSprite(AtlasDefine.Item, config.Icon);
     }
 
-    public Sprite GetHeroSprite(int id)
+    public Sprite GetHeroSmallSprite(int id)
     {
         HeroConfig config = HeroConfig.Instance.GetData(id);
         if (config == null)
             return null;
-        return this.getAtlasSprite(AtlasDefine.Hero, config.Model);
+        return this.getAtlasSprite(AtlasDefine.HeroSmall, config.Model);
     }
+
+    public Sprite GetArmySprite(int id)
+    {
+        ArmyConfig config = ArmyConfig.Instance.GetData(id);
+        if (config == null)
+            return null;
+        return this.getAtlasSprite(AtlasDefine.Army, config.Model);
+    }
+
+
+
 
     public Sprite GetHeroCardSprite(int id)
     {

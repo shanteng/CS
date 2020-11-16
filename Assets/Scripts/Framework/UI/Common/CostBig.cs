@@ -11,7 +11,7 @@ public class CostBig : UIBase
     public Image _Icon;
     public Text _Text;
     public Text _MyTxt;
-    public Animator _NotEnoughtAni;
+    public Animator _NotEnoughtAn;
 
     public void SetData(CostData data,bool needMy = false)
     {
@@ -24,7 +24,7 @@ public class CostBig : UIBase
             int myCount = RoleProxy._instance.GetNumberValue(data.id);
             string valueStr = UtilTools.NumberFormat(myCount);
             this._MyTxt.text = LanguageConfig.GetLanguage(LanMainDefine.OwnCount, valueStr);
-            _NotEnoughtAni.enabled = myCount < data.count;
+            _NotEnoughtAn.enabled = myCount < data.count;
         }
     }//end 
 }

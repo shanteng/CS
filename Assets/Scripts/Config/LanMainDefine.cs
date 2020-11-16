@@ -86,6 +86,28 @@
     public const string CareerEvaluateDesc = "CareerEvaluateDesc";
     public const string ItemCount = "ItemCount";
     public const string QuestTarget = "QuestTarget";
+    public const string PathType = "PathType";
+    public const string LogType = "LogType";
+    public const string GetHourTax = "GetHourTax";
+
+    public const string TeamOpenCondition = "TeamOpenCondition";
+    public const string TeamBlood = "TeamBlood";
+
+    public const string TeamStatus = "TeamStatus";
+
+
+    public const string DataWithYDMHMS = "DataWithYDMHMS";
+    public const string DataWithMDHM = "DataWithMDHM";
+
+    public const string DateYearAgo = "DateYearAgo";
+    public const string DateMonthAgo = "DateMonthAgo";
+    public const string DateWeekAgo = "DateWeekAgo";
+    public const string DateDayAgo = "DateDayAgo";
+    public const string DateHourAgo = "DateHourAgo";
+    public const string DateMinAgo = "DateMinAgo";
+    public const string DateJustAgo = "DateJustAgo";
+
+    public const string LogItemContent = "LogItemContent";
 
 
     public const string LuckyValue = "LuckyValue";
@@ -121,6 +143,7 @@
 
     public const string TalentFail = "TalentFail";
     public const string TalentSuccess = "TalentSuccess";
+    public const string LuckyTalentSuccess = "LuckyTalentSuccess";
     public const string Talent = "Talent";
 
     public const string BuildFinish = "BuildFinish";

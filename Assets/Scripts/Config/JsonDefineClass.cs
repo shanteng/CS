@@ -107,10 +107,13 @@ public class ArmyConfig : Config<ArmyConfig>
     public int Career;
     public int Star;
     public float SpeedRate;
+    public float Attack;
+    public float Defense;
+
     public int Blood;
     public int Load;
     public int Power;
-    public string[] InitAttribute;
+ 
     public string[] Cost;
     public int UnlockTech;//招募所需科技ID
 
@@ -195,8 +198,8 @@ public class HeroConfig : Config<HeroConfig>
 
 public class HeroStarConfig : Config<HeroStarConfig>
 {
-    public int BaseDemage;
-    public int GrowDemage;
+    public string[] BaseDemage;
+    public string[] GrowDemage;
     public int ElementValue;
     public float RangeBase;
     public HeroStarConfig() : base(JsonNameDefine.HeroStar) { }

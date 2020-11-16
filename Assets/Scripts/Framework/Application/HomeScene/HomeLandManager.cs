@@ -358,7 +358,6 @@ public class HomeLandManager : MonoBehaviour
         this.GenerateVisibleSpot(visibleSpots);
         this.GenerateAllPath();
 
-
         string name = MediatorUtil.GetName(MediatorDefine.MAIN);
         MainMediator mediator = ApplicationFacade.instance.RetrieveMediator(name) as MainMediator;
         this._infoCanvas = mediator.GetView()._InfoUI;
@@ -395,6 +394,29 @@ public class HomeLandManager : MonoBehaviour
         PathModel.name = UtilTools.combine("path-", path.ID);
         PathModel.DoPath(path);
         _pathModels.Add(path.ID, PathModel);
+    }
+
+    private string _selectPathId = "";
+    public bool GoToPathCurrentPostion(string id)
+    {
+        bool isSelect = id.Equals(this._selectPathId) == false;
+        foreach (PathModel model in this._pathModels.Values)
+        {
+            if (model.ID.Equals(id))
+            {
+                model.SetSelect(isSelect);
+                if (isSelect)
+                {
+                    Vector3 pos = model._modelRoot.transform.position;
+                    ViewControllerLocal.GetInstance().TryGotoWorldPostion(pos);
+                }
+            }
+            else
+                model.SetSelect(false);
+        }
+
+        this._selectPathId = isSelect ? id : "";
+        return isSelect;
     }
 
     public void RemoveOnePath(string pathid)

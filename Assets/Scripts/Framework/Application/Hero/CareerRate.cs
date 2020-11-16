@@ -21,7 +21,7 @@ public class CareerRate : UIBase
         this._rateTxt.gameObject.SetActive(isUnSet == false);
         UIRoot.Intance.SetImageGray(this._Icon, isUnSet);
         if(this._bg != null)
-            UIRoot.Intance.SetImageGray(this._Icon, isUnSet);
+            UIRoot.Intance.SetImageGray(this._bg, isUnSet);
     }
 
     

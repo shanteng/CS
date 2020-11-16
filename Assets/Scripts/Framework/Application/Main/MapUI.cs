@@ -76,7 +76,8 @@ public class MapUI : MonoBehaviour
 
     private void OnClickHome(UIButton btn)
     {
-        ViewControllerLocal.GetInstance().TryGoto(new VInt2());
+        VInt2 main = WorldProxy._instance.GetCityCordinate(0);
+        ViewControllerLocal.GetInstance().TryGoto(main);
     }
 
     private void OnClickGoTo(UIButton btn)

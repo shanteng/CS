@@ -22,6 +22,10 @@ public class MainMediator : BaseWindowMediator<MainView>
         this.m_HideNoHandleNotifations.Add(NotiDefine.RoleLvExpHasUpdated);
         this.m_HideNoHandleNotifations.Add(NotiDefine.CordinateChange);
         this.m_HideNoHandleNotifations.Add(NotiDefine.PowerChanged);
+        this.m_HideNoHandleNotifations.Add(NotiDefine.PathAddNoti);
+        this.m_HideNoHandleNotifations.Add(NotiDefine.PathRemoveNoti);
+        this.m_HideNoHandleNotifations.Add(NotiDefine.NewLogNoti);
+        this.m_HideNoHandleNotifations.Add(NotiDefine.JudegeNewLog);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
@@ -54,6 +58,23 @@ public class MainMediator : BaseWindowMediator<MainView>
                     this.m_view.SetPower();
                     break;
                 }
+            case NotiDefine.PathAddNoti:
+            case NotiDefine.PathRemoveNoti:
+                {
+                    this.m_view.SetPathState();
+                    break;
+                }
+            case NotiDefine.NewLogNoti:
+                {
+                    this.m_view.SetLogNew(true);
+                    break;
+                }
+            case NotiDefine.JudegeNewLog:
+                {
+                    this.m_view.SetLogNew();
+                    break;
+                }
+
         }
     }//end func
 
@@ -69,6 +90,8 @@ public class MainMediator : BaseWindowMediator<MainView>
         this.m_view.SetLevelExp();
         this.m_view._mapUI.SetCordinate();
         this.m_view.SetPower();
+        this.m_view.SetPathState();
+        this.m_view.SetLogNew();
     }
 
 }//end class

@@ -336,9 +336,9 @@ public class UtilTools
         return intA - intB;
     }
 
-    public static long compareLong(long intA, long intB)
+    public static int compareLong(long intA, long intB)
     {
-        return intA - intB;
+        return (int)(intA - intB);
     }
 
     public static int compareBool(bool intA, bool intB)
@@ -366,5 +366,70 @@ public class UtilTools
         if (max <= min)
             return min;
         return UnityEngine.Random.Range(min, max);
+    }
+
+    public static string getDataWithYDMHMS(int seconds)
+    {
+        System.DateTime baseDate = System.TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
+        System.DateTime date1 = baseDate.AddSeconds(seconds);
+        return date1.ToString(LanguageConfig.GetLanguage(LanMainDefine.DataWithYDMHMS, "yyyy", "MM", "dd", "HH", "mm", "ss"));
+    }
+
+    public static string getDataWithMDHM(int seconds)
+    {
+        System.DateTime baseDate = System.TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
+        System.DateTime date1 = baseDate.AddSeconds(seconds);
+        return date1.ToString(LanguageConfig.GetLanguage(LanMainDefine.DataWithMDHM,  "MM", "dd", "HH", "mm"));
+    }
+
+    //常量
+    public static int oneMinSecs = 60;
+    public static int oneHourSecs = 60 * oneMinSecs;
+    public static int oneDaySecs = 24 * oneHourSecs;
+    public static int oneWeekSecs = oneDaySecs * 7;
+    public static int oneMonthSecs = oneDaySecs * 30;
+    public static int onYearSces = 365 * oneDaySecs;
+
+    public static string getDateFromNowOn(long seconds)
+    {
+        long dateServerSecs = GameIndex.ServerTime;
+        int descDateSecs = (int)(dateServerSecs - seconds);
+
+        if (descDateSecs > onYearSces)
+        {
+            return LanguageConfig.GetLanguage(LanMainDefine.DateYearAgo, 1);
+        }
+
+        if (descDateSecs > oneMonthSecs)
+        {
+            int month = descDateSecs / oneMonthSecs;
+            return LanguageConfig.GetLanguage(LanMainDefine.DateYearAgo, month);
+        }
+
+        if (descDateSecs > oneWeekSecs)
+        {
+            int week = descDateSecs / oneWeekSecs;
+            return LanguageConfig.GetLanguage(LanMainDefine.DateWeekAgo, week);
+        }
+
+        if (descDateSecs > oneDaySecs)
+        {
+            int day = descDateSecs / oneDaySecs;
+            return LanguageConfig.GetLanguage(LanMainDefine.DateDayAgo, day);
+        }
+
+        if (descDateSecs > oneHourSecs)
+        {
+            int hour = descDateSecs / oneHourSecs;
+            return LanguageConfig.GetLanguage(LanMainDefine.DateHourAgo, hour);
+        }
+
+        if (descDateSecs > oneMinSecs)
+        {
+            int min = descDateSecs / oneMinSecs;
+            return LanguageConfig.GetLanguage(LanMainDefine.DateMinAgo, min);
+        }
+
+        return LanguageConfig.GetLanguage(LanMainDefine.DateJustAgo);
     }
 }

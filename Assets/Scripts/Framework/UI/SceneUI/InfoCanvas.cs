@@ -386,6 +386,13 @@ public class InfoCanvas : UIBase, IConfirmListener
                 }
             case OpType.QuestCity:
                 {
+                    bool hasFree = HeroProxy._instance.HasFreeHero();
+                    if (hasFree == false)
+                    {
+                        PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoHeroFreeToQuest);
+                        return;
+                    }
+
                     PopupFactory.Instance.ShowQuestNpcCity(this._cityId);
                     break;
                 }

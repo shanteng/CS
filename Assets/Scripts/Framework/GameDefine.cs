@@ -75,6 +75,7 @@ public class NotiDefine
 
     public const string PowerChanged = "PowerChanged";
     public const string NewLogNoti = "NewLogNoti";
+    public const string JudegeNewLog = "JudegeNewLog";
 
 
     public const string AcceptHourAwardDo = "AcceptHourAwardDo";
@@ -114,7 +115,7 @@ public class NotiDefine
 
     public const string HerosUpdated = "HerosUpdated";
     public const string CordinateChange = "CordinateChange";
-    public const string GoToEnd = "GoToEnd";
+    public const string WorldGoToStart = "WorldGoToStart";
 
     public const string LoadAllArmyDo = "LoadAllArmyDo";
     public const string LoadAllArmyResp = "LoadAllArmyResp";
@@ -183,6 +184,8 @@ public class ErrorCode
     public const string HeroHasQuest = "HeroHasQuest";
     public const string HeroNoEnegry = "HeroNoEnegry";
     public const string NoOwnNoQuest = "NoOwnNoQuest";
+    public const string NoVisibleNoAttack = "NoVisibleNoAttack";
+    public const string NoHeroFreeToQuest = "NoHeroFreeToQuest";
 }
 
 [Serializable]
@@ -278,16 +281,18 @@ public class CityData
 
 public class LogData
 {
+    public string ID;
     public LogType Type;
     public long Time;
     public string Content;
-    public object Param;
+    public VInt2 Position;
+    public bool New;
 }
 
 public enum LogType
 {
-     HeroFavorLevel,
-     HeroFavorChange,
+    HeroFavorLevel = 1,
+    HeroFavorChange,
     HarvestArmy,
     DoPatrol,
     FinishPatrol,
@@ -297,6 +302,7 @@ public enum LogType
     BuildUp,
     RecruitHeroSuccess,
     OwnCityResp,
+    HourTax,
 }
 
 public enum HeroBelong
@@ -366,6 +372,8 @@ public enum MediatorDefine
     CREATE,
     HERO,
     BAG,
+    GAME_LOG,
+    TEAM,
 }
 
 public class StringKeyValue
@@ -525,6 +533,7 @@ public class PathData
     public long ExpireTime;
     public string Model;
     public object Param;
+    public string Picture;
 }
 
 
@@ -688,11 +697,11 @@ public class HeroRecruitRefreshData
 
 public class Team
 {
-    public int Id;//BelongID*100+Index
+    public int Id;//CityID*100+Index
     public int Index;//序列
     public int HeroID;//上阵英雄
     public int Status;//0-空闲 1-行军 2-返回 3-战斗
-    public int BelongID;//0-主城，>0 Npc城市ID
+    public int CityID;//0-主城，>0 Npc城市ID
     public int FromID;//0-主城，>0 要塞ID
     public int TargetID;//移动目标 0-主城 >0 Npc城市ID 
     public long StartTime;//行军或者返回开始时间
@@ -706,7 +715,8 @@ public class Hero
     public int StarRank;//升星
     public int Exp;
     public float ElementValue;//和稀有的挂钩
-    public Dictionary<int, int> Blood;//当前兵种/兵力
+    public int ArmyTypeID;//当前兵种
+    public int Blood;//当前兵力
     public int MaxBlood;//带兵上限 等级和建筑计算
     public int Belong;//-1-在野  >=0 为对应城市ID
     public bool IsMy;//是否为我方
@@ -715,6 +725,7 @@ public class Hero
     public long TalkExpire;//上次的聊天时间 HeroTalkGap 时间后俩天可以增加好感度
     public long EnegryFullExpire;//体力恢复满的时间
     public int MaxEnegry;
+    public Dictionary<string, float> Attributes;
 
     public Dictionary<string, int> GetItems;//获得过的馈赠
     public Dictionary<int, string> Equips;// EqupType 装备的部位和道具ID
@@ -724,7 +735,8 @@ public class Hero
         this.Id = config.ID;
         this.Level = config.InitLevel;
         this.Exp = 0;
-        this.Blood = new Dictionary<int, int>();
+        this.ArmyTypeID = 0;
+        this.Blood = 0;
         this.Belong = config.InitBelong;
         this.IsMy = this.Belong == 0;
         this.TeamId = 0;
@@ -764,6 +776,7 @@ public class Hero
     {
         HeroConfig config = HeroConfig.Instance.GetData(this.Id);
         HeroLevelConfig configLv = HeroLevelConfig.Instance.GetData(this.Level);
+        HeroStarConfig configStar = HeroStarConfig.Instance.GetData(config.Star);
         int cityid = TeamProxy._instance.GetTeamCity(this.TeamId);
         BuildingEffectsData bdAddData = WorldProxy._instance.GetBuildingEffects(cityid);
 
@@ -781,6 +794,31 @@ public class Hero
             }
             this.MaxBlood = configLv.BloodMax;
         }
+
+        if (this.Attributes == null)
+            this.Attributes = new Dictionary<string, float>();
+        else
+            this.Attributes.Clear();
+        foreach (string str in configStar.BaseDemage)
+        {
+            string[] list = str.Split(':');
+            float baseValue = UtilTools.ParseFloat(list[1]);
+            float oldValue = 0;
+            if (this.Attributes.TryGetValue(list[0], out oldValue) == false)
+                oldValue = 0;
+            Attributes[list[0]] = oldValue + baseValue;
+        }//end foreach
+
+        foreach (string str in configStar.GrowDemage)
+        {
+            string[] list = str.Split(':');
+            float levelValue = UtilTools.ParseFloat(list[1]) * (this.Level-1);
+            float oldValue = 0;
+            if (this.Attributes.TryGetValue(list[0], out oldValue) == false)
+                oldValue = 0;
+            Attributes[list[0]] = oldValue + levelValue;
+        }//end foreach
+
     }//end function
 
     public static int ComputeElementValue(int id)

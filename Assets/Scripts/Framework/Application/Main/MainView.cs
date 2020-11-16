@@ -17,6 +17,8 @@ public class MainView : MonoBehaviour
     public Image _lvSlider;
     public UIButton _BtnBuild;
     public UIButton _BtnSdk;
+    public UIButton BtnLog;
+    public GameObject _LogRed;
     public InfoCanvas _InfoUI;
     public Image _dianLiang;
     public Text _timeTxt;
@@ -26,8 +28,9 @@ public class MainView : MonoBehaviour
     //mainbtn
     public UIButton _btnBag;
     public UIButton _btnHero;
-
+    public UIButton _btnTeam;
     public MapUI _mapUI;
+    public PathUi _pathUi;
 
     private int _dianLiangCount = 60;
     private static MainView instance;
@@ -46,7 +49,7 @@ public class MainView : MonoBehaviour
         {
             if (item._key.Equals(key))
             {
-                Vector3 pos =  UIRoot.Intance.GetLayer(WindowLayer.Popup).worldToLocalMatrix.MultiplyPoint3x4(item.Icon.GetComponent<RectTransform>().position);
+                Vector3 pos = UIRoot.Intance.GetLayer(WindowLayer.Popup).worldToLocalMatrix.MultiplyPoint3x4(item.Icon.GetComponent<RectTransform>().position);
                 return pos;
             }
         }
@@ -58,12 +61,16 @@ public class MainView : MonoBehaviour
         _dianLiangCount = 60;
         _BtnBuild.AddEvent(this.OnClickBuild);
         _BtnSdk.AddEvent(this.OnSdk);
-    
+
         _btnBag.AddEvent(this.OnClickBag);
         _btnHero.AddEvent(this.OnClickHero);
+        this._btnTeam.AddEvent(this.OnClickTeam);
+
+
+        this.BtnLog.AddEvent(this.OnClickLog);
 
         this._InfoUI.gameObject.SetActive(false);
-        StartCoroutine(CountDown()); 
+        StartCoroutine(CountDown());
     }
 
     IEnumerator CountDown()
@@ -106,7 +113,7 @@ public class MainView : MonoBehaviour
 
     private void OnSdk(UIButton btn)
     {
-        
+
         //PopupFactory.Instance.ShowErrorNotice(ErrorCode.ValueOutOfRange, "", 1);
         SdkView.Intance.ShowSdk();
     }
@@ -123,9 +130,19 @@ public class MainView : MonoBehaviour
         UIRoot.Intance.SetHomeSceneEnable(false);
     }
 
+    private void OnClickLog(UIButton btn)
+    {
+        MediatorUtil.ShowMediator(MediatorDefine.GAME_LOG);
+    }
+
     private void OnClickBag(UIButton btn)
     {
         MediatorUtil.ShowMediator(MediatorDefine.BAG);
+    }
+
+    private void OnClickTeam(UIButton btn)
+    {
+        MediatorUtil.ShowMediator(MediatorDefine.TEAM,0);
     }
 
     public void setDianLiang()
@@ -136,6 +153,32 @@ public class MainView : MonoBehaviour
         this._dianLiang.fillAmount = leftDianValue;
     }
 
+    public void SetLogNew(bool isNew = false)
+    {
+        if (isNew)
+            this._LogRed.SetActive(isNew);
+        else
+        {
+            bool has = false;
+            Queue<LogData> datas = RoleProxy._instance.GetLogs();
+            foreach (LogData data in datas)
+            {
+                if (data.New)
+                {
+                    has = true;
+                    break;
+                }
+            }
+            this._LogRed.SetActive(has);
+        }
+    }
+
+    public void SetPathState()
+    {
+        Dictionary<string, PathData> dic = PathProxy._instance.AllPaths;
+        this._pathUi.gameObject.SetActive(dic.Count > 0);
+        this._pathUi.SetList();
+    }
 
     public void UpdateIncome()
     {

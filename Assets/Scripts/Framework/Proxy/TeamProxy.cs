@@ -28,7 +28,7 @@ public class TeamProxy : BaseRemoteProxy
         if (teamid <= 0)
             return -1;
         Team team = this.GetTeam(teamid);
-        return team.BelongID;
+        return team.CityID;
     }
 
     public Team GetTeam(int id)
@@ -44,11 +44,46 @@ public class TeamProxy : BaseRemoteProxy
         return this._teams;
     }
 
+    public List<Team> GetCityTeams(int city)
+    {
+        List<Team> list = new List<Team>();
+        foreach (Team t in this._teams.Values)
+        {
+            if (t.CityID == city)
+                list.Add(t);
+        }
+        return list;
+    }
+
  
 
     public void ComputeBuildingEffect(int city)
     {
         
+    }
+
+    public bool IsTeamOpen(int teamid, out int openLevel)
+    {
+        Team team = this.GetTeam(teamid);
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects(team.CityID);
+        bool isOpen = effect.TroopNum >= team.Index;
+
+        openLevel = 0;
+        if (isOpen == false)
+        {
+            BuildingConfig config = BuildingConfig.Instance.GetData(BuildingData.MainCityID);
+            for (int i = 0; i < config.MaxLevel; ++i)
+            {
+                BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(BuildingData.MainCityID, i+1);
+                int openCount = UtilTools.ParseInt( configLv.AddValues[1]);
+                if (openCount >= team.Index)
+                {
+                    openLevel = configLv.Level;
+                    break;
+                }
+            }
+        }
+        return isOpen;
     }
 
     public void SetTeamHero(int teamid,int heroid)
@@ -60,7 +95,7 @@ public class TeamProxy : BaseRemoteProxy
             return;
         }
 
-        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects(team.BelongID);
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects(team.CityID);
         bool isOpen = effect.TroopNum >= team.Index;
         if (isOpen == false)
         {
@@ -68,6 +103,8 @@ public class TeamProxy : BaseRemoteProxy
             return;
         }
     }
+
+   
 
     public void InitCityTeam(int cityid)
     {
@@ -81,7 +118,7 @@ public class TeamProxy : BaseRemoteProxy
             team.Id = cityid * 100 + team.Index;
             team.HeroID = 0;
             team.Status = (int)TeamStatus.Idle;
-            team.BelongID = cityid;
+            team.CityID = cityid;
             team.FromID = cityid;
             team.TargetID = 0;
             team.StartTime = 0;

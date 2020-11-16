@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Hero
+  m_Name: HeroSmall
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -534,5 +534,5 @@ SpriteAtlas:
   - sunshangxiang_fire
   - daqiao_fire
   - huangzhong_wood
-  m_Tag: Hero
+  m_Tag: HeroSmall
   m_IsVariant: 0

@@ -17,5 +17,7 @@ public class ViewsInitializeCommand : SimpleCommand
         Facade.RegisterMediator(new ArmyMediator());
         Facade.RegisterMediator(new CreateMediator());
         Facade.RegisterMediator(new HeroMediator());
+        Facade.RegisterMediator(new GameLogMediator());
+        Facade.RegisterMediator(new TeamMediator());
     }
 }

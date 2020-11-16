@@ -44,7 +44,7 @@ public class HeroProxy : BaseRemoteProxy
     }
 
 
-    public bool JudegeTalentResult(int type, int value, int heroid)
+    public int JudegeTalentResult(int type, int value, int heroid)
     {
         HeroConfig heroCoinfig = HeroConfig.Instance.GetData(heroid);
         int heroValue = 0;
@@ -61,17 +61,21 @@ public class HeroProxy : BaseRemoteProxy
         }//end for
 
         if (heroValue > value)
-            return true;
+            return 1;
+
+        int curLucky = UtilTools.RangeInt(0, 100);
         if (heroValue == value)
         {
             //根据幸运值判断
-            int curLucky = UtilTools.RangeInt(0, 100);
-            return heroCoinfig.Lucky >= curLucky;
+            if (heroCoinfig.Lucky >= curLucky)
+                return 2;
+            return 0;
         }
 
-        int curLowLucky = UtilTools.RangeInt(0, 100);
         int luckLow = Mathf.CeilToInt((float)heroCoinfig.Lucky * (float)heroValue / 100f);
-        return luckLow >= curLowLucky;
+        if (luckLow >= curLucky)
+            return 2;
+        return 0;
     }
 
     public Hero GetHero(int id)
@@ -246,6 +250,16 @@ public class HeroProxy : BaseRemoteProxy
         CloudDataTool.SaveFile(SaveFileDefine.HeroRecruitRefresh, this._refreshData);
     }
 
+    public bool HasFreeHero()
+    {
+        foreach (Hero hero in this._datas.Values)
+        {
+            if (hero.IsMy && hero.TeamId == (int)HeroTeamState.NoTeam)
+                return true;
+        }
+        return false;
+    }
+
     public void LoadAllHeros()
     {
         this._datas.Clear();
@@ -253,26 +267,25 @@ public class HeroProxy : BaseRemoteProxy
         string json = CloudDataTool.LoadFile(fileName);
         if (json.Equals(string.Empty) == false)
         {
-           this._datas = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Hero>>(json);
+            this._datas = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Hero>>(json);
         }
-
-        bool hasNewHero = false;
-        Dictionary<int, HeroConfig> heroDic = HeroConfig.Instance.getDataArray();
-        var it = heroDic.Values.GetEnumerator();
-        while (it.MoveNext())
+        else
         {
-            HeroConfig config = it.Current;
-            if (this._datas.ContainsKey(config.ID))
-                continue;
-            hasNewHero = true;
-            Hero newHero = new Hero();
-            newHero.Create(config);
-            this._datas[newHero.Id] = newHero;
+            bool hasNewHero = false;
+            Dictionary<int, HeroConfig> heroDic = HeroConfig.Instance.getDataArray();
+            var it = heroDic.Values.GetEnumerator();
+            while (it.MoveNext())
+            {
+                HeroConfig config = it.Current;
+                if (this._datas.ContainsKey(config.ID))
+                    continue;
+                hasNewHero = true;
+                Hero newHero = new Hero();
+                newHero.Create(config);
+                this._datas[newHero.Id] = newHero;
+            }
+            it.Dispose();
         }
-        it.Dispose();
-
-        if (hasNewHero)
-            this.DoSaveHeros();
 
         LoadRefreshData();
         this.SendNotification(NotiDefine.LoadAllHeroResp);
@@ -325,7 +338,8 @@ public class HeroProxy : BaseRemoteProxy
         bool oldMy = hero.IsMy;
         hero.Belong = (int)belong;
         hero.IsMy = isMy;
-        hero.Blood.Clear();
+        hero.Blood = 0;
+        hero.ArmyTypeID = 0;
         hero.ComputeAttributes();
         this.DoSaveHeros();
 
@@ -334,7 +348,7 @@ public class HeroProxy : BaseRemoteProxy
             HeroConfig config = HeroConfig.Instance.GetData(id);
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroSuccess,config.Name));
 
-            RoleProxy._instance.AddLog(LogType.RecruitHeroSuccess, LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroSuccess, config.Name), id);
+            RoleProxy._instance.AddLog(LogType.RecruitHeroSuccess, LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroSuccess, config.Name));
         }
     }
 
@@ -372,18 +386,18 @@ public class HeroProxy : BaseRemoteProxy
                 this.SendNotification(NotiDefine.FavorLevelUpNoti, id);
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.HeroFavorLevelChanged, config.Name, configLv.Name));
 
-            RoleProxy._instance.AddLog(LogType.HeroFavorLevel, LanguageConfig.GetLanguage(LanMainDefine.HeroFavorLevelChanged, config.Name, configLv.Name), id);
+            RoleProxy._instance.AddLog(LogType.HeroFavorLevel, LanguageConfig.GetLanguage(LanMainDefine.HeroFavorLevelChanged, config.Name, configLv.Name));
         }
         else if (hero.Favor > oldFavor)
         {
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.HeroFavorUp, config.Name), CommonUINameDefine.UP_arrow);
 
-            RoleProxy._instance.AddLog(LogType.HeroFavorChange, LanguageConfig.GetLanguage(LanMainDefine.HeroFavorUp, config.Name), id);
+            RoleProxy._instance.AddLog(LogType.HeroFavorChange, LanguageConfig.GetLanguage(LanMainDefine.HeroFavorUp, config.Name));
         }
         else if (hero.Favor < oldFavor)
         {
             PopupFactory.Instance.ShowNotice(LanMainDefine.HeroFavorDown,config.Name);
-            RoleProxy._instance.AddLog(LogType.HeroFavorChange, LanguageConfig.GetLanguage(LanMainDefine.HeroFavorDown, config.Name), id);
+            RoleProxy._instance.AddLog(LogType.HeroFavorChange, LanguageConfig.GetLanguage(LanMainDefine.HeroFavorDown, config.Name));
         }
 
         this.DoSaveHeros();
