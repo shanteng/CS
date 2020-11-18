@@ -177,6 +177,7 @@ public class InfoCanvas : UIBase, IConfirmListener
 
         VInt2 kv = UtilTools.WorldToGameCordinate(this._curPos.x, this._curPos.y);
         this._cordinateTxt.text = LanguageConfig.GetLanguage(LanMainDefine.SpotCordinate, kv.x, kv.y);
+        this._cordinateTxt.gameObject.SetActive(true);
         List<IntStrPair> btnTypeList;
         this.GetNpcCityBtnList(out btnTypeList);
         this.SetBtnState(btnTypeList);
@@ -196,6 +197,7 @@ public class InfoCanvas : UIBase, IConfirmListener
 
         VInt2 kv = UtilTools.WorldToGameCordinate(this._curPos.x, this._curPos.y);
         this._cordinateTxt.text = LanguageConfig.GetLanguage(LanMainDefine.SpotCordinate, kv.x, kv.y);
+        this._cordinateTxt.gameObject.SetActive(true);
 
         List<IntStrPair> btnTypeList;
         this.GetSpotBtnList(out btnTypeList);
@@ -266,7 +268,7 @@ public class InfoCanvas : UIBase, IConfirmListener
 
         VInt2 kv = UtilTools.WorldToGameCordinate(this._data._cordinate.x, this._data._cordinate.y);
         this._cordinateTxt.text = LanguageConfig.GetLanguage(LanMainDefine.SpotCordinate,kv.x,kv.y);
-
+        this._cordinateTxt.gameObject.SetActive(false);
         List<IntStrPair> btnTypeList;
         this.GetBtnList(out btnTypeList);
         this.SetBtnState(btnTypeList);

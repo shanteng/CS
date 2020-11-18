@@ -263,6 +263,19 @@ public class ArmyProxy : BaseRemoteProxy
         MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, army);
     }
 
+    public void ChangeArmyCount(int city,int id, int changeCount)
+    {
+        if (changeCount == 0)
+            return;
+        Army army = this.GetArmy(id, city);
+        if (army == null)
+            return;
+        army.Count += changeCount;
+        if (army.Count < 0)
+            army.Count = 0;
+        this.DoSave();
+        RoleProxy._instance.ComputePower(true);
+    }
 
     public void HarvestArmy(VInt2 kv)
     {
@@ -278,11 +291,9 @@ public class ArmyProxy : BaseRemoteProxy
             return;
         }
 
-
         if (army.ReserveCount > 0)
         {
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, army.ReserveCount, config.Name));
-
             RoleProxy._instance.AddLog(LogType.HarvestArmy, LanguageConfig.GetLanguage(LanMainDefine.ArmyHarvest, army.ReserveCount, config.Name));
         }
             
@@ -359,6 +370,18 @@ public class ArmyProxy : BaseRemoteProxy
         curArmy.CanAccept = true;
         curArmy.RecruitExpireTime = 0;
         curArmy.RecruitStartTime = 0;
+       
+
+        string cityName = WorldProxy._instance.GetCityName(army.CityID);
+        VInt2 pos = WorldProxy._instance.GetCityCordinate(army.CityID);
+        ArmyConfig config = ArmyConfig.Instance.GetData(army.Id);
+
+        string bdKey = WorldProxy._instance.GetArmyBuildingBy(config.Career, army.CityID);
+
+        string notice = LanguageConfig.GetLanguage(LanMainDefine.ArmyRecruitFinish, cityName,config.Name, curArmy.ReserveCount);
+        PopupFactory.Instance.ShowNotice(notice);
+        RoleProxy._instance.AddLog(LogType.FinshArmy, notice, pos, bdKey);
+
         this.DoSave();
         MediatorUtil.SendNotification(NotiDefine.ArmyStateChange, army);
     }

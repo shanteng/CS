@@ -89,6 +89,9 @@
     public const string PathType = "PathType";
     public const string LogType = "LogType";
     public const string GetHourTax = "GetHourTax";
+    public const string ArmyRecruitFinish = "ArmyRecruitFinish";
+
+    public const string TeamSetSuccess = "TeamSetSuccess";
 
     public const string TeamOpenCondition = "TeamOpenCondition";
     public const string TeamBlood = "TeamBlood";

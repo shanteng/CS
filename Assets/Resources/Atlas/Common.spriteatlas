@@ -67,7 +67,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 409635
+    totalSpriteSurfaceArea: 411703
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -162,6 +162,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 06ce409821a87ce4f8797916d7e81897, type: 3}
   - {fileID: 21300000, guid: b7e37cb8ad3a89346b316346c81e26fc, type: 3}
   - {fileID: 21300000, guid: c61cc4d80edd78848972b7d228978cdb, type: 3}
+  - {fileID: 21300000, guid: 182a93e8cc283d04998859e35914838c, type: 3}
   - {fileID: 21300000, guid: 28350ce8dbbcba6469c711632325a771, type: 3}
   - {fileID: 21300000, guid: b4e317a9ce179fe4d87a52b3c94e4167, type: 3}
   - {fileID: 21300000, guid: 95ccbaa9d037d71418343d0b91a6b36e, type: 3}
@@ -176,6 +177,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f6404faa85881ec4d8bd8446ea3bbbd4, type: 3}
   - {fileID: 21300000, guid: 15bc2ecaaf2eb9740b104e79bf27a8b5, type: 3}
   - {fileID: 21300000, guid: e5083ada032c6c848a6e7adf943355e7, type: 3}
+  - {fileID: 21300000, guid: 230797fa768fec14898a58f99f540bbc, type: 3}
   - {fileID: 21300000, guid: b880180b0146a614580c8638a72d3f44, type: 3}
   - {fileID: 21300000, guid: d905c81bd72f5c34b8cda6e43b425c29, type: 3}
   - {fileID: 21300000, guid: c8bef93bcd3f2244e9e9dc1d09bb75c5, type: 3}
@@ -310,6 +312,7 @@ SpriteAtlas:
   - delete
   - OP_DIG
   - OP_GET_EXP
+  - slider
   - h_water
   - h_normal
   - flag
@@ -324,6 +327,7 @@ SpriteAtlas:
   - smallcircle
   - lucky
   - power01
+  - check-green
   - button01
   - OP_jiaomie
   - miniProgress bar01

@@ -86,8 +86,13 @@ public class TeamProxy : BaseRemoteProxy
         return isOpen;
     }
 
-    public void SetTeamHero(int teamid,int heroid)
+    public void SetTeamHero(Dictionary<string, object> vo)
     {
+        int teamid = (int)vo["teamid"];
+        int heroid = (int)vo["heroid"];
+        int army = (int)vo["army"];
+        int count = (int)vo["count"];
+
         Team team = this.GetTeam(teamid);
         if (team.Status != (int)TeamStatus.Idle)
         {
@@ -102,6 +107,45 @@ public class TeamProxy : BaseRemoteProxy
             PopupFactory.Instance.ShowErrorNotice(ErrorCode.TeamNotOpen);
             return;
         }
+
+        Hero heroTeam = HeroProxy._instance.GetHero(team.HeroID);
+        Hero newHero = HeroProxy._instance.GetHero(heroid);
+
+        if (heroTeam != null && team.HeroID != heroid)
+        {
+            //卸下兵种
+            ArmyProxy._instance.ChangeArmyCount(team.CityID, heroTeam.ArmyTypeID, heroTeam.Blood);
+            heroTeam.ArmyTypeID = 0;
+            heroTeam.Blood = 0;
+            heroTeam.TeamId = 0;
+        }
+        else if (heroTeam == null && newHero != null)
+        {
+            ArmyProxy._instance.ChangeArmyCount(team.CityID, army, -count);
+            newHero.ArmyTypeID = army;
+            newHero.Blood = count;
+            newHero.TeamId = teamid;
+        }
+        else if (heroTeam != null && team.HeroID == heroid)
+        {
+            if (heroTeam.ArmyTypeID == army)
+            {
+                ArmyProxy._instance.ChangeArmyCount(team.CityID, heroTeam.ArmyTypeID, heroTeam.Blood - count);
+            }
+            else
+            {
+                ArmyProxy._instance.ChangeArmyCount(team.CityID, heroTeam.ArmyTypeID, heroTeam.Blood);//旧的加回去
+                ArmyProxy._instance.ChangeArmyCount(team.CityID, army, -count);//新的减少掉
+            }
+            heroTeam.ArmyTypeID = army;
+            heroTeam.Blood = count;
+        }
+
+        team.HeroID = heroid;
+        HeroProxy._instance.DoSaveHeros();
+        this.DoSaveTeams();
+        this.SendNotification(NotiDefine.SetTeamHeroResp);
+        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.TeamSetSuccess));
     }
 
    

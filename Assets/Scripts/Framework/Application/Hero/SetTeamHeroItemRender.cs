@@ -5,17 +5,19 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class HeroItemRData : ScrollData
+public class SetTeamHeroItemData : ScrollData
 {
     public Hero _hero;
-    public HeroItemRData(Hero cg)
+    public int _teamHeroID;
+    public SetTeamHeroItemData(Hero cg,int th)
     {
         this._hero = cg;
+        this._teamHeroID = th;
         this._Key = "Hero";
     }
 }
 
-public class HeroItemRender : ItemRender
+public class SetTeamHeroItemRender : ItemRender
 {
     public HeroHead _Head;
     public GameObject _Current;
@@ -25,8 +27,9 @@ public class HeroItemRender : ItemRender
 
     protected override void setDataInner(ScrollData data)
     {
-        HeroItemRData curData = (HeroItemRData)data;
+        SetTeamHeroItemData curData = (SetTeamHeroItemData)data;
         this.SetData(curData._hero);
+        this._Current.SetActive(this._id == curData._teamHeroID);
     }
     public void SetData(Hero hero)
     {
@@ -38,6 +41,7 @@ public class HeroItemRender : ItemRender
         this._Head._Star.gameObject.SetActive(isMy);
         this._Head._lvCon.SetActive(isMy);
         UIRoot.Intance.SetImageGray(this._Head._Icon, !isMy);
+       
     }
 }
 

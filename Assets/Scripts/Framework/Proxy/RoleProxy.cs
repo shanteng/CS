@@ -40,13 +40,14 @@ public class RoleProxy : BaseRemoteProxy
 
     public RoleInfo Role => this._role;
 
-    public void AddLog(LogType type,string Content, VInt2 Position = null)
+    public void AddLog(LogType type,string Content, VInt2 Position = null,string bdKey = "")
     {
         LogData data = new LogData();
         data.New = true;
         data.ID = UtilTools.GenerateUId();
         data.Type = type;
         data.Content = Content;
+        data.BdKey = bdKey;
         if (Position != null)
             data.Position = Position;
         data.Time = GameIndex.ServerTime;
@@ -508,10 +509,10 @@ public class RoleProxy : BaseRemoteProxy
     private void Login()
     {
         this._role.UID = PlayerIdentityManager.Current.userId;
-     
+
         //初始化数据
+        WorldProxy._instance.GenerateAllBaseSpot(1);
         MediatorUtil.SendNotification(NotiDefine.LoadAllArmyDo);
-        MediatorUtil.SendNotification(NotiDefine.GenerateMySpotDo, 1);
         MediatorUtil.SendNotification(NotiDefine.LoadAllHeroDo);
         TeamProxy._instance.LoadAllTeam();
         WorldProxy._instance.LoadPatrol();

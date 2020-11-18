@@ -169,7 +169,7 @@ public class ArmyView : MonoBehaviour
 
         this._id = id;
         ArmyConfig config = ArmyConfig.Instance.GetData(id);
-        this._curModel.SetModel(config.Model);
+        this._curModel.SetModel("QiBing");
 
         this._nameTxt.text = config.Name;
         this._careerIcon.sprite = ResourcesManager.Instance.GetCareerIcon(config.Career);

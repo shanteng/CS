@@ -286,6 +286,7 @@ public class LogData
     public long Time;
     public string Content;
     public VInt2 Position;
+    public string BdKey;
     public bool New;
 }
 
@@ -303,6 +304,7 @@ public enum LogType
     RecruitHeroSuccess,
     OwnCityResp,
     HourTax,
+    FinshArmy,
 }
 
 public enum HeroBelong
@@ -374,6 +376,7 @@ public enum MediatorDefine
     BAG,
     GAME_LOG,
     TEAM,
+    SET_TEAM_HERO,
 }
 
 public class StringKeyValue

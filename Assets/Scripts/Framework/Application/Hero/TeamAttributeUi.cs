@@ -29,16 +29,7 @@ public class TeamAttributeUi : UIBase
         else
         {
             HeroConfig config = HeroConfig.Instance.GetData(heroid);
-            int rateID = 0;
-            for (int i = 0; i < config.CareerRates.Length; ++i)
-            {
-                int career = i + 1;
-                if (career == armyConfig.Career)
-                {
-                    rateID = config.CareerRates[i];
-                    break;
-                }
-            }//end for
+            int rateID = HeroProxy._instance.GetHeroCareerRate(heroid, armyConfig.Career);
 
             CareerEvaluateConfig configRate = CareerEvaluateConfig.Instance.GetData(rateID);
             float RateValue = 1f + (float)configRate.Percent / 100f;

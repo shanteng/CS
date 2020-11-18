@@ -526,16 +526,16 @@ public class DataGrid : UIBase
         int topIndex = (int)param[1];
         bool notifySelect = (bool)param[2];
 
-        if (scroll != 0)
+        if (topIndex >= 0)
+        {
+            this.ShowItemOnTopBy(topIndex, notifySelect);
+        }
+        else
         {
             if (this.m_isVertical)
                 this.verticalPos = scroll;
             else
                 this.horizonPos = 1 - scroll;
-        }
-        else if(topIndex >= 0)
-        {
-            this.ShowItemOnTopBy(topIndex, notifySelect);
         }
         
     }

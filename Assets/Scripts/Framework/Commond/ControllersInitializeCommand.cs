@@ -46,5 +46,9 @@ public class ControllersInitializeCommand : SimpleCommand
         Facade.RegisterCommand(NotiDefine.HarvestArmyDo, typeof(ArmyCommand));
         Facade.RegisterCommand(NotiDefine.SpeedUpArmyDo, typeof(ArmyCommand));
         Facade.RegisterCommand(NotiDefine.CancelArmyDo, typeof(ArmyCommand));
+
+        //TeamCommand
+        Facade.RegisterCommand(NotiDefine.SetTeamHeroDo, typeof(TeamCommand));
+
     }
 }

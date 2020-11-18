@@ -41,14 +41,14 @@ public class TeamHeroItem : ItemRender
     {
         if (this._isOpen == false)
             return;
-        PopupFactory.Instance.ShowTeamSet(this.ID);
+        MediatorUtil.ShowMediator(MediatorDefine.SET_TEAM_HERO, this.ID);
     }
 
     private void OnHeroClick(UIButton btn)
     {
         if (this._isOpen == false)
             return;
-        PopupFactory.Instance.ShowTeamSet(this.ID);
+        MediatorUtil.ShowMediator(MediatorDefine.SET_TEAM_HERO, this.ID);
     }
 
     protected override void setDataInner(ScrollData data)

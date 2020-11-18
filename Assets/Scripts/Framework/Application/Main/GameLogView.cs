@@ -20,7 +20,6 @@ public class GameLogView : MonoBehaviour
     {
         this._InnerTran.DOLocalMoveX(-1200, 0.1f).onComplete = () =>
          {
-             RoleProxy._instance.SetLogOld();
              MediatorUtil.HideMediator(MediatorDefine.GAME_LOG);
          };
     }
@@ -40,7 +39,7 @@ public class GameLogView : MonoBehaviour
             LogItemData data = new LogItemData(datap);
             this._hGrid.Data.Add(data);
         }
-        _hGrid.ShowGrid(this, DataGrid.SCROLL_BOTTOM);
+        _hGrid.ShowGrid(this,-1,false, DataGrid.SCROLL_BOTTOM);
     }
 
     public void AddOne(LogData data)
@@ -53,9 +52,15 @@ public class GameLogView : MonoBehaviour
     public void onClickScrollItem(ScrollData data)
     {
         LogData curData = ((LogItemData)data)._data;
-        if (curData.Position != null)
+        if (curData.BdKey.Equals("") == false)
         {
-            ViewControllerLocal.GetInstance().TryGoto(curData.Position as VInt2);
+            BuildingData bd = WorldProxy._instance.GetBuilding(curData.BdKey);
+            if (bd != null)
+                ViewControllerLocal.GetInstance().TryGoto(bd._cordinate);
+        }
+        else if (curData.Position != null)
+        {
+            ViewControllerLocal.GetInstance().TryGoto(curData.Position);
         }
     }
 

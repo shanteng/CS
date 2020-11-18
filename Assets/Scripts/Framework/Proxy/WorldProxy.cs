@@ -69,8 +69,7 @@ public class WorldProxy : BaseRemoteProxy
     {
         if (cityid == 0)
         {
-            BuildingData bd = this.GetFirstBuilding(BuildingData.MainCityID,cityid);
-            return bd._cordinate;
+            return new VInt2();
         }
 
         CityConfig config = CityConfig.Instance.GetData(cityid);
@@ -545,7 +544,6 @@ public class WorldProxy : BaseRemoteProxy
 
     public BuildingData GetBuildingInRange(int x, int z)
     {
-
         foreach (List<BuildingData> datas in this._WorldData.Datas.Values)
         {
             foreach (BuildingData bd in datas)
@@ -566,6 +564,23 @@ public class WorldProxy : BaseRemoteProxy
                 return true;
         }
         return false;
+    }
+
+    public string GetArmyBuildingBy(int armyCareer, int cityid = 0)
+    {
+        List<BuildingData> list = this.GetCityBuildings(cityid);
+        foreach (BuildingData data in list)
+        {
+            BuildingConfig config = BuildingConfig.Instance.GetData(data._id);
+            if (config.AddType.Equals(ValueAddType.RecruitVolume))
+            {
+                BuildingUpgradeConfig configLv = BuildingUpgradeConfig.GetConfig(config.ID, data._level);
+                int career = UtilTools.ParseInt(configLv.AddValues[0]);
+                if (career == armyCareer)
+                    return data._key;
+            }
+        }
+        return "";
     }
 
     public BuildingData GetBuilding(string key, int cityid = 0)
@@ -1334,13 +1349,6 @@ public class WorldProxy : BaseRemoteProxy
         //时间中心去掉
         MediatorUtil.SendNotification(NotiDefine.RemoveTimestepCallback, key);
         this.OnBuildExpireFinsih(key);
-
-        /*data.SetStatus(BuildingData.BuildingStatus.NORMAL);
-        data.SetLevel(data._level + 1);
-        ComputeEffects(data._city);//计算影响
-        this.DoSaveWorldDatas();
-        MediatorUtil.SendNotification(NotiDefine.BuildingStatusChanged, key);
-        */
     }
 
     public void SpeedUpUpgrade(string key)
@@ -1409,12 +1417,12 @@ public class WorldProxy : BaseRemoteProxy
             VInt2 gamePos = UtilTools.WorldToGameCordinate(pos.x, pos.y);
             string notice;
             if (data._status == BuildingData.BuildingStatus.BUILD)
-                notice = LanguageConfig.GetLanguage(LanMainDefine.BuildFinish, config.Name, gamePos.x, gamePos.y);
+                notice = LanguageConfig.GetLanguage(LanMainDefine.BuildFinish, config.Name);
             else
-                notice = LanguageConfig.GetLanguage(LanMainDefine.UpgradeBuildFinish, config.Name, data._level, gamePos.x, gamePos.y);
+                notice = LanguageConfig.GetLanguage(LanMainDefine.UpgradeBuildFinish, config.Name, data._level);
 
             PopupFactory.Instance.ShowNotice(notice);
-            RoleProxy._instance.AddLog(LogType.BuildUp, notice, pos);
+            RoleProxy._instance.AddLog(LogType.BuildUp, notice, null,data._key);
 
             data.SetStatus(BuildingData.BuildingStatus.NORMAL);
             ComputeEffects(data._city);//计算影响

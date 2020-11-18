@@ -41,7 +41,8 @@ public class LogItemRender : ItemRender
         this._new.SetActive(data.New);
         string TimeStr = UtilTools.getDateFromNowOn(data.Time);
         this.Content.text = LanguageConfig.GetLanguage(LanMainDefine.LogItemContent, TimeStr, data.Content);
-        this.FunIcon.gameObject.SetActive(data.Position != null);
+        BuildingData bd = WorldProxy._instance.GetBuilding(data.BdKey);
+        this.FunIcon.gameObject.SetActive(data.Position != null || bd != null);
     }
 
 }

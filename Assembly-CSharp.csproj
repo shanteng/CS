@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\ArmySetItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\CareerRate.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroCareerRates.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroDetailsUI.cs" />
@@ -87,6 +88,9 @@
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitView.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\SetTeamHeroItemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\SetTeamHeroMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\SetTeamHeroView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\TeamAttributeUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\TeamCityItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\TeamHeroItem.cs" />
@@ -156,6 +160,7 @@
     <Compile Include="Assets\Scripts\Framework\Commond\ModelsInitializeCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\RoleCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\StartupCommand.cs" />
+    <Compile Include="Assets\Scripts\Framework\Commond\TeamCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\TimeCenterCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\Commond\ViewsInitializeCommand.cs" />
     <Compile Include="Assets\Scripts\Framework\GameDefine.cs" />
@@ -190,6 +195,7 @@
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIDrag.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIDragRotation.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIMediatorHideHandler.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\UIMeshTexts.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIModel.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIPress.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\UIScreenHideHandler.cs" />

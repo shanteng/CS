@@ -5,10 +5,11 @@ using SMVC.Patterns;
 using System.Collections;
 using System.IO;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
-public class GameLogMediator : BaseWindowMediator<GameLogView>
+public class SetTeamHeroMediator : BaseWindowMediator<SetTeamHeroView>
 {
-    public GameLogMediator() : base(MediatorDefine.GAME_LOG, WindowLayer.Window)
+    public SetTeamHeroMediator() : base(MediatorDefine.SET_TEAM_HERO, WindowLayer.Window)
     {
         
     }
@@ -16,17 +17,16 @@ public class GameLogMediator : BaseWindowMediator<GameLogView>
    
     protected override void InitListNotificationInterestsInner()
     {
-        m_HideNoHandleNotifations.Add(NotiDefine.NewLogNoti);
+        m_HideNoHandleNotifations.Add(NotiDefine.SetTeamHeroResp);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.NewLogNoti:
+            case NotiDefine.SetTeamHeroResp:
                 {
-                    LogData data = (LogData)notification.Body;
-                    this.m_view.AddOne(data);
+                    MediatorUtil.HideMediator(MediatorDefine.SET_TEAM_HERO);
                     break;
                 }
         }
@@ -34,19 +34,17 @@ public class GameLogMediator : BaseWindowMediator<GameLogView>
 
     protected override void InitViewComponent(GameObject view)
     {
-        
+
     }
 
     protected override void DoInitializeInner()
     {
-        this.m_view.DoShow();
-        this.m_view.SetList();
+        this.m_view.InitData((int)this.ShowData);
     }
 
-    protected override void hideWindowInner()
+    protected override void hideWindowInner() 
     {
-        RoleProxy._instance.SetLogOld();
-        MediatorUtil.SendNotification(NotiDefine.JudegeNewLog);
+        
     }
 
 }//end class

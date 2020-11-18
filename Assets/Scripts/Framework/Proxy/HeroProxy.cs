@@ -78,6 +78,24 @@ public class HeroProxy : BaseRemoteProxy
         return 0;
     }
 
+    public int GetHeroCareerRate(int heroid, int curCareer)
+    {
+        HeroConfig config = HeroConfig.Instance.GetData(heroid);
+        if (config == null)
+            return 0;
+        int rateID = 0;
+        for (int i = 0; i < config.CareerRates.Length; ++i)
+        {
+            int career = i + 1;
+            if (career == curCareer)
+            {
+                rateID = config.CareerRates[i];
+                break;
+            }
+        }//end for
+        return rateID;
+    }
+
     public Hero GetHero(int id)
     {
         Hero hero = null;
