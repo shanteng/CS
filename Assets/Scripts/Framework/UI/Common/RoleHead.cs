@@ -14,4 +14,9 @@ public class RoleHead : UIBase
     {
         this._Icon.sprite = ResourcesManager.Instance.GetHeadSprite(head);
     }//end 
+
+    public void SetHero(int id)
+    {
+        this._Icon.sprite = ResourcesManager.Instance.GetHeroHeadSprite(id);
+    }
 }

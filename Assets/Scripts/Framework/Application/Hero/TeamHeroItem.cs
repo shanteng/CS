@@ -106,7 +106,7 @@ public class TeamHeroItem : ItemRender
         if (armyId > 0)
             this._IconArmy.sprite = ResourcesManager.Instance.GetArmySprite(armyId);
 
-        this._TeamAttrUi.SetData(heroID, armyId, blood);
+        this._TeamAttrUi.SetData(_teamID);
         this._TeamAttrUi.gameObject.SetActive(_isOpen);
         this._StateTxt.gameObject.SetActive(team.Status != (int)TeamStatus.Idle);
         this._StateTxt.FirstLabel.text = LanErrorConfig.GetLanguage(UtilTools.combine(LanMainDefine.TeamStatus, team.Status));

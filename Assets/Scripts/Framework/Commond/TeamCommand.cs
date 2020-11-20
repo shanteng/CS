@@ -14,6 +14,11 @@ public class TeamCommand : SimpleCommand
                     proxy.SetTeamHero(notification.Body as Dictionary<string, object>);
                     break;
                 }
+            case NotiDefine.AttackCityDo:
+                {
+                    proxy.AttackCityDo(notification.Body as Dictionary<string, object>);
+                    break;
+                }
         }
     }//end func
 }

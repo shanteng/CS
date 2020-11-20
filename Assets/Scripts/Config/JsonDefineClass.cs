@@ -31,7 +31,7 @@ public class JsonNameDefine
     public static string FavorLevel = "FavorLevel";
     public static string CareerEvaluate = "CareerEvaluate";
     public static string City = "City";
-
+    public static string NpcTeam = "NpcTeam";
 
     public static JArray JsonRead(string name)
     {
@@ -110,7 +110,7 @@ public class ArmyConfig : Config<ArmyConfig>
     public float Attack;
     public float Defense;
 
-    public int Blood;
+    public float Blood;
     public int Load;
     public int Power;
  
@@ -128,6 +128,17 @@ public class RoleLevelConfig : Config<RoleLevelConfig>
     public RoleLevelConfig() : base(JsonNameDefine.RoleLevel) { }
 }
 
+public class NpcTeamConfig : Config<NpcTeamConfig>
+{
+    public int Type;
+    public int Hero;
+    public int Level;
+    public int[] SkillLvs;
+    public int Army;
+    public int Count;
+    public NpcTeamConfig() : base(JsonNameDefine.NpcTeam) { }
+}
+
 public class CityConfig : Config<CityConfig>
 {
     public int Type;
@@ -136,10 +147,12 @@ public class CityConfig : Config<CityConfig>
     public int[] Range;
     public string Model;
     public int[] Position;
+    public int[] NpcTeams;
     public string[] Buildings;
     public int Power;//
     public string[] QuestDrops;
     public string[] QuestTalents;//TalentDefine
+    public string[] AttackDrops;//
     public CityConfig() : base(JsonNameDefine.City) { }
 
     public static BuildingUpgradeConfig GetConfig(int id, int level)
@@ -178,7 +191,7 @@ public class HeroConfig : Config<HeroConfig>
     public string Model;
     public int[] CareerRates;
     public int Star;
-    public int InitLevel;
+
     public int InitBelong;
     public string Element;
     public float Speed;//真实攻速为和Army的SpeedType相加得到

@@ -9,6 +9,7 @@ public class RecruitView : MonoBehaviour
     public DataGrid _hGrid;
     public List<UIToggle> _toggleList;
     public CountDownText _cdTxt;
+    public UIButton _btnRe;
     private int _city = 0;
     private string _Element = "All";
     void Awake()
@@ -18,6 +19,13 @@ public class RecruitView : MonoBehaviour
             item._param._value = item.gameObject.name;
             item.AddEvent(OnSelectToggle);
         }
+        this._btnRe.AddEvent(OnClickRe);
+    }
+
+    private void OnClickRe(UIButton btn)
+    {
+        HeroProxy._instance.JustRefreshHero(this._city,true);
+        this.SetList();
     }
 
     private void OnSelectToggle(UIToggle btnSelf)
@@ -48,6 +56,29 @@ public class RecruitView : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void RemoveHero(int id)
+    {
+        int rmIndex = -1;
+        int index = 0;
+        foreach (ScrollData data in this._hGrid.Data)
+        {
+            RecruitItemData cur = (RecruitItemData)data;
+            if (cur._hero.Id == id)
+            {
+                rmIndex = index;
+                break;
+            }
+            index++;
+        }
+
+        if (rmIndex >= 0)
+        {
+            this._hGrid.justRemoveOne(this._hGrid.Data[rmIndex]);
+            this._hGrid.UpdateView();
+        }
+          
     }
 
     public int City => this._city;

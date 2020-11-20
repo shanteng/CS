@@ -19,7 +19,7 @@ public enum PopType
     CITY_INFO,
     QUEST_CITY,
     HERO_TALENT,
-
+    TEXT,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -70,7 +70,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowConfirmBy(data);
     }
 
-   
+
+    public void ShowText(string content)
+    {
+        this.ShowPop(PopType.TEXT, content);
+    }
 
     public void ShowHeroTalent(int id)
     {
@@ -200,6 +204,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
                     _curShowWin = InitQuestCity();
                     break;
                 }
+            case PopType.TEXT:
+                {
+                    _curShowWin = InitText();
+                    break;
+                }
         }
         this._curShowType = type;
         this._curShowWin.gameObject.SetActive(true);
@@ -295,6 +304,14 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         GameObject view = ResourcesManager.Instance.LoadPopupRes("QuestCityPop");
         Popup script = view.GetComponent<Popup>();
         QuestCityPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<QuestCityPop>();
+        return scriptClone;
+    }
+
+    protected Popup InitText()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("TextPop");
+        Popup script = view.GetComponent<Popup>();
+        TextPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<TextPop>();
         return scriptClone;
     }
 }//end class

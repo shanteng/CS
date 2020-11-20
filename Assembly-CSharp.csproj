@@ -74,8 +74,11 @@
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\ArmyAttributeUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\ArmySetItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\CareerRate.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\FightHeroUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\FightTeamItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroCareerRates.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroDetailsUI.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroHead.cs" />
@@ -85,12 +88,15 @@
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroScene.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroTalents.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroView.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\NpcTeamRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\SetTeamHeroItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\SetTeamHeroMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\SetTeamHeroView.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\TeamAttackMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\TeamAttackView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\TeamAttributeUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\TeamCityItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\TeamHeroItem.cs" />
@@ -144,6 +150,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\QuestCityPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\QuesttemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\TalentPop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\TextPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\ResourcesManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderView.cs" />
@@ -186,6 +193,7 @@
     <Compile Include="Assets\Scripts\Framework\UI\Common\HeroStar.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NonDrawingGraphic.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\NumberAnimation.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\Common\QuestionTips.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\RoleHead.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\SpineUiPlayer.cs" />
     <Compile Include="Assets\Scripts\Framework\UI\Common\TextColorPingPong.cs" />

@@ -43,7 +43,7 @@ public class QuestCityPop : Popup
         HeroConfig aConfig = HeroConfig.Instance.GetData(a.Id);
         HeroConfig bConfig = HeroConfig.Instance.GetData(b.Id);
 
-        int compare = UtilTools.compareInt(a.Belong, b.Belong);
+        int compare = UtilTools.compareInt(a.City, b.City);
         if (compare != 0)
             return compare;
         compare = UtilTools.compareFloat(bConfig.Speed, aConfig.Speed);

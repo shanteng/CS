@@ -30,6 +30,7 @@ public class ArmyView : MonoBehaviour
     public UIButton _btnHarvest;
 
     public UIModel _curModel;
+    public ArmyAttributeUi _AttrUi;
 
     private int _id;
     private int _cityid;
@@ -169,10 +170,11 @@ public class ArmyView : MonoBehaviour
 
         this._id = id;
         ArmyConfig config = ArmyConfig.Instance.GetData(id);
+        this._AttrUi.SetData(id);
         this._curModel.SetModel("QiBing");
 
         this._nameTxt.text = config.Name;
-        this._careerIcon.sprite = ResourcesManager.Instance.GetCareerIcon(config.Career);
+        this._careerIcon.sprite = ResourcesManager.Instance.GetArmySprite(config.ID);
         this.UpdateState(this._career);
         
     }

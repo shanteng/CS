@@ -177,6 +177,7 @@ MonoBehaviour:
     sheets:
     - World
     - City
+    - NpcTeam
   - name: ItemInfo
     sheets:
     - ItemInfo

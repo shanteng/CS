@@ -2555,6 +2555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _param:
     _key: 
+  _Select: {fileID: 0}
   _Bg: {fileID: 3808554054961640931}
   _nameTxt: {fileID: 4175204365766567142}
   _descTxt: {fileID: 9094250571077981519}

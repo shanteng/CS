@@ -219,7 +219,7 @@ public class RoleProxy : BaseRemoteProxy
         for (int i = 0; i < count; ++i)
         {
             CostData data = new CostData();
-            data.Init(costs[i]);
+            data.InitJustItem(costs[i]);
             int myValue = this.GetNumberValue(data.id);
             int valueCanDO = myValue / data.count;
             if (valueCanDO < canDoMin)
@@ -238,7 +238,7 @@ public class RoleProxy : BaseRemoteProxy
         for (int i = 0; i < count; ++i)
         {
             CostData data = new CostData();
-            data.Init(costs[i], mutil);
+            data.InitJustItem(costs[i], mutil);
             int myValue = this.GetNumberValue(data.id);
             if (myValue < data.count)
             {
@@ -258,7 +258,7 @@ public class RoleProxy : BaseRemoteProxy
         for (int i = 0; i < count; ++i)
         {
             CostData data = new CostData();
-            data.Init(costs[i], mutil);
+            data.InitJustItem(costs[i], mutil);
             int myValue = this.GetNumberValue(data.id);
             if (myValue < data.count)
             {
@@ -301,7 +301,7 @@ public class RoleProxy : BaseRemoteProxy
         for (int i = 0; i < count; ++i)
         {
             CostData data = new CostData();
-            data.Init(costs[i], mutil);
+            data.InitJustItem(costs[i], mutil);
             awards.Add(data);
         }
 
@@ -390,7 +390,7 @@ public class RoleProxy : BaseRemoteProxy
         for (int i = 0; i < count; ++i)
         {
             CostData data = new CostData();
-            data.Init(cfgconst.StringValues[i], secs);
+            data.InitJustItem(cfgconst.StringValues[i], secs);
             int myValue = this.GetNumberValue(data.id);
             if (myValue < data.count)
             {
@@ -491,7 +491,7 @@ public class RoleProxy : BaseRemoteProxy
         for (int i = 0; i < count; ++i)
         {
             CostData data = new CostData();
-            data.Init(config.StringValues[i]);
+            data.InitJustItem(config.StringValues[i]);
             this._role.ItemList.Add(data);
 
             HourAwardData hourAward = new HourAwardData();

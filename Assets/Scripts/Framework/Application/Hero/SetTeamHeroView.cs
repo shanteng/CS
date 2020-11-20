@@ -16,7 +16,8 @@ public class SetTeamHeroView : MonoBehaviour
 
     public GameObject _armyCon;
     public DataGrid _armyGrid;
-
+    public GameObject _attrCon;
+    public ArmyAttributeUi _attrUi;
     public GameObject _NoHero;
 
     public GameObject _btnLayout;
@@ -114,7 +115,7 @@ public class SetTeamHeroView : MonoBehaviour
         foreach (Hero hero in heros.Values)
         {
             HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
-            if (hero.IsMy == false || hero.TeamId != (int)HeroTeamState.NoTeam || hero.Belong != this._cityID)
+            if (hero.IsMy == false || hero.TeamId != (int)HeroTeamState.NoTeam || hero.City != this._cityID)
                 continue;
             SetTeamHeroItemData data = new SetTeamHeroItemData(hero,this._teamHeroID);
             this._hGrid.Data.Add(data);
@@ -138,7 +139,7 @@ public class SetTeamHeroView : MonoBehaviour
         this._btnLayout.SetActive(count > 0);
         this._detailsUi.gameObject.SetActive(count > 0);
         this._armyCon.SetActive(count > 0);
-
+        this._attrCon.SetActive(dic.Count > 0);
         if (selectIndex >= 0)
         {
             int id = (this._hGrid.Data[selectIndex] as SetTeamHeroItemData)._hero.Id;
@@ -215,6 +216,9 @@ public class SetTeamHeroView : MonoBehaviour
             curRender.SetSelectState();
             curRender.UpdateCount();
         }
+
+        if (selectid > 0)
+            this._attrUi.SetData(selectid);
 
         //血量
         this._heroOriginalBlood = hero.Blood;

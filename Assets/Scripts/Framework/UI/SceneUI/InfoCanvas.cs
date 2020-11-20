@@ -405,7 +405,8 @@ public class InfoCanvas : UIBase, IConfirmListener
                 }
             case OpType.Attack:
                 {
-                    WorldProxy._instance.DoOwnCity(this._cityId);
+                    MediatorUtil.ShowMediator(MediatorDefine.TEAM_ATTACK, this._cityId);
+                    //WorldProxy._instance.DoOwnCity(this._cityId);
                     break;
                 }
         }

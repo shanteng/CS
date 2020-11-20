@@ -55,7 +55,26 @@ public class TeamProxy : BaseRemoteProxy
         return list;
     }
 
- 
+    public void GetFightAwardTotleExp(int npcCity,out int count,out int addExp)
+    {
+        count = 0;
+        addExp = 0;
+        float totleBlood = 0;
+        CityConfig config = CityConfig.Instance.GetData(npcCity);
+        int[] npcs = config.NpcTeams;
+        for (int i = 0; i < npcs.Length; ++i)
+        {
+            NpcTeamConfig configNpc = NpcTeamConfig.Instance.GetData(npcs[i]);
+            count += configNpc.Count;
+            ArmyConfig configArmy = ArmyConfig.Instance.GetData(configNpc.Army);
+            totleBlood += count * configArmy.Blood;
+        }
+
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.CancelArmyReturnRate);
+        float rate = (float)cfgconst.IntValues[0] / 100f;
+        addExp =  Mathf.RoundToInt(rate * totleBlood);
+    }
+   
 
     public void ComputeBuildingEffect(int city)
     {
@@ -84,6 +103,26 @@ public class TeamProxy : BaseRemoteProxy
             }
         }
         return isOpen;
+    }
+
+    public void AttackCityDo(Dictionary<string, object> vo)
+    {
+        int cityid = (int)vo["cityid"];
+        int from = (int)vo["from"];
+        List<int> teams = (List<int>)vo["teams"];
+
+        this.DoSaveTeams();
+
+        VInt2 cityFromPos = WorldProxy._instance.GetCityCordinate(from);
+        VInt2 cityTargetPos = WorldProxy._instance.GetCityCordinate(cityid);
+        string fName = WorldProxy._instance.GetCityName(from);
+        string tName = WorldProxy._instance.GetCityName(cityid);
+
+        VInt2 gamePos = UtilTools.WorldToGameCordinate(cityTargetPos.x, cityTargetPos.y);
+        string notice = LanguageConfig.GetLanguage(LanMainDefine.AttackCityMoveOut, fName, teams.Count, tName);
+        PopupFactory.Instance.ShowNotice(notice);
+        RoleProxy._instance.AddLog(LogType.AttackCity, notice, cityTargetPos);
+        this.SendNotification(NotiDefine.AttackCityResp);
     }
 
     public void SetTeamHero(Dictionary<string, object> vo)
@@ -142,6 +181,7 @@ public class TeamProxy : BaseRemoteProxy
         }
 
         team.HeroID = heroid;
+        team.ComputeAttribute();
         HeroProxy._instance.DoSaveHeros();
         this.DoSaveTeams();
         this.SendNotification(NotiDefine.SetTeamHeroResp);

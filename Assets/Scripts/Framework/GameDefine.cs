@@ -153,6 +153,10 @@ public class NotiDefine
     public const string SetTeamHeroDo = "SetTeamHeroDo";
     public const string SetTeamHeroResp = "SetTeamHeroResp";
 
+    public const string AttackCityDo = "AttackCityDo";
+    public const string AttackCityResp = "AttackCityResp";
+
+
     public const string PathAddNoti = "PathAddNoti";
     public const string PathRemoveNoti = "PathRemoveNoti";
 
@@ -305,12 +309,13 @@ public enum LogType
     OwnCityResp,
     HourTax,
     FinshArmy,
+    AttackCity,
 }
 
 public enum HeroBelong
 {
-    MainCity = 0,
     Wild = -1,
+    MainCity = 0,
 }
 
 public enum CareerRateDefine
@@ -377,6 +382,7 @@ public enum MediatorDefine
     GAME_LOG,
     TEAM,
     SET_TEAM_HERO,
+    TEAM_ATTACK,
 }
 
 public class StringKeyValue
@@ -439,6 +445,7 @@ public class ValueAddType
     public const string HeroRecruit = "HeroRecruit";
     public const string AttributeAdd = "AttributeAdd";
     public const string Worker = "Worker";
+    public const string TroopSpeed = "TroopSpeed";
 }
 
 public class ElementDefine
@@ -452,6 +459,8 @@ public class AttributeDefine
 {
     public const string Attack = "Attack";
     public const string Defense = "Defense";
+    public const string Speed = "Speed";
+    public const string Blood = "Blood";
 }
 
 
@@ -584,6 +593,7 @@ public class BuildingEffectsData
     public int TroopNum = 0;//可以配置队伍数量
     public int DayBoxLimit = 0;//每日宝箱次数上限
     public int HeroRectuitLimit = 0;//酒馆刷新上限
+    public int TeamMoveReduceRate = 0;//行军时间减免百分比/100使用
 
     public Dictionary<int, int> RecruitVolume = new Dictionary<int, int>();//兵种每次招募的上限
     public Dictionary<string, IncomeData> IncomeDic = new Dictionary<string, IncomeData>();
@@ -709,6 +719,40 @@ public class Team
     public int TargetID;//移动目标 0-主城 >0 Npc城市ID 
     public long StartTime;//行军或者返回开始时间
     public long ExpireTime;//行军或者返回的结束时间
+    public Dictionary<string, float> Attributes;
+
+    public void ComputeAttribute()
+    {
+        if (Attributes == null)
+            Attributes = new Dictionary<string, float>();
+        else
+            Attributes.Clear();
+        Hero hero = HeroProxy._instance.GetHero(this.HeroID);
+        int armyId = hero != null ? hero.ArmyTypeID : 0;
+        ArmyConfig armyConfig = ArmyConfig.Instance.GetData(armyId);
+        if (hero == null || armyConfig == null)
+            return;
+        int count = hero.Blood;
+        HeroConfig config = HeroConfig.Instance.GetData(HeroID);
+        int rateID = HeroProxy._instance.GetHeroCareerRate(HeroID, armyConfig.Career);
+
+
+        CareerEvaluateConfig configRate = CareerEvaluateConfig.Instance.GetData(rateID);
+        float RateValue = 1f + (float)configRate.Percent / 100f;
+
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.AttackRate);
+        int atk = Mathf.RoundToInt(hero.Attributes[AttributeDefine.Attack] * count * armyConfig.Attack * RateValue* (float)cfgconst.IntValues[0]*0.01f);
+
+        cfgconst = ConstConfig.Instance.GetData(ConstDefine.DefenseRate);
+        int def = Mathf.RoundToInt(hero.Attributes[AttributeDefine.Defense] * count * armyConfig.Defense * RateValue * (float)cfgconst.IntValues[0] * 0.01f);
+
+        float speed = config.Speed * (1f + (float)armyConfig.SpeedRate / 100f);
+        int blood = Mathf.RoundToInt(count * armyConfig.Blood);
+        Attributes[AttributeDefine.Attack] = atk;
+        Attributes[AttributeDefine.Defense] = def;
+        Attributes[AttributeDefine.Speed] = speed;
+        Attributes[AttributeDefine.Blood] = blood;
+    }
 }
 
 public class Hero
@@ -721,7 +765,7 @@ public class Hero
     public int ArmyTypeID;//当前兵种
     public int Blood;//当前兵力
     public int MaxBlood;//带兵上限 等级和建筑计算
-    public int Belong;//-1-在野  >=0 为对应城市ID
+    public int City;//-1-在野  >=0 为对应城市ID
     public bool IsMy;//是否为我方
     public int TeamId;//上阵队伍ID 0-未上阵 -1-探索
     public int Favor;//好感度
@@ -736,12 +780,12 @@ public class Hero
     public void Create(HeroConfig config)
     {
         this.Id = config.ID;
-        this.Level = config.InitLevel;
-        this.Exp = 0;
+        this.Level =1;
+        this.Exp = 
         this.ArmyTypeID = 0;
         this.Blood = 0;
-        this.Belong = config.InitBelong;
-        this.IsMy = this.Belong == 0;
+        this.City = config.InitBelong;
+        this.IsMy = this.City == (int)HeroBelong.MainCity;
         this.TeamId = 0;
         this.StarRank = 0;
         this.Favor = 0;
@@ -773,6 +817,34 @@ public class Hero
             this.EnegryFullExpire = GameIndex.ServerTime + TotleSecs;
         else
             this.EnegryFullExpire +=  TotleSecs;
+    }
+
+    public static Dictionary<string, float> GetNpcAttribute(int heroid, int herolv)
+    {
+        Dictionary<string, float> Attributes = new Dictionary<string, float>();
+        HeroConfig config = HeroConfig.Instance.GetData(heroid);
+        HeroLevelConfig configLv = HeroLevelConfig.Instance.GetData(herolv);
+        HeroStarConfig configStar = HeroStarConfig.Instance.GetData(config.Star);
+        foreach (string str in configStar.BaseDemage)
+        {
+            string[] list = str.Split(':');
+            float baseValue = UtilTools.ParseFloat(list[1]);
+            float oldValue = 0;
+            if (Attributes.TryGetValue(list[0], out oldValue) == false)
+                oldValue = 0;
+            Attributes[list[0]] = oldValue + baseValue;
+        }//end foreach
+
+        foreach (string str in configStar.GrowDemage)
+        {
+            string[] list = str.Split(':');
+            float levelValue = UtilTools.ParseFloat(list[1]) * (herolv - 1);
+            float oldValue = 0;
+            if (Attributes.TryGetValue(list[0], out oldValue) == false)
+                oldValue = 0;
+            Attributes[list[0]] = oldValue + levelValue;
+        }//end foreach
+        return Attributes;
     }
 
     public void ComputeAttributes()
@@ -845,21 +917,32 @@ public class Hero
 
 public class CostData
 {
+    public static string TYPE_ITEM = "Item";
+    public static string TYPE_HERO = "Hero";
+    public string type = TYPE_ITEM;
     public string id;
     public int count;
 
-    public void Init(string keyValueStr,float mutil =1f)
+    public void InitFull(string keyValueStr, float mutil = 1f)
+    {
+        string[] kv = keyValueStr.Split('|');
+        this.type = kv[0];
+        string[] list = kv[1].Split(':');
+        this.id = list[0];
+        if (this.type.Equals(TYPE_ITEM))
+            this.count = Mathf.RoundToInt(UtilTools.ParseFloat(list[1]) * mutil);
+        else
+            this.count = 1;
+    }
+
+    public void InitJustItem(string keyValueStr,float mutil =1f)
     {
         string[] list = keyValueStr.Split(':');
         this.id = list[0];
+        this.type = TYPE_ITEM;
         this.count = Mathf.RoundToInt(UtilTools.ParseFloat(list[1]) * mutil);
     }
 
-    public void Init(CostData d)
-    {
-        this.id = d.id;
-        this.count = d.count;
-    }
 }
 
 public class HourAwardData

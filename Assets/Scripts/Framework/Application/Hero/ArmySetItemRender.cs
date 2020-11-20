@@ -38,7 +38,7 @@ public class ArmySetItemRender : ItemRender
         ArmySetItemData curData = (ArmySetItemData)data;
         this._id = curData._armyId;
         ArmyConfig config = ArmyConfig.Instance.GetData(curData._armyId);
-        this._Icon.sprite = ResourcesManager.Instance.GetCareerIcon(config.Career);
+        this._Icon.sprite = ResourcesManager.Instance.GetArmySprite(this._id);
         this.UpdateRate();
         this.UpdateCount();
     }

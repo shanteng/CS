@@ -217,7 +217,7 @@ public class UtilTools
         graphicRaycaster.Raycast(pointerEventData, results);
         if (results != null && results.Count > 0)
         {
-            Vector3 rayPos =  results[0].worldPosition;
+            Vector3 rayPos = results[0].worldPosition;
             int x = Mathf.CeilToInt(rayPos.x);
             int z = Mathf.CeilToInt(rayPos.z);
             BuildingData bd = WorldProxy._instance.GetBuildingInRange(x, z);
@@ -228,7 +228,7 @@ public class UtilTools
     }
 
 
-    public static bool SetCostList(List<CostItem> items, string[] Costs,bool NeedMy = false,float mutil = 1f)
+    public static bool SetCostList(List<CostItem> items, string[] Costs, bool NeedMy = false, float mutil = 1f)
     {
         bool isEnough = true;
         int len = Costs.Length;
@@ -241,7 +241,7 @@ public class UtilTools
                 continue;
             }
             CostData data = new CostData();
-            data.Init(Costs[i],mutil);
+            data.InitJustItem(Costs[i], mutil);
             bool isStisfy = items[i].SetData(data, NeedMy);
             if (isStisfy == false)
                 isEnough = false;
@@ -249,6 +249,24 @@ public class UtilTools
         }//end for
         return isEnough;
     }//end func
+
+    public static void SetFullAwardtList(List<CostBig> items, string[] Awards)
+    {
+        int len = Awards.Length;
+        int count = items.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            if (i >= len)
+            {
+                items[i].Hide();
+                continue;
+            }
+            CostData data = new CostData();
+            data.InitFull (Awards[i]);
+            items[i].SetData(data, false);
+            items[i].Show();
+        }//end for
+    }
 
     public static void SetCostList(List<CostBig> items, string[] Costs,bool needMy = false)
     {
@@ -262,7 +280,7 @@ public class UtilTools
                 continue;
             }
             CostData data = new CostData();
-            data.Init(Costs[i]);
+            data.InitJustItem(Costs[i]);
             items[i].SetData(data, needMy);
             items[i].Show();
         }//end for

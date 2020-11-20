@@ -44,6 +44,14 @@ public class TeamView : MonoBehaviour
         this.SetCity(city);
     }
 
+    public void UpdateTeamList()
+    {
+        foreach (ItemRender render in this._TeamGrid.ItemRenders)
+        {
+            render.updateData();
+        }
+    }
+
     public void onClickScrollItem(ScrollData data)
     {
         if (data._Key.Equals("TeamCityItemData"))

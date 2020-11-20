@@ -714,7 +714,7 @@ public class WorldProxy : BaseRemoteProxy
             {
                 //税收
                 CostData add = new CostData();
-                add.Init(configLevel.AddValues[0]);
+                add.InitJustItem(configLevel.AddValues[0]);
                 int limit = UtilTools.ParseInt(configLevel.AddValues[1]);
                 Effect.IncomeDic[add.id].Count += add.count;
                 Effect.IncomeDic[add.id].LimitVolume += limit;
@@ -728,6 +728,10 @@ public class WorldProxy : BaseRemoteProxy
             else if (config.AddType.Equals(ValueAddType.RecruitSecs))
             {
                 Effect.RecruitReduceRate = UtilTools.ParseFloat(configLevel.AddValues[0]);
+            }
+            else if (config.AddType.Equals(ValueAddType.TroopSpeed))
+            {
+                Effect.TeamMoveReduceRate = UtilTools.ParseInt(configLevel.AddValues[0]);
             }
         }//end for
 
@@ -1154,7 +1158,7 @@ public class WorldProxy : BaseRemoteProxy
         quest.ID = UtilTools.GenerateUId();
         quest.HeroID = HeroID;
         quest.TargetCity = TargetCity;
-        quest.Start = this.GetCityCordinate(hero.Belong);
+        quest.Start = this.GetCityCordinate(hero.City);
         quest.Target.x = targetPos.x;
         quest.Target.y = targetPos.y;
         quest.StartTime = GameIndex.ServerTime;
@@ -1258,18 +1262,20 @@ public class WorldProxy : BaseRemoteProxy
                 cityInfo.QuestIndex.Add(indexof);
             //发放奖励
             string GetName = "";
-            string[] list = awards.Split('|');
-            if (list[0].Equals("Item"))
+
+            CostData cost = new CostData();
+            cost.InitFull(awards);
+
+           
+            if (cost.type.Equals(CostData.TYPE_ITEM))
             {
-                CostData cost = new CostData();
-                cost.Init(list[1]);
                 RoleProxy._instance.ChangeRoleNumberValueBy(cost);
                 string name = ItemInfoConfig.Instance.GetData(cost.id).Name;
                 GetName = LanguageConfig.GetLanguage(LanMainDefine.ItemCount, name, cost.count);
             }
-            else if (list[0].Equals("Hero"))
+            else if(cost.type.Equals(CostData.TYPE_HERO))
             {
-                int heroid = UtilTools.ParseInt(list[1]);
+                int heroid = UtilTools.ParseInt(cost.id);
                 HeroProxy._instance.ChangeHeroBelong(heroid, true, (int)HeroBelong.MainCity);
                 GetName = HeroConfig.Instance.GetData(heroid).Name;
             }
@@ -1467,7 +1473,7 @@ public class WorldProxy : BaseRemoteProxy
         else if (ValueAddType.HourTax.Equals(AddType))
         {
             CostData cost = new CostData();
-            cost.Init(AddValues[0]);
+            cost.InitJustItem(AddValues[0]);
             ItemInfoConfig configItem = ItemInfoConfig.Instance.GetData(cost.id);
             int currenValue = RoleProxy._instance.GetHourAwardValue(cost.id);
 

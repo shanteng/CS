@@ -2121,6 +2121,7 @@ MonoBehaviour:
     _key: 
   _Select: {fileID: 6262597532958939879}
   _Head: {fileID: 992002052403551870}
+  _Current: {fileID: 0}
 --- !u!1 &9200311183917306956
 GameObject:
   m_ObjectHideFlags: 0

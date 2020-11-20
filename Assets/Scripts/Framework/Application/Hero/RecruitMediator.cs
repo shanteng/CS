@@ -36,7 +36,7 @@ public class RecruitMediator : BaseWindowMediator<RecruitView>
                 }
             case NotiDefine.RecruitHeroResp:
                 {
-                    this.m_view.SetList();
+                    this.m_view.RemoveHero((int)notification.Body);
                     break;
                 }
             case NotiDefine.FavorLevelUpNoti:

@@ -45,6 +45,8 @@
     public const string DoPatrol = "DoPatrol";
     public const string DoQuestCity = "DoQuestCity";
     public const string OwnCitySuccess = "OwnCitySuccess";
+    
+    public const string AttackCityMoveOut = "AttackCityMoveOut";
 
 
     public const string RoleLevelExp = "RoleLevelExp";
@@ -90,6 +92,8 @@
     public const string LogType = "LogType";
     public const string GetHourTax = "GetHourTax";
     public const string ArmyRecruitFinish = "ArmyRecruitFinish";
+
+    public const string TeamAttrTips = "TeamAttrTips";
 
     public const string TeamSetSuccess = "TeamSetSuccess";
 
@@ -151,7 +155,9 @@
 
     public const string BuildFinish = "BuildFinish";
     public const string UpgradeBuildFinish = "UpgradeBuildFinish";
-
+    public const string EnegryNotEnough = "EnegryNotEnough";
+    public const string TeamNotInCity = "TeamNotInCity";
+    public const string TeamNoBlood = "TeamNoBlood";
 }
 
 public class ConstDefine
@@ -167,9 +173,16 @@ public class ConstDefine
     public const string HeroTalkGap = "HeroTalkGap";
     public const string PatrolDeltaSces = "PatrolDeltaSces";
     public const string QuestDeltaSces = "QuestDeltaSces";
+    public const string BloodExpRate = "BloodExpRate";
+    public const string AttackDeltaSces = "AttackDeltaSces";
+    public const string FightOneArmyCost = "FightOneArmyCost";
+
+    public const string AttackRate = "AttackRate";
+    public const string DefenseRate = "DefenseRate";
 
     public const string HeroEnegry = "HeroEnegry";
     public const string HeroCostEnegry = "HeroCostEnegry";
     public const string HeroEnegryRecoverDelta = "HeroEnegryRecoverDelta";
+    public const string MoraleReduceDelta = "MoraleReduceDelta";
 }
 

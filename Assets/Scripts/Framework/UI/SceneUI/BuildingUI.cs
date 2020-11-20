@@ -75,7 +75,7 @@ public class BuildingUI : UIBase
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.IncomeShowValue);
         _needValueShow = cfgconst.IntValues[0];
         CostData add = new CostData();
-        add.Init(configLv.AddValues[0]);
+        add.InitJustItem(configLv.AddValues[0]);
         this._icon.sprite = ResourcesManager.Instance.getAtlasSprite(AtlasDefine.Common, add.id);
     }
 

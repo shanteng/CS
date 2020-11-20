@@ -52,7 +52,7 @@ public class QuesttemRender : ItemRender
         vo["HeroID"] = curData.HeroID;
 
         Hero hero = HeroProxy._instance.GetHero(curData.HeroID);
-        int cityid = hero.Belong;
+        int cityid = hero.City;
         this._cityTxt.text = WorldProxy._instance.GetCityName(cityid);
         VInt2 cityPos = WorldProxy._instance.GetCityCordinate(cityid);
         VInt2 targetPos = WorldProxy._instance.GetCityCordinate(curData.Target);

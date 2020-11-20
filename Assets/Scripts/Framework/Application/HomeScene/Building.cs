@@ -89,7 +89,7 @@ public class Building : MonoBehaviour
             if (configLv != null)
             {
                 CostData add = new CostData();
-                add.Init(configLv.AddValues[0]);
+                add.InitJustItem(configLv.AddValues[0]);
                 _AddIconShow =  this._Ui.UpdateIncome(add.id);
                 this._AddAttr = add.id;
             }

@@ -191,6 +191,40 @@ public class HeroProxy : BaseRemoteProxy
         return null;
     }
 
+    public void JustRefreshHero(int city,bool save = false)
+    {
+        HeroRecruitRefreshData cityRefresh = this.GetCityRefreshData(city);
+        if (cityRefresh == null)
+            return;
+        BuildingEffectsData data = WorldProxy._instance.GetBuildingEffects(city);
+        int limitCount = data.HeroRectuitLimit;
+        if (limitCount == 0)
+            return;
+
+        List<int> wildHero = new List<int>();
+        foreach (Hero hero in this._datas.Values)
+        {
+            HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
+            if (hero.City == (int)HeroBelong.Wild && config.DarkSide == 0)
+            {
+                //心魔不会刷出来
+                bool isInTarven = this.IsHeroInCityTarven(hero.Id);
+                if (isInTarven == false)
+                    wildHero.Add(hero.Id);
+            }
+        }
+
+        if (limitCount > wildHero.Count)
+            limitCount = wildHero.Count;
+
+        cityRefresh.IDs.Clear();
+        cityRefresh.IDs = UtilTools.GetRandomChilds<int>(wildHero, limitCount);
+        if (save)
+        {
+            this.DoSaveHeros();
+        }
+    }
+
     public void GenerateRefresh(int city)
     {
         BuildingEffectsData data = WorldProxy._instance.GetBuildingEffects(city);
@@ -206,27 +240,10 @@ public class HeroProxy : BaseRemoteProxy
             this._refreshData.Add(city, cityRefresh);
         }
 
-        List<int> wildHero = new List<int>();
-        foreach (Hero hero in this._datas.Values)
-        {
-            HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
-            if (hero.Belong == (int)HeroBelong.Wild && config.DarkSide == 0)
-            {
-                //心魔不会刷出来
-                bool isInTarven = this.IsHeroInCityTarven(hero.Id);
-                if(isInTarven == false)
-                    wildHero.Add(hero.Id);
-            }
-        }
-
-        if (limitCount > wildHero.Count)
-            limitCount = wildHero.Count;
+        this.JustRefreshHero(city,false);
 
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.TavernRefreshSecs);
         int secs = cfgconst.IntValues[0];
-
-        cityRefresh.IDs.Clear();
-        cityRefresh.IDs = UtilTools.GetRandomChilds<int>(wildHero, limitCount);
         cityRefresh.ExpireTime = GameIndex.ServerTime + secs;
        
         this.DoSaveRefresh();
@@ -239,7 +256,7 @@ public class HeroProxy : BaseRemoteProxy
         if (cityRefresh == null)
             return false;
         Hero he = this.GetHero(id);
-        return cityRefresh.IDs.Contains(id) && he.Belong == (int)HeroBelong.Wild;
+        return cityRefresh.IDs.Contains(id) && he.City == (int)HeroBelong.Wild;
     }
 
     public long GetTervenExpire(int city)
@@ -333,7 +350,7 @@ public class HeroProxy : BaseRemoteProxy
         }
 
         this.ChangeHeroBelong(id, true,(int)HeroBelong.MainCity);
-        this.SendNotification(NotiDefine.RecruitHeroResp);
+        this.SendNotification(NotiDefine.RecruitHeroResp,id);
     }
 
     public void ChangeHeroTeam(int id,int teamid)
@@ -354,7 +371,7 @@ public class HeroProxy : BaseRemoteProxy
     {
         Hero hero = this.GetHero(id);
         bool oldMy = hero.IsMy;
-        hero.Belong = (int)belong;
+        hero.City = (int)belong;
         hero.IsMy = isMy;
         hero.Blood = 0;
         hero.ArmyTypeID = 0;
