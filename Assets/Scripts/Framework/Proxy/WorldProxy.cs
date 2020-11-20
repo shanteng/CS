@@ -1197,7 +1197,7 @@ public class WorldProxy : BaseRemoteProxy
         dataTime.TimeStep = quest.ExpireTime;
         dataTime._param = quest.ID;
         MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
-        this.DoSaveQuestCity();
+        //this.DoSaveQuestCity();
     }
 
     public void OnFinishQuestCity(string questid,bool needSave = true)

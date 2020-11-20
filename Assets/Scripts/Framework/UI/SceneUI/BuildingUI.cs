@@ -18,13 +18,16 @@ public class BuildingUI : UIBase
 
     private void OnAccept(UIButton btn)
     {
-        Vector3 clickpos;
+        Vector3 clickpos = Vector3.zero;
 #if UNITY_EDITOR
         clickpos = Input.mousePosition;
 #else
         if (Input.touchCount > 0)
             clickpos = Input.GetTouch(0).position;
 #endif
+
+        if (clickpos.Equals( Vector3.zero))
+            return;
 
         Vector2 uiPos;
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(UIRoot.Intance.transform.GetComponent<RectTransform>(), clickpos, UIRoot.Intance.camera, out uiPos))

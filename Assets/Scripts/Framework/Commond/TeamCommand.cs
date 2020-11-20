@@ -19,6 +19,11 @@ public class TeamCommand : SimpleCommand
                     proxy.AttackCityDo(notification.Body as Dictionary<string, object>);
                     break;
                 }
+            case NotiDefine.AttackCityExpireReachedNoti:
+                {
+                    proxy.OnFinishMarchAttackCity(notification.Body as string);
+                    break;
+                }
         }
     }//end func
 }

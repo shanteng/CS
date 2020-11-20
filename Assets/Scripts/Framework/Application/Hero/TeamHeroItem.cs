@@ -109,7 +109,7 @@ public class TeamHeroItem : ItemRender
         this._TeamAttrUi.SetData(_teamID);
         this._TeamAttrUi.gameObject.SetActive(_isOpen);
         this._StateTxt.gameObject.SetActive(team.Status != (int)TeamStatus.Idle);
-        this._StateTxt.FirstLabel.text = LanErrorConfig.GetLanguage(UtilTools.combine(LanMainDefine.TeamStatus, team.Status));
+        this._StateTxt.FirstLabel.text = LanguageConfig.GetLanguage(UtilTools.combine(LanMainDefine.TeamStatus, team.Status));
         this._Mask.SetActive(isIdleState == false);
     }//end func
 

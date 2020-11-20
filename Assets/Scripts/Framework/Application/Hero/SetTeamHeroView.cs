@@ -88,7 +88,7 @@ public class SetTeamHeroView : MonoBehaviour
     public void InitData(int teamid)
     {
         Team team = TeamProxy._instance.GetTeam(teamid);
-        this._cityID= team.CityID;
+        this._cityID = team.CityID;
         this._teamId = teamid;
         this._teamHeroID = team.HeroID;
         this._teamArmyID = 0;
@@ -100,7 +100,7 @@ public class SetTeamHeroView : MonoBehaviour
             this._teamArmyCount = teamHero.Blood;
         }
 
-       
+
         int selectIndex = -1;
         _hGrid.Data.Clear();
         if (teamHero != null)
@@ -117,20 +117,23 @@ public class SetTeamHeroView : MonoBehaviour
             HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
             if (hero.IsMy == false || hero.TeamId != (int)HeroTeamState.NoTeam || hero.City != this._cityID)
                 continue;
-            SetTeamHeroItemData data = new SetTeamHeroItemData(hero,this._teamHeroID);
+            SetTeamHeroItemData data = new SetTeamHeroItemData(hero, this._teamHeroID);
             this._hGrid.Data.Add(data);
         }
         _hGrid.ShowGrid(this, selectIndex);
 
-        
+
 
         //army
-        Dictionary<int, Army>  dic = ArmyProxy._instance.GetCityArmys(_cityID);
         this._armyGrid.Data.Clear();
-        foreach (Army army in dic.Values)
+        Dictionary<int, Army> dic = ArmyProxy._instance.GetCityArmys(_cityID);
+        if (dic != null)
         {
-            ArmySetItemData data = new ArmySetItemData(army.Id,army.Count);
-            this._armyGrid.Data.Add(data);
+            foreach (Army army in dic.Values)
+            {
+                ArmySetItemData data = new ArmySetItemData(army.Id, army.Count);
+                this._armyGrid.Data.Add(data);
+            }
         }
         _armyGrid.ShowGrid(this);
 
@@ -139,7 +142,7 @@ public class SetTeamHeroView : MonoBehaviour
         this._btnLayout.SetActive(count > 0);
         this._detailsUi.gameObject.SetActive(count > 0);
         this._armyCon.SetActive(count > 0);
-        this._attrCon.SetActive(dic.Count > 0);
+        this._attrCon.SetActive(this._armyGrid.Data.Count > 0);
         if (selectIndex >= 0)
         {
             int id = (this._hGrid.Data[selectIndex] as SetTeamHeroItemData)._hero.Id;

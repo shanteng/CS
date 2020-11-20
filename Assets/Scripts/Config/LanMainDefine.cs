@@ -47,6 +47,7 @@
     public const string OwnCitySuccess = "OwnCitySuccess";
     
     public const string AttackCityMoveOut = "AttackCityMoveOut";
+    public const string AttackCityWaitFight = "AttackCityWaitFight";
 
 
     public const string RoleLevelExp = "RoleLevelExp";

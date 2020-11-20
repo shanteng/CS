@@ -39,6 +39,7 @@ public class NotiDefine
     public const string BuildingStatusChanged = "BuildingStatusChanged";
     public const string PatrolExpireReachedNoti = "PatrolExpireReachedNoti";
     public const string QuestCityExpireReachedNoti = "QuestCityExpireReachedNoti";
+    public const string AttackCityExpireReachedNoti = "AttackCityExpireReachedNoti";
 
     public const string PatrolDo = "PatrolDo";
     public const string PatrolResp = "PatrolResp";
@@ -190,6 +191,8 @@ public class ErrorCode
     public const string NoOwnNoQuest = "NoOwnNoQuest";
     public const string NoVisibleNoAttack = "NoVisibleNoAttack";
     public const string NoHeroFreeToQuest = "NoHeroFreeToQuest";
+
+    public const string NoArmyNoTeam = "NoArmyNoTeam";
 }
 
 [Serializable]
@@ -310,6 +313,7 @@ public enum LogType
     HourTax,
     FinshArmy,
     AttackCity,
+    AttackCityWaitFight,
 }
 
 public enum HeroBelong
@@ -536,6 +540,7 @@ public class PathData
     public static int TYPE_PATROL = 1;
     public static int TYPE_TEAM = 2;
     public static int TYPE_QUEST_CITY = 3;
+    public static int TYPE_GROUP_ATTACK = 4;
 
     public string ID;
     public int Type;
@@ -696,9 +701,15 @@ public enum HeroTeamState
 public enum TeamStatus
 {
     Idle = 1,
-    March = 2,
-    Back = 3,
+    Fight = 2,
+};
+
+public enum GroupStatus
+{
+    March = 1,
+    WaitFight = 2,
     Fight = 3,
+    Back = 4,
 };
 
 public class HeroRecruitRefreshData
@@ -708,6 +719,30 @@ public class HeroRecruitRefreshData
     public long ExpireTime;
 }
 
+public class Group
+{
+    public string Id;
+    public int CityID;
+    public int Status;
+    public int TargetCityID;
+    public long StartTime;//行军或者返回开始时间
+    public long ExpireTime;//行军或者返回的结束时间
+    public long MoraleExpire;//恢复慢士气时间戳
+    public VInt2 RealTargetPostion;
+    public List<int> Teams;
+
+    public int GetMorale()
+    {
+        long leftSecs = this.MoraleExpire - GameIndex.ServerTime;
+        if (leftSecs <= 0)
+            return 100;
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.MoraleReduceDelta);
+        int EnegryDelta = cfgconst.IntValues[0];
+        int curEnergy = 100 - Mathf.CeilToInt((float)leftSecs / (float)EnegryDelta);
+        return curEnergy;
+    }
+}
+
 public class Team
 {
     public int Id;//CityID*100+Index
@@ -715,10 +750,6 @@ public class Team
     public int HeroID;//上阵英雄
     public int Status;//0-空闲 1-行军 2-返回 3-战斗
     public int CityID;//0-主城，>0 Npc城市ID
-    public int FromID;//0-主城，>0 要塞ID
-    public int TargetID;//移动目标 0-主城 >0 Npc城市ID 
-    public long StartTime;//行军或者返回开始时间
-    public long ExpireTime;//行军或者返回的结束时间
     public Dictionary<string, float> Attributes;
 
     public void ComputeAttribute()

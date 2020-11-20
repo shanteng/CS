@@ -98,12 +98,20 @@ public class PathModel : MonoBehaviour
         this.SetSelect(false);
         this._camTran = Camera.main.transform;
 
+        this._cdTxt.Show();
         this._cdTxt.DoCountDown(this._data.ExpireTime);
         Vector3 targetPos = this._cdTxt.transform.position + _camTran.rotation * Vector3.forward;
         Vector3 targetOrientation = _camTran.rotation * Vector3.up;
         this._cdTxt.transform.LookAt(targetPos, targetOrientation);
-        this._SelectFlag.transform.LookAt(targetPos, targetOrientation);
+        //this._SelectFlag.transform.LookAt(targetPos, targetOrientation);
         this._isStart = true;
+
+        if (GameIndex.ServerTime >= this._data.ExpireTime)
+        {
+            this._cdTxt.Stop();
+            this._cdTxt._CDTxt.text = "";
+        }
+            
     }
 
     public void SetSelect(bool isSelect)
