@@ -20,6 +20,7 @@ public enum PopType
     QUEST_CITY,
     HERO_TALENT,
     TEXT,
+    ATTACK_GROUPS,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -95,6 +96,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
     public void ShowNpcCityInfo(int city)
     {
         this.ShowPop(PopType.CITY_INFO, city);
+    }
+
+    public void ShowAttackGroups(int city)
+    {
+        this.ShowPop(PopType.ATTACK_GROUPS, city);
     }
 
     public void ShowBuildingInfo(string bdKey)

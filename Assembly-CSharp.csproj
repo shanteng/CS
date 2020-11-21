@@ -177,6 +177,7 @@
     <Compile Include="Assets\Scripts\Framework\Mediator\BaseWindowMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\ArmyProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\BaseProxy.cs" />
+    <Compile Include="Assets\Scripts\Framework\Proxy\BattleProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\CloudData\CloudDataTool.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\HeroProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\PathProxy.cs" />

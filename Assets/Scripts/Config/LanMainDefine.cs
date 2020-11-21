@@ -22,6 +22,7 @@
     public const string OpQuestCity = "OpQuestCity";
     public const string OpCityInfo = "OpCityInfo";
     public const string OpAttack = "OpAttack";
+    public const string OpPreBattle = "OpPreBattle";
 
     public const string HourAdd = "HourAdd";
     public const string Progress = "Progress";
@@ -48,6 +49,9 @@
     
     public const string AttackCityMoveOut = "AttackCityMoveOut";
     public const string AttackCityWaitFight = "AttackCityWaitFight";
+
+    public const string AttackCitySuccess = "AttackCitySuccess";
+    public const string AttackCityFail = "AttackCityFail";
 
 
     public const string RoleLevelExp = "RoleLevelExp";
@@ -177,6 +181,7 @@ public class ConstDefine
     public const string BloodExpRate = "BloodExpRate";
     public const string AttackDeltaSces = "AttackDeltaSces";
     public const string FightOneArmyCost = "FightOneArmyCost";
+    public const string MoveBackDeltaSces = "MoveBackDeltaSces";
 
     public const string AttackRate = "AttackRate";
     public const string DefenseRate = "DefenseRate";

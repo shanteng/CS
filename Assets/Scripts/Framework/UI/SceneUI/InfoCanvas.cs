@@ -16,6 +16,7 @@ public enum OpType
     QuestCity,
     NpcCityInfo,
     Attack,
+    PreBattle,
 }
 
 public class IntStrPair
@@ -227,8 +228,16 @@ public class InfoCanvas : UIBase, IConfirmListener
         }
         else
         {
-            data = new IntStrPair(OpType.Attack, LanguageConfig.GetLanguage(LanMainDefine.OpAttack), "OP_ATK");
+            data = new IntStrPair(OpType.Attack, LanguageConfig.GetLanguage(LanMainDefine.OpAttack), "Op_Patrol");
             btnTypeList.Add(data);
+
+            //判断当前有没有group
+            List<string> groups = TeamProxy._instance.GetAttackCityGroups(this._cityId);
+            if (groups.Count > 0)
+            {
+                data = new IntStrPair(OpType.PreBattle, LanguageConfig.GetLanguage(LanMainDefine.OpPreBattle), "OP_ATK");
+                btnTypeList.Add(data);
+            }
         }
     }
 
@@ -407,6 +416,11 @@ public class InfoCanvas : UIBase, IConfirmListener
                 {
                     MediatorUtil.ShowMediator(MediatorDefine.TEAM_ATTACK, this._cityId);
                     //WorldProxy._instance.DoOwnCity(this._cityId);
+                    break;
+                }
+            case OpType.PreBattle:
+                {
+                    PopupFactory.Instance.ShowAttackGroups(this._cityId);
                     break;
                 }
         }

@@ -49,7 +49,8 @@ public class ControllersInitializeCommand : SimpleCommand
 
         //TeamCommand
         Facade.RegisterCommand(NotiDefine.SetTeamHeroDo, typeof(TeamCommand));
-        Facade.RegisterCommand(NotiDefine.AttackCityDo, typeof(TeamCommand));
+        Facade.RegisterCommand(NotiDefine.MoveToAttackCityDo, typeof(TeamCommand));
         Facade.RegisterCommand(NotiDefine.AttackCityExpireReachedNoti, typeof(TeamCommand));
+        Facade.RegisterCommand(NotiDefine.AttackCityDo, typeof(TeamCommand));
     }
 }

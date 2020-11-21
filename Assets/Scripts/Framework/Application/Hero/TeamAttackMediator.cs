@@ -17,14 +17,14 @@ public class TeamAttackMediator : BaseWindowMediator<TeamAttackView>
    
     protected override void InitListNotificationInterestsInner()
     {
-        m_HideNoHandleNotifations.Add(NotiDefine.AttackCityResp);
+        m_HideNoHandleNotifations.Add(NotiDefine.MoveToAttackCityResp);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.AttackCityResp:
+            case NotiDefine.MoveToAttackCityResp:
                 {
                     this.HideWindow();
                     break;

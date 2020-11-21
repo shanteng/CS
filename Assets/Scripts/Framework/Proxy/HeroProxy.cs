@@ -367,6 +367,14 @@ public class HeroProxy : BaseRemoteProxy
         this.DoSaveHeros();
     }
 
+    public void DoOwnHero(CostData data)
+    {
+        int id = UtilTools.ParseInt(data.id);
+        Hero hero = this.GetHero(id);
+        if (hero.IsMy == false)
+            this.ChangeHeroBelong(id, true, 0);
+    }
+
     public void ChangeHeroBelong(int id, bool isMy, int belong)
     {
         Hero hero = this.GetHero(id);
@@ -382,7 +390,6 @@ public class HeroProxy : BaseRemoteProxy
         {
             HeroConfig config = HeroConfig.Instance.GetData(id);
             PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroSuccess,config.Name));
-
             RoleProxy._instance.AddLog(LogType.RecruitHeroSuccess, LanguageConfig.GetLanguage(LanMainDefine.RecruitHeroSuccess, config.Name));
         }
     }

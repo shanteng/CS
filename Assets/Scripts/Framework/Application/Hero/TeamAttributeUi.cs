@@ -24,18 +24,13 @@ public class TeamAttributeUi : UIBase
         ArmyConfig armyConfig = ArmyConfig.Instance.GetData(configNpc.Army);
         HeroConfig config = HeroConfig.Instance.GetData(configNpc.Hero);
         int rateID = HeroProxy._instance.GetHeroCareerRate(configNpc.Hero, armyConfig.Career);
+        Dictionary<string, float> Attributes;
+        Team.ComputeTeamAttribute(out Attributes, configNpc.Hero, configNpc.Level, configNpc.Army, configNpc.Count);
 
-        CareerEvaluateConfig configRate = CareerEvaluateConfig.Instance.GetData(rateID);
-        float RateValue = 1f + (float)configRate.Percent / 100f;
-        Dictionary<string, float> Attributes = Hero.GetNpcAttribute(configNpc.Hero, configNpc.Level);
-
-        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.AttackRate);
-        float atk = (Attributes[AttributeDefine.Attack]  * armyConfig.Attack * RateValue * (float)cfgconst.IntValues[0] * 0.01f);
-
-        cfgconst = ConstConfig.Instance.GetData(ConstDefine.DefenseRate);
-        float def = (Attributes[AttributeDefine.Defense]  * armyConfig.Defense * RateValue * (float)cfgconst.IntValues[0] * 0.01f);
-        float speed = config.Speed * (1f + (float)armyConfig.SpeedRate / 100f);
-        int blood = Mathf.RoundToInt(configNpc.Count * armyConfig.Blood);
+        float blood = Attributes[AttributeDefine.Blood];
+        float atk = Attributes[AttributeDefine.Attack] / blood;
+        float def = Attributes[AttributeDefine.Defense] / blood;
+        float speed = Attributes[AttributeDefine.Speed];
 
         this._AttackTxt.FirstLabel.text = atk.ToString("0.#");
         this._DefenseTxt.FirstLabel.text = def.ToString("0.#");

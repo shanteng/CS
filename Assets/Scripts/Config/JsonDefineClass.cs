@@ -136,6 +136,7 @@ public class NpcTeamConfig : Config<NpcTeamConfig>
     public int[] SkillLvs;
     public int Army;
     public int Count;
+   
     public NpcTeamConfig() : base(JsonNameDefine.NpcTeam) { }
 }
 
@@ -153,6 +154,7 @@ public class CityConfig : Config<CityConfig>
     public string[] QuestDrops;
     public string[] QuestTalents;//TalentDefine
     public string[] AttackDrops;//
+    public int BattleSceneID;
     public CityConfig() : base(JsonNameDefine.City) { }
 
     public static BuildingUpgradeConfig GetConfig(int id, int level)

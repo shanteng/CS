@@ -1070,14 +1070,22 @@ public class WorldProxy : BaseRemoteProxy
         }
 
         city.IsOwn = true;
-        VInt2 gamePos = UtilTools.WorldToGameCordinate(cityPos.x, cityPos.y);
+        //发奖励
+        List<CostData> list = new List<CostData>();
+        foreach (string award in config.AttackDrops)
+        {
+            CostData cost = new CostData();
+            cost.InitFull(award);
+            if (cost.type.Equals(CostData.TYPE_ITEM))
+                list.Add(cost);
+            else if (cost.type.Equals(CostData.TYPE_HERO))
+                HeroProxy._instance.DoOwnHero(cost);
+        }
+        if (list.Count > 0)
+            RoleProxy._instance.ChangeRoleNumberValue(list);
         this.DoSaveCitys();
-
         //设置新的迷雾解锁
         SetCityRangeSpotVisible(cityid);
-
-        PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.OwnCitySuccess, config.Name, gamePos.x, gamePos.y));
-        RoleProxy._instance.AddLog(LogType.OwnCityResp, LanguageConfig.GetLanguage(LanMainDefine.FinishPatrol, config.Name, gamePos.x, gamePos.y), cityPos);
         this.SendNotification(NotiDefine.DoOwnCityResp, cityid);
     }
 
@@ -1167,7 +1175,6 @@ public class WorldProxy : BaseRemoteProxy
 
         this.QuestCityAction(quest);
         PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.DoQuestCity, confighe.Name,config.Name));
-
         RoleProxy._instance.AddLog(LogType.QuestCity, LanguageConfig.GetLanguage(LanMainDefine.DoQuestCity, confighe.Name, config.Name), targetPos);
 
         this.SendNotification(NotiDefine.QuestCityResp, quest);

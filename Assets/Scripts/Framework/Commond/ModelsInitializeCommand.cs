@@ -14,5 +14,6 @@ public class ModelsInitializeCommand : SimpleCommand
         Facade.RegisterProxy(new ArmyProxy());
         Facade.RegisterProxy(new TeamProxy());
         Facade.RegisterProxy(new PathProxy());
+        Facade.RegisterProxy(new BattleProxy());
     }
 }

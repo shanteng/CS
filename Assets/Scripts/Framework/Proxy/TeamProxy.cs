@@ -106,7 +106,127 @@ public class TeamProxy : BaseRemoteProxy
         return isOpen;
     }
 
-    public void AttackCityDo(Dictionary<string, object> vo)
+    public Group GetGroup(string groupid)
+    {
+        Group data;
+        if (this._GroupDic.TryGetValue(groupid, out data))
+            return data;
+        return null;
+    }
+
+    public List<string> GetAttackCityGroups(int city)
+    {
+        List<string> list = new List<string>();
+        foreach (Group gp in this._GroupDic.Values)
+        {
+            if (gp.TargetCityID == city && gp.Status != (int)GroupStatus.Back)
+                list.Add(gp.Id);
+        }
+        return list;
+    }
+
+    public void AttackCityDo(string groupid)
+    {
+        //通知battleproxy
+        Group data;
+        if (this._GroupDic.TryGetValue(groupid, out data) == false)
+            return;
+        CityConfig configCIty = CityConfig.Instance.GetData(data.TargetCityID);
+
+        data.Status = (int)GroupStatus.Fight;//临时状态不存储
+        BattleData battleData = new BattleData();
+        battleData.Id = configCIty.BattleSceneID;
+        battleData.Type = BattleType.AttackCity;
+        battleData.Round = 0;
+        battleData.Status = BattleStatus.PreStart;
+        battleData.Players = new Dictionary<int, BattlePlayer>();
+        battleData.Param = data.TargetCityID;
+        foreach (int teamid in data.Teams)
+        {
+            BattlePlayer player = new BattlePlayer();
+            Team team = this.GetTeam(teamid);
+            player.InitMy(team,data.GetMorale());
+            battleData.Players.Add(teamid, player);
+        }
+
+        //构造敌方
+        int index = 1;
+        foreach (int npcTeam in configCIty.NpcTeams)
+        {
+            BattlePlayer player = new BattlePlayer();
+            player.InitNpc(npcTeam, index, configCIty.BattleSceneID);
+            battleData.Players.Add(index, player);
+            ++index;
+        }
+        BattleProxy._instance.EnterBattle(battleData);
+    }
+
+    public void AttackCityEnd(string groupid, bool isSuccess)
+    {
+        //返回城市
+        Group gp;
+        if (this._GroupDic.TryGetValue(groupid, out gp) == false)
+            return;
+        gp.Status = (int)GroupStatus.Back;
+        gp.StartTime = GameIndex.ServerTime;
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.MoveBackDeltaSces);
+        int SecsDelta = cfgconst.IntValues[0];
+        BuildingEffectsData effect = WorldProxy._instance.GetBuildingEffects(gp.CityID);
+        float deltaFinal = (1f - effect.TeamMoveReduceRate) * (float)SecsDelta;
+
+        VInt2 StartPos = WorldProxy._instance.GetCityCordinate(gp.TargetCityID);
+        VInt2 Goto = WorldProxy._instance.GetCityCordinate(gp.CityID);
+        gp.ExpireTime = WorldProxy._instance.GetMoveExpireTime(StartPos.x, StartPos.y, Goto.x, Goto.y, deltaFinal);//栈道来提升速度百分比
+        gp.RealTargetPostion = new VInt2();
+        gp.RealTargetPostion.x = Goto.x;
+        gp.RealTargetPostion.y = Goto.y;
+
+        this.AttackCityAction(gp);
+
+        this.DoSaveGroup();
+
+        CityConfig config = CityConfig.Instance.GetData(gp.TargetCityID);
+        string fName = WorldProxy._instance.GetCityName(gp.CityID);
+        string tName = WorldProxy._instance.GetCityName(gp.TargetCityID);
+
+        VInt2 gamePos = UtilTools.WorldToGameCordinate(StartPos.x, StartPos.y);
+        string notice = "";
+        if (isSuccess)
+        {
+            List<string> list = new List<string>();
+            string GetName = "";
+            foreach (string award in config.AttackDrops)
+            {
+                CostData cost = new CostData();
+                cost.InitFull(award);
+                if (cost.type.Equals(CostData.TYPE_ITEM))
+                {
+                    RoleProxy._instance.ChangeRoleNumberValueBy(cost);
+                    string name = ItemInfoConfig.Instance.GetData(cost.id).Name;
+                    GetName = LanguageConfig.GetLanguage(LanMainDefine.ItemCount, name, cost.count);
+                }
+                else if (cost.type.Equals(CostData.TYPE_HERO))
+                {
+                    int heroid = UtilTools.ParseInt(cost.id);
+                    HeroProxy._instance.ChangeHeroBelong(heroid, true, (int)HeroBelong.MainCity);
+                    GetName = HeroConfig.Instance.GetData(heroid).Name;
+                }
+                list.Add(GetName);
+            }
+            string awardStr = string.Join(",", list);
+            notice = LanguageConfig.GetLanguage(LanMainDefine.AttackCitySuccess, fName, tName, awardStr);
+        }
+        else
+        {
+            notice = LanguageConfig.GetLanguage(LanMainDefine.AttackCityFail, fName, tName);
+        }
+            
+        PopupFactory.Instance.ShowNotice(notice);
+        RoleProxy._instance.AddLog(LogType.OwnCityResp, notice, StartPos);
+        this.SendNotification(NotiDefine.MoveToAttackCityResp);
+    }
+
+    public void MoveToAttackCityDo(Dictionary<string, object> vo)
     {
         int cityid = (int)vo["cityid"];
         int from = (int)vo["from"];
@@ -179,7 +299,7 @@ public class TeamProxy : BaseRemoteProxy
         string notice = LanguageConfig.GetLanguage(LanMainDefine.AttackCityMoveOut, fName, teams.Count, tName);
         PopupFactory.Instance.ShowNotice(notice);
         RoleProxy._instance.AddLog(LogType.AttackCity, notice, cityTargetPos);
-        this.SendNotification(NotiDefine.AttackCityResp);
+        this.SendNotification(NotiDefine.MoveToAttackCityResp);
     }
 
     private void AttackCityAction(Group gp)

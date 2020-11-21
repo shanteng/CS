@@ -59,6 +59,7 @@ public class NotiDefine
     public const string BuildingCancelDo = "BuildingCancelDo";
     public const string BuildingSpeedUpDo = "BuildingSpeedUpDo";
 
+    
     public const string HomeRangeChanged = "HomeRangeChanged";
     public const string LandVisibleChanged = "LandVisibleChanged";
 
@@ -154,6 +155,9 @@ public class NotiDefine
     public const string SetTeamHeroDo = "SetTeamHeroDo";
     public const string SetTeamHeroResp = "SetTeamHeroResp";
 
+    public const string MoveToAttackCityDo = "MoveToAttackCityDo";
+    public const string MoveToAttackCityResp = "MoveToAttackCityResp";
+
     public const string AttackCityDo = "AttackCityDo";
     public const string AttackCityResp = "AttackCityResp";
 
@@ -163,6 +167,8 @@ public class NotiDefine
 
     public const string NewCitysVisbleNoti = "NewCitysVisbleNoti";
 
+    public const string EnterBattleSuccess = "EnterBattleSuccess";
+    public const string BattleEndNoti = "BattleEndNoti";
 }
 
 public class ErrorCode
@@ -421,6 +427,7 @@ class ProxyNameDefine
     public const string ARMY = "ARMY";
     public const string TEAM = "TEAM";
     public const string PATH = "PATH";
+    public const string BATTLE = "BATTLE";
 }
 
 public class SceneDefine
@@ -465,6 +472,7 @@ public class AttributeDefine
     public const string Defense = "Defense";
     public const string Speed = "Speed";
     public const string Blood = "Blood";
+    public const string OrignalBlood = "OrignalBlood";
 }
 
 
@@ -754,35 +762,39 @@ public class Team
 
     public void ComputeAttribute()
     {
-        if (Attributes == null)
-            Attributes = new Dictionary<string, float>();
-        else
-            Attributes.Clear();
         Hero hero = HeroProxy._instance.GetHero(this.HeroID);
         int armyId = hero != null ? hero.ArmyTypeID : 0;
         ArmyConfig armyConfig = ArmyConfig.Instance.GetData(armyId);
-        if (hero == null || armyConfig == null)
+        int count = 0;
+        int level = 0;
+        if (hero != null)
+        {
+            count = hero.Blood;
+            level = hero.Level;
+        }
+        Team.ComputeTeamAttribute(out this.Attributes, this.HeroID, level, armyId, count);
+    }
+
+    public static void ComputeTeamAttribute(out Dictionary<string, float> Attribute, int heroid, int level, int armyid, int count)
+    {
+        Attribute = new Dictionary<string, float>();
+        HeroConfig config = HeroConfig.Instance.GetData(heroid);
+        ArmyConfig armyConfig = ArmyConfig.Instance.GetData(armyid);
+        if (config == null || armyConfig == null)
             return;
-        int count = hero.Blood;
-        HeroConfig config = HeroConfig.Instance.GetData(HeroID);
-        int rateID = HeroProxy._instance.GetHeroCareerRate(HeroID, armyConfig.Career);
-
-
+        int rateID = HeroProxy._instance.GetHeroCareerRate(heroid, armyConfig.Career);
         CareerEvaluateConfig configRate = CareerEvaluateConfig.Instance.GetData(rateID);
         float RateValue = 1f + (float)configRate.Percent / 100f;
+        Dictionary<string, float> Attributes = Hero.GetHeroAttribute(heroid, level);
 
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.AttackRate);
-        int atk = Mathf.RoundToInt(hero.Attributes[AttributeDefine.Attack] * count * armyConfig.Attack * RateValue* (float)cfgconst.IntValues[0]*0.01f);
+        ConstConfig cfgconstDef = ConstConfig.Instance.GetData(ConstDefine.DefenseRate);
 
-        cfgconst = ConstConfig.Instance.GetData(ConstDefine.DefenseRate);
-        int def = Mathf.RoundToInt(hero.Attributes[AttributeDefine.Defense] * count * armyConfig.Defense * RateValue * (float)cfgconst.IntValues[0] * 0.01f);
-
-        float speed = config.Speed * (1f + (float)armyConfig.SpeedRate / 100f);
-        int blood = Mathf.RoundToInt(count * armyConfig.Blood);
-        Attributes[AttributeDefine.Attack] = atk;
-        Attributes[AttributeDefine.Defense] = def;
-        Attributes[AttributeDefine.Speed] = speed;
-        Attributes[AttributeDefine.Blood] = blood;
+        Attributes[AttributeDefine.Attack] = (Attributes[AttributeDefine.Attack] * armyConfig.Attack * RateValue * (float)cfgconst.IntValues[0] * 0.01f);
+        Attributes[AttributeDefine.Defense] = (Attributes[AttributeDefine.Defense] * armyConfig.Defense * RateValue * (float)cfgconstDef.IntValues[0] * 0.01f);
+        Attributes[AttributeDefine.Speed] = config.Speed * (1f + (float)armyConfig.SpeedRate / 100f);
+        Attributes[AttributeDefine.Blood] = Mathf.RoundToInt(count * armyConfig.Blood);
+        Attributes[AttributeDefine.OrignalBlood] = Attributes[AttributeDefine.Blood];
     }
 }
 
@@ -850,7 +862,7 @@ public class Hero
             this.EnegryFullExpire +=  TotleSecs;
     }
 
-    public static Dictionary<string, float> GetNpcAttribute(int heroid, int herolv)
+    public static Dictionary<string, float> GetHeroAttribute(int heroid, int herolv)
     {
         Dictionary<string, float> Attributes = new Dictionary<string, float>();
         HeroConfig config = HeroConfig.Instance.GetData(heroid);
@@ -983,3 +995,81 @@ public class HourAwardData
     public float base_secs_value;//每秒可产出的量
     public long generate_time;//开始计算的时间
 }
+
+public enum BattleType
+{
+    AttackCity = 1,
+}
+
+public enum BattleStatus
+{
+    PreStart = 0,
+    Start,
+    Judge,
+    Action,
+    End,
+};
+
+public enum PlayerStatus
+{
+    Formation = 0,
+    Wait = 1,
+    Action = 2,
+    Dead = 3,
+};
+
+public class BattleData
+{
+    public int Id;//战斗场景模板ID
+    public BattleType Type;
+    public int Round;
+    public BattleStatus Status;//是否在等待玩家行动
+    public Dictionary<int, BattlePlayer> Players;
+    public object Param;
+}
+
+public class BattlePlayer
+{
+    public int TeamID;//我方>0,敌方<0
+    public int HeroID;//上阵英雄
+    public PlayerStatus Status;
+    public Dictionary<string, float> Attributes;
+    public float ActionCountDown;//下次出手倒计时
+    public VInt2 Postion;//当前位置
+
+    public void InitMy(Team team, int morale)
+    {
+        float reduceAttr = (float)(100f - morale) * 0.5f;
+        this.TeamID = team.Id;
+        this.HeroID = team.HeroID;
+        this.Status = PlayerStatus.Formation;
+        this.Attributes = new Dictionary<string, float>();
+        foreach (string key in team.Attributes.Keys)
+        {
+            this.Attributes[key] = team.Attributes[key];
+            if ((key.Equals(AttributeDefine.Attack) ||
+                key.Equals(AttributeDefine.Attack)) && reduceAttr > 0)
+            {
+                this.Attributes[key] = this.Attributes[key] * (1f - reduceAttr);
+            }
+        }
+        this.Postion = new VInt2();//
+        this.ActionCountDown = -1;
+    }
+
+    public void InitNpc(int npcTeam, int index, int battleSceneID)
+    {
+        NpcTeamConfig configNpc = NpcTeamConfig.Instance.GetData(npcTeam);
+        this.TeamID = -index;
+        this.HeroID = configNpc.Hero;
+        this.Status = PlayerStatus.Formation;
+        //计算Npc的Attribute
+        Team.ComputeTeamAttribute(out this.Attributes, configNpc.Hero, configNpc.Level, configNpc.Army, configNpc.Count);
+        this.Postion = new VInt2();//根据配置直接设置battleSceneID
+        this.ActionCountDown = -1;
+    }
+}
+
+
+
+

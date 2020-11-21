@@ -63,7 +63,7 @@ public class TeamAttackView : MonoBehaviour
         vo["cityid"] = this._targetCityID;
         vo["from"] = this._curCityId;
         vo["teams"] = this.FightTeamList;
-        MediatorUtil.SendNotification(NotiDefine.AttackCityDo,vo);
+        MediatorUtil.SendNotification(NotiDefine.MoveToAttackCityDo, vo);
     }
 
     private void OnEndClick(object param)
