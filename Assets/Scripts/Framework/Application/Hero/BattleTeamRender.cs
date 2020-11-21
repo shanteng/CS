@@ -7,7 +7,7 @@ using TMPro;
 
 
 
-public class NpcTeamRender : ItemRender
+public class BattleTeamRender : ItemRender
 {
     public Image _careerSp;
     public Text _countTxt;
@@ -15,9 +15,9 @@ public class NpcTeamRender : ItemRender
     public TeamAttributeUi _teamAttrUi;
     public HeroHead _HeadUi;
 
-    private int _NpcTeamID;
+    private int _TeamID;
 
-    public int ID => this._NpcTeamID;
+    public int ID => this._TeamID;
  
     private void Start()
     {
@@ -28,12 +28,16 @@ public class NpcTeamRender : ItemRender
  
     protected override void setDataInner(ScrollData data)
     {
-        this.SetData((int)data._Param);
+        int id = (int)data._Param;
+        if (id < 0)
+            this.SetNpcTeam(-id);
+        else
+            this.SetMyTeam(id);
     }
 
-    public void SetData(int id)
+    public void SetNpcTeam(int id)
     {
-        this._NpcTeamID = id;
+        this._TeamID = id;
         NpcTeamConfig configTeam = NpcTeamConfig.Instance.GetData(id);
         Hero hero = HeroProxy._instance.GetHero(configTeam.Hero);
         ArmyConfig config = ArmyConfig.Instance.GetData(configTeam.Army);
@@ -45,6 +49,19 @@ public class NpcTeamRender : ItemRender
         this._HeadUi.SetData(configTeam.Hero);
         this._HeadUi._levelTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevel, configTeam.Level);
     }//end func
+
+    public void SetMyTeam(int id)
+    {
+        Team team = TeamProxy._instance.GetTeam(id);
+        Hero hero = HeroProxy._instance.GetHero(team.HeroID);
+        ArmyConfig config = ArmyConfig.Instance.GetData(hero.ArmyTypeID);
+        this._countTxt.text = hero.Blood.ToString();
+        int rate = HeroProxy._instance.GetHeroCareerRate(team.HeroID, config.Career);
+        this._rateTxt.text = Hero.GetCareerEvaluateName(rate);
+        this._careerSp.sprite = ResourcesManager.Instance.GetArmySprite(hero.ArmyTypeID);
+        this._teamAttrUi.SetData(id);
+        this._HeadUi.SetData(team.HeroID);
+    }
 
 }
 

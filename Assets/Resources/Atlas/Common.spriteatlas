@@ -67,7 +67,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 437119
+    totalSpriteSurfaceArea: 494273
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -89,6 +89,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1b602d317c222a74f93eea23ec9f7456, type: 3}
   - {fileID: 21300000, guid: 4378a341ff56a0f41b75831aabc7f19d, type: 3}
   - {fileID: 21300000, guid: 761d4d61246e11949854580c6bc8235b, type: 3}
+  - {fileID: 21300000, guid: b8dc20819f7c75e4e80236dd0422c786, type: 3}
   - {fileID: 21300000, guid: 5de8d18110cd9974fac111ddfe269436, type: 3}
   - {fileID: 21300000, guid: e9ac3381e30d17f49b648a0519d175a1, type: 3}
   - {fileID: 21300000, guid: 4610b0a1a2b9c3b498be57ef42f89fb0, type: 3}
@@ -211,6 +212,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 7ea8a42f6a3d98242b47f52bf029a140, type: 3}
   - {fileID: 21300000, guid: 27e9d93f675b22d4aa2042f042a88be6, type: 3}
   - {fileID: 21300000, guid: a149ca3f74f2d6d47b40a14bc7a1e7fc, type: 3}
+  - {fileID: 21300000, guid: e427994f63fe36443b559dbe87d00d05, type: 3}
   - {fileID: 21300000, guid: e9e7db5fa6a9bd44187ffd46120e77f7, type: 3}
   - {fileID: 21300000, guid: 483ca66f599c0104cbf2de9393127228, type: 3}
   - {fileID: 21300000, guid: 1861cb6f6ebc11f4e97482af477d70cd, type: 3}
@@ -241,6 +243,7 @@ SpriteAtlas:
   - Progressbar-bg
   - blackframe-base
   - ta4
+  - Fight
   - Wind_bar
   - miniProgress bar02
   - OP_BUILD
@@ -363,6 +366,7 @@ SpriteAtlas:
   - bg_input
   - h_fire
   - t1
+  - battle_btn
   - default
   - t2
   - img_flag

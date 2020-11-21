@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\ArmyAttributeUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\ArmySetItemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\BattleTeamRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\CareerRate.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\FightHeroUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\FightTeamItemRender.cs" />
@@ -88,7 +89,6 @@
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroScene.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroTalents.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroView.cs" />
-    <Compile Include="Assets\Scripts\Framework\Application\Hero\NpcTeamRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\RecruitView.cs" />
