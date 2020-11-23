@@ -118,7 +118,8 @@ public class HeroProxy : BaseRemoteProxy
             Hero hero = it.Current;
             if (hero.IsMy)
             {
-                int cityid = TeamProxy._instance.GetTeamCity(hero.TeamId);
+                int inTeamID = TeamProxy._instance.GetHeroTeamID(hero.Id);
+                int cityid = TeamProxy._instance.GetTeamCity(inTeamID);
                 if (cityid == city)
                 {
                     isChange = true;
@@ -289,8 +290,12 @@ public class HeroProxy : BaseRemoteProxy
     {
         foreach (Hero hero in this._datas.Values)
         {
-            if (hero.IsMy && hero.TeamId == (int)HeroTeamState.NoTeam)
-                return true;
+            if (hero.IsMy && hero.DoingState == (int)HeroDoingState.Idle)
+            {
+                int teamid = TeamProxy._instance.GetHeroTeamID(hero.Id);
+                if (teamid == 0)
+                    return true;
+            }
         }
         return false;
     }
@@ -349,14 +354,14 @@ public class HeroProxy : BaseRemoteProxy
             return;
         }
 
-        this.ChangeHeroBelong(id, true,(int)HeroBelong.MainCity);
+        this.ChangeHeroBelong(id,(int)HeroBelong.MainCity);
         this.SendNotification(NotiDefine.RecruitHeroResp,id);
     }
 
-    public void ChangeHeroTeam(int id,int teamid)
+    public void ChangeHeroDoing(int id,int state)
     {
         Hero hero = this.GetHero(id);
-        hero.TeamId = teamid;
+        hero.DoingState = state;
         this.DoSaveHeros();
     }
 
@@ -372,17 +377,17 @@ public class HeroProxy : BaseRemoteProxy
         int id = UtilTools.ParseInt(data.id);
         Hero hero = this.GetHero(id);
         if (hero.IsMy == false)
-            this.ChangeHeroBelong(id, true, 0);
+            this.ChangeHeroBelong(id, 0);
     }
 
-    public void ChangeHeroBelong(int id, bool isMy, int belong)
+    public void ChangeHeroBelong(int id ,int belongCity)
     {
         Hero hero = this.GetHero(id);
+        if (belongCity == hero.City)
+            return;
+
         bool oldMy = hero.IsMy;
-        hero.City = (int)belong;
-        hero.IsMy = isMy;
-        hero.Blood = 0;
-        hero.ArmyTypeID = 0;
+        hero.City = belongCity;
         hero.ComputeAttributes();
         this.DoSaveHeros();
 

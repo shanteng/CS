@@ -110,7 +110,7 @@ public class TeamAttackView : MonoBehaviour
         for (int i = 0; i < npcs.Length; ++i)
         {
             ScrollData data = new ScrollData();
-            data._Param = npcs[i];
+            data._Param = -npcs[i];
             this._NpcGrid.Data.Add(data);
         }
         this._NpcGrid.ShowGrid(null);

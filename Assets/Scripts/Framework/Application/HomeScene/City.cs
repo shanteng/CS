@@ -31,6 +31,8 @@ public class City : MonoBehaviour
         this._Ui.UpdateOwn();
     }
 
+
+
     public void OnPointerClick(PointerEventData eventData)
     {
         HomeLandManager.GetInstance().OnClickNpcCity(this.ID);

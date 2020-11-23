@@ -49,6 +49,7 @@
     
     public const string AttackCityMoveOut = "AttackCityMoveOut";
     public const string AttackCityWaitFight = "AttackCityWaitFight";
+    public const string AttackCityBack = "AttackCityBack";
 
     public const string AttackCitySuccess = "AttackCitySuccess";
     public const string AttackCityFail = "AttackCityFail";
@@ -88,6 +89,8 @@
     public const string HeroFavorUp = "HeroFavorUp";
     public const string HeroFavorDown = "HeroFavorDown";
 
+    public const string CityGroupName = "CityGroupName";
+
     public const string AfterTimeTalk = "AfterTimeTalk";
     public const string HeroFavorLevelChanged = "HeroFavorLevelChanged";
     public const string CareerEvaluateDesc = "CareerEvaluateDesc";
@@ -97,6 +100,9 @@
     public const string LogType = "LogType";
     public const string GetHourTax = "GetHourTax";
     public const string ArmyRecruitFinish = "ArmyRecruitFinish";
+
+    public const string ArriveYet = "ArriveYet";
+    public const string Moving = "Moving";
 
     public const string TeamAttrTips = "TeamAttrTips";
 

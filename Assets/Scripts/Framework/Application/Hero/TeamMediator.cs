@@ -17,14 +17,14 @@ public class TeamMediator : BaseWindowMediator<TeamView>
    
     protected override void InitListNotificationInterestsInner()
     {
-        m_HideNoHandleNotifations.Add(NotiDefine.SetTeamHeroResp);
+        m_HideNoHandleNotifations.Add(NotiDefine.TeamStateChangeNoti);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
     {
         switch (notification.Name)
         {
-            case NotiDefine.SetTeamHeroResp:
+            case NotiDefine.TeamStateChangeNoti:
                 {
                     this.m_view.UpdateTeamList();
                     break;

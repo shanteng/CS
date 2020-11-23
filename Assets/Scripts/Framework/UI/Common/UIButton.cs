@@ -12,10 +12,12 @@ public class UIButton : UIBase
     private Button _btn;
     private Text _text;
     private Image _icon;
+    private Image _btnImg;
     private UIButtonDelegate _listener;
 
     void Awake()
     {
+        this._btnImg = this.gameObject.GetComponent<Image>();
         this._btn = this.gameObject.GetComponent<Button>();
         this._btn.onClick.AddListener(this.DoClick);
         Text[] txts =  transform.GetComponentsInChildren<Text>();
@@ -53,6 +55,10 @@ public class UIButton : UIBase
         set
         {
             this._btn.interactable = value;
+
+            if (this._btnImg != null)
+                UIRoot.Intance.SetImageGray(this._btnImg, value == false);
+
             if (this._text != null)
             {
                 Color orcolor = this._text.color;

@@ -21,6 +21,7 @@ public class TeamProxy : BaseRemoteProxy
 
     public void DoSaveTeams()
     {
+        this.SendNotification(NotiDefine.TeamStateChangeNoti);
         CloudDataTool.SaveFile(SaveFileDefine.Team, this._teams);
     }
 
@@ -140,12 +141,12 @@ public class TeamProxy : BaseRemoteProxy
         battleData.Round = 0;
         battleData.Status = BattleStatus.PreStart;
         battleData.Players = new Dictionary<int, BattlePlayer>();
-        battleData.Param = data.TargetCityID;
+        battleData.Param = groupid;
         foreach (int teamid in data.Teams)
         {
             BattlePlayer player = new BattlePlayer();
             Team team = this.GetTeam(teamid);
-            player.InitMy(team,data.GetMorale());
+            player.InitMy(team,data.GetMorale(),BattlePlace.Attack);
             battleData.Players.Add(teamid, player);
         }
 
@@ -154,16 +155,15 @@ public class TeamProxy : BaseRemoteProxy
         foreach (int npcTeam in configCIty.NpcTeams)
         {
             BattlePlayer player = new BattlePlayer();
-            player.InitNpc(npcTeam, index, configCIty.BattleSceneID);
-            battleData.Players.Add(index, player);
+            player.InitNpc(npcTeam, index, configCIty.BattleSceneID, BattlePlace.Defense);
+            battleData.Players.Add(-index, player);
             ++index;
         }
         BattleProxy._instance.EnterBattle(battleData);
     }
 
-    public void AttackCityEnd(string groupid, bool isSuccess)
+    private void GroupBackCity(string groupid)
     {
-        //返回城市
         Group gp;
         if (this._GroupDic.TryGetValue(groupid, out gp) == false)
             return;
@@ -181,10 +181,33 @@ public class TeamProxy : BaseRemoteProxy
         gp.RealTargetPostion.x = Goto.x;
         gp.RealTargetPostion.y = Goto.y;
 
-        this.AttackCityAction(gp);
+        PathProxy._instance.RemovePath(groupid);
+        this.AttackOverBackCityAction(gp);
 
         this.DoSaveGroup();
+    }
 
+    public void AttackCityEnd(string groupid, bool isSuccess)
+    {
+        
+
+        Group gp;
+        if (this._GroupDic.TryGetValue(groupid, out gp) == false)
+            return;
+
+        //所有当前等待的Group都返回城市
+        List<string> waitAndFightList = this.GetAttackCityGroups(gp.TargetCityID);
+        foreach (string gpid in waitAndFightList)
+        {
+            Group curGp = this.GetGroup(gpid);
+            if (curGp.Status == (int)GroupStatus.WaitFight ||
+                curGp.Status == (int)GroupStatus.Fight)
+            {
+                this.GroupBackCity(gpid);
+            }
+        }
+
+        VInt2 StartPos = WorldProxy._instance.GetCityCordinate(gp.TargetCityID);
         CityConfig config = CityConfig.Instance.GetData(gp.TargetCityID);
         string fName = WorldProxy._instance.GetCityName(gp.CityID);
         string tName = WorldProxy._instance.GetCityName(gp.TargetCityID);
@@ -208,7 +231,7 @@ public class TeamProxy : BaseRemoteProxy
                 else if (cost.type.Equals(CostData.TYPE_HERO))
                 {
                     int heroid = UtilTools.ParseInt(cost.id);
-                    HeroProxy._instance.ChangeHeroBelong(heroid, true, (int)HeroBelong.MainCity);
+                    HeroProxy._instance.ChangeHeroBelong(heroid, (int)HeroBelong.MainCity);
                     GetName = HeroConfig.Instance.GetData(heroid).Name;
                 }
                 list.Add(GetName);
@@ -271,13 +294,9 @@ public class TeamProxy : BaseRemoteProxy
 
 
         long NeedSecs = gp.ExpireTime - GameIndex.ServerTime;
-        cfgconst = ConstConfig.Instance.GetData(ConstDefine.MoraleReduceDelta);
-        int onePercentReduceSecs = cfgconst.IntValues[0];
-        int leftPercent = 100 - (int)(NeedSecs / onePercentReduceSecs);
-        gp.MoraleExpire = GameIndex.ServerTime + leftPercent * onePercentReduceSecs;
+        gp.MoraleExpire = gp.ExpireTime + NeedSecs;
         gp.Teams = new List<int>();
         gp.Teams.AddRange(teams);
-
 
         foreach (int teamid in teams)
         {
@@ -300,6 +319,30 @@ public class TeamProxy : BaseRemoteProxy
         PopupFactory.Instance.ShowNotice(notice);
         RoleProxy._instance.AddLog(LogType.AttackCity, notice, cityTargetPos);
         this.SendNotification(NotiDefine.MoveToAttackCityResp);
+    }
+
+    private void AttackOverBackCityAction(Group gp)
+    {
+        //路线添加
+        PathData path = new PathData();
+        path.ID = gp.Id;
+        path.Type = PathData.TYPE_GROUP_BACK_ATTACK;
+        path.Start = WorldProxy._instance.GetCityCordinate(gp.TargetCityID);
+        path.Target = WorldProxy._instance.GetCityCordinate(gp.CityID);
+        path.StartTime = gp.StartTime;
+        path.ExpireTime = gp.ExpireTime;
+        path.Model = "PathModel";//后面读取英灵模型，暂时写死
+        path.Picture = "default";
+        path.Param = gp;
+        PathProxy._instance.AddPath(path);
+
+        //时间监听
+        TimeCallData dataTime = new TimeCallData();
+        dataTime._key = gp.Id;
+        dataTime._notifaction = NotiDefine.AttackCityBackHomeExpireReachedNoti;
+        dataTime.TimeStep = gp.ExpireTime;
+        dataTime._param = gp.Id;
+        MediatorUtil.SendNotification(NotiDefine.AddTimestepCallback, dataTime);
     }
 
     private void AttackCityAction(Group gp)
@@ -333,19 +376,51 @@ public class TeamProxy : BaseRemoteProxy
         Group data;
         if (this._GroupDic.TryGetValue(id, out data) == false)
             return;
-        data.Status = (int)GroupStatus.WaitFight;
+        //判断城市是不是已经被占领了
+        bool isOwn = WorldProxy._instance.IsOwnCity(data.TargetCityID);
+        if (isOwn)
+        {
+            this.GroupBackCity(id);
+        }
+        else
+        {
+            data.Status = (int)GroupStatus.WaitFight;
+            this.DoSaveGroup();
+            string fName = WorldProxy._instance.GetCityName(data.CityID);
+            string tName = WorldProxy._instance.GetCityName(data.TargetCityID);
+            VInt2 cityTargetPos = WorldProxy._instance.GetCityCordinate(data.TargetCityID);
 
-        this.DoSaveGroup();
+            VInt2 gamePos = UtilTools.WorldToGameCordinate(cityTargetPos.x, cityTargetPos.y);
+            string notice = LanguageConfig.GetLanguage(LanMainDefine.AttackCityWaitFight, fName, tName);
+            PopupFactory.Instance.ShowNotice(notice);
+            RoleProxy._instance.AddLog(LogType.AttackCityWaitFight, notice, cityTargetPos);
+        }
+    }
+
+    public void OnFinishBackHomeAttackCity(string id, bool needSave = true)
+    {
+        PathProxy._instance.RemovePath(id);
+        Group data;
+        if (this._GroupDic.TryGetValue(id, out data) == false)
+            return;
+        foreach (int t in data.Teams)
+        {
+            Team team = this.GetTeam(t);
+            team.Status = (int)TeamStatus.Idle;
+        }
+        this.DoSaveTeams();
+
 
         string fName = WorldProxy._instance.GetCityName(data.CityID);
-        string tName = WorldProxy._instance.GetCityName(data.TargetCityID);
-        VInt2 cityTargetPos = WorldProxy._instance.GetCityCordinate(data.TargetCityID);
+        VInt2 cityTargetPos = WorldProxy._instance.GetCityCordinate(data.CityID);
 
         VInt2 gamePos = UtilTools.WorldToGameCordinate(cityTargetPos.x, cityTargetPos.y);
-        string notice = LanguageConfig.GetLanguage(LanMainDefine.AttackCityWaitFight, fName, tName);
+        string notice = LanguageConfig.GetLanguage(LanMainDefine.AttackCityBack, fName);
         PopupFactory.Instance.ShowNotice(notice);
-        RoleProxy._instance.AddLog(LogType.AttackCityWaitFight, notice, cityTargetPos);
+        RoleProxy._instance.AddLog(LogType.AttackCityBack, notice, cityTargetPos);
 
+        this._GroupDic.Remove(id);
+        this.DoSaveGroup();
     }
 
     public void DoSaveGroup()
@@ -360,8 +435,6 @@ public class TeamProxy : BaseRemoteProxy
         int heroid = (int)vo["heroid"];
         int army = (int)vo["army"];
         int count = (int)vo["count"];
-
-     
 
         Team team = this.GetTeam(teamid);
         if (team.Status != (int)TeamStatus.Idle)
@@ -378,10 +451,9 @@ public class TeamProxy : BaseRemoteProxy
             return;
         }
 
-        if (army == 0 && heroid > 0)
+        if ((army == 0 || count == 0) && heroid > 0)
         {
-            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoArmyNoTeam);
-            return;
+            heroid = 0;//下阵
         }
 
         Hero heroTeam = HeroProxy._instance.GetHero(team.HeroID);
@@ -390,34 +462,30 @@ public class TeamProxy : BaseRemoteProxy
         if (heroTeam != null && team.HeroID != heroid)
         {
             //卸下兵种
-            ArmyProxy._instance.ChangeArmyCount(team.CityID, heroTeam.ArmyTypeID, heroTeam.Blood);
-            heroTeam.ArmyTypeID = 0;
-            heroTeam.Blood = 0;
-            heroTeam.TeamId = 0;
+            ArmyProxy._instance.ChangeArmyCount(team.CityID, team.ArmyTypeID, team.Blood);
+            team.Blood = 0;
         }
         else if (heroTeam == null && newHero != null)
         {
             ArmyProxy._instance.ChangeArmyCount(team.CityID, army, -count);
-            newHero.ArmyTypeID = army;
-            newHero.Blood = count;
-            newHero.TeamId = teamid;
+            team.Blood = count;
         }
         else if (heroTeam != null && team.HeroID == heroid)
         {
-            if (heroTeam.ArmyTypeID == army)
+            if (team.ArmyTypeID == army)
             {
-                ArmyProxy._instance.ChangeArmyCount(team.CityID, heroTeam.ArmyTypeID, heroTeam.Blood - count);
+                ArmyProxy._instance.ChangeArmyCount(team.CityID, team.ArmyTypeID, team.Blood - count);
             }
             else
             {
-                ArmyProxy._instance.ChangeArmyCount(team.CityID, heroTeam.ArmyTypeID, heroTeam.Blood);//旧的加回去
+                ArmyProxy._instance.ChangeArmyCount(team.CityID, team.ArmyTypeID, team.Blood);//旧的加回去
                 ArmyProxy._instance.ChangeArmyCount(team.CityID, army, -count);//新的减少掉
             }
-            heroTeam.ArmyTypeID = army;
-            heroTeam.Blood = count;
+            team.Blood = count;
         }
 
         team.HeroID = heroid;
+        team.ArmyTypeID = heroid > 0 ? army : 0;
         team.ComputeAttribute();
         HeroProxy._instance.DoSaveHeros();
         this.DoSaveTeams();
@@ -435,11 +503,7 @@ public class TeamProxy : BaseRemoteProxy
         for (int i = 0; i < max; ++i)
         {
             Team team = new Team();
-            team.Index = i + 1;
-            team.Id = cityid * 100 + team.Index;
-            team.HeroID = 0;
-            team.Status = (int)TeamStatus.Idle;
-            team.CityID = cityid;
+            team.Create(cityid, i + 1);
             this._teams[team.Id] = team;
         }
         this.DoSaveTeams();
@@ -458,7 +522,10 @@ public class TeamProxy : BaseRemoteProxy
         while (it.MoveNext())
         {
             Group data = it.Current;
-            this.AttackCityAction(data);
+            if (data.Status == (int)GroupStatus.Back)
+                this.AttackOverBackCityAction(data);
+            else
+                this.AttackCityAction(data);
         }
         it.Dispose();
     }
@@ -479,6 +546,15 @@ public class TeamProxy : BaseRemoteProxy
         }
         this.SendNotification(NotiDefine.LoadAllTeamResp);
     }
-    
+
+    public int GetHeroTeamID(int heroid)
+    {
+        foreach (Team t in this._teams.Values)
+        {
+            if (t.HeroID == heroid)
+                return t.Id;
+        }
+        return 0;
+    }
 
 }//end class

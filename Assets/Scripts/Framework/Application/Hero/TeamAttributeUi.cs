@@ -52,9 +52,9 @@ public class TeamAttributeUi : UIBase
             foreach (string key in team.Attributes.Keys)
             {
                 if (key.Equals(AttributeDefine.Attack))
-                    atk = team.Attributes[key] / (float)hero.Blood;
+                    atk = team.Attributes[key] / (float)team.Blood;
                 else if (key.Equals(AttributeDefine.Defense))
-                    def = team.Attributes[key] / (float)hero.Blood;
+                    def = team.Attributes[key] / (float)team.Blood;
                 if (key.Equals(AttributeDefine.Speed))
                     speed = team.Attributes[key];
                 if (key.Equals(AttributeDefine.Blood))

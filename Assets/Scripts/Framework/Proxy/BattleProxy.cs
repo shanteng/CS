@@ -39,4 +39,10 @@ public class BattleProxy : BaseRemoteProxy
         this.SendNotification(NotiDefine.BattleEndNoti);
     }
 
+    public BattlePlayer GetPlayer(int teamid)
+    {
+        BattlePlayer player = this.Data.Players[teamid];
+        return player;
+    }
+
 }//end class

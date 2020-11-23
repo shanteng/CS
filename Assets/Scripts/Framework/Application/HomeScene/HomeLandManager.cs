@@ -475,6 +475,8 @@ public class HomeLandManager : MonoBehaviour
         }
     }
 
+
+
     public void AddOneNpcShowCity(int cityid)
     {
         if (this._ShowCitys.ContainsKey(cityid) || cityid == 0)

@@ -397,6 +397,9 @@ public class InfoCanvas : UIBase, IConfirmListener
                 }
             case OpType.QuestCity:
                 {
+                    //测试
+                    WorldProxy._instance.DoOwnCity(this._cityId,false);
+                    return;
                     bool hasFree = HeroProxy._instance.HasFreeHero();
                     if (hasFree == false)
                     {

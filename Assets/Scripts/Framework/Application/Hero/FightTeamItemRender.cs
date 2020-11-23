@@ -9,11 +9,7 @@ using TMPro;
 
 public class FightTeamItemRender : ItemRender
 {
-    public Image _careerSp;
-    public TextMeshProUGUI _rateTxt;
-    public Text _countTxt;
-    public TeamAttributeUi _teamAttrUi;
-    public HeroHead _HeadUi;
+    public BattleTeamRender _teamUi;
     public UITexts _CanNotTxt;
     public Slider _SliderEnegry;
     private int _teamID;
@@ -34,16 +30,10 @@ public class FightTeamItemRender : ItemRender
     public void SetData(int id)
     {
         this._teamID = id;
+        this._teamUi.SetMyTeam(id);
+
         Team team =  TeamProxy._instance.GetTeam(id);
         Hero hero = HeroProxy._instance.GetHero(team.HeroID);
-        ArmyConfig config = ArmyConfig.Instance.GetData(hero.ArmyTypeID);
-
-        this._countTxt.text = hero.Blood.ToString();
-        int rate = HeroProxy._instance.GetHeroCareerRate(team.HeroID, config.Career);
-        this._rateTxt.text = Hero.GetCareerEvaluateName(rate);
-        this._careerSp.sprite = ResourcesManager.Instance.GetArmySprite(hero.ArmyTypeID);
-        this._teamAttrUi.SetData(_teamID);
-        this._HeadUi.SetData(team.HeroID);
         int curEnegry = hero.GetEnegry();
         this._SliderEnegry.value = (float)curEnegry / (float)hero.MaxEnegry;
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.HeroCostEnegry);
@@ -59,7 +49,7 @@ public class FightTeamItemRender : ItemRender
             this._CanNotTxt.gameObject.SetActive(true);
             this._CanNotTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.EnegryNotEnough);
         }
-        else if (hero.Blood == 0)
+        else if (team.Blood == 0)
         {
             this._CanNotTxt.gameObject.SetActive(true);
             this._CanNotTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.TeamNoBlood);

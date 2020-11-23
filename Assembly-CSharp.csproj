@@ -72,6 +72,8 @@
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyItem.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyView.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattlePlayerUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleViewController.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\ArmyAttributeUi.cs" />
@@ -141,6 +143,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingInfoPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingUpgradePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\CareerEvaluatePop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\CityAttackGroupPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\ConfirmPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\NoticePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\PatrolItemRender.cs" />

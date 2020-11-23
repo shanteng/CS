@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.UI;
+
 public class PathModel : MonoBehaviour
 {
     public float YOffset = 0.51f;
@@ -10,10 +12,11 @@ public class PathModel : MonoBehaviour
     public CountDownText _cdTxt;
     public Transform _Flag;
     public GameObject _SelectFlag;
-
+    public Image _TypeIcon;
     public Transform _PatrolRoot;
     public GameObject _patrolSpotPrefab;
 
+    public Transform _WaitFightIcon;
 
     private LineRenderer _pathLine;
     private LineRenderer _pathPassLine;
@@ -48,6 +51,7 @@ public class PathModel : MonoBehaviour
         this._Flag.position = _endPos;
         this.transform.position = this._startPos;
 
+        this._WaitFightIcon.gameObject.SetActive(data.Type == PathData.TYPE_GROUP_ATTACK);
         this._PatrolRoot.gameObject.SetActive(data.Type == PathData.TYPE_PATROL);
         if (data.Type == PathData.TYPE_PATROL)
         {
@@ -59,7 +63,7 @@ public class PathModel : MonoBehaviour
                 int corX = _data.Target.x + row;
                 for (int col = -halfRange; col <= halfRange; ++col)
                 {
-                    int corZ = _data.Target.y +col;
+                    int corZ = _data.Target.y + col;
                     bool isVisible = WorldProxy._instance.IsSpotVisible(corX, corZ);
                     if (isVisible == false)
                     {
@@ -72,12 +76,43 @@ public class PathModel : MonoBehaviour
                 }
             }//end for
         }
+        else if (data.Type == PathData.TYPE_GROUP_ATTACK)
+        {
+            Group gp = (Group)data.Param;
+            VInt2 pos = WorldProxy._instance.GetCityCordinate(gp.TargetCityID);
+            Vector3 fightPos = new Vector3(pos.x, 3.5f, pos.y);
+            this._WaitFightIcon.position = fightPos;
+        }
 
         GameObject prefab = ResourcesManager.Instance.LoadModel(data.Model);
         this._model = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, this._modelRoot);
         this._model.transform.localPosition = new Vector3(0, 0, 0);
         this._model.transform.localScale = Vector3.one;
         this._model.transform.localRotation = Quaternion.Euler(Vector3.zero);
+
+        string icon = "";
+        if (data.Type == PathData.TYPE_PATROL)
+        {
+            icon = "Op_Patrol";
+        }
+        else if (data.Type == PathData.TYPE_QUEST_CITY)
+        {
+            icon = "building";
+        }
+        else if (data.Type == PathData.TYPE_GROUP_ATTACK)
+        {
+            icon = "OP_SWEEP";
+        }
+        else if (data.Type == PathData.TYPE_GROUP_BACK_ATTACK)
+        {
+            icon = "Op_Patrol";
+        }
+
+        bool isshow = icon.Equals("") == false;
+        this._TypeIcon.gameObject.SetActive(isshow);
+        this._TypeIcon.sprite = ResourcesManager.Instance.GetCommonSprite(icon);
+        this._TypeIcon.SetNativeSize();
+
 
         //pathLine
         prefab = ResourcesManager.Instance.LoadLandRes("PathLine");

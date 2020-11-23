@@ -47,5 +47,13 @@ public class SceneUtil
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         EditorSceneManager.OpenScene("Assets/Scenes/Hero.unity");
     }
+
+    [MenuItem("SceneUtil/打开Battle1场景")]
+    public static void EnterBattle1()
+    {
+        if (EditorApplication.isPlaying) return;
+        EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+        EditorSceneManager.OpenScene("Assets/Scenes/Battle1.unity");
+    }
 }
 #endif

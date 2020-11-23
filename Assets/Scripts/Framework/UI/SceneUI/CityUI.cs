@@ -7,6 +7,7 @@ public class CityUI : UIBase
 {
     public float MutilValue = 10;
     public Text _NameTxt;
+
     private int _id;
 
 
@@ -14,7 +15,6 @@ public class CityUI : UIBase
     {
         this._id = config.ID;
         this.UpdateOwn();
-
 
         //调整内部坐标
         int range = config.Range[0];
@@ -32,7 +32,8 @@ public class CityUI : UIBase
             this._NameTxt.text = config.Name;
         else
             this._NameTxt.text = LanguageConfig.GetLanguage(LanMainDefine.OwnCityName, config.Name);
-
     }
+
+ 
 
 }

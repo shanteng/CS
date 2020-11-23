@@ -40,6 +40,7 @@ public class NotiDefine
     public const string PatrolExpireReachedNoti = "PatrolExpireReachedNoti";
     public const string QuestCityExpireReachedNoti = "QuestCityExpireReachedNoti";
     public const string AttackCityExpireReachedNoti = "AttackCityExpireReachedNoti";
+    public const string AttackCityBackHomeExpireReachedNoti = "AttackCityBackHomeExpireReachedNoti";
 
     public const string PatrolDo = "PatrolDo";
     public const string PatrolResp = "PatrolResp";
@@ -160,6 +161,8 @@ public class NotiDefine
 
     public const string AttackCityDo = "AttackCityDo";
     public const string AttackCityResp = "AttackCityResp";
+
+    public const string TeamStateChangeNoti = "TeamStateChangeNoti";
 
 
     public const string PathAddNoti = "PathAddNoti";
@@ -320,6 +323,7 @@ public enum LogType
     FinshArmy,
     AttackCity,
     AttackCityWaitFight,
+    AttackCityBack,
 }
 
 public enum HeroBelong
@@ -546,9 +550,9 @@ public class IncomeData
 public class PathData
 {
     public static int TYPE_PATROL = 1;
-    public static int TYPE_TEAM = 2;
-    public static int TYPE_QUEST_CITY = 3;
-    public static int TYPE_GROUP_ATTACK = 4;
+    public static int TYPE_QUEST_CITY = 2;
+    public static int TYPE_GROUP_ATTACK = 3;
+    public static int TYPE_GROUP_BACK_ATTACK = 4;
 
     public string ID;
     public int Type;
@@ -698,12 +702,10 @@ public enum EquipType
     Horse = 3,
 };
 
-public enum HeroTeamState
+public enum HeroDoingState
 {
-    //>0再队伍中
-    NoTeam = 0,
+    Idle = 0,
     QuestCity = -1,
-   
 };
 
 public enum TeamStatus
@@ -756,23 +758,28 @@ public class Team
     public int Id;//CityID*100+Index
     public int Index;//序列
     public int HeroID;//上阵英雄
+    public int ArmyTypeID;//当前兵种
+    public int Blood;//当前兵力
     public int Status;//0-空闲 1-行军 2-返回 3-战斗
     public int CityID;//0-主城，>0 Npc城市ID
     public Dictionary<string, float> Attributes;
 
+    public void Create(int cityid, int index)
+    {
+        this.Id = cityid * 100 + index;
+        this.HeroID = 0;
+        this.Status = (int)TeamStatus.Idle;
+        this.CityID = cityid;
+        this.ArmyTypeID = 0;
+        this.Blood = 0;
+    }
+
     public void ComputeAttribute()
     {
         Hero hero = HeroProxy._instance.GetHero(this.HeroID);
-        int armyId = hero != null ? hero.ArmyTypeID : 0;
-        ArmyConfig armyConfig = ArmyConfig.Instance.GetData(armyId);
-        int count = 0;
-        int level = 0;
-        if (hero != null)
-        {
-            count = hero.Blood;
-            level = hero.Level;
-        }
-        Team.ComputeTeamAttribute(out this.Attributes, this.HeroID, level, armyId, count);
+        ArmyConfig armyConfig = ArmyConfig.Instance.GetData(this.ArmyTypeID);
+        int level = hero != null ? hero.Level : 0;
+        Team.ComputeTeamAttribute(out this.Attributes, this.HeroID, level, this.ArmyTypeID, this.Blood);
     }
 
     public static void ComputeTeamAttribute(out Dictionary<string, float> Attribute, int heroid, int level, int armyid, int count)
@@ -785,16 +792,16 @@ public class Team
         int rateID = HeroProxy._instance.GetHeroCareerRate(heroid, armyConfig.Career);
         CareerEvaluateConfig configRate = CareerEvaluateConfig.Instance.GetData(rateID);
         float RateValue = 1f + (float)configRate.Percent / 100f;
-        Dictionary<string, float> Attributes = Hero.GetHeroAttribute(heroid, level);
+        Dictionary<string, float> heroAttri = Hero.GetHeroAttribute(heroid, level);
 
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.AttackRate);
         ConstConfig cfgconstDef = ConstConfig.Instance.GetData(ConstDefine.DefenseRate);
 
-        Attributes[AttributeDefine.Attack] = (Attributes[AttributeDefine.Attack] * armyConfig.Attack * RateValue * (float)cfgconst.IntValues[0] * 0.01f);
-        Attributes[AttributeDefine.Defense] = (Attributes[AttributeDefine.Defense] * armyConfig.Defense * RateValue * (float)cfgconstDef.IntValues[0] * 0.01f);
-        Attributes[AttributeDefine.Speed] = config.Speed * (1f + (float)armyConfig.SpeedRate / 100f);
-        Attributes[AttributeDefine.Blood] = Mathf.RoundToInt(count * armyConfig.Blood);
-        Attributes[AttributeDefine.OrignalBlood] = Attributes[AttributeDefine.Blood];
+        Attribute[AttributeDefine.Attack] = (heroAttri[AttributeDefine.Attack] * armyConfig.Attack * RateValue * (float)cfgconst.IntValues[0] * 0.01f);
+        Attribute[AttributeDefine.Defense] = (heroAttri[AttributeDefine.Defense] * armyConfig.Defense * RateValue * (float)cfgconstDef.IntValues[0] * 0.01f);
+        Attribute[AttributeDefine.Speed] = config.Speed * (1f + (float)armyConfig.SpeedRate / 100f);
+        Attribute[AttributeDefine.Blood] = Mathf.RoundToInt(count * armyConfig.Blood);
+        Attribute[AttributeDefine.OrignalBlood] = Attribute[AttributeDefine.Blood];
     }
 }
 
@@ -805,12 +812,10 @@ public class Hero
     public int StarRank;//升星
     public int Exp;
     public float ElementValue;//和稀有的挂钩
-    public int ArmyTypeID;//当前兵种
-    public int Blood;//当前兵力
+   
     public int MaxBlood;//带兵上限 等级和建筑计算
     public int City;//-1-在野  >=0 为对应城市ID
-    public bool IsMy;//是否为我方
-    public int TeamId;//上阵队伍ID 0-未上阵 -1-探索
+    public int DoingState;//HeroDoingState
     public int Favor;//好感度
     public long TalkExpire;//上次的聊天时间 HeroTalkGap 时间后俩天可以增加好感度
     public long EnegryFullExpire;//体力恢复满的时间
@@ -820,16 +825,20 @@ public class Hero
     public Dictionary<string, int> GetItems;//获得过的馈赠
     public Dictionary<int, string> Equips;// EqupType 装备的部位和道具ID
 
+    public bool IsMy 
+     {
+        get
+        {
+            return WorldProxy._instance.IsOwnCity(this.City);
+        }
+     }
+
     public void Create(HeroConfig config)
     {
         this.Id = config.ID;
         this.Level =1;
-        this.Exp = 
-        this.ArmyTypeID = 0;
-        this.Blood = 0;
+        this.Exp = 0;
         this.City = config.InitBelong;
-        this.IsMy = this.City == (int)HeroBelong.MainCity;
-        this.TeamId = 0;
         this.StarRank = 0;
         this.Favor = 0;
         this.TalkExpire = 0;
@@ -895,7 +904,9 @@ public class Hero
         HeroConfig config = HeroConfig.Instance.GetData(this.Id);
         HeroLevelConfig configLv = HeroLevelConfig.Instance.GetData(this.Level);
         HeroStarConfig configStar = HeroStarConfig.Instance.GetData(config.Star);
-        int cityid = TeamProxy._instance.GetTeamCity(this.TeamId);
+
+        int inTeamID = TeamProxy._instance.GetHeroTeamID(this.Id);
+        int cityid = TeamProxy._instance.GetTeamCity(inTeamID);
         BuildingEffectsData bdAddData = WorldProxy._instance.GetBuildingEffects(cityid);
 
         if (bdAddData != null)
@@ -1018,6 +1029,12 @@ public enum PlayerStatus
     Dead = 3,
 };
 
+public enum BattlePlace
+{
+    Attack = 1,
+    Defense = 2,
+};
+
 public class BattleData
 {
     public int Id;//战斗场景模板ID
@@ -1033,16 +1050,18 @@ public class BattlePlayer
     public int TeamID;//我方>0,敌方<0
     public int HeroID;//上阵英雄
     public PlayerStatus Status;
+    public BattlePlace Place;
     public Dictionary<string, float> Attributes;
     public float ActionCountDown;//下次出手倒计时
     public VInt2 Postion;//当前位置
 
-    public void InitMy(Team team, int morale)
+    public void InitMy(Team team, int morale, BattlePlace place)
     {
         float reduceAttr = (float)(100f - morale) * 0.5f;
         this.TeamID = team.Id;
         this.HeroID = team.HeroID;
         this.Status = PlayerStatus.Formation;
+        this.Place = place;
         this.Attributes = new Dictionary<string, float>();
         foreach (string key in team.Attributes.Keys)
         {
@@ -1057,12 +1076,13 @@ public class BattlePlayer
         this.ActionCountDown = -1;
     }
 
-    public void InitNpc(int npcTeam, int index, int battleSceneID)
+    public void InitNpc(int npcTeam, int index, int battleSceneID,BattlePlace place)
     {
         NpcTeamConfig configNpc = NpcTeamConfig.Instance.GetData(npcTeam);
         this.TeamID = -index;
         this.HeroID = configNpc.Hero;
         this.Status = PlayerStatus.Formation;
+        this.Place = place;
         //计算Npc的Attribute
         Team.ComputeTeamAttribute(out this.Attributes, configNpc.Hero, configNpc.Level, configNpc.Army, configNpc.Count);
         this.Postion = new VInt2();//根据配置直接设置battleSceneID

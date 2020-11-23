@@ -77,7 +77,7 @@ public class TeamHeroItem : ItemRender
 
        
         this._TeamAttrUi.gameObject.SetActive(_isOpen && hero != null);
-        int blood = 0;
+        int blood = team.Blood ;
         int maxBlood = 1;
         int armyId = 0;
         if (_isOpen == false)
@@ -89,8 +89,7 @@ public class TeamHeroItem : ItemRender
         {
             this._rateUi.SetData(heroID);
             this._HeadUi.SetData(heroID);
-            blood = hero.Blood;
-            armyId = hero.ArmyTypeID;
+            armyId = team.ArmyTypeID;
             maxBlood = hero.MaxBlood;
         }
         else

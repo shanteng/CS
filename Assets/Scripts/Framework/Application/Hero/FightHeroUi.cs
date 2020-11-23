@@ -29,7 +29,7 @@ public class FightHeroUi : UIBase
         this._head.SetHero(config.ID);
         this._nameTxt.text = config.Name;
         this._btnDel._param._value = this._teamid;
-        return hero.Blood;
+        return team.Blood;
     }
 }
 

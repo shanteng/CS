@@ -215,6 +215,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
                     _curShowWin = InitText();
                     break;
                 }
+            case PopType.ATTACK_GROUPS:
+                {
+                    _curShowWin = InitAttackCityGroup();
+                    break;
+                }
         }
         this._curShowType = type;
         this._curShowWin.gameObject.SetActive(true);
@@ -318,6 +323,14 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         GameObject view = ResourcesManager.Instance.LoadPopupRes("TextPop");
         Popup script = view.GetComponent<Popup>();
         TextPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<TextPop>();
+        return scriptClone;
+    }
+
+    protected Popup InitAttackCityGroup()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("CityAttackGroupPop");
+        Popup script = view.GetComponent<Popup>();
+        CityAttackGroupPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<CityAttackGroupPop>();
         return scriptClone;
     }
 }//end class

@@ -54,11 +54,11 @@ public class BattleTeamRender : ItemRender
     {
         Team team = TeamProxy._instance.GetTeam(id);
         Hero hero = HeroProxy._instance.GetHero(team.HeroID);
-        ArmyConfig config = ArmyConfig.Instance.GetData(hero.ArmyTypeID);
-        this._countTxt.text = hero.Blood.ToString();
+        ArmyConfig config = ArmyConfig.Instance.GetData(team.ArmyTypeID);
+        this._countTxt.text = team.Blood.ToString();
         int rate = HeroProxy._instance.GetHeroCareerRate(team.HeroID, config.Career);
         this._rateTxt.text = Hero.GetCareerEvaluateName(rate);
-        this._careerSp.sprite = ResourcesManager.Instance.GetArmySprite(hero.ArmyTypeID);
+        this._careerSp.sprite = ResourcesManager.Instance.GetArmySprite(team.ArmyTypeID);
         this._teamAttrUi.SetData(id);
         this._HeadUi.SetData(team.HeroID);
     }

@@ -33,7 +33,7 @@ public class SetTeamHeroView : MonoBehaviour
     private int _selectHeroId;
     private int _selectArmyId;
     private int _usedCount = 0;
-    private int _heroOriginalBlood = 0;
+    private int _teamOriginalBlood = 0;
     private int _heroMaxBlood = 0;
     private int _cityID;
     private int _teamId;
@@ -93,14 +93,11 @@ public class SetTeamHeroView : MonoBehaviour
         this._teamHeroID = team.HeroID;
         this._teamArmyID = 0;
         this._teamArmyCount = 0;
+
+        this._teamArmyID = team.ArmyTypeID;
+        this._teamArmyCount = team.Blood;
+
         Hero teamHero = HeroProxy._instance.GetHero(this._teamHeroID);
-        if (teamHero != null)
-        {
-            this._teamArmyID = teamHero.ArmyTypeID;
-            this._teamArmyCount = teamHero.Blood;
-        }
-
-
         int selectIndex = -1;
         _hGrid.Data.Clear();
         if (teamHero != null)
@@ -115,7 +112,10 @@ public class SetTeamHeroView : MonoBehaviour
         foreach (Hero hero in heros.Values)
         {
             HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
-            if (hero.IsMy == false || hero.TeamId != (int)HeroTeamState.NoTeam || hero.City != this._cityID)
+            if (hero.IsMy == false || hero.DoingState != (int)HeroDoingState.Idle || hero.City != this._cityID)
+                continue;
+            int inTeamID = TeamProxy._instance.GetHeroTeamID(hero.Id);
+            if (inTeamID > 0)
                 continue;
             SetTeamHeroItemData data = new SetTeamHeroItemData(hero, this._teamHeroID);
             this._hGrid.Data.Add(data);
@@ -160,6 +160,7 @@ public class SetTeamHeroView : MonoBehaviour
         if (this._curModel != null)
             Destroy(this._curModel.gameObject);
         this._selectHeroId = id;
+        Team team = TeamProxy._instance.GetTeam(this._teamId);
         foreach (ItemRender render in this._hGrid.ItemRenders)
         {
             SetTeamHeroItemRender rd = (SetTeamHeroItemRender)render;
@@ -177,7 +178,7 @@ public class SetTeamHeroView : MonoBehaviour
 
         Hero hero = HeroProxy._instance.GetHero(this._selectHeroId);
         this._detailsUi.SetData(id);
-        this.SetArmy(hero.ArmyTypeID);
+        this.SetArmy(team.ArmyTypeID);
 
         HeroConfig configHero = HeroConfig.Instance.GetData(hero.Id);
         GameObject prefab = ResourcesManager.Instance.LoadSpine(configHero.Model);
@@ -199,6 +200,7 @@ public class SetTeamHeroView : MonoBehaviour
 
     private void SetArmy(int selectid)
     {
+        Team team = TeamProxy._instance.GetTeam(this._teamId);
         Hero hero = HeroProxy._instance.GetHero(this._selectHeroId);
         this._selectArmyId = selectid;
         this._usedCount = 0;
@@ -207,7 +209,7 @@ public class SetTeamHeroView : MonoBehaviour
             ArmySetItemData curData = (ArmySetItemData)data;
             curData._heroId = this._selectHeroId;
             if (hero != null)
-                curData._heroArmy = hero.ArmyTypeID;
+                curData._heroArmy = team.ArmyTypeID;
             curData._useCount = this._usedCount;
             curData._IsSelect = curData._armyId == this._selectArmyId;
         }
@@ -224,23 +226,24 @@ public class SetTeamHeroView : MonoBehaviour
             this._attrUi.SetData(selectid);
 
         //血量
-        this._heroOriginalBlood = hero.Blood;
-        if (this._selectArmyId != hero.ArmyTypeID)
-            this._heroOriginalBlood = 0;
+        this._teamOriginalBlood = team.Blood;
+        if (this._selectArmyId != team.ArmyTypeID)
+            this._teamOriginalBlood = 0;
 
         this._heroMaxBlood = hero.MaxBlood;
 
         this._recruitSlider.minValue = 0;
         this._recruitSlider.maxValue = hero.MaxBlood;
-        this._recruitSlider.SetValueWithoutNotify(_heroOriginalBlood);
+        this._recruitSlider.SetValueWithoutNotify(_teamOriginalBlood);
         this._recruitSlider.interactable = this._selectArmyId > 0;
 
-        this._curBloodTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, _heroOriginalBlood, hero.MaxBlood);
+        this._curBloodTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, _teamOriginalBlood, hero.MaxBlood);
         this.UpdateCanRecruit();
     }
 
     private void UpdateCanRecruit()
     {
+        Team team = TeamProxy._instance.GetTeam(this._teamId);
         Hero hero = HeroProxy._instance.GetHero(this._selectHeroId);
         int max = hero.MaxBlood;
         int value = 0;
@@ -248,9 +251,8 @@ public class SetTeamHeroView : MonoBehaviour
         {
             Army army = ArmyProxy._instance.GetArmy(this._selectArmyId, this._cityID);
             int armyCount = army.Count;
-            if (army.Id == hero.ArmyTypeID)
-                armyCount += this._heroOriginalBlood;
-
+            if (army.Id == team.ArmyTypeID)
+                armyCount += this._teamOriginalBlood;
             value = armyCount > max ? max : armyCount;
         }
 
@@ -276,7 +278,7 @@ public class SetTeamHeroView : MonoBehaviour
         int count = (int)value;
         this._btnSave.gameObject.SetActive(this._selectHeroId != this._teamHeroID || this._selectArmyId != this._teamArmyID || count != this._teamArmyCount);
 
-        this._usedCount = (int)value - this._heroOriginalBlood;
+        this._usedCount = (int)value - this._teamOriginalBlood;
         this._curBloodTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, value, this._heroMaxBlood);
         foreach (ScrollData data in this._armyGrid.Data)
         {

@@ -1051,41 +1051,45 @@ public class WorldProxy : BaseRemoteProxy
            
     }
 
-    public void DoOwnCity(int cityid)
+    public void DoOwnCity(int cityid,bool isOwn = true)
     {
         CityData city = this.GetCity(cityid);
         if (city == null || city.Visible == false)
-        {
             return;
-        }
 
         VInt2 cityPos = this.GetCityCordinate(cityid);
         CityConfig config = CityConfig.Instance.GetData(cityid);
-        int borderRange = config.Range[0] / 2 + 1;
+      /*  int borderRange = config.Range[0] / 2 + 1;
         bool canMove = this.CanMoveTo(cityPos.x, cityPos.y, borderRange);
         if (canMove == false)
         {
-            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoVisibleNoAttack, config.Name);
-            return;
+           // PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoVisibleNoAttack, config.Name);
+          //  return;
         }
+      */
 
-        city.IsOwn = true;
+        city.IsOwn = isOwn;
+
         //发奖励
-        List<CostData> list = new List<CostData>();
-        foreach (string award in config.AttackDrops)
+        if (isOwn)
         {
-            CostData cost = new CostData();
-            cost.InitFull(award);
-            if (cost.type.Equals(CostData.TYPE_ITEM))
-                list.Add(cost);
-            else if (cost.type.Equals(CostData.TYPE_HERO))
-                HeroProxy._instance.DoOwnHero(cost);
+            List<CostData> list = new List<CostData>();
+            foreach (string award in config.AttackDrops)
+            {
+                CostData cost = new CostData();
+                cost.InitFull(award);
+                if (cost.type.Equals(CostData.TYPE_ITEM))
+                    list.Add(cost);
+                else if (cost.type.Equals(CostData.TYPE_HERO))
+                    HeroProxy._instance.DoOwnHero(cost);
+            }
+            if (list.Count > 0)
+                RoleProxy._instance.ChangeRoleNumberValue(list);
+            //设置新的迷雾解锁
+            SetCityRangeSpotVisible(cityid);
         }
-        if (list.Count > 0)
-            RoleProxy._instance.ChangeRoleNumberValue(list);
+      
         this.DoSaveCitys();
-        //设置新的迷雾解锁
-        SetCityRangeSpotVisible(cityid);
         this.SendNotification(NotiDefine.DoOwnCityResp, cityid);
     }
 
@@ -1116,7 +1120,8 @@ public class WorldProxy : BaseRemoteProxy
 
         Hero hero = HeroProxy._instance.GetHero(HeroID);
         HeroConfig confighe = HeroConfig.Instance.GetData(HeroID);
-        if (hero.TeamId > 0)
+        int inTeamID = TeamProxy._instance.GetHeroTeamID(hero.Id);
+        if (inTeamID > 0)
         {
             PopupFactory.Instance.ShowErrorNotice(ErrorCode.HeroInTeamNoQuest, confighe.Name);
             return false;
@@ -1154,7 +1159,7 @@ public class WorldProxy : BaseRemoteProxy
             return false;
         }
 
-        hero.TeamId = (int)HeroTeamState.QuestCity;
+        hero.DoingState = (int)HeroDoingState.QuestCity;
         hero.ChangeEnegry(needEnegry);
         HeroProxy._instance.DoSaveHeros();
        
@@ -1221,7 +1226,7 @@ public class WorldProxy : BaseRemoteProxy
         if (cityInfo.QuestIndex == null)
             cityInfo.QuestIndex = new List<int>();
 
-        HeroProxy._instance.ChangeHeroTeam(data.HeroID, (int)HeroTeamState.NoTeam);
+        HeroProxy._instance.ChangeHeroDoing(data.HeroID, (int)HeroDoingState.Idle);
         this._QuestCityDic.Remove(questid);
 
         if (needSave)
@@ -1283,7 +1288,7 @@ public class WorldProxy : BaseRemoteProxy
             else if(cost.type.Equals(CostData.TYPE_HERO))
             {
                 int heroid = UtilTools.ParseInt(cost.id);
-                HeroProxy._instance.ChangeHeroBelong(heroid, true, (int)HeroBelong.MainCity);
+                HeroProxy._instance.ChangeHeroBelong(heroid, (int)HeroBelong.MainCity);
                 GetName = HeroConfig.Instance.GetData(heroid).Name;
             }
 

@@ -24,7 +24,10 @@ public class QuestCityPop : Popup
         List<Hero> heros = new List<Hero>();
         foreach (Hero hero in dic.Values)
         {
-            if (hero.TeamId != (int)HeroTeamState.NoTeam || hero.IsMy == false)
+            if (hero.DoingState != (int)HeroDoingState.Idle || hero.IsMy == false)
+                continue;
+            int inTeamID = TeamProxy._instance.GetHeroTeamID(hero.Id);
+            if (inTeamID > 0)
                 continue;
             heros.Add(hero);
         }//end for city

@@ -89,8 +89,6 @@ public class HeroScene : MonoBehaviour
         this._curModel.Play(SpineUiPlayer.STATE_IDLE, true);
     }
 
-   
-
 
     public void DoBackToOrignal()
     {
