@@ -26,6 +26,7 @@ public class MainMediator : BaseWindowMediator<MainView>
         this.m_HideNoHandleNotifations.Add(NotiDefine.PathRemoveNoti);
         this.m_HideNoHandleNotifations.Add(NotiDefine.NewLogNoti);
         this.m_HideNoHandleNotifations.Add(NotiDefine.JudegeNewLog);
+        this.m_HideNoHandleNotifations.Add(NotiDefine.EnterBattleSuccess);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
@@ -74,7 +75,11 @@ public class MainMediator : BaseWindowMediator<MainView>
                     this.m_view.SetLogNew();
                     break;
                 }
-
+            case NotiDefine.EnterBattleSuccess:
+                {
+                    this.HideWindow();
+                    break;
+                }
         }
     }//end func
 

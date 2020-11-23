@@ -72,6 +72,8 @@
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyItem.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyView.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleControllMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleController.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattlePlayerUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleViewController.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />

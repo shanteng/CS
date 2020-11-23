@@ -32,6 +32,7 @@ public class JsonNameDefine
     public static string CareerEvaluate = "CareerEvaluate";
     public static string City = "City";
     public static string NpcTeam = "NpcTeam";
+    public static string BattleScene = "BattleScene";
 
     public static JArray JsonRead(string name)
     {
@@ -118,6 +119,12 @@ public class ArmyConfig : Config<ArmyConfig>
     public int UnlockTech;//招募所需科技ID
 
     public ArmyConfig() : base(JsonNameDefine.Army) { }
+}
+
+public class BattleSceneConfig : Config<BattleSceneConfig>
+{
+    public string Scene;
+    public BattleSceneConfig() : base(JsonNameDefine.BattleScene) { }
 }
 
 public class RoleLevelConfig : Config<RoleLevelConfig>

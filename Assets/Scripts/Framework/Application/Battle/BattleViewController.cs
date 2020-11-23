@@ -47,8 +47,7 @@ public class BattleViewController : MonoBehaviour
         ins = this;
         float degree = this._camera.transform.rotation.eulerAngles.x;
         CosDegreeValue = Mathf.Cos(degree * Mathf.Deg2Rad);
-        //test
-        this.InitBorder(25, 15);
+        this.InitBorder();
     }
 
     void Start()
@@ -79,7 +78,7 @@ public class BattleViewController : MonoBehaviour
     //前后最大位移量
     private float _yMin = 0;
     private float _yMax = 0;
-    public void InitBorder(int showRow, int showCol)
+    private void InitBorder()
     {
         this._StartPos = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 

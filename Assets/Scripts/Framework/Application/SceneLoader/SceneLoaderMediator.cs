@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class SceneLoaderMediator : BaseFullScreenWindowMediator<SceneLoaderView>
 {
     private string _name;
+    private bool _isAddtive = false;
     public SceneLoaderMediator() : base(MediatorDefine.SCENE_LOADER)
     {
        
@@ -18,6 +19,7 @@ public class SceneLoaderMediator : BaseFullScreenWindowMediator<SceneLoaderView>
     protected override void InitListNotificationInterestsInner()
     {
         m_lInterestNotifications.Add(NotiDefine.DoLoadScene);
+        m_lInterestNotifications.Add(NotiDefine.DoLoadSceneAddtive);
         m_HideNoHandleNotifations.Add(NotiDefine.LoadSceneFinish);
     }
 
@@ -27,6 +29,14 @@ public class SceneLoaderMediator : BaseFullScreenWindowMediator<SceneLoaderView>
         {
             case NotiDefine.DoLoadScene:
                 {
+                    this._isAddtive = false;
+                    this._name = (string)notification.Body;
+                    MediatorUtil.ShowMediator(MediatorDefine.SCENE_LOADER);
+                    break;
+                }
+            case NotiDefine.DoLoadSceneAddtive:
+                {
+                    this._isAddtive = true;
                     this._name = (string)notification.Body;
                     MediatorUtil.ShowMediator(MediatorDefine.SCENE_LOADER);
                     break;
@@ -47,6 +57,6 @@ public class SceneLoaderMediator : BaseFullScreenWindowMediator<SceneLoaderView>
 
     protected override void DoInitializeInner()
     {
-        this.m_view.LoadScene(this._name);
+        this.m_view.LoadScene(this._name,this._isAddtive);
     }
 }//end class

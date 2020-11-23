@@ -190,7 +190,7 @@ public class HomeLandMediator : BaseNoWindowMediator
 
     void InitScene()
     {
-        GameObject[] allObj = SceneManager.GetActiveScene().GetRootGameObjects();
+        GameObject[] allObj = SceneManager.GetSceneByName(SceneDefine.Home).GetRootGameObjects();
         _LandManager = null;
         foreach (GameObject obj in allObj)
         {

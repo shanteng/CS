@@ -20,17 +20,22 @@ public class SceneLoaderView : MonoBehaviour
        // SceneManager.UnloadSceneAsync(scene);
     }
 
-    public void LoadScene(string name)
+    public void LoadScene(string name,bool isAddtive)
     {
         this._loadName = name;
         SceneManager.sceneLoaded += OnSceneLoaded;
-        StartCoroutine(LoadScene());
+        StartCoroutine(LoadScene(isAddtive));
     }
 
-    IEnumerator LoadScene()
+    IEnumerator LoadScene(bool isAddtive)
     {
         yield return null;
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(this._loadName);
+        AsyncOperation asyncOperation;
+        if (isAddtive == false)
+            asyncOperation = SceneManager.LoadSceneAsync(this._loadName);
+        else
+            asyncOperation = SceneManager.LoadSceneAsync(_loadName, LoadSceneMode.Additive);
+
         //不激活场景
         asyncOperation.allowSceneActivation = true;
         //当加载正在进行时，加载Text和进度条
@@ -40,7 +45,6 @@ public class SceneLoaderView : MonoBehaviour
             {
                 //激活场景加载完成了
                 this.SetProgress(1f);
-                 //asyncOperation.allowSceneActivation = true;
             }
             else
             {

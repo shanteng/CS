@@ -20,6 +20,7 @@ public class NotiDefine
     public const string CLOSE_ = "CLOSE_";
 
     public const string DoLoadScene = "DoLoadScene";
+    public const string DoLoadSceneAddtive = "DoLoadSceneAddtive";
     public const string LoadSceneFinish = "LoadSceneFinish";
 
    
@@ -397,6 +398,8 @@ public enum MediatorDefine
     TEAM,
     SET_TEAM_HERO,
     TEAM_ATTACK,
+    BATTLE_CONTROL,
+    BATTLE,
 }
 
 public class StringKeyValue
@@ -440,6 +443,7 @@ public class SceneDefine
     public const string Home = "Home";
     public const string GameIndex = "GameIndex";
     public const string Hero = "Hero";
+    public const string Battle = "Battle";
 }
 
 public class ValueAddType

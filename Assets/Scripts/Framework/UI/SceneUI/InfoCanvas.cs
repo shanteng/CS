@@ -72,7 +72,7 @@ public class InfoCanvas : UIBase, IConfirmListener
     {
         if (this._cor != null)
         {
-            CoroutineUtil.GetInstance().Stop(this._cor);
+            this.StopCoroutine(_cor);
             this._cor = null;
         }
         this.gameObject.SetActive(true);
@@ -83,14 +83,17 @@ public class InfoCanvas : UIBase, IConfirmListener
     public new void Hide()
     {
         this._animator.SetTrigger("MoveOut");
-        _cor =  CoroutineUtil.GetInstance().WaitTime(0.4f, true, WaitInitEnd);
+        _cor = StartCoroutine(WaitHide());
         this._cityId = -1;
     }
 
-    private void WaitInitEnd(object[] param)
+    IEnumerator WaitHide()
     {
+        WaitForSeconds waitYield = new WaitForSeconds(0.4f);
+        yield return waitYield;
         this.gameObject.SetActive(false);
     }
+
 
     private void GetBtnList( out List<IntStrPair> btnTypeList)
     {

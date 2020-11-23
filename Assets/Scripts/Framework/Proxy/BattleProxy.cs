@@ -20,9 +20,9 @@ public class BattleProxy : BaseRemoteProxy
     public void EnterBattle(BattleData data)
     {
         this._data = data;
-        this.SendNotification(NotiDefine.EnterBattleSuccess);//加载场景，进行布阵
+        this.SendNotification(NotiDefine.EnterBattleSuccess,data.Id);//加载场景，进行布阵
         //测试写死直接胜利
-        this.BattleEnd(true);
+        //this.BattleEnd(true);
     }
 
     public void BattleEnd(bool isSuccess)
