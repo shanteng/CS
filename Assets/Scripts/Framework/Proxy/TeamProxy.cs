@@ -138,6 +138,7 @@ public class TeamProxy : BaseRemoteProxy
         BattleData battleData = new BattleData();
         battleData.Id = configCIty.BattleSceneID;
         battleData.Type = BattleType.AttackCity;
+        battleData.MyPlace = BattlePlace.Attack;
         battleData.Round = 0;
         battleData.Status = BattleStatus.PreStart;
         battleData.Players = new Dictionary<int, BattlePlayer>();
@@ -154,8 +155,9 @@ public class TeamProxy : BaseRemoteProxy
         int index = 1;
         foreach (int npcTeam in configCIty.NpcTeams)
         {
+            int npcBorn = configCIty.NpcBorns[index - 1];
             BattlePlayer player = new BattlePlayer();
-            player.InitNpc(npcTeam, index, configCIty.BattleSceneID, BattlePlace.Defense);
+            player.InitNpc(npcTeam, npcBorn, index, configCIty.BattleSceneID, BattlePlace.Defense);
             battleData.Players.Add(-index, player);
             ++index;
         }

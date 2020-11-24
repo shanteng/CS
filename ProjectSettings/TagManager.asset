@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Plane
+  - Born
   layers:
   - Default
   - TransparentFX

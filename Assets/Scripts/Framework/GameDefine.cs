@@ -173,6 +173,9 @@ public class NotiDefine
 
     public const string EnterBattleSuccess = "EnterBattleSuccess";
     public const string BattleEndNoti = "BattleEndNoti";
+    public const string BattleBornUpdate = "BattleBornUpdate";
+    public const string BattleStateChangeNoti = "BattleStateChangeNoti";
+    public const string BattleStartNoti = "BattleStartNoti";
 }
 
 public class ErrorCode
@@ -203,6 +206,7 @@ public class ErrorCode
     public const string NoHeroFreeToQuest = "NoHeroFreeToQuest";
 
     public const string NoArmyNoTeam = "NoArmyNoTeam";
+    public const string NoUpPlayer = "NoUpPlayer";
 }
 
 [Serializable]
@@ -384,7 +388,6 @@ public enum MediatorDefine
     NONE,
     DATA_CENTER,
     LOGIN,
-
     HOME_LAND,
     SCENE_LOADER,
     MAIN,
@@ -1043,6 +1046,7 @@ public class BattleData
 {
     public int Id;//战斗场景模板ID
     public BattleType Type;
+    public BattlePlace MyPlace;
     public int Round;
     public BattleStatus Status;//是否在等待玩家行动
     public Dictionary<int, BattlePlayer> Players;
@@ -1053,19 +1057,23 @@ public class BattlePlayer
 {
     public int TeamID;//我方>0,敌方<0
     public int HeroID;//上阵英雄
+    public int Level;
     public PlayerStatus Status;
-    public BattlePlace Place;
+   
     public Dictionary<string, float> Attributes;
     public float ActionCountDown;//下次出手倒计时
-    public VInt2 Postion;//当前位置
+    public int BornIndex;//>0表示上阵了
+    public Vector3 Postion;//当前位置
 
     public void InitMy(Team team, int morale, BattlePlace place)
     {
         float reduceAttr = (float)(100f - morale) * 0.5f;
         this.TeamID = team.Id;
         this.HeroID = team.HeroID;
+        Hero he = HeroProxy._instance.GetHero(this.HeroID);
+        this.Level = he.Level;
         this.Status = PlayerStatus.Formation;
-        this.Place = place;
+        this.BornIndex = 0;
         this.Attributes = new Dictionary<string, float>();
         foreach (string key in team.Attributes.Keys)
         {
@@ -1076,21 +1084,23 @@ public class BattlePlayer
                 this.Attributes[key] = this.Attributes[key] * (1f - reduceAttr);
             }
         }
-        this.Postion = new VInt2();//
-        this.ActionCountDown = -1;
+        this.Postion = Vector3.zero;
+        this.ActionCountDown = 1500 / this.Attributes[AttributeDefine.Speed];
     }
 
-    public void InitNpc(int npcTeam, int index, int battleSceneID,BattlePlace place)
+    public void InitNpc(int npcTeam,int born, int index, int battleSceneID,BattlePlace place)
     {
         NpcTeamConfig configNpc = NpcTeamConfig.Instance.GetData(npcTeam);
         this.TeamID = -index;
         this.HeroID = configNpc.Hero;
+        this.Level = configNpc.Level;
         this.Status = PlayerStatus.Formation;
-        this.Place = place;
+        this.BornIndex = born;
+        
         //计算Npc的Attribute
         Team.ComputeTeamAttribute(out this.Attributes, configNpc.Hero, configNpc.Level, configNpc.Army, configNpc.Count);
-        this.Postion = new VInt2();//根据配置直接设置battleSceneID
-        this.ActionCountDown = -1;
+        this.Postion = Vector3.zero;
+        this.ActionCountDown = 100f / this.Attributes[AttributeDefine.Speed];
     }
 }
 

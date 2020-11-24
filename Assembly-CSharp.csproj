@@ -74,8 +74,17 @@
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleControllMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleController.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleInfoUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattlePlayerInfoItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattlePlayerUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattlePlayerUpItemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleSpot.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleViewController.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BornSpot.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\PreBattleUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\SpeedPlayerUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\ArmyAttributeUi.cs" />

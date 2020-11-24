@@ -20,6 +20,7 @@ public class BattleControllMediator : BaseNoWindowMediator
     {
         m_lInterestNotifications.Add(NotiDefine.LoadSceneFinish);
         m_lInterestNotifications.Add(NotiDefine.EnterBattleSuccess);
+        m_lInterestNotifications.Add(NotiDefine.BattleStartNoti);
     }
 
     public override void HandleNotification(INotification notification)
@@ -44,6 +45,14 @@ public class BattleControllMediator : BaseNoWindowMediator
                     }
                     break;
                 }
+            case NotiDefine.BattleStartNoti:
+                {
+                    if (_isLoaded)
+                    {
+                        BattleController.Instance.StartBattle();
+                    }
+                    break;
+                }
         }
     }//end 
 
@@ -63,8 +72,13 @@ public class BattleControllMediator : BaseNoWindowMediator
             }
         }
 
+        this._battleController.InitPreBattle();
         MediatorUtil.ShowMediator(MediatorDefine.BATTLE);
-        this._battleController.InitScene();
         this._isLoaded = true;
+
+        GameIndex.InWorld = false;
+        GameIndex.InBattle = true;
     }
+
+   
 }//end class

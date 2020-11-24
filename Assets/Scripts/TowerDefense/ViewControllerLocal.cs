@@ -192,6 +192,13 @@ public class ViewControllerLocal : MonoBehaviour
         }
     }
 
+    public void DirectGoTo(VInt2 wolrdPos)
+    {
+        Vector3 cameraPos = new Vector3(this._StartPos.x + wolrdPos.x, this._StartPos.y, this._StartPos.z + wolrdPos.y);
+        this.transform.position = cameraPos;
+        MediatorUtil.SendNotification(NotiDefine.CordinateChange);
+    }
+
     public bool TryGotoWorldPostion(Vector3 wolrdPos, UnityAction<object> callBack = null, object param = null)
     {
         Vector3 cameraPos = new Vector3(this._StartPos.x + wolrdPos.x, this._StartPos.y, this._StartPos.z + wolrdPos.z);
@@ -207,8 +214,6 @@ public class ViewControllerLocal : MonoBehaviour
         };
 
         PopupFactory.Instance.Hide();
-        this._translateX = wolrdPos.x;
-        this._translateY = wolrdPos.y;
         return true;
     }
 
@@ -253,14 +258,11 @@ public class ViewControllerLocal : MonoBehaviour
                 callBack.Invoke(param);
         };
         PopupFactory.Instance.Hide();
-        this._translateX = wolrdPos.x;
-        this._translateY = wolrdPos.y;
         return true;
     }
 
     
-    private float _translateX = 0;
-    private float _translateY = 0;
+
     void JudgeDragMap()
     {
 #if UNITY_EDITOR

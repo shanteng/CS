@@ -124,6 +124,9 @@ public class ArmyConfig : Config<ArmyConfig>
 public class BattleSceneConfig : Config<BattleSceneConfig>
 {
     public string Scene;
+    public int[] RowCol;
+    public int[] AttackBorn;
+    public int[] DefenseBorn;
     public BattleSceneConfig() : base(JsonNameDefine.BattleScene) { }
 }
 
@@ -156,6 +159,7 @@ public class CityConfig : Config<CityConfig>
     public string Model;
     public int[] Position;
     public int[] NpcTeams;
+    public int[] NpcBorns;
     public string[] Buildings;
     public int Power;//
     public string[] QuestDrops;

@@ -82,6 +82,8 @@ public class InfoCanvas : UIBase, IConfirmListener
 
     public new void Hide()
     {
+        if (this.gameObject == null || this.gameObject.activeSelf == false)
+            return;
         this._animator.SetTrigger("MoveOut");
         _cor = StartCoroutine(WaitHide());
         this._cityId = -1;

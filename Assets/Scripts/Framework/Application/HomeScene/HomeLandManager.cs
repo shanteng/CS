@@ -505,28 +505,6 @@ public class HomeLandManager : MonoBehaviour
             spot.transform.localEulerAngles = new Vector3(90, 0, 0);
             spot.name = key;
 
-        //    float zValue = 0.5f;
-       //     float wValue = 0.5f;
-
-       //     int x = list[key].x;
-      //      int z = list[key].y;
-
-       /*     bool isLeftVisible = WorldProxy._instance.IsSpotVisible(x-1,z);
-            bool isRightVisible = WorldProxy._instance.IsSpotVisible(x + 1, z);
-            if (isLeftVisible == false)
-                zValue = 1f;
-            else if (isRightVisible == false)
-                zValue = 0f;
-
-            bool isTopVisble = WorldProxy._instance.IsSpotVisible(x, z+1);
-            bool isBottomVible = WorldProxy._instance.IsSpotVisible(x, z-1);
-            if (isTopVisble == false)
-                wValue = 0f;
-            else if (isBottomVible == false)
-                wValue = 1f;
-
-            spot.GetComponent<MeshRenderer>().material.SetVector("_size", new Vector4(1, 1, zValue, wValue));
-       */
             this._VisibleSpots.Add(key,spot);
         }
     }

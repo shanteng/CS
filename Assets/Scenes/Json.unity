@@ -178,6 +178,7 @@ MonoBehaviour:
     - World
     - City
     - NpcTeam
+    - BattleScene
   - name: ItemInfo
     sheets:
     - ItemInfo

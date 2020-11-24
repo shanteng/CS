@@ -181,7 +181,7 @@ public class UtilTools
 
     public static bool isFingerOverUI()
     {
-        if (GameIndex.InGame == false)
+        if (GameIndex.InWorld == false && GameIndex.InBattle == false)
             return false;
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
 #if UNITY_EDITOR

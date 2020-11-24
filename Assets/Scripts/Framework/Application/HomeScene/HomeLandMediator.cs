@@ -48,7 +48,7 @@ public class HomeLandMediator : BaseNoWindowMediator
             case NotiDefine.GAME_RESET:
                 {
                     this._isHomeLoaded = false;
-                    GameIndex.InGame = false;
+                    GameIndex.InWorld = false;
                     break;
                 }
             case NotiDefine.LoadSceneFinish:
@@ -57,6 +57,10 @@ public class HomeLandMediator : BaseNoWindowMediator
                     if (name.Equals(SceneDefine.Home))
                     {
                         this.InitScene();
+                    }
+                    else
+                    {
+                        this._isHomeLoaded = false;
                     }
                     break;
                 }
@@ -202,12 +206,22 @@ public class HomeLandMediator : BaseNoWindowMediator
         }
 
         MediatorUtil.ShowMediator(MediatorDefine.MAIN);
-
         if (this._LandManager != null)
             this._LandManager.InitScene();
-        
+
+        if (GameIndex.InBattle)
+        {
+            //从战斗场景退出的
+            if (BattleProxy._instance.Data.Type == BattleType.AttackCity)
+            {
+                Group gp = TeamProxy._instance.GetGroup((string)BattleProxy._instance.Data.Param);
+                VInt2 cityPost = WorldProxy._instance.GetCityCordinate(gp.TargetCityID);
+                ViewControllerLocal.GetInstance().DirectGoTo(cityPost);
+            }
+        }
 
         this._isHomeLoaded = true;
-        GameIndex.InGame = true;
+        GameIndex.InWorld = true;
+        GameIndex.InBattle = false;
     }
 }//end class

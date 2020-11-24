@@ -83,6 +83,7 @@ public class ColorFlash : MonoBehaviour
     {
         foreach (MeshRenderer render in this._allRenders)
         {
+        
             render.material.color = this._curColor;
             render.material.SetFloat("_AlphaScale", 1f);
         }

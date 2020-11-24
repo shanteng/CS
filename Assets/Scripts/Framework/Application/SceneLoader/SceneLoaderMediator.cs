@@ -31,6 +31,7 @@ public class SceneLoaderMediator : BaseFullScreenWindowMediator<SceneLoaderView>
                 {
                     this._isAddtive = false;
                     this._name = (string)notification.Body;
+
                     MediatorUtil.ShowMediator(MediatorDefine.SCENE_LOADER);
                     break;
                 }

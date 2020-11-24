@@ -18,7 +18,7 @@ public class BattlePlayerUi : UIBase
 
     public int ID => this._teamid;
 
-    public void SetData(BattlePlayer player)
+    public void SetData(BattlePlayer player, BattlePlace myPlace)
     {
         this._teamid = player.TeamID;
         HeroConfig config = HeroConfig.Instance.GetData(player.HeroID);
@@ -28,16 +28,27 @@ public class BattlePlayerUi : UIBase
             Destroy(this._curModel.gameObject);
         GameObject prefab = ResourcesManager.Instance.LoadSpine(config.Model);
         GameObject obj;
-        if (player.Place == BattlePlace.Attack)
+        if (player.TeamID > 0 && myPlace == BattlePlace.Attack)
             obj = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, this._AttackRoot);
-        else
+        else if (player.TeamID > 0 && myPlace == BattlePlace.Defense)
             obj = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, this._DefenseRoot);
-
+        else if (player.TeamID < 0 && myPlace == BattlePlace.Attack)
+            obj = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, this._DefenseRoot);
+        else
+            obj = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, this._AttackRoot);
+     
         this._curModel = obj.GetComponent<SpineUiPlayer>();
         this._curModel.transform.localPosition = new Vector3(0, 0, 0);
         this._curModel.transform.localScale = Vector3.one;
         this._curModel.transform.localRotation = Quaternion.Euler(Vector3.zero);
         this._curModel.Play(SpineUiPlayer.STATE_IDLE, true);
+        this.SetPostion();
+    }
+
+    public void SetPostion()
+    {
+        BattlePlayer data = BattleProxy._instance.GetPlayer(this.ID);
+        this.transform.position = data.Postion;
     }
 
 

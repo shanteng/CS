@@ -100,6 +100,7 @@
     public const string LogType = "LogType";
     public const string GetHourTax = "GetHourTax";
     public const string ArmyRecruitFinish = "ArmyRecruitFinish";
+    public const string SelectUpPostion = "SelectUpPostion";
 
     public const string ArriveYet = "ArriveYet";
     public const string Moving = "Moving";

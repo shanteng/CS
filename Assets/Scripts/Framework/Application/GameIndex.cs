@@ -11,7 +11,8 @@ using System;
 
 public class GameIndex : MonoBehaviour
 {
-    public static bool InGame = false;
+    public static bool InWorld = false;
+    public static bool InBattle = false;
     public static string UID = "";
     private static long _serverTime;
     private static long _serverTimeOnSync;
