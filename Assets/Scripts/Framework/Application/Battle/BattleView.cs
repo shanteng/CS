@@ -11,13 +11,88 @@ public class BattleView : MonoBehaviour
     public PreBattleUi _preUi;
     public GameObject _WaitLine;
     public SpeedPlayerUi _waitPlayerTemplete;
+
+    public GameObject _ActionCon;
+    public UIButton _btnFight;
+    public UIButton _btnEndRound;
+    public UIButton _btnCancelFight;
+    public UIButton _btnSureFight;
+
+
     private Dictionary<int, SpeedPlayerUi> _AliveWaitPlayerDic;
     private Dictionary<BattlePlace, BattleInfoUi> _InfoUiDic;
+
     void Awake()
     {
         this._FightAni.SetActive(false);
         this._btnQuit.AddEvent(OnQuit);
+
+        this._btnFight.AddEvent(OnFight);
+        this._btnEndRound.AddEvent(OnEndRound);
+        this._btnCancelFight.AddEvent(OnCancelFight);
+        this._btnSureFight.AddEvent(OnSureFight);
+
         this._waitPlayerTemplete.gameObject.SetActive(false);
+    }
+
+    private void OnFight(UIButton btn)
+    {
+        this._btnFight.Hide();
+        this._btnCancelFight.Show();
+        BattleController.Instance.SetAttackRange(0);
+    }
+
+    private void OnEndRound(UIButton btn)
+    {
+        BattleProxy._instance.DoNextRound();
+    }
+
+    private void OnCancelFight(UIButton btn)
+    {
+
+    }
+
+    private void OnSureFight(UIButton btn)
+    {
+        BattleController.Instance.DoAttack();
+        this._btnSureFight.Hide();
+        this._btnCancelFight.Hide();
+        this._btnEndRound.Hide();
+    }
+
+    public void ShowAttackSure()
+    {
+        this._btnSureFight.Show();
+    }
+
+    public void OnAttackEnd()
+    {
+       
+        //更新列表状态和血量
+        foreach (BattleInfoUi ui in this._InfoUiDic.Values)
+        {
+            ui.UpdateBlood();
+            ui.UpdateList();
+        }
+
+        //删除速度进度条上的玩家
+        List<int> rms = new List<int>();
+        foreach (SpeedPlayerUi pl in this._AliveWaitPlayerDic.Values)
+        {
+            BattlePlayer data = BattleProxy._instance.GetPlayer(pl.ID);
+            if (data.Status == PlayerStatus.Dead)
+            {
+                rms.Add(data.TeamID);
+            }
+        }
+
+        foreach (int rmindex in rms)
+        {
+            Destroy(this._AliveWaitPlayerDic[rmindex].gameObject);
+            _AliveWaitPlayerDic.Remove(rmindex);
+        }
+
+        this._btnEndRound.Show();
     }
 
     private void OnQuit(UIButton btn)
@@ -32,6 +107,7 @@ public class BattleView : MonoBehaviour
         this._preUi.SetList();
         this._FightAni.SetActive(false);
         this._WaitLine.SetActive(false);
+        this._ActionCon.SetActive(false);
 
         this._InfoUiDic = new Dictionary<BattlePlace, BattleInfoUi>();
         BattleInfoUi ui = this.transform.Find("Top/Attack").GetComponent<BattleInfoUi>();
@@ -75,7 +151,7 @@ public class BattleView : MonoBehaviour
         this._FightAni.SetActive(true);
         this._WaitLine.SetActive(true);
         this.InitWaitPlayer();
-        CoroutineUtil.GetInstance().WaitTime(3f, true, WaitInitEnd);
+        CoroutineUtil.GetInstance().WaitTime(2f, true, WaitInitEnd);
     }
 
     private void InitWaitPlayer()
@@ -101,19 +177,37 @@ public class BattleView : MonoBehaviour
         }
     }
 
-    private void PlayerDoAction()
+    private void PlayerDoAction(bool isMove)
     {
         foreach (SpeedPlayerUi pl in this._AliveWaitPlayerDic.Values)
         {
-            pl.SetMove(false);
+            pl.SetMove(isMove);
         }
+    }
+
+    private void JudegeMyAction()
+    {
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        if (player == null || player.TeamID < 0)
+            return;
+        this._ActionCon.SetActive(true);
+        this._btnFight.Show();
+        this._btnEndRound.Show();
+        this._btnSureFight.Hide();
+        this._btnCancelFight.Hide();
     }
 
     public void OnStateChange(BattleStatus state)
     {
+        if (state == BattleStatus.Judge)
+        {
+            this._ActionCon.SetActive(false);
+            this.PlayerDoAction(true);
+        }
         if (state == BattleStatus.Action)
         {
-            this.PlayerDoAction();
+            this.PlayerDoAction(false);
+            this.JudegeMyAction();
         }
     }
 }

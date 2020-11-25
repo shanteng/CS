@@ -25,6 +25,69 @@ public class BattleProxy : BaseRemoteProxy
         //this.BattleEnd(true);
     }
 
+    public void DoAttackAction()
+    {
+        BattlePlayer actionPlayer = this.GetActionPlayer();
+        //计算所有被伤害的人
+        int skillID = actionPlayer._AttackSkillID;
+        int AttackDemage = actionPlayer.ComputeDemage(skillID);//根据技能和属性计算出本次的输出伤害
+        List<PlayerBloodChangeData> attackPlayers = new List<PlayerBloodChangeData>();
+        foreach (VInt2 attackPos in actionPlayer.SkillDemageCordinates)
+        {
+            BattlePlayer posPlayer = this.GetPlayerBy(attackPos);
+            if (posPlayer == null || posPlayer.Status != PlayerStatus.Wait)
+                continue;
+            int teamvalue = actionPlayer.TeamID * posPlayer.TeamID;
+            if (teamvalue > 0)
+                continue;//相同队伍的不受伤害
+            int loseBlood = posPlayer.TakeDemage(AttackDemage);
+            PlayerBloodChangeData kv = new PlayerBloodChangeData();
+            kv.TeamID = posPlayer.TeamID;
+            kv.ChangeValue = -loseBlood;
+            attackPlayers.Add(kv);
+        }
+
+        //播放完毕动画再去处理UI
+        BattleController.Instance.TakeDeamge(attackPlayers);
+    }
+
+    public BattlePlayer GetPlayerBy(VInt2 pos)
+    {
+        foreach (BattlePlayer pl in this.Data.Players.Values)
+        {
+            if (pl.Postion.x == pos.x && pl.Postion.y == pos.y)
+                return pl;
+        }
+        return null;
+    }
+
+    public void DoNextRound()
+    {
+        this._data.Status = BattleStatus.Judge;
+        foreach (BattlePlayer pl in this._data.Players.Values)
+        {
+            if (pl.Status == PlayerStatus.Action || pl.Status == PlayerStatus.ActionFinished)
+            {
+                pl.Status = PlayerStatus.Wait;
+                break;
+            }
+        }
+
+        this._data.Round++;
+        this.SendNotification(NotiDefine.BattleStateChangeNoti, this._data.Status);
+    }
+
+    public void OnPlayerActionFinishded(int teamid)
+    {
+        BattlePlayer pl = this._data.Players[teamid];
+        pl.Status = PlayerStatus.ActionFinished;
+        pl.ActionMoveCordinates = null;
+        pl.SkillFightRangeCordinates = null;
+        pl.SkillFightRangeCordinatesStrList = null;
+        pl.SkillDemageCordinates = null;
+        pl._AttackSkillID = 0;
+    }
+
     public void OnTeamBegin(int teamid)
     {
         this._data.Status = BattleStatus.Action;
@@ -33,6 +96,7 @@ public class BattleProxy : BaseRemoteProxy
             if (pl.TeamID == teamid)
             {
                 pl.Status = PlayerStatus.Action;
+                pl.HasDoRoundActionFinish = false;
                 break;
             }
         }
@@ -82,10 +146,36 @@ public class BattleProxy : BaseRemoteProxy
         this.SendNotification(NotiDefine.BattleEndNoti);
     }
 
+     
+
+
+
+    public bool IsSpotOccupy(int x, int z, int teamid)
+    {
+        foreach (BattlePlayer player in this.Data.Players.Values)
+        {
+            if (player.TeamID == teamid || player.Status != PlayerStatus.Wait)
+                continue;
+            if(player.Postion.x == x && player.Postion.y == z)
+                return true;
+        }
+        return false;
+    }
+
     public BattlePlayer GetPlayer(int teamid)
     {
         BattlePlayer player = this.Data.Players[teamid];
         return player;
+    }
+
+    public BattlePlayer GetActionPlayer()
+    {
+        foreach (BattlePlayer pl in this.Data.Players.Values)
+        {
+            if (pl.Status == PlayerStatus.Action)
+                return pl;
+        }
+        return null;
     }
 
     private Dictionary<int, Vector3> _bornPosDic;
@@ -96,7 +186,7 @@ public class BattleProxy : BaseRemoteProxy
         {
             if (pl.TeamID > 0)
                 continue;
-            pl.Postion = this._bornPosDic[pl.BornIndex];
+            pl.Postion = new VInt2((int)this._bornPosDic[pl.BornIndex].x,(int)this._bornPosDic[pl.BornIndex].z);
         }
     }
 
@@ -117,13 +207,13 @@ public class BattleProxy : BaseRemoteProxy
         {
             oldPlayer.BornIndex = curPlayer.BornIndex;
             if (oldPlayer.BornIndex > 0)
-                oldPlayer.Postion = this._bornPosDic[oldPlayer.BornIndex];
+                oldPlayer.Postion = new VInt2((int)this._bornPosDic[oldPlayer.BornIndex].x, (int)this._bornPosDic[oldPlayer.BornIndex].z);
             else
-                oldPlayer.Postion = Vector3.zero;
+                oldPlayer.Postion = new VInt2();
         }
            
         curPlayer.BornIndex = bornIndex;
-        curPlayer.Postion = this._bornPosDic[curPlayer.BornIndex];
+        curPlayer.Postion = new VInt2((int)this._bornPosDic[curPlayer.BornIndex].x, (int)this._bornPosDic[curPlayer.BornIndex].z);
         this.SendNotification(NotiDefine.BattleBornUpdate);
     }
 
@@ -133,8 +223,15 @@ public class BattleProxy : BaseRemoteProxy
         if (curPlayer.BornIndex == 0)
             return;
         curPlayer.BornIndex = 0;
-        curPlayer.Postion = Vector3.zero;
+        curPlayer.Postion = new VInt2();
         this.SendNotification(NotiDefine.BattleBornUpdate);
+    }
+
+    public void SetPlayerPostion(int teamid,int x,int z)
+    {
+        BattlePlayer curPlayer = this.GetPlayer(teamid);
+        curPlayer.Postion.x = x;
+        curPlayer.Postion.y = z;
     }
 
 }//end class

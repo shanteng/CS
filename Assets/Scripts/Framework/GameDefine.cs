@@ -176,6 +176,11 @@ public class NotiDefine
     public const string BattleBornUpdate = "BattleBornUpdate";
     public const string BattleStateChangeNoti = "BattleStateChangeNoti";
     public const string BattleStartNoti = "BattleStartNoti";
+
+    public const string AttackPlayerEndJudge = "AttackPlayerEndJudge";
+
+
+    public const string ShowSureFight = "ShowSureFight";
 }
 
 public class ErrorCode
@@ -484,6 +489,7 @@ public class AttributeDefine
     public const string Speed = "Speed";
     public const string Blood = "Blood";
     public const string OrignalBlood = "OrignalBlood";
+    public const string MoveRange = "MoveRange";
 }
 
 
@@ -809,6 +815,10 @@ public class Team
         Attribute[AttributeDefine.Speed] = config.Speed * (1f + (float)armyConfig.SpeedRate / 100f);
         Attribute[AttributeDefine.Blood] = Mathf.RoundToInt(count * armyConfig.Blood);
         Attribute[AttributeDefine.OrignalBlood] = Attribute[AttributeDefine.Blood];
+
+        HeroLevelConfig configLevel = HeroLevelConfig.Instance.GetData(level);
+        HeroStarConfig configStar = HeroStarConfig.Instance.GetData(config.Star);
+        Attribute[AttributeDefine.MoveRange] = Mathf.RoundToInt(configStar.RangeBase * configLevel.RangeRate);
     }
 }
 
@@ -1019,6 +1029,15 @@ public enum BattleType
     AttackCity = 1,
 }
 
+public enum BattleSpotStatus
+{
+    Normal = 0,
+    MoveEnable,
+    MoveDisable,
+    CanAttack,
+    AttackDemageRange,
+};
+
 public enum BattleStatus
 {
     PreStart = 0,
@@ -1033,7 +1052,8 @@ public enum PlayerStatus
     Formation = 0,
     Wait = 1,
     Action = 2,
-    Dead = 3,
+    ActionFinished = 3,
+    Dead = 4,
 };
 
 public enum BattlePlace
@@ -1041,6 +1061,7 @@ public enum BattlePlace
     Attack = 1,
     Defense = 2,
 };
+
 
 public class BattleData
 {
@@ -1053,17 +1074,118 @@ public class BattleData
     public object Param;
 }
 
+public class PlayerBloodChangeData
+{
+    public int TeamID;
+    public int ChangeValue;//>0 加血 <0减血
+}
+
 public class BattlePlayer
 {
     public int TeamID;//我方>0,敌方<0
     public int HeroID;//上阵英雄
     public int Level;
+    public int ArmyID;
     public PlayerStatus Status;
    
     public Dictionary<string, float> Attributes;
     public float ActionCountDown;//下次出手倒计时
     public int BornIndex;//>0表示上阵了
-    public Vector3 Postion;//当前位置
+    public VInt2 Postion;//当前位置
+    public List<VInt2> ActionMoveCordinates;
+    public bool HasDoRoundActionFinish;//是否本回合已经行动完成
+
+    public List<VInt2> SkillFightRangeCordinates;
+    public List<string> SkillFightRangeCordinatesStrList;
+    public int _AttackSkillID = 0;
+    public List<VInt2> SkillDemageCordinates;
+
+    public int ComputeDemage(int skillid)
+    {
+        int attack = Mathf.RoundToInt(this.Attributes[AttributeDefine.Attack] * this.Attributes[AttributeDefine.Blood]);
+        if (skillid == 0)
+        {
+            //直接按照攻击数值输出
+            return attack;
+        }
+
+        //技能伤害额外去计算
+        return attack;
+    }
+
+    public int TakeDemage(int demage)
+    {
+        //根据防御属性算出最终减少的血量，以及是否死亡
+        int defense = Mathf.RoundToInt(this.Attributes[AttributeDefine.Defense] * this.Attributes[AttributeDefine.Blood]);
+        int descBlood = demage - defense;
+        if (descBlood <= 0)
+            descBlood = 1500;//最少打一滴血 测试写死100最少
+
+        int leftBlood = (int)this.Attributes[AttributeDefine.Blood] - descBlood;
+        if (leftBlood <= 0)
+        {
+            this.Status = PlayerStatus.Dead;
+            leftBlood = 0;
+        }
+        this.Attributes[AttributeDefine.Blood] = leftBlood;
+
+        return descBlood;
+    }
+
+    public void ComputeSkillFightRange(int skillid = 0)
+    {
+        //skillid 0-代表普通攻击
+        SkillFightRangeCordinates = new List<VInt2>();
+        this.SkillFightRangeCordinatesStrList = new List<string>();
+        //临时返回一个以自己为中心矩形范围，之后根据技能模板和技能等级等来计算
+        VInt2 centerPos = new VInt2(this.Postion.x, this.Postion.y);
+        int halfRange = 2;
+        int startX = centerPos.x - halfRange;
+        int endX = centerPos.x + halfRange;
+        int startZ = centerPos.y - halfRange;
+        int endZ = centerPos.y + halfRange;
+        for (int row = startX; row <= endX; ++row)
+        {
+            int corX = row;
+            for (int col = startZ; col <= endZ; ++col)
+            {
+                int corZ = col;
+                SkillFightRangeCordinates.Add(new VInt2(corX, corZ));
+                string key = UtilTools.combine(corX, "|", corZ);
+                SkillFightRangeCordinatesStrList.Add(key);
+            }
+        }
+    }
+
+    public void ComputeSkillDemageRange(VInt2 attackPostion)
+    {
+        //根据选中的技能来确定伤害范围
+        SkillDemageCordinates = new List<VInt2>();
+        //临时返回一个十字架，之后根据技能模板和技能等级等来计算
+        VInt2 centerPos = new VInt2(attackPostion.x, attackPostion.y);
+        int halfRange = 1;
+
+        SkillDemageCordinates.Add(new VInt2(centerPos.x, centerPos.y));
+
+        int startX = centerPos.x - halfRange;
+        int endX = centerPos.x + halfRange;
+        for (int row = startX; row <= endX; ++row)
+        {
+            if (row == centerPos.x)
+                continue;
+            SkillDemageCordinates.Add(new VInt2(row, centerPos.y));
+        }
+
+        int startZ = centerPos.y - halfRange;
+        int endZ = centerPos.y + halfRange;
+        for (int col = startZ; col <= endZ; ++col)
+        {
+            if (col == centerPos.y)
+                continue;
+            SkillDemageCordinates.Add(new VInt2(centerPos.x, col));
+        }
+
+    }
 
     public void InitMy(Team team, int morale, BattlePlace place)
     {
@@ -1072,6 +1194,7 @@ public class BattlePlayer
         this.HeroID = team.HeroID;
         Hero he = HeroProxy._instance.GetHero(this.HeroID);
         this.Level = he.Level;
+        this.ArmyID = team.ArmyTypeID;
         this.Status = PlayerStatus.Formation;
         this.BornIndex = 0;
         this.Attributes = new Dictionary<string, float>();
@@ -1084,8 +1207,8 @@ public class BattlePlayer
                 this.Attributes[key] = this.Attributes[key] * (1f - reduceAttr);
             }
         }
-        this.Postion = Vector3.zero;
-        this.ActionCountDown = 1500 / this.Attributes[AttributeDefine.Speed];
+        this.Postion = new VInt2();
+        this.ActionCountDown = 10f / this.Attributes[AttributeDefine.Speed];
     }
 
     public void InitNpc(int npcTeam,int born, int index, int battleSceneID,BattlePlace place)
@@ -1094,13 +1217,14 @@ public class BattlePlayer
         this.TeamID = -index;
         this.HeroID = configNpc.Hero;
         this.Level = configNpc.Level;
+        this.ArmyID = configNpc.Army;
         this.Status = PlayerStatus.Formation;
         this.BornIndex = born;
         
         //计算Npc的Attribute
         Team.ComputeTeamAttribute(out this.Attributes, configNpc.Hero, configNpc.Level, configNpc.Army, configNpc.Count);
-        this.Postion = Vector3.zero;
-        this.ActionCountDown = 100f / this.Attributes[AttributeDefine.Speed];
+        this.Postion = new VInt2();
+        this.ActionCountDown = 10f / this.Attributes[AttributeDefine.Speed];
     }
 }
 

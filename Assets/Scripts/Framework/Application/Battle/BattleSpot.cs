@@ -7,10 +7,10 @@ using UnityEngine.EventSystems;
 public class BattleSpot : MonoBehaviour
     , IPointerClickHandler
 {
-   
+    public List<Color> _Colors;
     private VInt2 Postion;
     private UnityAction<BattleSpot> _fun;
-
+    public VInt2 Pos => this.Postion;
 
     void Awake()
     {
@@ -20,7 +20,6 @@ public class BattleSpot : MonoBehaviour
     public void InitPostion(int x, int z)
     {
         this.Postion = new VInt2(x, z);
-        
     }
 
     public void AddEvent(UnityAction<BattleSpot> callBack)
@@ -28,6 +27,10 @@ public class BattleSpot : MonoBehaviour
         this._fun = callBack;
     }
 
+    public void ChangeColor(BattleSpotStatus spotStatus)
+    {
+        this.GetComponent<MeshRenderer>().material.SetColor("_Color", this._Colors[(int)spotStatus]);
+    }
  
 
     public void OnPointerClick(PointerEventData eventData)

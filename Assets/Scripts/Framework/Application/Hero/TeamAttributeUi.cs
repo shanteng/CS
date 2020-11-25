@@ -28,8 +28,8 @@ public class TeamAttributeUi : UIBase
         Team.ComputeTeamAttribute(out Attributes, configNpc.Hero, configNpc.Level, configNpc.Army, configNpc.Count);
 
         float blood = Attributes[AttributeDefine.Blood];
-        float atk = Attributes[AttributeDefine.Attack] / blood;
-        float def = Attributes[AttributeDefine.Defense] / blood;
+        float atk = Attributes[AttributeDefine.Attack];
+        float def = Attributes[AttributeDefine.Defense];
         float speed = Attributes[AttributeDefine.Speed];
 
         this._AttackTxt.FirstLabel.text = atk.ToString("0.#");
@@ -52,9 +52,9 @@ public class TeamAttributeUi : UIBase
             foreach (string key in team.Attributes.Keys)
             {
                 if (key.Equals(AttributeDefine.Attack))
-                    atk = team.Attributes[key] / (float)team.Blood;
+                    atk = team.Attributes[key];
                 else if (key.Equals(AttributeDefine.Defense))
-                    def = team.Attributes[key] / (float)team.Blood;
+                    def = team.Attributes[key];
                 if (key.Equals(AttributeDefine.Speed))
                     speed = team.Attributes[key];
                 if (key.Equals(AttributeDefine.Blood))

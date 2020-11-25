@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
+using System;
 
 public class BattleController : MonoBehaviour
 {
@@ -84,6 +86,307 @@ public class BattleController : MonoBehaviour
         this._BornRoot.gameObject.SetActive(false);
     }
 
+    public void OnStateChange(BattleStatus state)
+    {
+        if (state == BattleStatus.Judge)
+        {
+            //清除所有的地块状态
+            foreach (BattleSpot spot in this._SpotDic.Values)
+            {
+                spot.AddEvent(null);
+                spot.ChangeColor(BattleSpotStatus.Normal);
+            }
+        }
+        else if (state == BattleStatus.Action)
+        {
+            this.PlayerDoAction();
+        }
+    }
+
+    private void PlayerDoAction()
+    {
+        foreach (BattlePlayerUi pl in this._PlayerDic.Values)
+        {
+            pl.SetDoAction();
+        }
+        this.SetCurrentPlayerMoveRange();
+    }
+
+    public void DoAttack()
+    {
+        BattleProxy._instance.DoAttackAction();
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        player.HasDoRoundActionFinish = true;
+
+        BattlePlayerUi pl = this._PlayerDic[player.TeamID];
+        pl.PlayAnimation(SpineUiPlayer.STATE_ATTACK, 0.2f);
+    }
+
+    public void TakeDeamge(List<PlayerBloodChangeData> players)
+    {
+        foreach (PlayerBloodChangeData data in players)
+        {
+            BattlePlayerUi pl = this._PlayerDic[data.TeamID];
+            //播放被击动画
+            pl.DoBloodChange(data);
+        }
+        //等待各种伤害数字以及被击中的人的被打击动画播放完毕
+        CoroutineUtil.GetInstance().WaitTime(2f, true, OnAttackEnd);
+    }
+    
+
+    private void OnAttackEnd(object[] param)
+    {
+        //删除已经死亡的模型
+        List<int> rms = new List<int>();
+        foreach (BattlePlayerUi pl in this._PlayerDic.Values)
+        {
+            BattlePlayer data = BattleProxy._instance.GetPlayer(pl.ID);
+            if (data.Status == PlayerStatus.Dead)
+            {
+                rms.Add(data.TeamID);
+            }
+        }
+
+        foreach (int rmindex in rms)
+        {
+            Destroy(this._PlayerDic[rmindex].gameObject);
+            _PlayerDic.Remove(rmindex);
+        }
+
+        //清除所有地块状态，等待玩家点击结束回合进入下一轮
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        //移除可移动状态
+        BattleSpot spot;
+        if (player.ActionMoveCordinates != null)
+        {
+            foreach (VInt2 Pos in player.ActionMoveCordinates)
+            {
+                string key = UtilTools.combine(Pos.x, "|", Pos.y);
+                if (this._SpotDic.TryGetValue(key, out spot))
+                {
+                    spot.ChangeColor(BattleSpotStatus.Normal);
+                    spot.AddEvent(null);
+                }
+            }
+        }
+
+        if (player.SkillFightRangeCordinates != null)
+        {
+            foreach (VInt2 Pos in player.SkillFightRangeCordinates)
+            {
+                string key = UtilTools.combine(Pos.x, "|", Pos.y);
+                if (this._SpotDic.TryGetValue(key, out spot))
+                {
+                    spot.ChangeColor(BattleSpotStatus.Normal);
+                    spot.AddEvent(null);
+                }
+            }
+        }
+
+        if (player.SkillDemageCordinates != null)
+        {
+            foreach (VInt2 Pos in player.SkillDemageCordinates)
+            {
+                string key = UtilTools.combine(Pos.x, "|", Pos.y);
+                if (this._SpotDic.TryGetValue(key, out spot))
+                {
+                    spot.ChangeColor(BattleSpotStatus.Normal);
+                    spot.AddEvent(null);
+                }
+            }
+        }
+
+        BattleProxy._instance.OnPlayerActionFinishded(player.TeamID);
+        //通知UI更新
+        MediatorUtil.SendNotification(NotiDefine.AttackPlayerEndJudge);
+        if (player.TeamID < 0)//玩家自己，等待点击结束回合
+        {
+            //自动进入下一轮
+            BattleProxy._instance.DoNextRound();
+        }
+    }
+
+    public void SetAttackRange(int skillid)
+    {
+        //skillid 0-代表普通攻击
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        player._AttackSkillID = skillid;
+        //移除可移动状态，
+        foreach (VInt2 movePos in player.ActionMoveCordinates)
+        {
+            string key = UtilTools.combine(movePos.x, "|", movePos.y);
+            this._SpotDic[key].ChangeColor(BattleSpotStatus.Normal);
+            this._SpotDic[key].AddEvent(null);
+        }
+
+        //设置攻击范围
+        player.ComputeSkillFightRange(skillid);
+        foreach (VInt2 attackPos in player.SkillFightRangeCordinates)
+        {
+            string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
+            if (this._SpotDic.ContainsKey(key) == false)
+                continue;//不在范围内
+           
+            this._SpotDic[key].ChangeColor(BattleSpotStatus.CanAttack);
+            this._SpotDic[key].AddEvent(OnClickAttackSpot);
+        }
+        //等待玩家选择要攻击的地块坐标
+    }
+
+    private void OnClickAttackSpot(BattleSpot spot)
+    {
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        //清除旧的伤害范围
+        if (player.SkillDemageCordinates != null && player.SkillDemageCordinates.Count > 0)
+        {
+            foreach (VInt2 oldPos in player.SkillDemageCordinates)
+            {
+                string key = UtilTools.combine(oldPos.x, "|", oldPos.y);
+                if (this._SpotDic.ContainsKey(key) == false)
+                    continue;//不在范围内
+                if(player.SkillFightRangeCordinatesStrList.Contains(key))//说明是攻击范围
+                    this._SpotDic[key].ChangeColor(BattleSpotStatus.CanAttack);
+                else
+                    this._SpotDic[key].ChangeColor(BattleSpotStatus.Normal);
+            }
+        }
+
+        //设置显示新的伤害范围
+        player.ComputeSkillDemageRange(spot.Pos);
+        foreach (VInt2 attackPos in player.SkillDemageCordinates)
+        {
+            string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
+            if (this._SpotDic.ContainsKey(key) == false)
+                continue;//不在范围内
+            this._SpotDic[key].ChangeColor(BattleSpotStatus.AttackDemageRange);
+        }
+
+
+        MediatorUtil.SendNotification(NotiDefine.ShowSureFight);
+    }
+
+    private void SetCurrentPlayerMoveRange()
+    {
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        if (player == null)
+            return;
+        player.ActionMoveCordinates = new List<VInt2>();
+        int halfRange = (int)player.Attributes[AttributeDefine.MoveRange];
+        VInt2 centerPos = new VInt2(player.Postion.x, player.Postion.y);
+        int startX = centerPos.x - halfRange;
+        int endX = centerPos.x + halfRange;
+        int startZ = centerPos.y - halfRange;
+        int endZ = centerPos.y + halfRange;
+
+        for (int row = startX; row <= endX; ++row)
+        {
+            int corX = row;
+            for (int col = startZ; col <= endZ; ++col)
+            {
+                int corZ = col;
+                string key = UtilTools.combine(corX, "|", corZ);
+                if (this._SpotDic.ContainsKey(key) == false)
+                    continue;//不在范围内
+                bool spotOccupy = BattleProxy._instance.IsSpotOccupy(corX, corZ, player.TeamID);
+                if (spotOccupy)
+                    this._SpotDic[key].ChangeColor(BattleSpotStatus.MoveDisable);
+                else
+                    this._SpotDic[key].ChangeColor(BattleSpotStatus.MoveEnable);
+                if (spotOccupy == false)
+                {
+                    player.ActionMoveCordinates.Add(new VInt2(corX, corZ));
+                    if (player.TeamID > 0)//添加地块点击事件
+                    {
+                        this._SpotDic[key].AddEvent(OnClickMoveSpot);
+                    }
+                }
+            }//end for col
+        }//end for row
+
+        //如果是Npc执行一下Ai
+        if (player.TeamID < 0)
+            this.DoAiAction(player);
+        else
+            this.DoMyAction();
+    }
+
+    private void DoMyAction()
+    {
+         
+    }
+
+    private void DoAiAction(BattlePlayer player)
+    {
+        //暂时随便移动一下
+        int randomIndex = UtilTools.RangeInt(0, player.ActionMoveCordinates.Count-1);
+        float moveSecs = this.PlayerDoMoveTo(player.ActionMoveCordinates[randomIndex]);
+        CoroutineUtil.GetInstance().WaitTime(moveSecs, true, OnAiEnd);
+    }
+
+    private void OnAiEnd(object[] param)
+    {
+        //进入下一轮
+        BattleProxy._instance.DoNextRound();
+    }
+
+    private void OnClickMoveSpot(BattleSpot spot)
+    {
+         this.PlayerDoMoveTo(spot.Pos);
+    }
+
+    private bool _isMoving = false;
+    private float _moveDelta = 0.3f;
+    private float PlayerDoMoveTo(VInt2 pos)
+    {
+        float needSecs = 0f;
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        if (player == null || _isMoving)
+            return needSecs;
+        if (pos.x == player.Postion.x && pos.y == player.Postion.y)
+            return needSecs;
+
+        VInt2 startPos = new VInt2(player.Postion.x, player.Postion.y);
+
+        if (pos.x != startPos.x)
+            needSecs += _moveDelta;
+        if (pos.y != startPos.y)
+            needSecs += _moveDelta;
+
+        this._isMoving = true;
+        BattleProxy._instance.SetPlayerPostion(player.TeamID, pos.x, pos.y);
+        BattlePlayerUi pl = this._PlayerDic[player.TeamID];
+        pl.PlayAnimation(SpineUiPlayer.STATE_WALK, needSecs);
+
+        //Tween过去 先x后z
+        if (pos.x != startPos.x)
+        {
+            pl.transform.DOMoveX(pos.x, _moveDelta).onComplete = () =>
+            {
+                if (pos.y != startPos.y)
+                {
+                    pl.transform.DOMoveZ(pos.y, _moveDelta).onComplete = () =>
+                    {
+                        this._isMoving = false;
+                    };
+                }
+                else
+                {
+                    this._isMoving = false;
+                }
+            };
+        }
+        else
+        {
+            pl.transform.DOMoveZ(pos.y, _moveDelta).onComplete = () =>
+            {
+                this._isMoving = false;
+            };
+        }
+
+        return needSecs;
+    }
+
     private void Init()
     {
         this._prefabDic = new Dictionary<string, GameObject>();
@@ -127,6 +430,7 @@ public class BattleController : MonoBehaviour
                 Vector3 pos = new Vector3(corX, 0, corZ);
                 BattleSpot script = this.CreatePrefab<BattleSpot>("BattleSpot", pos.ToString(), pos, this._SpotRoot);
                 script.transform.localEulerAngles = new Vector3(90, 0, 0);
+                script.InitPostion(corX, corZ);
                 string key = UtilTools.combine(corX, "|", corZ);
                 this._SpotDic.Add(key, script);
             }

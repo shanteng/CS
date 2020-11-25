@@ -540,6 +540,12 @@ public class TeamProxy : BaseRemoteProxy
         if (json.Equals(string.Empty) == false)
         {
             this._teams = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Team>>(json);
+            //计算一下存储
+            foreach (Team t in this._teams.Values)
+            {
+                t.ComputeAttribute();
+            }
+            this.DoSaveTeams();
         }
         else
         {

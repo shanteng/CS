@@ -102,6 +102,9 @@
     public const string ArmyRecruitFinish = "ArmyRecruitFinish";
     public const string SelectUpPostion = "SelectUpPostion";
 
+    public const string BloodAdd = "BloodAdd";
+    public const string BloodDesc = "BloodDesc";
+
     public const string ArriveYet = "ArriveYet";
     public const string Moving = "Moving";
 

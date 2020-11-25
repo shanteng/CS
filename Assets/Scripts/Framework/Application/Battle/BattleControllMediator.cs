@@ -21,6 +21,7 @@ public class BattleControllMediator : BaseNoWindowMediator
         m_lInterestNotifications.Add(NotiDefine.LoadSceneFinish);
         m_lInterestNotifications.Add(NotiDefine.EnterBattleSuccess);
         m_lInterestNotifications.Add(NotiDefine.BattleStartNoti);
+        m_lInterestNotifications.Add(NotiDefine.BattleStateChangeNoti);
     }
 
     public override void HandleNotification(INotification notification)
@@ -50,6 +51,14 @@ public class BattleControllMediator : BaseNoWindowMediator
                     if (_isLoaded)
                     {
                         BattleController.Instance.StartBattle();
+                    }
+                    break;
+                }
+            case NotiDefine.BattleStateChangeNoti:
+                {
+                    if (_isLoaded)
+                    {
+                        BattleController.Instance.OnStateChange((BattleStatus)notification.Body);
                     }
                     break;
                 }

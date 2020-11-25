@@ -15,6 +15,7 @@ public class SpeedPlayerUi : UIBase
     private float _needSecs;
     private bool _DoMove = false;
     private Coroutine _cor;
+    public static float MoveX = 600;
 
     public void SetData(int id)
     {
@@ -23,39 +24,35 @@ public class SpeedPlayerUi : UIBase
         BattlePlayer player = BattleProxy._instance.GetPlayer(this._teamid);
         this._Head.sprite = ResourcesManager.Instance.GetHeroSmallSprite(player.HeroID);
         this._needSecs = player.ActionCountDown;
-        this._rect.anchoredPosition = new Vector2(-750, 0);
+        this._rect.anchoredPosition = new Vector2(-MoveX, 0);
         this.SetMove(false);
     }
 
     public void StartWaitMove()
     {
+        this._rect.anchoredPosition = _fromPos;
+        this.MoveSces = 0;
         this.SetMove(true);
-        this._rect.anchoredPosition = new Vector2(-750, 0);
-        if (this._cor != null)
-        {
-            StopCoroutine(this._cor);
-            this._cor = null;
-        }
-        this._cor = StartCoroutine(MoveTo(new Vector2(750, 0)));
     }
-    
 
-    private IEnumerator MoveTo(Vector2 pos)
+    float MoveSces = 0;
+    Vector2 _targetPos = new Vector2(MoveX, 0);
+    Vector2 _fromPos = new Vector2(-MoveX, 0);
+    private void Update()
     {
-        float t = 0;
-        while (_DoMove)
+        if (_DoMove == false)
+            return;
+        MoveSces += Time.deltaTime;
+        float a = MoveSces / this._needSecs;
+        this._rect.anchoredPosition = Vector2.Lerp(_fromPos, _targetPos, a);
+        if (a >= 1.0f)
         {
-            t += Time.deltaTime;
-            float a = t / this._needSecs;
-            this._rect.anchoredPosition = Vector2.Lerp(new Vector2(-750, 0), pos, a);
-            if (a >= 1.0f)
-            {
-                BattleProxy._instance.OnTeamBegin(this.ID);
-                break;
-            }
-            yield return null;
+            this._DoMove = false;
+            this.MoveSces = 0;
+            BattleProxy._instance.OnTeamBegin(this.ID);
         }
     }
+
 
     public void SetMove(bool isMove)
     {
