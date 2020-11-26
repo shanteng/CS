@@ -20,7 +20,8 @@ public enum PopType
     QUEST_CITY,
     HERO_TALENT,
     TEXT,
-    ATTACK_GROUPS,
+    ATTACK_GROUP,
+    HERO_DETAILS,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -54,6 +55,23 @@ public class PopupFactory : SingletonFactory<PopupFactory>
                     }
                     break;
                 }
+            case NotiDefine.GroupReachCityNoti:
+                {
+                    if (this._curShowType == PopType.ATTACK_GROUP)
+                    {
+                        (this._curShowWin as AttackCityGroupPop).UpdateState();
+                    }
+                    break;
+                }
+            case NotiDefine.GroupBackCityNoti:
+                {
+                    if (this._curShowType == PopType.ATTACK_GROUP)
+                    {
+                        string gpid = (string)notification.Body;
+                        (this._curShowWin as AttackCityGroupPop).OnBackCity(gpid);
+                    }
+                    break;
+                }
         }
     }
     public void ShowConfirmBy(ConfirmData data)
@@ -77,6 +95,16 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.TEXT, content);
     }
 
+    public void ShowHeroDetails(int id)
+    {
+        this.ShowPop(PopType.HERO_DETAILS, id);
+    }
+
+    public void ShowAttackGroup(string id)
+    {
+        this.ShowPop(PopType.ATTACK_GROUP, id);
+    }
+
     public void ShowHeroTalent(int id)
     {
         this.ShowPop(PopType.HERO_TALENT, id);
@@ -98,10 +126,6 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         this.ShowPop(PopType.CITY_INFO, city);
     }
 
-    public void ShowAttackGroups(int city)
-    {
-        this.ShowPop(PopType.ATTACK_GROUPS, city);
-    }
 
     public void ShowBuildingInfo(string bdKey)
     {
@@ -215,9 +239,14 @@ public class PopupFactory : SingletonFactory<PopupFactory>
                     _curShowWin = InitText();
                     break;
                 }
-            case PopType.ATTACK_GROUPS:
+            case PopType.ATTACK_GROUP:
                 {
-                    _curShowWin = InitAttackCityGroup();
+                    _curShowWin = InitAttackGroup();
+                    break;
+                }
+            case PopType.HERO_DETAILS:
+                {
+                    _curShowWin = InitHeroDetails();
                     break;
                 }
         }
@@ -318,6 +347,14 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         return scriptClone;
     }
 
+    protected Popup InitAttackGroup()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("AttackGroupPop");
+        Popup script = view.GetComponent<Popup>();
+        AttackCityGroupPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<AttackCityGroupPop>();
+        return scriptClone;
+    }
+
     protected Popup InitText()
     {
         GameObject view = ResourcesManager.Instance.LoadPopupRes("TextPop");
@@ -326,11 +363,13 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         return scriptClone;
     }
 
-    protected Popup InitAttackCityGroup()
+    protected Popup InitHeroDetails()
     {
-        GameObject view = ResourcesManager.Instance.LoadPopupRes("CityAttackGroupPop");
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("HeroDetailsPop");
         Popup script = view.GetComponent<Popup>();
-        CityAttackGroupPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<CityAttackGroupPop>();
+        HeroDetailsPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<HeroDetailsPop>();
         return scriptClone;
     }
+
+
 }//end class

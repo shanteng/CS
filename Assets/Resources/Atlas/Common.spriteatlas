@@ -67,7 +67,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 494273
+    totalSpriteSurfaceArea: 506241
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -219,6 +219,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e0a52d6fa30868f4db961e9a82b8f714, type: 3}
   - {fileID: 21300000, guid: 81b8b37f42357bb419e512d6b353222c, type: 3}
   - {fileID: 21300000, guid: 983f409f3d88ece4cb8e1edec06394d9, type: 3}
+  - {fileID: 21300000, guid: 2c7a98afd298b5648ab7e77896b85c28, type: 3}
   - {fileID: 21300000, guid: 6cfe59af91383d74d9a15a405769f72e, type: 3}
   - {fileID: 21300000, guid: 30c3b4bfcb879a74faf36acae7edef96, type: 3}
   - {fileID: 21300000, guid: 19a3c1dfa78abd54cb6aeecf668303c5, type: 3}
@@ -373,6 +374,7 @@ SpriteAtlas:
   - wood
   - OP_ATK
   - bgframe
+  - defaultBig
   - icon01
   - Op_qiecuo
   - title_chendi

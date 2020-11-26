@@ -17,19 +17,29 @@ public class BattleProxy : BaseRemoteProxy
         _instance = this;
     }
 
-    public void EnterBattle(BattleData data)
+    public bool EnterBattle(BattleData data)
     {
+        if(data.Players.Count == 0)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoTeamCanFight);
+            return false;
+        }
         this._data = data;
         this.SendNotification(NotiDefine.EnterBattleSuccess,data.Id);//加载场景，进行布阵
+        return true;
         //测试写死直接胜利
         //this.BattleEnd(true);
     }
 
-    public void DoAttackAction()
+    public void DoPlayerAttackAction()
     {
         BattlePlayer actionPlayer = this.GetActionPlayer();
         //计算所有被伤害的人
         int skillID = actionPlayer._AttackSkillID;
+        if (skillID < 0)
+            return;
+
+        int attackerTeamID = actionPlayer.TeamID;
         int AttackDemage = actionPlayer.ComputeDemage(skillID);//根据技能和属性计算出本次的输出伤害
         List<PlayerBloodChangeData> attackPlayers = new List<PlayerBloodChangeData>();
         foreach (VInt2 attackPos in actionPlayer.SkillDemageCordinates)
@@ -38,17 +48,56 @@ public class BattleProxy : BaseRemoteProxy
             if (posPlayer == null || posPlayer.Status != PlayerStatus.Wait)
                 continue;
             int teamvalue = actionPlayer.TeamID * posPlayer.TeamID;
+
             if (teamvalue > 0)
                 continue;//相同队伍的不受伤害
             int loseBlood = posPlayer.TakeDemage(AttackDemage);
+
             PlayerBloodChangeData kv = new PlayerBloodChangeData();
             kv.TeamID = posPlayer.TeamID;
             kv.ChangeValue = -loseBlood;
             attackPlayers.Add(kv);
         }
 
+        //判断战斗结束
+        bool hasAliveOpppTeamID = false;
+        foreach (BattlePlayer pl in this.Data.Players.Values)
+        {
+            int teamvalue = actionPlayer.TeamID * pl.TeamID;
+            if (teamvalue < 0 && pl.Attributes[AttributeDefine.Blood] > 0)
+            {
+                hasAliveOpppTeamID = true;
+                break;
+            }
+        }
+
+        if (hasAliveOpppTeamID == false)
+        {
+            //判断战斗结束，胜利和失败
+            this.DoEndBattleResult(attackerTeamID > 0);
+        }
+
         //播放完毕动画再去处理UI
         BattleController.Instance.TakeDeamge(attackPlayers);
+    }
+
+    public void DoEndBattleResult(bool IsWin)
+    {
+        this._data.IsGameOver = true;
+        this._data.IsWin = IsWin;
+        this._data.Status = BattleStatus.End;
+        BattleController.Instance.StopAi();
+        //进行战斗数据结算
+        //根据上阵伤害，平均分配战斗經驗
+
+        //城市攻占
+        if (this._data.Type == BattleType.AttackCity)
+        {
+            int TargetCityID = (int)BattleProxy._instance.Data.Param;
+            if(this._data.IsWin)
+                WorldProxy._instance.DoOwnCity(TargetCityID);
+            TeamProxy._instance.AttackCityEnd(TargetCityID, this._data);
+        }
     }
 
     public BattlePlayer GetPlayerBy(VInt2 pos)
@@ -85,7 +134,7 @@ public class BattleProxy : BaseRemoteProxy
         pl.SkillFightRangeCordinates = null;
         pl.SkillFightRangeCordinatesStrList = null;
         pl.SkillDemageCordinates = null;
-        pl._AttackSkillID = 0;
+        pl._AttackSkillID = -1;
     }
 
     public void OnTeamBegin(int teamid)
@@ -131,24 +180,6 @@ public class BattleProxy : BaseRemoteProxy
         this._data.Round = 1;
         this.SendNotification(NotiDefine.BattleStartNoti);
     }
-
-    public void BattleEnd(bool isSuccess)
-    {
-        if (this.Data.Type == BattleType.AttackCity)
-        {
-            string groupid = (string)this.Data.Param;
-            Group gp = TeamProxy._instance.GetGroup(groupid);
-            if (gp == null) return;
-            if (isSuccess)
-                WorldProxy._instance.DoOwnCity(gp.TargetCityID);
-            TeamProxy._instance.AttackCityEnd(groupid, isSuccess);
-        }
-        this.SendNotification(NotiDefine.BattleEndNoti);
-    }
-
-     
-
-
 
     public bool IsSpotOccupy(int x, int z, int teamid)
     {

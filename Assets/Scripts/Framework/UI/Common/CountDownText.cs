@@ -11,7 +11,7 @@ public class CountDownText : UIBase
     private long _expire = 0;
     private Coroutine _curCor;
     private string _LanKey;
-
+    private bool _needHide;
 
     private void Start()
     {
@@ -25,8 +25,9 @@ public class CountDownText : UIBase
             this.StopCoroutine(_curCor);
     }
 
-    public void DoCountDown(long expire,string lanKey = "")
+    public void DoCountDown(long expire,string lanKey = "",bool NeedReachHide = false)
     {
+        this._needHide = NeedReachHide;
         this._LanKey = lanKey;
         this._expire = expire;
         if (this._curCor != null)
@@ -53,11 +54,14 @@ public class CountDownText : UIBase
     IEnumerator CountDown()
     {
         WaitForSeconds waitYield = new WaitForSeconds(1f);
-        while (this._expire > GameIndex.ServerTime)
+        while (this._expire >= GameIndex.ServerTime)
         {
             this.SetCD();
             yield return waitYield;
         }
+
+        if (this._needHide)
+            this._CDTxt.text = "";
         this._curCor = null;
     }
 

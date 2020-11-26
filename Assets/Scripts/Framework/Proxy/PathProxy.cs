@@ -26,6 +26,14 @@ public class PathProxy : BaseRemoteProxy
         this.SendNotification(NotiDefine.PathAddNoti, path);
     }
 
+    public PathData GetPath(string id)
+    {
+        PathData data;
+        if (this._paths.TryGetValue(id, out data))
+            return data;
+        return null;
+    }
+
     public void RemovePath(string pathID)
     {
         this._paths.Remove(pathID);

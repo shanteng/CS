@@ -53,7 +53,7 @@ public class PathItem : ItemRender
     IEnumerator CountDown()
     {
         WaitForSeconds waitYield = new WaitForSeconds(1f);
-        while (this._ExpireTime > GameIndex.ServerTime)
+        while (this._ExpireTime >= GameIndex.ServerTime)
         {
             this.SetCD();
             yield return waitYield;

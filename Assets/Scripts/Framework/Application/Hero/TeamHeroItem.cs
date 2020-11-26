@@ -27,6 +27,7 @@ public class TeamHeroItem : ItemRender
 
     public UITexts _StateTxt;
     private int _teamID;
+    private int _heroID;
     private bool _isOpen;
 
     public int ID => this._teamID;
@@ -46,9 +47,10 @@ public class TeamHeroItem : ItemRender
 
     private void OnHeroClick(UIButton btn)
     {
-        if (this._isOpen == false)
+        if (this._isOpen == false || _heroID == 0)
             return;
-        MediatorUtil.ShowMediator(MediatorDefine.SET_TEAM_HERO, this.ID);
+        PopupFactory.Instance.ShowHeroDetails(this._heroID);
+        //MediatorUtil.ShowMediator(MediatorDefine.SET_TEAM_HERO, this.ID);
     }
 
     protected override void setDataInner(ScrollData data)
@@ -63,8 +65,8 @@ public class TeamHeroItem : ItemRender
         Team team =  TeamProxy._instance.GetTeam(id);
         int openLevel = 0;
         _isOpen = TeamProxy._instance.IsTeamOpen(id, out openLevel);
-        int heroID = team.HeroID;
-        Hero hero = HeroProxy._instance.GetHero(heroID);
+        _heroID = team.HeroID;
+        Hero hero = HeroProxy._instance.GetHero(_heroID);
 
         bool isIdleState = _isOpen && team.Status == (int)TeamStatus.Idle;
 
@@ -77,7 +79,7 @@ public class TeamHeroItem : ItemRender
 
        
         this._TeamAttrUi.gameObject.SetActive(_isOpen && hero != null);
-        int blood = team.Blood ;
+        int blood = team.ArmyCount;
         int maxBlood = 1;
         int armyId = 0;
         if (_isOpen == false)
@@ -87,8 +89,8 @@ public class TeamHeroItem : ItemRender
         }
         else if (_isOpen && hero != null)
         {
-            this._rateUi.SetData(heroID);
-            this._HeadUi.SetData(heroID);
+            this._rateUi.SetData(_heroID);
+            this._HeadUi.SetData(_heroID);
             armyId = team.ArmyTypeID;
             maxBlood = hero.MaxBlood;
         }

@@ -83,6 +83,23 @@ public class TeamAttackView : MonoBehaviour
         else if (data._Key.Equals("Team"))
         {
             int teamid = (int)data._Param;
+            //判断体力是否够用
+            Team t = TeamProxy._instance.GetTeam(teamid);
+            Hero hero = HeroProxy._instance.GetHero(t.HeroID);
+            if (t.ArmyCount == 0)
+            {
+                PopupFactory.Instance.ShowErrorNotice(ErrorCode.NoArmyNoTeam);
+                return;
+            }
+
+            ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.HeroCostEnegry);
+            int CostEnegry = cfgconst.IntValues[0];
+            if (hero.GetEnegry() < CostEnegry)
+            {
+                PopupFactory.Instance.ShowErrorNotice(ErrorCode.HeroNoEnegry);
+                return;
+            }
+
             if (this.FightTeamList.Contains(teamid))
                 this.FightTeamList.Remove(teamid);
             else
@@ -128,7 +145,7 @@ public class TeamAttackView : MonoBehaviour
         {
             if (cityInfo.IsOwn)
             {
-                TeamCityItemData data = new TeamCityItemData(cityInfo);
+                TeamCityItemData data = new TeamCityItemData(cityInfo, Goto);
                 this._CityGrid.Data.Add(data);
             }
         }

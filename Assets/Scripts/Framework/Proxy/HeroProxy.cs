@@ -369,7 +369,6 @@ public class HeroProxy : BaseRemoteProxy
     {
         Hero hero = this.GetHero(id);
         hero.ChangeEnegry(addValue);
-        this.DoSaveHeros();
     }
 
     public void DoOwnHero(CostData data)

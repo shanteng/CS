@@ -214,8 +214,8 @@ public class HomeLandMediator : BaseNoWindowMediator
             //从战斗场景退出的
             if (BattleProxy._instance.Data.Type == BattleType.AttackCity)
             {
-                Group gp = TeamProxy._instance.GetGroup((string)BattleProxy._instance.Data.Param);
-                VInt2 cityPost = WorldProxy._instance.GetCityCordinate(gp.TargetCityID);
+                int TargetCityID = (int)BattleProxy._instance.Data.Param;
+                VInt2 cityPost = WorldProxy._instance.GetCityCordinate(TargetCityID);
                 ViewControllerLocal.GetInstance().DirectGoTo(cityPost);
             }
         }

@@ -107,6 +107,8 @@
 
     public const string ArriveYet = "ArriveYet";
     public const string Moving = "Moving";
+    public const string Backing = "Backing";
+
 
     public const string TeamAttrTips = "TeamAttrTips";
 

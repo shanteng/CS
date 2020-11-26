@@ -95,7 +95,7 @@ public class SetTeamHeroView : MonoBehaviour
         this._teamArmyCount = 0;
 
         this._teamArmyID = team.ArmyTypeID;
-        this._teamArmyCount = team.Blood;
+        this._teamArmyCount = team.ArmyCount;
 
         Hero teamHero = HeroProxy._instance.GetHero(this._teamHeroID);
         int selectIndex = -1;
@@ -177,7 +177,7 @@ public class SetTeamHeroView : MonoBehaviour
             return;
 
         Hero hero = HeroProxy._instance.GetHero(this._selectHeroId);
-        this._detailsUi.SetData(id);
+        this._detailsUi.SetData(id,true);
         this.SetArmy(team.ArmyTypeID);
 
         HeroConfig configHero = HeroConfig.Instance.GetData(hero.Id);
@@ -226,7 +226,7 @@ public class SetTeamHeroView : MonoBehaviour
             this._attrUi.SetData(selectid);
 
         //血量
-        this._teamOriginalBlood = team.Blood;
+        this._teamOriginalBlood = team.ArmyCount;
         if (this._selectArmyId != team.ArmyTypeID)
             this._teamOriginalBlood = 0;
 

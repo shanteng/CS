@@ -14,6 +14,9 @@ public class BattleController : MonoBehaviour
     public List<GameObject> _prefabs;
     private Dictionary<string, GameObject> _prefabDic;
 
+    public List<GameObject> _EffectPrefabs;
+    private Dictionary<string, GameObject> _EffectPrefabDic;
+
     public Transform _BornRoot;
     private Dictionary<int,Vector3> _BornPostions;
     private Dictionary<int,BornSpot> _AttackBorns;
@@ -110,16 +113,50 @@ public class BattleController : MonoBehaviour
             pl.SetDoAction();
         }
         this.SetCurrentPlayerMoveRange();
+
+        //如果是Npc执行一下Ai
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        if (player != null)
+        {
+            if (player.TeamID < 0)
+                this.DoAiAction(player);
+            else
+                this.DoMyAction();
+        }
     }
 
+    private float _skillSecs = 2f;
     public void DoAttack()
     {
-        BattleProxy._instance.DoAttackAction();
+        BattleProxy._instance.DoPlayerAttackAction();
         BattlePlayer player = BattleProxy._instance.GetActionPlayer();
         player.HasDoRoundActionFinish = true;
 
         BattlePlayerUi pl = this._PlayerDic[player.TeamID];
-        pl.PlayAnimation(SpineUiPlayer.STATE_ATTACK, 0.2f);
+        pl.PlayAnimation(SpineUiPlayer.STATE_ATTACK, 0.3f);
+        //再AttackRange显示特效
+        BattleSpot spot;
+        foreach (VInt2 attackPos in player.SkillDemageCordinates)
+        {
+            string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
+            if (this._SpotDic.TryGetValue(key, out spot))
+            {
+                spot.AddEvent(null);
+                BattleEffect effect = this.CreateBattleEffect(BattleEffect.TuCi, new Vector3(attackPos.x, 0, attackPos.y));
+                effect.gameObject.SetActive(true);
+                GameObject.Destroy(effect.gameObject, effect.Sces);
+                _skillSecs = effect.Sces;
+            }
+        }
+
+        foreach (VInt2 attackPos in player.SkillFightRangeCordinates)
+        {
+            string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
+            if (this._SpotDic.TryGetValue(key, out spot))
+            {
+                spot.AddEvent(null);
+            }
+        }
     }
 
     public void TakeDeamge(List<PlayerBloodChangeData> players)
@@ -131,9 +168,61 @@ public class BattleController : MonoBehaviour
             pl.DoBloodChange(data);
         }
         //等待各种伤害数字以及被击中的人的被打击动画播放完毕
-        CoroutineUtil.GetInstance().WaitTime(2f, true, OnAttackEnd);
+        CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd);
     }
-    
+
+    public void BackToMoveState()
+    {
+        //返回到可移动状态的地块
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        BattleSpot spot;
+        if (player.SkillFightRangeCordinates != null)
+        {
+            foreach (VInt2 Pos in player.SkillFightRangeCordinates)
+            {
+                string key = UtilTools.combine(Pos.x, "|", Pos.y);
+                if (this._SpotDic.TryGetValue(key, out spot))
+                {
+                    spot.ChangeColor(BattleSpotStatus.Normal);
+                    spot.AddEvent(null);
+                }
+            }
+        }
+
+        if (player.SkillDemageCordinates != null)
+        {
+            foreach (VInt2 Pos in player.SkillDemageCordinates)
+            {
+                string key = UtilTools.combine(Pos.x, "|", Pos.y);
+                if (this._SpotDic.TryGetValue(key, out spot))
+                {
+                    spot.ChangeColor(BattleSpotStatus.Normal);
+                    spot.AddEvent(null);
+                }
+            }
+        }
+
+        foreach (VInt2 Pos in player.ActionMoveCordinates)
+        {
+            string key = UtilTools.combine(Pos.x, "|", Pos.y);
+            if (this._SpotDic.ContainsKey(key) == false)
+                continue;//不在范围内
+            bool spotOccupy = BattleProxy._instance.IsSpotOccupy(Pos.x, Pos.y, player.TeamID);
+            if (spotOccupy)
+                this._SpotDic[key].ChangeColor(BattleSpotStatus.MoveDisable);
+            else
+                this._SpotDic[key].ChangeColor(BattleSpotStatus.MoveEnable);
+            if (spotOccupy == false && player.TeamID > 0)
+            {
+                this._SpotDic[key].AddEvent(OnClickMoveSpot);
+            }
+        }
+
+        player.SkillFightRangeCordinates = null;
+        player.SkillFightRangeCordinatesStrList = null;
+        player.SkillDemageCordinates = null;
+        player._AttackSkillID = -1;
+    }
 
     private void OnAttackEnd(object[] param)
     {
@@ -200,7 +289,7 @@ public class BattleController : MonoBehaviour
         BattleProxy._instance.OnPlayerActionFinishded(player.TeamID);
         //通知UI更新
         MediatorUtil.SendNotification(NotiDefine.AttackPlayerEndJudge);
-        if (player.TeamID < 0)//玩家自己，等待点击结束回合
+        if (player.TeamID < 0 && BattleProxy._instance.Data.IsGameOver == false)//玩家自己，等待点击结束回合
         {
             //自动进入下一轮
             BattleProxy._instance.DoNextRound();
@@ -304,11 +393,7 @@ public class BattleController : MonoBehaviour
             }//end for col
         }//end for row
 
-        //如果是Npc执行一下Ai
-        if (player.TeamID < 0)
-            this.DoAiAction(player);
-        else
-            this.DoMyAction();
+        
     }
 
     private void DoMyAction()
@@ -316,18 +401,30 @@ public class BattleController : MonoBehaviour
          
     }
 
+    public void StopAi()
+    {
+        if (this._cor != null)
+        {
+            CoroutineUtil.GetInstance().Stop(this._cor);
+            this._cor = null;
+        }
+    }
+
+    Coroutine _cor;
     private void DoAiAction(BattlePlayer player)
     {
         //暂时随便移动一下
         int randomIndex = UtilTools.RangeInt(0, player.ActionMoveCordinates.Count-1);
         float moveSecs = this.PlayerDoMoveTo(player.ActionMoveCordinates[randomIndex]);
-        CoroutineUtil.GetInstance().WaitTime(moveSecs, true, OnAiEnd);
+        _cor =   CoroutineUtil.GetInstance().WaitTime(moveSecs, true, OnAiEnd);
     }
 
     private void OnAiEnd(object[] param)
     {
+        this._cor = null;
         //进入下一轮
-        BattleProxy._instance.DoNextRound();
+        if (BattleProxy._instance.Data.Status == BattleStatus.Action)
+            BattleProxy._instance.DoNextRound();
     }
 
     private void OnClickMoveSpot(BattleSpot spot)
@@ -393,6 +490,12 @@ public class BattleController : MonoBehaviour
         foreach (GameObject obj in this._prefabs)
         {
             this._prefabDic.Add(obj.name, obj);
+        }
+
+        this._EffectPrefabDic = new Dictionary<string, GameObject>();
+        foreach (GameObject obj in this._EffectPrefabs)
+        {
+            this._EffectPrefabDic.Add(obj.name, obj);
         }
 
         this._BornPostions = new Dictionary<int, Vector3>();
@@ -501,7 +604,16 @@ public class BattleController : MonoBehaviour
         return script;
     }
 
-    
+    private BattleEffect CreateBattleEffect(string nameStr, Vector3 postion)
+    {
+        GameObject prefab = this._EffectPrefabDic[nameStr];
+        GameObject obj = GameObject.Instantiate(prefab, postion, Quaternion.identity, this._SpotRoot);
+        obj.name = nameStr;
+        BattleEffect script = obj.GetComponent<BattleEffect>();
+        return script;
+    }
+
+
 }
 
 

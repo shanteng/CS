@@ -5,20 +5,19 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class CityAttackGroupPop : Popup
+public class CityAttackGroupView : UIBase
 {
     public Text _GroupNameTxt;
     public Text _myCountTxt;
     public DataGrid _GroupGrid;
     public Text _MoraleTxt;
-    public UITexts _StateTxt;
+    public CountDownText _StateCDTxt;
     public UIButton _BtnPre;
     public UIButton _BtnNext;
     public Text _PageTxt;
 
 
     public Text _CityNameTxt;
-   
     public DataGrid _NpcGrid;
     public Text _NpcCountTxt;
     public UITexts _ExpAddTxt;
@@ -42,8 +41,9 @@ public class CityAttackGroupPop : Popup
 
     private void OnFight(UIButton btn)
     {
-        TeamProxy._instance.AttackCityDo(this._GroupID);
-        PopupFactory.Instance.Hide();
+        bool isSuccess = TeamProxy._instance.AttackCityDo(this._CityID);
+        if (isSuccess)
+            MediatorUtil.HideMediator(MediatorDefine.ATTACK_CITY_GROUP);
     }
 
     private void OnPre(UIButton btn)
@@ -62,9 +62,9 @@ public class CityAttackGroupPop : Popup
         this.SetCurPage(next);
     }
 
-    public override void setContent(object data)
+    public  void SetData(int cityid)
     {
-        this._CityID = (int)data;
+        this._CityID = cityid;
         CityConfig config = CityConfig.Instance.GetData(_CityID);
         this._CityNameTxt.text = config.Name;
 
@@ -118,7 +118,7 @@ public class CityAttackGroupPop : Popup
             teamData._Param = teams[i];
             this._GroupGrid.Data.Add(teamData);
             Team team = TeamProxy._instance.GetTeam(teams[i]);
-            totleCount += team.Blood;
+            totleCount += team.ArmyCount;
         }
         this._GroupGrid.ShowGrid(null);
 
@@ -126,10 +126,21 @@ public class CityAttackGroupPop : Popup
         int morale = data.GetMorale();
         this._MoraleTxt.text = LanguageConfig.GetLanguage(LanMainDefine.Percent, morale);
 
-        if (data.ExpireTime > GameIndex.ServerTime)
-            this._StateTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.Moving);
+        this.UpdateState();
+    }
+
+    public void UpdateState()
+    {
+        Group data = TeamProxy._instance.GetGroup(this._GroupID);
+        bool isArrive = GameIndex.ServerTime >= data.ExpireTime;
+        if (isArrive == false)
+        {
+            this._StateCDTxt.DoCountDown(data.ExpireTime, LanMainDefine.Moving);
+        }
         else
-            this._StateTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.ArriveYet);
-        this._BtnFight.IsEnable = data.ExpireTime <= GameIndex.ServerTime;
+        {
+            this._StateCDTxt.Stop();
+            this._StateCDTxt._CDTxt.text = LanguageConfig.GetLanguage(LanMainDefine.ArriveYet);
+        }
     }
 }//end class

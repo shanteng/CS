@@ -48,6 +48,13 @@ public class PathUi : MonoBehaviour
         {
             PathItemData curData = (PathItemData)data;
             bool isSelect = HomeLandManager.GetInstance().GoToPathCurrentPostion(curData._data.ID);
+            bool isGourp = curData._data.Type == PathData.TYPE_GROUP_BACK_ATTACK || curData._data.Type == PathData.TYPE_GROUP_ATTACK;
+            if (isGourp)
+            {
+                Group gpid = (Group)curData._data.Param;
+                PopupFactory.Instance.ShowAttackGroup(gpid.Id);
+            }
+
             foreach (ItemRender render in this._hGrid.ItemRenders)
             {
                 PathItem rd = (PathItem)render;

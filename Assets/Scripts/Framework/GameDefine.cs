@@ -165,6 +165,9 @@ public class NotiDefine
 
     public const string TeamStateChangeNoti = "TeamStateChangeNoti";
 
+    public const string GroupReachCityNoti = "GroupReachCityNoti";
+    public const string GroupBackCityNoti = "GroupBackCityNoti";
+
 
     public const string PathAddNoti = "PathAddNoti";
     public const string PathRemoveNoti = "PathRemoveNoti";
@@ -212,6 +215,12 @@ public class ErrorCode
 
     public const string NoArmyNoTeam = "NoArmyNoTeam";
     public const string NoUpPlayer = "NoUpPlayer";
+    public const string NoTeamCanFight = "NoTeamCanFight";
+
+    public const string GroupBacking = "GroupBacking";
+    public const string GroupFighting = "GroupFighting";
+    public const string GroupHasBack = "GroupHasBack";
+
 }
 
 [Serializable]
@@ -408,6 +417,7 @@ public enum MediatorDefine
     TEAM_ATTACK,
     BATTLE_CONTROL,
     BATTLE,
+    ATTACK_CITY_GROUP,
 }
 
 public class StringKeyValue
@@ -751,6 +761,7 @@ public class Group
     public long StartTime;//行军或者返回开始时间
     public long ExpireTime;//行军或者返回的结束时间
     public long MoraleExpire;//恢复慢士气时间戳
+    public VInt2 RealFromPostion;
     public VInt2 RealTargetPostion;
     public List<int> Teams;
 
@@ -772,7 +783,7 @@ public class Team
     public int Index;//序列
     public int HeroID;//上阵英雄
     public int ArmyTypeID;//当前兵种
-    public int Blood;//当前兵力
+    public int ArmyCount;//当前兵力
     public int Status;//0-空闲 1-行军 2-返回 3-战斗
     public int CityID;//0-主城，>0 Npc城市ID
     public Dictionary<string, float> Attributes;
@@ -784,7 +795,7 @@ public class Team
         this.Status = (int)TeamStatus.Idle;
         this.CityID = cityid;
         this.ArmyTypeID = 0;
-        this.Blood = 0;
+        this.ArmyCount = 0;
     }
 
     public void ComputeAttribute()
@@ -792,7 +803,7 @@ public class Team
         Hero hero = HeroProxy._instance.GetHero(this.HeroID);
         ArmyConfig armyConfig = ArmyConfig.Instance.GetData(this.ArmyTypeID);
         int level = hero != null ? hero.Level : 0;
-        Team.ComputeTeamAttribute(out this.Attributes, this.HeroID, level, this.ArmyTypeID, this.Blood);
+        Team.ComputeTeamAttribute(out this.Attributes, this.HeroID, level, this.ArmyTypeID, this.ArmyCount);
     }
 
     public static void ComputeTeamAttribute(out Dictionary<string, float> Attribute, int heroid, int level, int armyid, int count)
@@ -877,10 +888,10 @@ public class Hero
         return curEnergy;
     }
 
-    public void ChangeEnegry(int addEnegry)
+    public void ChangeEnegry(int costEnegry)
     {
         int EnegryDelta = ConstConfig.Instance.GetData(ConstDefine.HeroEnegryRecoverDelta).IntValues[0];
-        int TotleSecs = EnegryDelta * addEnegry;
+        int TotleSecs = EnegryDelta * costEnegry;
         long leftSecs = this.EnegryFullExpire - GameIndex.ServerTime;
         if (leftSecs <= 0)
             this.EnegryFullExpire = GameIndex.ServerTime + TotleSecs;
@@ -1070,7 +1081,9 @@ public class BattleData
     public BattlePlace MyPlace;
     public int Round;
     public BattleStatus Status;//是否在等待玩家行动
-    public Dictionary<int, BattlePlayer> Players;
+    public Dictionary<int, BattlePlayer> Players;//进入的玩家
+    public bool IsGameOver;//是否战斗结束
+    public bool IsWin;//胜利
     public object Param;
 }
 
@@ -1119,8 +1132,8 @@ public class BattlePlayer
         int defense = Mathf.RoundToInt(this.Attributes[AttributeDefine.Defense] * this.Attributes[AttributeDefine.Blood]);
         int descBlood = demage - defense;
         if (descBlood <= 0)
-            descBlood = 1500;//最少打一滴血 测试写死100最少
-
+            descBlood = 1;//最少打一滴血 
+        descBlood = 20000;//测试用
         int leftBlood = (int)this.Attributes[AttributeDefine.Blood] - descBlood;
         if (leftBlood <= 0)
         {

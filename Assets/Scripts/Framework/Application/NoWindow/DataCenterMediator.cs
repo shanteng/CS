@@ -14,6 +14,8 @@ public class DataCenterMediator : BaseNoWindowMediator
     protected override void InitListNotificationInterestsInner()
     {
         m_lInterestNotifications.Add(NotiDefine.PatrolFinishNoti);
+        m_lInterestNotifications.Add(NotiDefine.GroupReachCityNoti);
+        m_lInterestNotifications.Add(NotiDefine.GroupBackCityNoti);
     }
 
     public override void HandleNotification(INotification notification)
@@ -21,6 +23,8 @@ public class DataCenterMediator : BaseNoWindowMediator
         switch (notification.Name)
         {
             case NotiDefine.PatrolFinishNoti:
+            case NotiDefine.GroupReachCityNoti:
+            case NotiDefine.GroupBackCityNoti:
                 {
                     PopupFactory.Instance.HandleNoti(notification);
                     break;

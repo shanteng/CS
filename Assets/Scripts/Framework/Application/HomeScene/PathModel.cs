@@ -48,8 +48,8 @@ public class PathModel : MonoBehaviour
         this._endPos = new Vector3(_data.Target.x, YOffset, _data.Target.y);
         this._dir = (this._endPos - this._startPos).normalized;
 
-        this._Flag.position = _endPos;
         this.transform.position = this._startPos;
+        this._Flag.position = _endPos;
 
         this._WaitFightIcon.gameObject.SetActive(data.Type == PathData.TYPE_GROUP_ATTACK);
         this._PatrolRoot.gameObject.SetActive(data.Type == PathData.TYPE_PATROL);
@@ -134,7 +134,7 @@ public class PathModel : MonoBehaviour
         this._camTran = Camera.main.transform;
 
         this._cdTxt.Show();
-        this._cdTxt.DoCountDown(this._data.ExpireTime);
+        this._cdTxt.DoCountDown(this._data.ExpireTime,"",true);
         Vector3 targetPos = this._cdTxt.transform.position + _camTran.rotation * Vector3.forward;
         Vector3 targetOrientation = _camTran.rotation * Vector3.up;
         this._cdTxt.transform.LookAt(targetPos, targetOrientation);
@@ -146,7 +146,6 @@ public class PathModel : MonoBehaviour
             this._cdTxt.Stop();
             this._cdTxt._CDTxt.text = "";
         }
-            
     }
 
     public void SetSelect(bool isSelect)

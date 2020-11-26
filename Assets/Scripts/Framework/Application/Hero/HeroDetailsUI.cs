@@ -31,16 +31,19 @@ public class HeroDetailsUI : UIBase
 
 
     private int _id;
-    public void SetData(int id)
+    private bool _justShow;
+    public void SetData(int id,bool justShow = false)
     {
         this._id = id;
+        this._justShow = justShow;
         Hero hero = HeroProxy._instance.GetHero(id);
         HeroConfig config = HeroConfig.Instance.GetData(id);
         this._NameTxt.text = config.Name;
         this._Element.sprite = ResourcesManager.Instance.GetCommonSprite(config.Element);
         this._StarUi.SetData(hero);
         int canRankCount = hero.Level / 10;
-        this._btnStar.gameObject.SetActive(hero.StarRank < canRankCount);
+        this._btnStar.gameObject.SetActive(hero.StarRank < canRankCount && !justShow);
+        this._btnExp.gameObject.SetActive(!justShow);
         this._rateUi.SetData(id);
         this._lvTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevel, hero.Level);
         HeroLevelConfig configNext = HeroLevelConfig.Instance.GetData(hero.Level + 1);

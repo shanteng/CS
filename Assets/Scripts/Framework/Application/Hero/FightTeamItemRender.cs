@@ -49,7 +49,7 @@ public class FightTeamItemRender : ItemRender
             this._CanNotTxt.gameObject.SetActive(true);
             this._CanNotTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.EnegryNotEnough);
         }
-        else if (team.Blood == 0)
+        else if (team.ArmyCount == 0)
         {
             this._CanNotTxt.gameObject.SetActive(true);
             this._CanNotTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.TeamNoBlood);

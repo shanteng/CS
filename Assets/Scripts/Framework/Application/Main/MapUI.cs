@@ -51,7 +51,6 @@ public class MapUI : MonoBehaviour
         VInt2 pos = ViewControllerLocal.GetInstance().GetCurrentCordinate();
         VInt2 gamePos = UtilTools.WorldToGameCordinate(pos.x, pos.y);
 
-       
         this._pos.x = gamePos.x;
         this._pos.y = gamePos.y;
         this._inputX.text = gamePos.x.ToString();
@@ -59,7 +58,7 @@ public class MapUI : MonoBehaviour
         this._btnGoTo.gameObject.SetActive(false);
 
         var distance = Mathf.Sqrt(pos.x * pos.x + pos.y * pos.y);
-        var distanceInt = Mathf.FloorToInt(distance);
+        var distanceInt = Mathf.CeilToInt(distance);
         string formatDistance = UtilTools.NumberFormat(distanceInt);
         this._btnHome.Label.text = LanguageConfig.GetLanguage(LanMainDefine.Distance, formatDistance);
         Vector3 zeroScreen = Camera.main.WorldToScreenPoint(Vector3.zero);

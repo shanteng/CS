@@ -404,7 +404,7 @@ public class InfoCanvas : UIBase, IConfirmListener
                 {
                     //测试
                     WorldProxy._instance.DoOwnCity(this._cityId,false);
-                    return;
+                   return;
                     bool hasFree = HeroProxy._instance.HasFreeHero();
                     if (hasFree == false)
                     {
@@ -423,12 +423,11 @@ public class InfoCanvas : UIBase, IConfirmListener
             case OpType.Attack:
                 {
                     MediatorUtil.ShowMediator(MediatorDefine.TEAM_ATTACK, this._cityId);
-                    //WorldProxy._instance.DoOwnCity(this._cityId);
                     break;
                 }
             case OpType.PreBattle:
                 {
-                    PopupFactory.Instance.ShowAttackGroups(this._cityId);
+                    MediatorUtil.ShowMediator(MediatorDefine.ATTACK_CITY_GROUP, this._cityId);
                     break;
                 }
         }

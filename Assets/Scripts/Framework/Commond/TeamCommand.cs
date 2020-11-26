@@ -21,7 +21,7 @@ public class TeamCommand : SimpleCommand
                 }
             case NotiDefine.AttackCityDo:
                 {
-                    proxy.AttackCityDo((string)notification.Body);
+                    proxy.AttackCityDo((int)notification.Body);
                     break;
                 }
             case NotiDefine.AttackCityExpireReachedNoti:

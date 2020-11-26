@@ -276,7 +276,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 1.52013e-40, z: 0, w: 1.4621508e+37}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1730,6 +1730,13 @@ MonoBehaviour:
   - {fileID: 668925193903136681, guid: 0cf1a92a2adb3fe4eb21da7075f3fd03, type: 3}
   - {fileID: 4852204997209200854, guid: 8771363a35989d142937e6be295f4ff1, type: 3}
   - {fileID: 4852204997209200854, guid: 353bcb27e7588c14c93c0a6e2ee6080c, type: 3}
+  _EffectPrefabs:
+  - {fileID: 1019389911696585316, guid: 910fa2a2f271f264a920034bf9ae733f, type: 3}
+  - {fileID: 1019389911696585316, guid: af4b7fbd016020e40ad569fca84b4e2d, type: 3}
+  - {fileID: 1019389911696585316, guid: c3b1d73f039606c4c9472917d0a0b934, type: 3}
+  - {fileID: 1019389911696585316, guid: c3367be91ff7f214d84c8df7a7b83ce1, type: 3}
+  - {fileID: 1019389911696585316, guid: 6d3bb0116ec948f408f2b42a15463271, type: 3}
+  - {fileID: 1019389911696585316, guid: efbcaf33579f94b40be8cf29b11d4c22, type: 3}
   _BornRoot: {fileID: 1019145430}
   _PlayerRoot: {fileID: 651176378}
   _SpotRoot: {fileID: 514058582}

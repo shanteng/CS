@@ -18,7 +18,7 @@ public class BattleView : MonoBehaviour
     public UIButton _btnCancelFight;
     public UIButton _btnSureFight;
 
-
+    public ResultUi _resultUi;
     private Dictionary<int, SpeedPlayerUi> _AliveWaitPlayerDic;
     private Dictionary<BattlePlace, BattleInfoUi> _InfoUiDic;
 
@@ -49,7 +49,10 @@ public class BattleView : MonoBehaviour
 
     private void OnCancelFight(UIButton btn)
     {
-
+        this._btnFight.Show();
+        this._btnCancelFight.Hide();
+        this._btnSureFight.Hide();
+        BattleController.Instance.BackToMoveState();
     }
 
     private void OnSureFight(UIButton btn)
@@ -67,7 +70,6 @@ public class BattleView : MonoBehaviour
 
     public void OnAttackEnd()
     {
-       
         //更新列表状态和血量
         foreach (BattleInfoUi ui in this._InfoUiDic.Values)
         {
@@ -92,17 +94,31 @@ public class BattleView : MonoBehaviour
             _AliveWaitPlayerDic.Remove(rmindex);
         }
 
-        this._btnEndRound.Show();
+        if (BattleProxy._instance.Data.IsGameOver)
+        {
+            this.ShowGameOver();
+        }
+        else
+        {
+            this._btnEndRound.Show();
+        }
+    }
+
+    private void ShowGameOver()
+    {
+        this._resultUi.Show();
+        this._resultUi.SetData(BattleProxy._instance.Data.IsWin);
     }
 
     private void OnQuit(UIButton btn)
     {
-        MediatorUtil.HideMediator(MediatorDefine.BATTLE);
-        MediatorUtil.SendNotification(NotiDefine.DoLoadScene, SceneDefine.Home);
+        BattleProxy._instance.DoEndBattleResult(false);
+        this.ShowGameOver();
     }
 
     public void Init()
     {
+        this._resultUi.Hide();
         this._preUi.gameObject.SetActive(true);
         this._preUi.SetList();
         this._FightAni.SetActive(false);

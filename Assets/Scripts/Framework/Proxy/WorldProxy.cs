@@ -847,7 +847,8 @@ public class WorldProxy : BaseRemoteProxy
     {
         if (cityid == 0)
             return LanguageConfig.GetLanguage(LanMainDefine.MainCity);
-        return "";//读取配置
+        CityConfig config = CityConfig.Instance.GetData(cityid);
+        return config.Name;//读取配置
     }
 
     public VInt2 GetCityPatrolInfo(int cityid)
@@ -876,11 +877,19 @@ public class WorldProxy : BaseRemoteProxy
         return datas;
     }
 
-    public long GetMoveExpireTime(int fromX, int fromZ, int targetX, int targetZ, float deltaSecs)
+    public int GetMoveDistance(int fromX, int fromZ, int targetX, int targetZ)
     {
         int descX = fromX - targetX;
         int descY = fromZ - targetZ;
         float distance = Mathf.Sqrt(descX * descX + descY * descY);
+        return Mathf.CeilToInt(distance);
+    }
+
+    public long GetMoveExpireTime(int fromX, int fromZ, int targetX, int targetZ, float deltaSecs)
+    {
+        int descX = fromX - targetX;
+        int descY = fromZ - targetZ;
+        int distance = GetMoveDistance(fromX, fromZ, targetX, targetZ);
         long expireSces = GameIndex.ServerTime + Mathf.CeilToInt(deltaSecs * distance);
         return expireSces;
     }

@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\Army\ArmyView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleControllMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleController.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleEffect.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleInfoUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattlePlayerInfoItemRender.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleViewController.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BornSpot.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\PreBattleUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\ResultUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\SpeedPlayerUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\CoroutineUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\GameIndex.cs" />
@@ -91,6 +93,8 @@
     <Compile Include="Assets\Scripts\Framework\Application\Hero\ArmySetItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\BattleTeamRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\CareerRate.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\CityAttackGroupMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Hero\CityAttackGroupView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\FightHeroUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\FightTeamItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Hero\HeroCareerRates.cs" />
@@ -148,14 +152,15 @@
     <Compile Include="Assets\Scripts\Framework\Application\Main\PathUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\DataCenterMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\MediatorUtil.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\AttackCityGroupPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\AttrAddPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildLevelPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildLevelRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingInfoPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\BuildingUpgradePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\CareerEvaluatePop.cs" />
-    <Compile Include="Assets\Scripts\Framework\Application\PopUp\CityAttackGroupPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\ConfirmPop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\HeroDetailsPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\NoticePop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\PatrolItemRender.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\PatrolPop.cs" />

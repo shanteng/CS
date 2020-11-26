@@ -14,6 +14,7 @@ public class UIButton : UIBase
     private Image _icon;
     private Image _btnImg;
     private UIButtonDelegate _listener;
+    private Material _oriMaterial;
 
     void Awake()
     {
@@ -24,6 +25,8 @@ public class UIButton : UIBase
         if (txts != null && txts.Length > 0)
             this._text = txts[0];
 
+        if(this._btnImg != null)
+            this._oriMaterial = _btnImg.material;
 
         if (this.transform.Find("Icon") != null)
             this._icon = this.transform.Find("Icon").GetComponent<Image>();
@@ -57,7 +60,13 @@ public class UIButton : UIBase
             this._btn.interactable = value;
 
             if (this._btnImg != null)
-                UIRoot.Intance.SetImageGray(this._btnImg, value == false);
+            {
+                if (value == false)
+                    UIRoot.Intance.SetImageGray(this._btnImg, true);
+                else
+                    this._btnImg.material = this._oriMaterial;
+            }
+               
 
             if (this._text != null)
             {

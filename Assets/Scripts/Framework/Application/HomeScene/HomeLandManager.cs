@@ -396,6 +396,25 @@ public class HomeLandManager : MonoBehaviour
         _pathModels.Add(path.ID, PathModel);
     }
 
+    public VInt2 GetMovingGroupPathPostion(string gpid)
+    {
+        foreach (PathModel model in this._pathModels.Values)
+        {
+            PathData pathdata = PathProxy._instance.GetPath(model.ID);
+            if (pathdata == null)
+                continue;
+            bool isGp = pathdata.Type == (int)PathData.TYPE_GROUP_ATTACK || pathdata.Type == (int)PathData.TYPE_GROUP_BACK_ATTACK;
+            if (isGp == false)
+                continue;
+            Group curGp = (Group)pathdata.Param;
+            if (curGp.Id.Equals(gpid))
+            {
+                return new VInt2((int)model._modelRoot.transform.position.x, (int)model._modelRoot.transform.position.z);
+            }
+        }
+        return null;
+    }
+
     private string _selectPathId = "";
     public bool GoToPathCurrentPostion(string id)
     {
