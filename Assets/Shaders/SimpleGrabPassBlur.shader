@@ -13,7 +13,7 @@ Shader "UI/SimpleGrabPassBlur" {
 
         // We must be transparent, so other objects are drawn before this one.
         Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Opaque" }
-
+        ZWrite Off
 
         SubShader {
 

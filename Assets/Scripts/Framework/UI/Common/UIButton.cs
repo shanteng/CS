@@ -57,7 +57,8 @@ public class UIButton : UIBase
         }
         set
         {
-            this._btn.interactable = value;
+            if(this._btn != null)
+                this._btn.interactable = value;
 
             if (this._btnImg != null)
             {
