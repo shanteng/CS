@@ -266,6 +266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _BtnStart: {fileID: 6393537756460310094}
   _BtnClear: {fileID: 2811204374892871614}
+  _ui: {fileID: 0}
 --- !u!222 &8649635946133846928
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -454,7 +455,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3648142305001682247
 RectTransform:
   m_ObjectHideFlags: 0

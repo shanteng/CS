@@ -20,6 +20,7 @@ public class BattlePlayerInfoItemRender : ItemRender
 {
     public HeroHead _heroUi;
     public Slider _blood;
+   
 
     private int _id;
     public int ID => this._id;
@@ -35,7 +36,7 @@ public class BattlePlayerInfoItemRender : ItemRender
         BattlePlayerInfoItemData curData = (BattlePlayerInfoItemData)data;
         BattlePlayer player = BattleProxy._instance.GetPlayer(curData._teamid);
         this._id = curData._teamid;
-        this._heroUi.SetData(player.HeroID);
+        this._heroUi.SetData(player.HeroID, player.ArmyID);
         this._heroUi._levelTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevel, player.Level);
         this.UpdateBlood();
     }

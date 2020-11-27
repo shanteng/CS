@@ -15,12 +15,14 @@ public class HeroHead : UIBase
     public Text _nameTxt;
     public GameObject _lvCon;
     public Text _levelTxt;
-   
+    public GameObject _ArmyCon;
+    public Image _ArmyIcon;
+
     private int _id;
 
     public int ID => this._id;
 
-    public void SetData(int id)
+    public void SetData(int id,int army=0)
     {
         this._id = id;
         Hero hero = HeroProxy._instance.GetHero(id);
@@ -33,6 +35,12 @@ public class HeroHead : UIBase
         string bar = UtilTools.combine(config.Element, "_bar");
         this._ElementBar.sprite = ResourcesManager.Instance.GetCommonSprite(bar);
         this._EleValueTxt.text = hero.ElementValue.ToString();
+
+        this._ArmyCon.SetActive(army > 0);
+        if (army > 0)
+        {
+            this._ArmyIcon.sprite = ResourcesManager.Instance.GetArmySprite(army);
+        }
     }
 
 }

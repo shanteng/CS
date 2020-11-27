@@ -146,10 +146,36 @@ public class ExcelToJsonToolEditor : Editor
                             value = new int[0];
                         }
                         break;
+                    case "ArrayIntLine":
+                        if (str.Length > 0)
+                        {
+                            string[] strs = str.Split('|');
+                            int[] ints = new int[strs.Length];
+                            for (int k = 0; k < strs.Length; k++)
+                            {
+                                ints[k] = UtilTools.ParseInt(strs[k]);
+                            }
+                            value = ints;
+                        }
+                        else
+                        {
+                            value = new int[0];
+                        }
+                        break;
                     case "ArrayString":
                         if (str.Length > 0)
                         {
                             value = str.Split(',');
+                        }
+                        else
+                        {
+                            value = new string[0];
+                        }
+                        break;
+                    case "StringArrayLine":
+                        if (str.Length > 0)
+                        {
+                            value = str.Split('|');
                         }
                         else
                         {
@@ -185,6 +211,11 @@ public class ExcelToJsonToolEditor : Editor
                 {
                     if (str.Equals(""))
                         break;
+                }
+
+                if (value == null)
+                {
+                    Debug.Log("value is Null");
                 }
 
                 postedJObject.Add(memberName, JToken.FromObject(value));

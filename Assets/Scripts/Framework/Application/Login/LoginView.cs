@@ -8,6 +8,7 @@ public class LoginView : MonoBehaviour
 {
     public UIButton _BtnStart;
     public UIButton _BtnClear;
+    
     void Start()
     {
         _BtnStart.AddEvent(this.OnClickStart);

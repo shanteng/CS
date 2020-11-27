@@ -34,6 +34,11 @@ public class JsonNameDefine
     public static string NpcTeam = "NpcTeam";
     public static string BattleScene = "BattleScene";
 
+    public static string Skill = "Skill";
+    public static string SkillEffect = "SkillEffect";
+    public static string SkillLevel = "SkillLevel";
+
+    public static string RangeFunction = "RangeFunction";
     public static JArray JsonRead(string name)
     {
         string json = "";
@@ -119,6 +124,45 @@ public class ArmyConfig : Config<ArmyConfig>
     public int UnlockTech;//招募所需科技ID
 
     public ArmyConfig() : base(JsonNameDefine.Army) { }
+}
+
+public class SkillConfig : Config<SkillConfig>
+{
+    public int Type;
+    public string Name;
+    public string[] Descs;
+    public int[] EffectIDs;
+    public int MpCost;
+    public SkillConfig() : base(JsonNameDefine.Skill) { }
+}
+
+public class SkillEffectConfig : Config<SkillEffectConfig>
+{
+    public string Type;
+    public string Target;
+    public string Value;
+    public string[] ComputeParams;
+    public string Rate;
+    public string Active_Rate;
+    public int Duration;
+    public SkillEffectConfig() : base(JsonNameDefine.SkillEffect) { }
+}
+
+public class SkillLevelConfig : Config<SkillLevelConfig>
+{
+    public int Skill;
+    public int Level;
+    public string AttackRangeID;
+    public string DemageRangeID;
+    public SkillLevelConfig() : base(JsonNameDefine.SkillLevel) { }
+}
+
+public class RangeFunctionConfig : Config<RangeFunctionConfig>
+{
+    public string Name;
+    public string Function;
+    public int[] ComputeParams;
+    public RangeFunctionConfig() : base(JsonNameDefine.RangeFunction, JsonKeyType.STRING) { }
 }
 
 public class BattleSceneConfig : Config<BattleSceneConfig>
@@ -218,6 +262,9 @@ public class HeroConfig : Config<HeroConfig>
     public string[] Talents;//TalentDefine
     public int Lucky;//
     public int DarkSide;//是否为心魔
+
+    public string AttackRangeID;
+    public string DemageRangeID;
 
     public HeroConfig() : base(JsonNameDefine.Hero) { }
 }

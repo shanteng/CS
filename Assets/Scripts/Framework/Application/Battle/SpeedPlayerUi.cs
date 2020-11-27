@@ -15,7 +15,7 @@ public class SpeedPlayerUi : UIBase
     private float _needSecs;
     private bool _DoMove = false;
     private Coroutine _cor;
-    public static float MoveX = 600;
+    public static float MoveX = 500;
 
     public void SetData(int id)
     {

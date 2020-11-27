@@ -28,6 +28,7 @@ public class HeroDetailsUI : UIBase
     public Text _MaxBloodTxt;
 
     public HeroTalents _talentUi;
+    public SkillDetailUi _skillUi;
 
 
     private int _id;
@@ -69,10 +70,15 @@ public class HeroDetailsUI : UIBase
             this._EnegrySlider.value = 1f;
 
         this._talentUi.SetData(this._id);
+
+        HeroSkillData skData = null;
+        if (config.Skills.Length > 0)
+        {
+            skData = hero.Skills[config.Skills[0]];
+            this._skillUi.SetData(skData.ID, skData.Level, skData.Open);
+        }
+        this._skillUi.gameObject.SetActive(skData != null);
     }
-
-    
-
 }
 
 

@@ -72,7 +72,7 @@ public class BattlePlayerUi : UIBase
         }
     }
 
-    public void DoBloodChange(PlayerBloodChangeData data)
+    public void ReponseToEffect(PlayerEffectChangeData data)
     {
         //伤血
         this._curModel.transform.DOShakePosition(2f, new Vector3(30, 0, 0), 8).onComplete = () =>

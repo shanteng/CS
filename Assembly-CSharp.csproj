@@ -175,6 +175,9 @@
     <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SdkView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SingletonFactory.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Skill\SkillDetailUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Skill\SkillItemUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Skill\SkillRangeUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\TimeCenterMono.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\UIRoot.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\UtilTools.cs" />
@@ -201,6 +204,7 @@
     <Compile Include="Assets\Scripts\Framework\Proxy\HeroProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\PathProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\RoleProxy.cs" />
+    <Compile Include="Assets\Scripts\Framework\Proxy\SkillProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\TeamProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\TimeCenterProxy.cs" />
     <Compile Include="Assets\Scripts\Framework\Proxy\WorldProxy.cs" />

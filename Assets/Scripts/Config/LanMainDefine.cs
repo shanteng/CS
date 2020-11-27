@@ -194,6 +194,7 @@ public class ConstDefine
     public const string AttackDeltaSces = "AttackDeltaSces";
     public const string FightOneArmyCost = "FightOneArmyCost";
     public const string MoveBackDeltaSces = "MoveBackDeltaSces";
+    public const string BattleMpRecoverForOneRound = "BattleMpRecoverForOneRound";
 
     public const string AttackRate = "AttackRate";
     public const string DefenseRate = "DefenseRate";

@@ -9,7 +9,7 @@ public class CreateView : MonoBehaviour
     public List<CreateRoleItem> _toggleList;
     public InputField _nameTxt;
     public UIButton _btnStart;
-
+    public SkillRangeUi _ui;
     private int _id;
 
     void Awake()
@@ -20,6 +20,11 @@ public class CreateView : MonoBehaviour
             item.SetData();
         }
         this._btnStart.AddEvent(this.OnClickStart);
+
+        if (this._ui != null && this._ui.gameObject.activeSelf)
+        {
+            this._nameTxt.characterLimit = 100;
+        }
     }
 
     public void InitData()
@@ -28,6 +33,11 @@ public class CreateView : MonoBehaviour
     }
     private void OnClickStart(UIButton btn)
     {
+        if (this._ui != null && this._ui.gameObject.activeSelf)
+        {
+            this._ui.SetData(this._nameTxt.text);
+            return;
+        }
         Dictionary<string, object> vo = new Dictionary<string, object>();
         vo["name"] = this._nameTxt.text;
         vo["head"] = (int)this._id;

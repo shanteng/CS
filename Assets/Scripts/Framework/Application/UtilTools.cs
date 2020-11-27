@@ -96,6 +96,20 @@ public class UtilTools
         return val;
     }
 
+    public static string formatCustomize(string expression, params object[] paramName)
+    {
+        if (string.IsNullOrEmpty(expression))
+            return "";
+        var len = paramName.Length;
+        int i = 0;
+        while (i + 1 < len)
+        {
+            expression = expression.Replace(paramName[i].ToString(), paramName[i + 1].ToString());
+            i += 2;
+        }
+        return expression;
+    }
+
     public static string format(string valuestr, params object[] paramStrs)
     {
         string afterStr = "";
@@ -106,7 +120,7 @@ public class UtilTools
         catch (Exception ex)
         {
 #if UNITY_EDITOR
-            UnityEngine.Debug.LogError(string.Format("Language: {0} 参数数量不匹配", valuestr));
+            UnityEngine.Debug.LogError(string.Format(": {0} 参数数量不匹配", valuestr));
 #endif
         }
         return afterStr;

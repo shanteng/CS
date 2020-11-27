@@ -199,3 +199,9 @@ MonoBehaviour:
     sheets:
     - Army
     - CareerEvaluate
+  - name: Skill
+    sheets:
+    - Skill
+    - SkillEffect
+    - SkillLevel
+    - RangeFunction

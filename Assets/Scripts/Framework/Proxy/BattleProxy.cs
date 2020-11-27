@@ -34,29 +34,35 @@ public class BattleProxy : BaseRemoteProxy
     public void DoPlayerAttackAction()
     {
         BattlePlayer actionPlayer = this.GetActionPlayer();
-        //计算所有被伤害的人
-        int skillID = actionPlayer._AttackSkillID;
-        if (skillID < 0)
-            return;
-
         int attackerTeamID = actionPlayer.TeamID;
-        int AttackDemage = actionPlayer.ComputeDemage(skillID);//根据技能和属性计算出本次的输出伤害
-        List<PlayerBloodChangeData> attackPlayers = new List<PlayerBloodChangeData>();
-        foreach (VInt2 attackPos in actionPlayer.SkillDemageCordinates)
+        List<PlayerEffectChangeData> effectPlayers = new List<PlayerEffectChangeData>();
+
+        int skillID = actionPlayer._AttackSkillID;
+        if (skillID == 0)
         {
-            BattlePlayer posPlayer = this.GetPlayerBy(attackPos);
-            if (posPlayer == null || posPlayer.Status != PlayerStatus.Wait)
-                continue;
-            int teamvalue = actionPlayer.TeamID * posPlayer.TeamID;
-
-            if (teamvalue > 0)
-                continue;//相同队伍的不受伤害
-            int loseBlood = posPlayer.TakeDemage(AttackDemage);
-
-            PlayerBloodChangeData kv = new PlayerBloodChangeData();
-            kv.TeamID = posPlayer.TeamID;
-            kv.ChangeValue = -loseBlood;
-            attackPlayers.Add(kv);
+            //计算普通攻击伤害的人
+            int AttackDemage = actionPlayer.ComputeDemage(skillID);//根据技能和属性计算出本次的输出伤害
+            foreach (VInt2 attackPos in actionPlayer.SkillDemageCordinates)
+            {
+                BattlePlayer posPlayer = this.GetPlayerBy(attackPos);
+                if (posPlayer == null || posPlayer.Status != PlayerStatus.Wait)
+                    continue;
+                int teamvalue = actionPlayer.TeamID * posPlayer.TeamID;
+                if (teamvalue > 0)
+                    continue;//相同队伍的不受伤害
+                int loseBlood = posPlayer.TakeDemage(AttackDemage);
+                PlayerEffectChangeData kv = new PlayerEffectChangeData();
+                kv.TeamID = posPlayer.TeamID;
+                kv.ChangeValue = -loseBlood;
+                effectPlayers.Add(kv);
+            }
+        }
+        else
+        {
+            //技能效果判断,扣除Mp
+            SkillConfig cfg = SkillConfig.Instance.GetData(skillID);
+            float curMp = actionPlayer.Attributes[AttributeDefine.Mp] - cfg.MpCost;
+            actionPlayer.Attributes[AttributeDefine.Mp] = curMp < 0 ? 0 : curMp;
         }
 
         //判断战斗结束
@@ -78,7 +84,7 @@ public class BattleProxy : BaseRemoteProxy
         }
 
         //播放完毕动画再去处理UI
-        BattleController.Instance.TakeDeamge(attackPlayers);
+        BattleController.Instance.ResponseToSkillBehaviour(effectPlayers);
     }
 
     public void DoEndBattleResult(bool IsWin)
@@ -113,12 +119,26 @@ public class BattleProxy : BaseRemoteProxy
     public void DoNextRound()
     {
         this._data.Status = BattleStatus.Judge;
+        
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.BattleMpRecoverForOneRound);
+        int RecoverValue = cfgconst.IntValues[0];
+
         foreach (BattlePlayer pl in this._data.Players.Values)
         {
             if (pl.Status == PlayerStatus.Action || pl.Status == PlayerStatus.ActionFinished)
             {
                 pl.Status = PlayerStatus.Wait;
-                break;
+            }
+
+            //所有玩家恢复一次Mp
+            if (pl.Status != PlayerStatus.Dead)
+            {
+                float curMp = pl.Attributes[AttributeDefine.Mp] + RecoverValue;
+                float OrMp = pl.Attributes[AttributeDefine.OrignalMp];
+                if (curMp <= OrMp)
+                    pl.Attributes[AttributeDefine.Mp] = curMp;
+                else
+                    pl.Attributes[AttributeDefine.Mp] = OrMp;
             }
         }
 

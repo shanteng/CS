@@ -67,7 +67,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 506241
+    totalSpriteSurfaceArea: 513933
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -178,10 +178,12 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 30c5988a6a4f4ec4da9dd7431c002265, type: 3}
   - {fileID: 21300000, guid: f6404faa85881ec4d8bd8446ea3bbbd4, type: 3}
   - {fileID: 21300000, guid: 15bc2ecaaf2eb9740b104e79bf27a8b5, type: 3}
+  - {fileID: 21300000, guid: d61d40da22bb7064cbbe37162989ead8, type: 3}
   - {fileID: 21300000, guid: e5083ada032c6c848a6e7adf943355e7, type: 3}
   - {fileID: 21300000, guid: 230797fa768fec14898a58f99f540bbc, type: 3}
   - {fileID: 21300000, guid: b880180b0146a614580c8638a72d3f44, type: 3}
   - {fileID: 21300000, guid: d905c81bd72f5c34b8cda6e43b425c29, type: 3}
+  - {fileID: 21300000, guid: 38d0303bcdab0c04294ce305e5cf0c4d, type: 3}
   - {fileID: 21300000, guid: c8bef93bcd3f2244e9e9dc1d09bb75c5, type: 3}
   - {fileID: 21300000, guid: 21f3f04b9f1f77b42bead348d8f43bc9, type: 3}
   - {fileID: 21300000, guid: dcfed64b12867604291a2d0aafed3901, type: 3}
@@ -333,10 +335,12 @@ SpriteAtlas:
   - gold
   - smallcircle
   - lucky
+  - vertical titlebar
   - power01
   - check-green
   - button01
   - OP_jiaomie
+  - chat-namebar
   - miniProgress bar01
   - ItemFrame5
   - Log

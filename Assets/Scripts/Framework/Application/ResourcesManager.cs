@@ -19,7 +19,7 @@ public class AtlasDefine
     public static string HeroSmall = "HeroSmall";//
     public static string HeroCard = "HeroCard";//
     public static string HeroHead = "HeroHead";//
-
+    public static string Skill = "Skill";//
 }
 public class ResourcesManager : SingletonFactory<ResourcesManager>
 {
@@ -151,6 +151,11 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
     public Sprite GetHeadSprite(int head)
     {
         return this.getAtlasSprite(AtlasDefine.Head, head.ToString());
+    }
+
+    public Sprite GetSkillSprite(int id)
+    {
+        return this.getAtlasSprite(AtlasDefine.Skill, id.ToString());
     }
 
     public Sprite GetCommonFrame(int Quality)

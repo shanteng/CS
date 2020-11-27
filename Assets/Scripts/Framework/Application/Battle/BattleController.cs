@@ -159,13 +159,13 @@ public class BattleController : MonoBehaviour
         }
     }
 
-    public void TakeDeamge(List<PlayerBloodChangeData> players)
+    public void ResponseToSkillBehaviour(List<PlayerEffectChangeData> effectPlayers)
     {
-        foreach (PlayerBloodChangeData data in players)
+        foreach (PlayerEffectChangeData data in effectPlayers)
         {
             BattlePlayerUi pl = this._PlayerDic[data.TeamID];
             //播放被击动画
-            pl.DoBloodChange(data);
+            pl.ReponseToEffect(data);
         }
         //等待各种伤害数字以及被击中的人的被打击动画播放完毕
         CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd);

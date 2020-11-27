@@ -453,6 +453,7 @@ class ProxyNameDefine
     public const string TEAM = "TEAM";
     public const string PATH = "PATH";
     public const string BATTLE = "BATTLE";
+    public const string SKILL = "SKILL";
 }
 
 public class SceneDefine
@@ -500,6 +501,10 @@ public class AttributeDefine
     public const string Blood = "Blood";
     public const string OrignalBlood = "OrignalBlood";
     public const string MoveRange = "MoveRange";
+    public const string WoundedBlood = "WoundedBlood";
+
+    public const string Mp = "Mp";
+    public const string OrignalMp = "OrignalMp";
 }
 
 
@@ -833,6 +838,13 @@ public class Team
     }
 }
 
+public class HeroSkillData
+{
+    public int ID;
+    public int Level;
+    public bool Open;
+}
+
 public class Hero
 {
     public int Id;//唯一标识
@@ -852,6 +864,7 @@ public class Hero
 
     public Dictionary<string, int> GetItems;//获得过的馈赠
     public Dictionary<int, string> Equips;// EqupType 装备的部位和道具ID
+    public Dictionary<int, HeroSkillData> Skills;//技能和对应等级
 
     public bool IsMy 
      {
@@ -874,6 +887,15 @@ public class Hero
         this.MaxEnegry = ConstConfig.Instance.GetData(ConstDefine.HeroEnegry).IntValues[0];
         this.GetItems = new Dictionary<string, int>();
         this.Equips = new Dictionary<int, string>();
+        this.Skills = new Dictionary<int, HeroSkillData>();
+        foreach (int skid in config.Skills)
+        {
+            HeroSkillData data = new HeroSkillData();
+            data.ID = skid;
+            data.Level = 1;
+            data.Open = true;//默认先开启，后面用一些条件控制
+            this.Skills.Add(data.ID, data);
+        }
         this.ComputeAttributes();
     }
 
@@ -996,8 +1018,15 @@ public class Hero
     }
 }
 
+public class RangeTypeDefine
+{
+    public static string Point = "Point";
+    public static string Cross = "Cross";
+    public static string Matrix = "Matrix";
+    public static string Line = "Line";
+}
 
-public class CostData
+    public class CostData
 {
     public static string TYPE_ITEM = "Item";
     public static string TYPE_HERO = "Hero";
@@ -1087,10 +1116,18 @@ public class BattleData
     public object Param;
 }
 
-public class PlayerBloodChangeData
+public class PlayerEffectChangeData
 {
     public int TeamID;
+    public string EffectType = "";//Buff类型 空为普通攻击
     public int ChangeValue;//>0 加血 <0减血
+
+}
+
+public class BattleSkill
+{
+    public int ID;
+    public int Level;
 }
 
 public class BattlePlayer
@@ -1108,6 +1145,8 @@ public class BattlePlayer
     public List<VInt2> ActionMoveCordinates;
     public bool HasDoRoundActionFinish;//是否本回合已经行动完成
 
+    public Dictionary<int,BattleSkill> _SkillDatas;
+
     public List<VInt2> SkillFightRangeCordinates;
     public List<string> SkillFightRangeCordinatesStrList;
     public int _AttackSkillID = 0;
@@ -1116,13 +1155,7 @@ public class BattlePlayer
     public int ComputeDemage(int skillid)
     {
         int attack = Mathf.RoundToInt(this.Attributes[AttributeDefine.Attack] * this.Attributes[AttributeDefine.Blood]);
-        if (skillid == 0)
-        {
-            //直接按照攻击数值输出
-            return attack;
-        }
-
-        //技能伤害额外去计算
+        //直接按照攻击数值输出
         return attack;
     }
 
@@ -1211,6 +1244,8 @@ public class BattlePlayer
         this.Status = PlayerStatus.Formation;
         this.BornIndex = 0;
         this.Attributes = new Dictionary<string, float>();
+        this.Attributes[AttributeDefine.Mp] = 100;
+        this.Attributes[AttributeDefine.OrignalMp] = 100;
         foreach (string key in team.Attributes.Keys)
         {
             this.Attributes[key] = team.Attributes[key];
@@ -1220,6 +1255,16 @@ public class BattlePlayer
                 this.Attributes[key] = this.Attributes[key] * (1f - reduceAttr);
             }
         }
+
+        this._SkillDatas = new Dictionary<int, BattleSkill>();
+        foreach (HeroSkillData skill in he.Skills.Values)
+        {
+            BattleSkill dat = new BattleSkill();
+            dat.ID = skill.ID;
+            dat.Level = skill.Level;
+            this._SkillDatas.Add(dat.ID, dat);
+        }
+
         this.Postion = new VInt2();
         this.ActionCountDown = 10f / this.Attributes[AttributeDefine.Speed];
     }
@@ -1233,9 +1278,24 @@ public class BattlePlayer
         this.ArmyID = configNpc.Army;
         this.Status = PlayerStatus.Formation;
         this.BornIndex = born;
+
+
+        this._SkillDatas = new Dictionary<int, BattleSkill>();
+        HeroConfig configHero = HeroConfig.Instance.GetData(this.HeroID);
+        int len = configHero.Skills.Length;
+        for(int i = 0;i<len;++i)
+        {
+            BattleSkill skill = new BattleSkill();
+            skill.ID = configHero.Skills[i];
+            skill.Level = configNpc.SkillLvs[i];
+            this._SkillDatas.Add(skill.ID, skill);
+        }
         
         //计算Npc的Attribute
         Team.ComputeTeamAttribute(out this.Attributes, configNpc.Hero, configNpc.Level, configNpc.Army, configNpc.Count);
+        this.Attributes[AttributeDefine.Mp] = 100;
+        this.Attributes[AttributeDefine.OrignalMp] = 100;
+
         this.Postion = new VInt2();
         this.ActionCountDown = 10f / this.Attributes[AttributeDefine.Speed];
     }

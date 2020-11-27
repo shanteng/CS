@@ -46,7 +46,7 @@ public class BattleTeamRender : ItemRender
         this._rateTxt.text = Hero.GetCareerEvaluateName(rate);
         this._careerSp.sprite = ResourcesManager.Instance.GetArmySprite(configTeam.Army);
         this._teamAttrUi.SetNpcData(configTeam);
-        this._HeadUi.SetData(configTeam.Hero);
+        this._HeadUi.SetData(configTeam.Hero,configTeam.Army);
         this._HeadUi._levelTxt.text = LanguageConfig.GetLanguage(LanMainDefine.RoleLevel, configTeam.Level);
     }//end func
 
@@ -60,7 +60,7 @@ public class BattleTeamRender : ItemRender
         this._rateTxt.text = Hero.GetCareerEvaluateName(rate);
         this._careerSp.sprite = ResourcesManager.Instance.GetArmySprite(team.ArmyTypeID);
         this._teamAttrUi.SetData(id);
-        this._HeadUi.SetData(team.HeroID);
+        this._HeadUi.SetData(team.HeroID, team.ArmyTypeID);
         UIRoot.Intance.SetImageGray(this._HeadUi._Icon, team.ArmyCount <= 0);
     }
 
