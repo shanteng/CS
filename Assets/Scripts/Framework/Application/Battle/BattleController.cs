@@ -125,15 +125,15 @@ public class BattleController : MonoBehaviour
         }
     }
 
-    private float _skillSecs = 2f;
-    public void DoAttack()
+    private void AttackAnimationEnd()
     {
-        BattleProxy._instance.DoPlayerAttackAction();
         BattlePlayer player = BattleProxy._instance.GetActionPlayer();
-        player.HasDoRoundActionFinish = true;
 
-        BattlePlayerUi pl = this._PlayerDic[player.TeamID];
-        pl.PlayAnimation(SpineUiPlayer.STATE_ATTACK, 0.3f);
+        string effectRes = BattleEffect.Attack;
+        SkillConfig configSkill = SkillConfig.Instance.GetData(player._AttackSkillID);
+        if (configSkill != null)
+            effectRes = configSkill.EffectRes;
+
         //再AttackRange显示特效
         BattleSpot spot;
         foreach (VInt2 attackPos in player.SkillDemageCordinates)
@@ -142,13 +142,26 @@ public class BattleController : MonoBehaviour
             if (this._SpotDic.TryGetValue(key, out spot))
             {
                 spot.AddEvent(null);
-                BattleEffect effect = this.CreateBattleEffect(BattleEffect.TuCi, new Vector3(attackPos.x, 0, attackPos.y));
+                BattleEffect effect = this.CreateBattleEffect(effectRes, new Vector3(attackPos.x, 0, attackPos.y));
                 effect.gameObject.SetActive(true);
                 GameObject.Destroy(effect.gameObject, effect.Sces);
                 _skillSecs = effect.Sces;
             }
         }
+    }
 
+    private float _skillSecs = 2f;
+    public void DoAttack()
+    {
+        BattleProxy._instance.DoPlayerAttackAction();
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        player.HasDoRoundActionFinish = true;
+
+        BattlePlayerUi pl = this._PlayerDic[player.TeamID];
+        pl.PlayAnimation(SpineUiPlayer.STATE_ATTACK, 0.3f,this.AttackAnimationEnd);
+
+
+        BattleSpot spot;
         foreach (VInt2 attackPos in player.SkillFightRangeCordinates)
         {
             string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
@@ -382,14 +395,13 @@ public class BattleController : MonoBehaviour
                     this._SpotDic[key].ChangeColor(BattleSpotStatus.MoveDisable);
                 else
                     this._SpotDic[key].ChangeColor(BattleSpotStatus.MoveEnable);
-                if (spotOccupy == false)
+                player.ActionMoveCordinates.Add(new VInt2(corX, corZ));
+
+                if (player.TeamID > 0 && spotOccupy == false)//添加地块点击事件
                 {
-                    player.ActionMoveCordinates.Add(new VInt2(corX, corZ));
-                    if (player.TeamID > 0)//添加地块点击事件
-                    {
-                        this._SpotDic[key].AddEvent(OnClickMoveSpot);
-                    }
+                    this._SpotDic[key].AddEvent(OnClickMoveSpot);
                 }
+
             }//end for col
         }//end for row
 

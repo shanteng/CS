@@ -41,7 +41,7 @@ public class BattleProxy : BaseRemoteProxy
         if (skillID == 0)
         {
             //计算普通攻击伤害的人
-            int AttackDemage = actionPlayer.ComputeDemage(skillID);//根据技能和属性计算出本次的输出伤害
+            int AttackDemage = actionPlayer.ComputeDemage(skillID);
             foreach (VInt2 attackPos in actionPlayer.SkillDemageCordinates)
             {
                 BattlePlayer posPlayer = this.GetPlayerBy(attackPos);
@@ -60,9 +60,46 @@ public class BattleProxy : BaseRemoteProxy
         else
         {
             //技能效果判断,扣除Mp
+            BattleSkill skillData = actionPlayer._SkillDatas[skillID];
+            Dictionary<int, SKillEffectResult> effectResults = skillData.EffectResults;
+
+            Dictionary<string, BattleEffectBuff> curEffects = new Dictionary<string, BattleEffectBuff>();
+            double EffectValue = 0;
+            foreach (SKillEffectResult effect in effectResults.Values)
+            {
+                EffectValue = 0;
+                if (!SkillProxy._instance.ComputeBattleSKillEffect(actionPlayer, effect, out EffectValue))
+                    continue;
+                BattleEffectBuff data = new BattleEffectBuff();
+                data.ID = effect.Config.ID;
+                data.Type = effect.Config.Type;
+                data.Duration = effect.Config.Duration;
+                data.Rate = effect.Rate;
+                data.Active_Rate = effect.ActiveRate;
+                data.EffectValue = EffectValue;
+                curEffects[data.Type] = data;
+            }
+
+
             SkillConfig cfg = SkillConfig.Instance.GetData(skillID);
             float curMp = actionPlayer.Attributes[AttributeDefine.Mp] - cfg.MpCost;
             actionPlayer.Attributes[AttributeDefine.Mp] = curMp < 0 ? 0 : curMp;
+           
+  
+            foreach (VInt2 attackPos in actionPlayer.SkillDemageCordinates)
+            {
+                BattlePlayer posPlayer = this.GetPlayerBy(attackPos);
+                if (posPlayer == null || posPlayer.Status != PlayerStatus.Wait)
+                    continue;
+
+                Dictionary<string, BattleEffectShowData> change = posPlayer.TakeBuffs(curEffects, actionPlayer.TeamID);
+                if (change.Count == 0)
+                    continue;
+                PlayerEffectChangeData kv = new PlayerEffectChangeData();
+                kv.TeamID = posPlayer.TeamID;
+                kv.ChangeShowDatas = change;
+                effectPlayers.Add(kv);
+            }
         }
 
         //判断战斗结束

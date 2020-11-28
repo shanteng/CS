@@ -86,6 +86,9 @@
     public const string FavorCurrent = "FavorCurrent";
     public const string TavenRefresh = "TavenRefresh";
 
+    public const string PassiveSkillRange = "PassiveSkillRange";
+
+
     public const string HeroFavorUp = "HeroFavorUp";
     public const string HeroFavorDown = "HeroFavorDown";
 

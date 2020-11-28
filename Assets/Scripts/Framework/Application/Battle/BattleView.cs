@@ -15,6 +15,7 @@ public class BattleView : MonoBehaviour
     public GameObject _ActionCon;
     public UIButton _btnFight;
     public List<SkillItemUi> _btnSkills;
+    public List<SkillPassiveUi> _btnPassiveSkills;
 
     public UIButton _btnEndRound;
     public UIButton _btnCancelFight;
@@ -50,6 +51,13 @@ public class BattleView : MonoBehaviour
         BattleController.Instance.SetAttackRange(0);
     }
 
+    private void OnPassiveSkill(int skillID)
+    {
+        BattlePlayer pl = BattleProxy._instance.GetActionPlayer();
+        BattleSkill data = pl._SkillDatas[skillID];
+        PopupFactory.Instance.ShowSkill(data);
+    }
+
     private void OnSkillFight(int skillID)
     {
         this.SetSKillBtnVisible(false);
@@ -65,6 +73,12 @@ public class BattleView : MonoBehaviour
         {
             btn.gameObject.SetActive(btn.ID > 0 && vis);
             btn.AddEvent(OnSkillFight);
+        }
+
+        foreach (SkillPassiveUi btn in this._btnPassiveSkills)
+        {
+            btn.gameObject.SetActive(btn.ID > 0 && vis);
+            btn.AddEvent(OnPassiveSkill);
         }
     }
 
@@ -89,6 +103,7 @@ public class BattleView : MonoBehaviour
         this._btnSureFight.Hide();
         this._btnCancelFight.Hide();
         this._btnEndRound.Hide();
+        this.SetHpAndMp();
     }
 
     public void ShowAttackSure()
@@ -98,7 +113,6 @@ public class BattleView : MonoBehaviour
 
     public void OnAttackEnd()
     {
-        this.SetHpAndMp();
         //更新列表状态和血量
         foreach (BattleInfoUi ui in this._InfoUiDic.Values)
         {
@@ -241,7 +255,7 @@ public class BattleView : MonoBehaviour
         float MpOr = player.Attributes[AttributeDefine.OrignalMp];
 
         this._HpSlider.value = Blood / BloodOr;
-        this._HpSlider.value = Mp / MpOr;
+        this._MpSlider.value = Mp / MpOr;
 
         this._HpTxt.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, Blood, BloodOr);
         this._MpTxt.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, Mp, MpOr);
@@ -265,11 +279,27 @@ public class BattleView : MonoBehaviour
                 this._btnSkills[i].SetData(0);
             }//end for
 
+             len = this._btnPassiveSkills.Count;
+            for (int i = 0; i < len; ++i)
+            {
+                this._btnPassiveSkills[i].SetData(0);
+            }//end for
+
             int index = 0;
+            int indexPass = 0;
             foreach (BattleSkill data in player._SkillDatas.Values)
             {
-                this._btnSkills[index].SetData(data.ID, data.Level);
-                index++;
+                SkillConfig config = SkillConfig.Instance.GetData(data.ID);
+                if (config.MpCost > 0)
+                {
+                    this._btnSkills[index].SetData(data.ID, data.Level);
+                    index++;
+                }
+                else
+                {
+                    this._btnPassiveSkills[indexPass].SetData(data.ID, data.Level);
+                    indexPass++;
+                }
             }
 
             //普攻图标

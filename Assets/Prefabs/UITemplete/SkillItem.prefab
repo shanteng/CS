@@ -956,7 +956,12 @@ MonoBehaviour:
   _Base: {fileID: 3001821692965179887}
   _LockGray: {fileID: 9131723280169394692}
   _Lock: {fileID: 7682345673330534150}
-  _ranks: []
+  _ranks:
+  - {fileID: 2436917290924544052}
+  - {fileID: 6692057505374099191}
+  - {fileID: 8136055720299797056}
+  - {fileID: 4407160163713575431}
+  - {fileID: 5567255845293077003}
 --- !u!114 &8013668159529883135
 MonoBehaviour:
   m_ObjectHideFlags: 0

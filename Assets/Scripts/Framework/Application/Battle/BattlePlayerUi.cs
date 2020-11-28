@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class BattlePlayerUi : UIBase
 {
@@ -63,14 +64,28 @@ public class BattlePlayerUi : UIBase
         this._BloodChangeTxt.gameObject.SetActive(false);
     }
 
-    public void PlayAnimation(string ani, float backIdleSces = 0)
+    private UnityAction _callBack;
+    public void PlayAnimation(string ani, float backIdleSces = 0,UnityAction callback = null)
     {
         this._curModel.Play(ani, backIdleSces == 0);
         if (backIdleSces > 0)
         {
+            _callBack = callback;
             CoroutineUtil.GetInstance().WaitTime(backIdleSces, true, OnBackToIdle);
         }
     }
+
+    private void OnBackToIdle(object[] param)
+    {
+        //进入下一轮
+        this._curModel.Play(SpineUiPlayer.STATE_IDLE, true);
+        if (this._callBack != null)
+        {
+            this._callBack.Invoke();
+            this._callBack = null;
+        }
+    }
+
 
     public void ReponseToEffect(PlayerEffectChangeData data)
     {
@@ -99,11 +114,6 @@ public class BattlePlayerUi : UIBase
         this._BloodChangeTxt.gameObject.SetActive(true);
     }
 
-    private void OnBackToIdle(object[] param)
-    {
-        //进入下一轮
-        this._curModel.Play(SpineUiPlayer.STATE_IDLE, true);
-    }
 
     public void UpdateBlood()
     {

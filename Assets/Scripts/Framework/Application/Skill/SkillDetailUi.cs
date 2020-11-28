@@ -32,7 +32,9 @@ public class SkillDetailUi : UIBase
         SkillConfig config = SkillConfig.Instance.GetData(id);
         this._itemUi.SetData(id, level, isOpen);
         this._NameTxt.text = config.Name;
+        this._TypeTxt.text = SkillProxy._instance.GetSkillTypeName(id);
         this._MpCostTxt.text = config.MpCost.ToString();
+        this._MpCostTxt.gameObject.SetActive(config.MpCost > 0);
         List<string> descs = new List<string>();
         int count = config.EffectIDs.Length;
         for (int i = 0; i < count; ++i)
@@ -53,6 +55,7 @@ public class SkillDetailUi : UIBase
         SkillLevelConfig configLv = SkillProxy._instance.GetSkillLvConfig(id, level);
         this._AttackRgUi.SetData(configLv.AttackRangeID);
         this._DemageRgUi.SetData(configLv.DemageRangeID);
+        this._DemageRgUi.gameObject.SetActive(configLv.DemageRangeID.Equals("") == false);
     }
 }
 

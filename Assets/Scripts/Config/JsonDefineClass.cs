@@ -130,6 +130,7 @@ public class SkillConfig : Config<SkillConfig>
 {
     public int Type;
     public string Name;
+    public string EffectRes;
     public string[] Descs;
     public int[] EffectIDs;
     public int MpCost;
@@ -144,6 +145,7 @@ public class SkillEffectConfig : Config<SkillEffectConfig>
     public string[] ComputeParams;
     public string Rate;
     public string Active_Rate;
+    public string Active_Mode;
     public int Duration;
     public SkillEffectConfig() : base(JsonNameDefine.SkillEffect) { }
 }

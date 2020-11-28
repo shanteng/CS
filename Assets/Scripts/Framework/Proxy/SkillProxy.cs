@@ -18,6 +18,12 @@ public class SkillProxy : BaseRemoteProxy
         _instance = this;
     }
 
+    public string GetSkillTypeName(int id)
+    {
+        SkillConfig config = SkillConfig.Instance.GetData(id);
+        string key = UtilTools.combine("SkillType", config.Type);
+        return LanguageConfig.GetLanguage(key);
+    }
     public double CalculateExpresstionValue(string expression, params object[] paramName)
     {
         if (string.IsNullOrEmpty(expression))
@@ -40,6 +46,52 @@ public class SkillProxy : BaseRemoteProxy
         double value = this.CalculateExpresstionValue(expression, paramName);
         return value.ToString();
     }
+
+    public Dictionary<int, SKillEffectResult> GetBattleSkillAttackEffect(int id, int level)
+    {
+        Dictionary<int, SKillEffectResult> effects = new Dictionary<int, SKillEffectResult>();
+        SkillConfig config = SkillConfig.Instance.GetData(id);
+        foreach (int effectid in config.EffectIDs)
+        {
+            SKillEffectResult result = new SKillEffectResult();
+            SkillEffectConfig configEffect = SkillEffectConfig.Instance.GetData(effectid);
+            result.Config = configEffect;
+            result.Value = SkillProxy._instance.CalculateExpresstionValue(configEffect.Value, "$level", level);
+            result.Rate = SkillProxy._instance.CalculateExpresstionValue(configEffect.Rate, "$level", level);
+            result.ActiveRate = SkillProxy._instance.CalculateExpresstionValue(configEffect.Active_Rate, "$level", level);
+
+            effects[effectid] = result;
+        }
+        return effects;
+    }
+
+    public bool IsRateSuccess(double rate)
+    {
+        int RandomRate = UtilTools.RangeInt(0, 99);
+        return (RandomRate > rate);
+    }
+
+    public double DemageCompute(BattlePlayer actionPl, SKillEffectResult result)
+    {
+        float attack = actionPl.Attributes[AttributeDefine.Attack] * actionPl.Attributes[AttributeDefine.Blood];
+        int finalDemage = Mathf.RoundToInt(attack * (float)result.Value * 0.01f);
+        return finalDemage;
+    }
+
+    public bool ComputeBattleSKillEffect(BattlePlayer actionPl, SKillEffectResult result,out double Value)
+    {
+        Value = 0;
+        if (IsRateSuccess(result.Rate))
+            return false;//失败了不触发
+
+        if (result.Config.Type.Equals(SkillEffectType.Demage))
+            Value = this.DemageCompute(actionPl, result);
+        else
+            Value = result.Value;
+        return true;
+    }
+
+   
 
     public List<VInt2> GetRangeCordinate(string rangeID,VInt2 StartPosition,VInt2 RolePostion = null)
     {

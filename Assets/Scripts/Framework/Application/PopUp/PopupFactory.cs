@@ -22,6 +22,7 @@ public enum PopType
     TEXT,
     ATTACK_GROUP,
     HERO_DETAILS,
+    SKILL,
 };
 
 public class PopupFactory : SingletonFactory<PopupFactory>
@@ -93,6 +94,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
     public void ShowText(string content)
     {
         this.ShowPop(PopType.TEXT, content);
+    }
+
+    public void ShowSkill(BattleSkill data)
+    {
+        this.ShowPop(PopType.SKILL, data);
     }
 
     public void ShowHeroDetails(int id)
@@ -249,6 +255,11 @@ public class PopupFactory : SingletonFactory<PopupFactory>
                     _curShowWin = InitHeroDetails();
                     break;
                 }
+            case PopType.SKILL:
+                {
+                    _curShowWin = InitSkill();
+                    break;
+                }
         }
         this._curShowType = type;
         this._curShowWin.gameObject.SetActive(true);
@@ -368,6 +379,14 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         GameObject view = ResourcesManager.Instance.LoadPopupRes("HeroDetailsPop");
         Popup script = view.GetComponent<Popup>();
         HeroDetailsPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<HeroDetailsPop>();
+        return scriptClone;
+    }
+
+    protected Popup InitSkill()
+    {
+        GameObject view = ResourcesManager.Instance.LoadPopupRes("SkillDetailsPop");
+        Popup script = view.GetComponent<Popup>();
+        SkillDetalisPop scriptClone = UIRoot.Intance.InstantiateUIInCenter(view, script._layer, script._SetAnchor).GetComponent<SkillDetalisPop>();
         return scriptClone;
     }
 

@@ -168,6 +168,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\PopupFactory.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\QuestCityPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\QuesttemRender.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\PopUp\SkillDetalisPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\TalentPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\TextPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\ResourcesManager.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\SingletonFactory.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Skill\SkillDetailUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Skill\SkillItemUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Skill\SkillPassiveUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Skill\SkillRangeUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\TimeCenterMono.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\UIRoot.cs" />

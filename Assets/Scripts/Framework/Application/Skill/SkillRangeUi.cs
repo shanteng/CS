@@ -33,6 +33,18 @@ public class SkillRangeUi : UIBase
         this._saves.Clear();
 
         RangeFunctionConfig config = RangeFunctionConfig.Instance.GetData(rangeID);
+        if (config == null)
+        {
+            this._nameTxt.text = LanguageConfig.GetLanguage(LanMainDefine.PassiveSkillRange);
+            this._Templete.gameObject.SetActive(true);
+            _Templete.rectTransform.localScale = Vector3.one;
+            _Templete.rectTransform.sizeDelta = new Vector2(Size, Size);
+            _Templete.rectTransform.anchoredPosition = Vector2.zero;
+            _Templete.color = this._StartPointColor;
+            return;    
+        }
+
+        _Templete.gameObject.SetActive(false);
         this._nameTxt.text = config.Name;
         Vector2 StartPos = new Vector2(0, 0);
         int maxRange = 1;
