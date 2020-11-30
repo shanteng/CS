@@ -534,7 +534,15 @@ public class SkillEffectTarget
 public class BuffActiveMode
 {
     public const string Now = "Now";
-    public const string EveryRound = "EveryRound";
+    public const string Round = "Round";
+}
+
+public class SkillReleaseTerm
+{
+    public const string Manual = "Manual";
+    public const string SelfRound = "SelfRound";
+    public const string BeforeRound = "BeforeRound";
+    public const string AfterAttack = "AfterAttack";
 }
 
 public class SkillComputeType
@@ -1158,8 +1166,7 @@ public class BattleData
 public class PlayerEffectChangeData
 {
     public int TeamID;
-    public int ChangeValue;//>0 加血 <0减血
-    public Dictionary<string, BattleEffectShowData> ChangeShowDatas;
+    public Dictionary<string, BattleEffectShowData> ChangeShowDatas = new Dictionary<string, BattleEffectShowData>();
 }
 
 public class BattleSkill
@@ -1191,7 +1198,7 @@ public class BattleEffectBuff
 public class BattleEffectShowData
 {
     public string Type;
-    public double EffectValue;
+    public double ChangeValue;
 }
 
 public class BattlePlayer
@@ -1218,26 +1225,32 @@ public class BattlePlayer
 
     public Dictionary<string, BattleEffectBuff> _Buffs = new Dictionary<string, BattleEffectBuff>();
 
-    public int ComputeDemage(int skillid)
+    public Dictionary<string, BattleEffectShowData> TakeBuffs(Dictionary<string, BattleEffectBuff> buffs
+        , int actionTeamID,List<VInt2> skillDemageCordinates)
     {
-        float realAttack = this.Attributes[AttributeDefine.Attack] + this.Attributes[AttributeDefine.BuffAttack];
-        int attack = Mathf.RoundToInt(realAttack * this.Attributes[AttributeDefine.Blood]);
-        //直接按照攻击数值输出
-        return attack;
-    }
-
-    public Dictionary<string, BattleEffectShowData> TakeBuffs(Dictionary<string, BattleEffectBuff> buffs, int actionTeamID)
-    {
-        Dictionary<string, BattleEffectShowData> changeDic = new Dictionary<string, BattleEffectShowData>();
+        Dictionary<string, BattleEffectShowData> changesDic = new Dictionary<string, BattleEffectShowData>();
         bool isSameTeam = actionTeamID * this.TeamID > 0;
         bool isMySelf = this.TeamID == actionTeamID;
         bool isSelfOther = isSameTeam && isMySelf == false;
         bool isEnemy = isSameTeam = false;
+        bool isInDemageRange = false;
+        foreach (VInt2 pos in skillDemageCordinates)
+        {
+            if (pos.x == this.Postion.x && pos.y == this.Postion.y)
+            {
+                isInDemageRange = true;
+                break;
+            }
+        }//end for 
 
         foreach (string buffType in buffs.Keys)
         {
             BattleEffectBuff curBuff = buffs[buffType];
             SkillEffectConfig config = SkillEffectConfig.Instance.GetData(curBuff.ID);
+            bool isJudgeDemageRange = config.JudgeInDemageRange > 0;
+            if (isJudgeDemageRange && isInDemageRange == false)
+                continue;//不再范围内的不判断
+
             if (config.Target.Equals(SkillEffectTarget.Enemy) && isEnemy == false)
                 continue;
 
@@ -1250,64 +1263,64 @@ public class BattlePlayer
             if (config.Target.Equals(SkillEffectTarget.Self_Other) && (isSameTeam == false || isMySelf))
                 continue;
 
-            BattleEffectBuff oldData;
-            if (this._Buffs.TryGetValue(buffType, out oldData))
+            BattleEffectBuff nowBuff;
+            if (this._Buffs.TryGetValue(buffType, out nowBuff) == false)
             {
-                oldData = new BattleEffectBuff();
-                this._Buffs.Add(buffType, oldData);
+                nowBuff = new BattleEffectBuff();
+                this._Buffs.Add(buffType, nowBuff);
             }
 
-            if (curBuff.EffectValue <= oldData.EffectValue)
-                continue;//较大的属性才进行替换
-
-            oldData.Type = buffType;
-            oldData.ID = curBuff.ID;
-            oldData.EffectValue = curBuff.EffectValue;
-            oldData.Duration = curBuff.Duration;
-            oldData.Rate = curBuff.Rate;
-            oldData.Active_Rate = curBuff.Active_Rate;
-            oldData.ActionTeamID = curBuff.ActionTeamID;
-
-            bool isNowEffect = config.Active_Mode.Equals(BuffActiveMode.Now);
-            if (isNowEffect == false)
-                continue;
+            nowBuff.Type = buffType;
+            nowBuff.ID = curBuff.ID;
+            nowBuff.EffectValue = curBuff.EffectValue;
+            nowBuff.Duration = curBuff.Duration;
+            nowBuff.Rate = curBuff.Rate;
+            nowBuff.Active_Rate = curBuff.Active_Rate;
+            nowBuff.ActionTeamID = curBuff.ActionTeamID;
 
             BattleEffectShowData showData = new BattleEffectShowData();
             showData.Type = curBuff.Type;
-            if (curBuff.Type.Equals(SkillEffectType.Demage))
+            showData.ChangeValue = 0;
+            bool isNowEffect = config.Active_Mode.Equals(BuffActiveMode.Now);
+            if (isNowEffect)//
             {
-                showData.EffectValue = this.TakeDemage(oldData.EffectValue);
-            }
-            else if (curBuff.Type.Equals(SkillEffectType.Defense_Up))
-            {
-                this.Attributes[AttributeDefine.BuffDefense] += (float)curBuff.EffectValue;
-                showData.EffectValue = curBuff.EffectValue;
-            }
-            else if (curBuff.Type.Equals(SkillEffectType.Heal))
-            {
-                float wouned = this.Attributes[AttributeDefine.WoundedBlood];
-                int recoverBlood = Mathf.RoundToInt(wouned * (float)curBuff.EffectValue * 0.01f);
-                int afterBlood = (int)this.Attributes[AttributeDefine.Blood] + recoverBlood;
-                if (afterBlood > (int)this.Attributes[AttributeDefine.OrignalBlood])
-                    afterBlood = (int)this.Attributes[AttributeDefine.OrignalBlood];
+                if (curBuff.Type.Equals(SkillEffectType.Demage))
+                {
+                    double realAttack = nowBuff.EffectValue + this.Attributes[AttributeDefine.BuffAttack];
+                    int demage = Mathf.RoundToInt((float)realAttack * this.Attributes[AttributeDefine.Blood]);
+                    showData.ChangeValue = this.TakeDemage(demage);
+                }
+                else if (curBuff.Type.Equals(SkillEffectType.Defense_Up))
+                {
+                    this.Attributes[AttributeDefine.BuffDefense] += (float)curBuff.EffectValue;
+                    showData.ChangeValue = curBuff.EffectValue;
+                }
+                else if (curBuff.Type.Equals(SkillEffectType.Heal))
+                {
+                    float wouned = this.Attributes[AttributeDefine.WoundedBlood];
+                    int recoverBlood = Mathf.RoundToInt(wouned * (float)curBuff.EffectValue * 0.01f);
+                    int afterBlood = (int)this.Attributes[AttributeDefine.Blood] + recoverBlood;
+                    if (afterBlood > (int)this.Attributes[AttributeDefine.OrignalBlood])
+                        afterBlood = (int)this.Attributes[AttributeDefine.OrignalBlood];
 
-                showData.EffectValue = afterBlood - this.Attributes[AttributeDefine.Blood];
-                this.Attributes[AttributeDefine.Blood] = afterBlood;
+                    showData.ChangeValue = afterBlood - this.Attributes[AttributeDefine.Blood];
+                    this.Attributes[AttributeDefine.Blood] = afterBlood;
+                }
+                else if (curBuff.Type.Equals(SkillEffectType.Attack_Up))
+                {
+                    this.Attributes[AttributeDefine.BuffAttack] += (float)curBuff.EffectValue;
+                    showData.ChangeValue = curBuff.EffectValue;
+                }
+                else if (curBuff.Type.Equals(SkillEffectType.Speed_Up))
+                {
+                    this.Attributes[AttributeDefine.BuffSpeed] += (float)curBuff.EffectValue;
+                    showData.ChangeValue = curBuff.EffectValue;
+                }
             }
-            else if (curBuff.Type.Equals(SkillEffectType.Attack_Up))
-            {
-                this.Attributes[AttributeDefine.BuffAttack] += (float)curBuff.EffectValue;
-                showData.EffectValue = curBuff.EffectValue;
-            }
-            else if (curBuff.Type.Equals(SkillEffectType.Speed_Up))
-            {
-                this.Attributes[AttributeDefine.BuffSpeed] += (float)curBuff.EffectValue;
-                showData.EffectValue = curBuff.EffectValue;
-            }
-            changeDic[showData.Type] = showData;
-        }
+            changesDic[showData.Type] = showData;
+        }//end for
 
-        return changeDic;
+        return changesDic;
     }
 
     public int TakeDemage(double demage)

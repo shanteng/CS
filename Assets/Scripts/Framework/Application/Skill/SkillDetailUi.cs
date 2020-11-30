@@ -9,10 +9,11 @@ using UnityEngine.Events;
 public class SkillDetailUi : UIBase
 {
     public SkillItemUi _itemUi;
-    public Text _NameTxt;
+   
     public Text _TypeTxt;
     public TextMeshProUGUI _MpCostTxt;
     public Text _DescTxt;
+    public Text _ReleaseTxt;
 
     public SkillRangeUi _AttackRgUi;
     public SkillRangeUi _DemageRgUi;
@@ -28,10 +29,9 @@ public class SkillDetailUi : UIBase
     public void SetData(int id, int level = 1, bool isOpen = true)
     {
         this._id = id;
-
         SkillConfig config = SkillConfig.Instance.GetData(id);
         this._itemUi.SetData(id, level, isOpen);
-        this._NameTxt.text = config.Name;
+       
         this._TypeTxt.text = SkillProxy._instance.GetSkillTypeName(id);
         this._MpCostTxt.text = config.MpCost.ToString();
         this._MpCostTxt.gameObject.SetActive(config.MpCost > 0);
@@ -52,10 +52,19 @@ public class SkillDetailUi : UIBase
         string str = string.Join("，", descs);
         this._DescTxt.text = str;
 
+        this._ReleaseTxt.text = SkillProxy._instance.GetSkillReleasDesc(id);
         SkillLevelConfig configLv = SkillProxy._instance.GetSkillLvConfig(id, level);
-        this._AttackRgUi.SetData(configLv.AttackRangeID);
-        this._DemageRgUi.SetData(configLv.DemageRangeID);
-        this._DemageRgUi.gameObject.SetActive(configLv.DemageRangeID.Equals("") == false);
+        bool NoRange = configLv.DemageRangeID.Equals("");
+
+        this._ReleaseTxt.gameObject.SetActive(NoRange);
+        this._DemageRgUi.gameObject.SetActive(NoRange == false);
+        this._AttackRgUi.gameObject.SetActive(NoRange == false);
+
+        if (NoRange == false)
+        {
+            this._AttackRgUi.SetData(configLv.AttackRangeID);
+            this._DemageRgUi.SetData(configLv.DemageRangeID);
+        }
     }
 }
 

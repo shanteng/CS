@@ -131,6 +131,8 @@ public class SkillConfig : Config<SkillConfig>
     public int Type;
     public string Name;
     public string EffectRes;
+    public string ReleaseTerm;
+
     public string[] Descs;
     public int[] EffectIDs;
     public int MpCost;
@@ -140,7 +142,11 @@ public class SkillConfig : Config<SkillConfig>
 public class SkillEffectConfig : Config<SkillEffectConfig>
 {
     public string Type;
+    public string Name;
+    public string Desc;
+
     public string Target;
+    public int JudgeInDemageRange;
     public string Value;
     public string[] ComputeParams;
     public string Rate;

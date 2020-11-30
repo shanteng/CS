@@ -93,6 +93,8 @@
     public const string HeroFavorDown = "HeroFavorDown";
 
     public const string CityGroupName = "CityGroupName";
+    public const string BuffEffectTips = "BuffEffectTips";
+    public const string Forever = "Forever";
 
     public const string AfterTimeTalk = "AfterTimeTalk";
     public const string HeroFavorLevelChanged = "HeroFavorLevelChanged";
@@ -105,8 +107,8 @@
     public const string ArmyRecruitFinish = "ArmyRecruitFinish";
     public const string SelectUpPostion = "SelectUpPostion";
 
-    public const string BloodAdd = "BloodAdd";
-    public const string BloodDesc = "BloodDesc";
+    public const string EffectAdd = "EffectAdd";
+    public const string EffectDesc = "EffectDesc";
 
     public const string ArriveYet = "ArriveYet";
     public const string Moving = "Moving";

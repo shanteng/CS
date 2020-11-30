@@ -24,6 +24,15 @@ public class SkillProxy : BaseRemoteProxy
         string key = UtilTools.combine("SkillType", config.Type);
         return LanguageConfig.GetLanguage(key);
     }
+
+    public string GetSkillReleasDesc(int id)
+    {
+        SkillConfig config = SkillConfig.Instance.GetData(id);
+        string key = UtilTools.combine("Release", config.ReleaseTerm);
+        return LanguageConfig.GetLanguage(key);
+    }
+
+
     public double CalculateExpresstionValue(string expression, params object[] paramName)
     {
         if (string.IsNullOrEmpty(expression))
@@ -71,12 +80,6 @@ public class SkillProxy : BaseRemoteProxy
         return (RandomRate > rate);
     }
 
-    public double DemageCompute(BattlePlayer actionPl, SKillEffectResult result)
-    {
-        float attack = actionPl.Attributes[AttributeDefine.Attack] * actionPl.Attributes[AttributeDefine.Blood];
-        int finalDemage = Mathf.RoundToInt(attack * (float)result.Value * 0.01f);
-        return finalDemage;
-    }
 
     public bool ComputeBattleSKillEffect(BattlePlayer actionPl, SKillEffectResult result,out double Value)
     {
@@ -85,7 +88,7 @@ public class SkillProxy : BaseRemoteProxy
             return false;//失败了不触发
 
         if (result.Config.Type.Equals(SkillEffectType.Demage))
-            Value = this.DemageCompute(actionPl, result);
+            Value = Mathf.RoundToInt(actionPl.Attributes[AttributeDefine.Attack] * (float)result.Value * 0.01f);
         else
             Value = result.Value;
         return true;

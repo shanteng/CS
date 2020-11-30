@@ -31,40 +31,36 @@ public class BattleProxy : BaseRemoteProxy
         //this.BattleEnd(true);
     }
 
-    public void DoPlayerAttackAction()
+    public List<PlayerEffectChangeData> ManualReleaseAction()
     {
         BattlePlayer actionPlayer = this.GetActionPlayer();
         int attackerTeamID = actionPlayer.TeamID;
-        List<PlayerEffectChangeData> effectPlayers = new List<PlayerEffectChangeData>();
 
+        Dictionary<string, BattleEffectBuff> curEffects = new Dictionary<string, BattleEffectBuff>();
+        double EffectValue = 0;
         int skillID = actionPlayer._AttackSkillID;
         if (skillID == 0)
         {
             //计算普通攻击伤害的人
-            int AttackDemage = actionPlayer.ComputeDemage(skillID);
-            foreach (VInt2 attackPos in actionPlayer.SkillDemageCordinates)
-            {
-                BattlePlayer posPlayer = this.GetPlayerBy(attackPos);
-                if (posPlayer == null || posPlayer.Status != PlayerStatus.Wait)
-                    continue;
-                int teamvalue = actionPlayer.TeamID * posPlayer.TeamID;
-                if (teamvalue > 0)
-                    continue;//相同队伍的不受伤害
-                int loseBlood = posPlayer.TakeDemage(AttackDemage);
-                PlayerEffectChangeData kv = new PlayerEffectChangeData();
-                kv.TeamID = posPlayer.TeamID;
-                kv.ChangeValue = -loseBlood;
-                effectPlayers.Add(kv);
-            }
+            BattleEffectBuff data = new BattleEffectBuff();
+            SkillEffectConfig normalEffectConfig = SkillEffectConfig.Instance.GetData(0);
+            data.ID = 0;//普攻特殊ID
+            data.Type = normalEffectConfig.Type;
+            data.Duration = normalEffectConfig.Duration;
+            data.Rate = SkillProxy._instance.CalculateExpresstionValue(normalEffectConfig.Rate, "$level", 1);
+            data.Active_Rate = SkillProxy._instance.CalculateExpresstionValue(normalEffectConfig.Active_Rate, "$level", 1);
+            data.EffectValue = SkillProxy._instance.CalculateExpresstionValue(normalEffectConfig.Value, "$level", 1); ;
+            curEffects[data.Type] = data;
         }
         else
         {
             //技能效果判断,扣除Mp
+            SkillConfig cfg = SkillConfig.Instance.GetData(skillID);
+            float curMp = actionPlayer.Attributes[AttributeDefine.Mp] - cfg.MpCost;
+            actionPlayer.Attributes[AttributeDefine.Mp] = curMp < 0 ? 0 : curMp;
+            //技能影响效果
             BattleSkill skillData = actionPlayer._SkillDatas[skillID];
             Dictionary<int, SKillEffectResult> effectResults = skillData.EffectResults;
-
-            Dictionary<string, BattleEffectBuff> curEffects = new Dictionary<string, BattleEffectBuff>();
-            double EffectValue = 0;
             foreach (SKillEffectResult effect in effectResults.Values)
             {
                 EffectValue = 0;
@@ -78,28 +74,23 @@ public class BattleProxy : BaseRemoteProxy
                 data.Active_Rate = effect.ActiveRate;
                 data.EffectValue = EffectValue;
                 curEffects[data.Type] = data;
-            }
+            }//end for
+        }//end else
 
-
-            SkillConfig cfg = SkillConfig.Instance.GetData(skillID);
-            float curMp = actionPlayer.Attributes[AttributeDefine.Mp] - cfg.MpCost;
-            actionPlayer.Attributes[AttributeDefine.Mp] = curMp < 0 ? 0 : curMp;
-           
-  
-            foreach (VInt2 attackPos in actionPlayer.SkillDemageCordinates)
-            {
-                BattlePlayer posPlayer = this.GetPlayerBy(attackPos);
-                if (posPlayer == null || posPlayer.Status != PlayerStatus.Wait)
-                    continue;
-
-                Dictionary<string, BattleEffectShowData> change = posPlayer.TakeBuffs(curEffects, actionPlayer.TeamID);
-                if (change.Count == 0)
-                    continue;
-                PlayerEffectChangeData kv = new PlayerEffectChangeData();
-                kv.TeamID = posPlayer.TeamID;
-                kv.ChangeShowDatas = change;
-                effectPlayers.Add(kv);
-            }
+        //判断效果接受效果的人
+        List<PlayerEffectChangeData> effectPlayers = new List<PlayerEffectChangeData>();
+        foreach (BattlePlayer pl in this._data.Players.Values)
+        {
+            bool isValid = pl.Status == PlayerStatus.Wait || pl.Status == PlayerStatus.Action || pl.Status == PlayerStatus.ActionFinished;
+            if (isValid == false)
+                continue;
+            Dictionary<string, BattleEffectShowData> changes = pl.TakeBuffs(curEffects, actionPlayer.TeamID, actionPlayer.SkillDemageCordinates);
+            if (changes.Count == 0)
+                continue;
+            PlayerEffectChangeData kv = new PlayerEffectChangeData();
+            kv.TeamID = pl.TeamID;
+            kv.ChangeShowDatas = changes;
+            effectPlayers.Add(kv);
         }
 
         //判断战斗结束
@@ -120,8 +111,7 @@ public class BattleProxy : BaseRemoteProxy
             this.DoEndBattleResult(attackerTeamID > 0);
         }
 
-        //播放完毕动画再去处理UI
-        BattleController.Instance.ResponseToSkillBehaviour(effectPlayers);
+        return effectPlayers;
     }
 
     public void DoEndBattleResult(bool IsWin)

@@ -17,6 +17,9 @@ public class BattleView : MonoBehaviour
     public List<SkillItemUi> _btnSkills;
     public List<SkillPassiveUi> _btnPassiveSkills;
 
+    public GameObject _buffCon;
+    public List<BuffItemUi> _buffs;
+
     public UIButton _btnEndRound;
     public UIButton _btnCancelFight;
     public UIButton _btnSureFight;
@@ -82,8 +85,6 @@ public class BattleView : MonoBehaviour
         }
     }
 
-  
-
     private void OnEndRound(UIButton btn)
     {
         BattleProxy._instance.DoNextRound();
@@ -98,7 +99,7 @@ public class BattleView : MonoBehaviour
 
     private void OnSureFight(UIButton btn)
     {
-        BattleController.Instance.DoAttack();
+        BattleController.Instance.DoManualReleaseAction();
         this.SetSKillBtnVisible(false);
         this._btnSureFight.Hide();
         this._btnCancelFight.Hide();

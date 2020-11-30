@@ -125,16 +125,14 @@ public class BattleController : MonoBehaviour
         }
     }
 
-    private void AttackAnimationEnd()
+    private void SetSpotAttackEffects()
     {
         BattlePlayer player = BattleProxy._instance.GetActionPlayer();
-
         string effectRes = BattleEffect.Attack;
         SkillConfig configSkill = SkillConfig.Instance.GetData(player._AttackSkillID);
         if (configSkill != null)
             effectRes = configSkill.EffectRes;
 
-        //再AttackRange显示特效
         BattleSpot spot;
         foreach (VInt2 attackPos in player.SkillDemageCordinates)
         {
@@ -151,18 +149,18 @@ public class BattleController : MonoBehaviour
     }
 
     private float _skillSecs = 2f;
-    public void DoAttack()
+    public void DoManualReleaseAction()
     {
-        BattleProxy._instance.DoPlayerAttackAction();
-        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
-        player.HasDoRoundActionFinish = true;
+        List<PlayerEffectChangeData> effectPlayers =  BattleProxy._instance.ManualReleaseAction();
+        BattlePlayer actionPl = BattleProxy._instance.GetActionPlayer();
+        actionPl.HasDoRoundActionFinish = true;
 
-        BattlePlayerUi pl = this._PlayerDic[player.TeamID];
-        pl.PlayAnimation(SpineUiPlayer.STATE_ATTACK, 0.3f,this.AttackAnimationEnd);
+        BattlePlayerUi plUi = this._PlayerDic[actionPl.TeamID];
+        plUi.PlayAnimation(SpineUiPlayer.STATE_ATTACK, 0.3f,this.SetSpotAttackEffects);//播完攻击动作，设置地块释放特效
 
-
+        //去掉地块点击事件
         BattleSpot spot;
-        foreach (VInt2 attackPos in player.SkillFightRangeCordinates)
+        foreach (VInt2 attackPos in actionPl.SkillFightRangeCordinates)
         {
             string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
             if (this._SpotDic.TryGetValue(key, out spot))
@@ -170,15 +168,16 @@ public class BattleController : MonoBehaviour
                 spot.AddEvent(null);
             }
         }
+
+        this.EffectPlayerResponseToSkill(effectPlayers);
     }
 
-    public void ResponseToSkillBehaviour(List<PlayerEffectChangeData> effectPlayers)
+    private void EffectPlayerResponseToSkill(List<PlayerEffectChangeData> effectPlayers)
     {
         foreach (PlayerEffectChangeData data in effectPlayers)
         {
-            BattlePlayerUi pl = this._PlayerDic[data.TeamID];
-            //播放被击动画
-            pl.ReponseToEffect(data);
+            BattlePlayerUi plUi = this._PlayerDic[data.TeamID];
+            plUi.ReponseToEffect(data);
         }
         //等待各种伤害数字以及被击中的人的被打击动画播放完毕
         CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd);

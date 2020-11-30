@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 public class SkillItemUi : UIBase
 {
+    public Text _NameTxt;
     public Image _Icon;
     public GameObject _Light;
     public Image _Base;
@@ -46,6 +47,7 @@ public class SkillItemUi : UIBase
         if (id == 0)
             return;
         SkillConfig config = SkillConfig.Instance.GetData(id);
+        this._NameTxt.text = config.Name;
         this._Icon.sprite = ResourcesManager.Instance.GetSkillSprite(id);
 
         UIRoot.Intance.SetImageGray(this._Icon, !isOpen);

@@ -13,14 +13,24 @@ public class BattlePlayerUi : UIBase
     public Transform _DefenseRoot;
     public Text _NameTxt;
     public Slider _bloodSlider;
+    public Image _bloodImage;
     public GameObject _actionObj;
-    public Text _BloodChangeTxt;
+
+    public Transform _EffectRoot;
+    public Text _ChangeTxt;
     private SpineUiPlayer _curModel;
 
     private int _teamid;
     private float _maxBlood;
 
+    public List<Color> _bloodColors;
+
     public int ID => this._teamid;
+
+    private void Awake()
+    {
+        this._ChangeTxt.gameObject.SetActive(false);
+    }
 
     public void SetData(BattlePlayer player, BattlePlace myPlace)
     {
@@ -41,7 +51,11 @@ public class BattlePlayerUi : UIBase
             obj = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, this._DefenseRoot);
         else
             obj = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, this._AttackRoot);
-     
+
+        int index = player.TeamID > 0 ? 0 : 1;
+        this._bloodImage.color = this._bloodColors[index];
+        this._NameTxt.color = this._bloodColors[index];
+
         this._curModel = obj.GetComponent<SpineUiPlayer>();
         this._curModel.transform.localPosition = Vector3.zero;
         this._curModel.transform.localScale = Vector3.one;
@@ -61,7 +75,7 @@ public class BattlePlayerUi : UIBase
     {
         BattlePlayer pl = BattleProxy._instance.GetPlayer(this.ID);
         this._actionObj.SetActive(pl.Status == PlayerStatus.Action);
-        this._BloodChangeTxt.gameObject.SetActive(false);
+        this._ChangeTxt.gameObject.SetActive(false);
     }
 
     private UnityAction _callBack;
@@ -89,29 +103,54 @@ public class BattlePlayerUi : UIBase
 
     public void ReponseToEffect(PlayerEffectChangeData data)
     {
+        //启动协程播放特效
+        StartCoroutine(PlayEffects(data));
+        this.UpdateBlood();
         //伤血
         this._curModel.transform.DOShakePosition(2f, new Vector3(30, 0, 0), 8).onComplete = () =>
         {
             this._curModel.transform.localPosition = Vector3.zero;
-            this.UpdateBlood();
         };
-
-        //飘一下伤血数字
-        this.PlayBloodChange(data.ChangeValue);
     }
 
-    private void PlayBloodChange(int changeValue)
+    IEnumerator PlayEffects(PlayerEffectChangeData data)
     {
-        if (changeValue < 0)
+        WaitForSeconds waitYield = new WaitForSeconds(0.1f);
+        foreach (BattleEffectShowData effect in data.ChangeShowDatas.Values)
         {
-            //减血
-            this._BloodChangeTxt.text = LanguageConfig.GetLanguage(LanMainDefine.BloodDesc, changeValue);
+            this.PlayOneEffect(effect);
+            yield return waitYield;
         }
+    }
+
+
+    private void PlayOneEffect(BattleEffectShowData effect)
+    {
+        GameObject obj = GameObject.Instantiate(this._ChangeTxt.gameObject, Vector3.zero, Quaternion.identity, this._EffectRoot);
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+        obj.SetActive(true);
+        Text changeTxt = obj.GetComponent<Text>();
+        GameObject.Destroy(obj, 2f);
+        string text = "";
+        string typeName = LanguageConfig.GetLanguage(UtilTools.combine("BuffName", effect.Type));
+        if (effect.ChangeValue < 0)
+            text = UtilTools.combine(typeName, effect.ChangeValue.ToString());
+        else if (effect.ChangeValue > 0)
+            text = UtilTools.combine(typeName, "+", effect.ChangeValue.ToString());
         else
-        {
-            this._BloodChangeTxt.text = LanguageConfig.GetLanguage(LanMainDefine.BloodAdd, changeValue);
-        }
-        this._BloodChangeTxt.gameObject.SetActive(true);
+            text = typeName;
+
+        bool isUpValue = 
+            effect.Type == SkillEffectType.Defense_Up ||
+            effect.Type == SkillEffectType.Heal ||
+            effect.Type == SkillEffectType.Attack_Up ||
+            effect.Type == SkillEffectType.Speed_Up;
+
+        if(isUpValue)
+            text = LanguageConfig.GetLanguage(LanMainDefine.EffectAdd, text);
+        else
+            text = LanguageConfig.GetLanguage(LanMainDefine.EffectDesc, text);
     }
 
 
