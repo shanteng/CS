@@ -161,9 +161,12 @@ public class HeroProxy : BaseRemoteProxy
         if (json.Equals(string.Empty) == false)
         {
             this._refreshData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int,HeroRecruitRefreshData>>(json);
-            foreach (int city in this._refreshData.Keys)
+            foreach (HeroRecruitRefreshData data in this._refreshData.Values)
             {
-                this.AddTimeCallBack(city);
+                if (data.ExpireTime >= GameIndex.ServerTime)
+                    this.GenerateRefresh(data.City);
+                else
+                    this.AddTimeCallBack(data.City);
             }
         }
     }
@@ -311,7 +314,6 @@ public class HeroProxy : BaseRemoteProxy
         }
         else
         {
-            bool hasNewHero = false;
             Dictionary<int, HeroConfig> heroDic = HeroConfig.Instance.getDataArray();
             var it = heroDic.Values.GetEnumerator();
             while (it.MoveNext())
@@ -319,7 +321,6 @@ public class HeroProxy : BaseRemoteProxy
                 HeroConfig config = it.Current;
                 if (this._datas.ContainsKey(config.ID))
                     continue;
-                hasNewHero = true;
                 Hero newHero = new Hero();
                 newHero.Create(config);
                 this._datas[newHero.Id] = newHero;
@@ -327,7 +328,7 @@ public class HeroProxy : BaseRemoteProxy
             it.Dispose();
         }
 
-        LoadRefreshData();
+        //LoadRefreshData();
         this.SendNotification(NotiDefine.LoadAllHeroResp);
     }
 

@@ -512,8 +512,8 @@ public class RoleProxy : BaseRemoteProxy
 
         //初始化数据
         WorldProxy._instance.GenerateAllBaseSpot(1);
-        MediatorUtil.SendNotification(NotiDefine.LoadAllArmyDo);
-        MediatorUtil.SendNotification(NotiDefine.LoadAllHeroDo);
+        ArmyProxy._instance.LoadAllArmys();
+        HeroProxy._instance.LoadAllHeros();
         TeamProxy._instance.LoadAllTeam();
         TeamProxy._instance.LoadGroup();
 

@@ -14,7 +14,8 @@ public class BattleView : MonoBehaviour
 
     public GameObject _ActionCon;
     public UIButton _btnFight;
-    public List<SkillItemUi> _btnSkills;
+    public List<BattleSkillItem> _btnSkills;
+
     public List<SkillPassiveUi> _btnPassiveSkills;
 
     public GameObject _buffCon;
@@ -45,6 +46,16 @@ public class BattleView : MonoBehaviour
         this._btnCancelFight.AddEvent(OnCancelFight);
         this._btnSureFight.AddEvent(OnSureFight);
 
+        foreach (SkillPassiveUi btn in this._btnPassiveSkills)
+        {
+            btn.AddEvent(OnPassiveSkill);
+        }
+
+        foreach (BattleSkillItem btn in this._btnSkills)
+        {
+            btn._Ui.AddEvent(OnSkillFight);
+        }
+
         this._waitPlayerTemplete.gameObject.SetActive(false);
     }
 
@@ -71,18 +82,13 @@ public class BattleView : MonoBehaviour
     {
         this._btnFight.gameObject.SetActive(vis);
         this._btnCancelFight.gameObject.SetActive(!vis);
-      
-        foreach (SkillItemUi btn in this._btnSkills)
-        {
-            btn.gameObject.SetActive(btn.ID > 0 && vis);
-            btn.AddEvent(OnSkillFight);
-        }
 
-        foreach (SkillPassiveUi btn in this._btnPassiveSkills)
+        int len = this._btnSkills.Count;
+        for (int i = 0; i < len; ++i)
         {
-            btn.gameObject.SetActive(btn.ID > 0 && vis);
-            btn.AddEvent(OnPassiveSkill);
-        }
+            int ID = this._btnSkills[i].ID;
+            this._btnSkills[i].gameObject.SetActive(vis && ID > 0);
+        }//end for
     }
 
     private void OnEndRound(UIButton btn)
@@ -103,7 +109,7 @@ public class BattleView : MonoBehaviour
         this.SetSKillBtnVisible(false);
         this._btnSureFight.Hide();
         this._btnCancelFight.Hide();
-        this._btnEndRound.Hide();
+        this._btnEndRound.IsEnable = false;
         this.SetHpAndMp();
     }
 
@@ -144,7 +150,7 @@ public class BattleView : MonoBehaviour
         }
         else
         {
-            this._btnEndRound.Show();
+            this._btnEndRound.IsEnable = true;
         }
     }
 
@@ -168,6 +174,7 @@ public class BattleView : MonoBehaviour
         this._FightAni.SetActive(false);
         this._WaitLine.SetActive(false);
         this._ActionCon.SetActive(false);
+        this._buffCon.SetActive(false);
         this._TeamCon.SetActive(false);
 
         this._InfoUiDic = new Dictionary<BattlePlace, BattleInfoUi>();
@@ -208,11 +215,15 @@ public class BattleView : MonoBehaviour
 
     public void OnStartFight()
     {
-        this._preUi.gameObject.SetActive(false);
-        this._FightAni.SetActive(true);
         this._WaitLine.SetActive(true);
         this.InitWaitPlayer();
         CoroutineUtil.GetInstance().WaitTime(2f, true, WaitInitEnd);
+    }
+
+    public void OnPreFight()
+    {
+        this._preUi.gameObject.SetActive(false);
+        this._FightAni.SetActive(true);
     }
 
     private void InitWaitPlayer()
@@ -238,7 +249,7 @@ public class BattleView : MonoBehaviour
         }
     }
 
-    private void PlayerDoAction(bool isMove)
+    private void SetPlayerMove(bool isMove)
     {
         foreach (SpeedPlayerUi pl in this._AliveWaitPlayerDic.Values)
         {
@@ -262,55 +273,94 @@ public class BattleView : MonoBehaviour
         this._MpTxt.text = LanguageConfig.GetLanguage(LanMainDefine.Progress, Mp, MpOr);
     }
 
+
+    public void OnAiEnd()
+    {
+        this._btnEndRound.IsEnable = true;
+    }
+
+    public void UpdateActionPlayerBuff()
+    {
+        int len = this._buffs.Count;
+        for (int i = 0; i < len; ++i)
+        {
+            this._buffs[i].Hide();
+        }//end for
+
+       
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        if (player == null)
+            return;
+        int index = 0;
+        foreach (BattleEffectBuff buff in player._Buffs.Values)
+        {
+            //先全部显示，后面改为0round不显示
+            if (buff.Duration < 0)
+                continue;
+            this._buffs[index].Show();
+            this._buffs[index].SetData(buff);
+            index++;
+        }
+
+        this._buffCon.SetActive(index > 0);
+
+    }
+
     private void JudegeAction()
     {
         BattlePlayer player = BattleProxy._instance.GetActionPlayer();
         this._TeamCon.SetActive(true);
+        this.UpdateActionPlayerBuff();
         this.SetHpAndMp();
-       
+
+        int len = this._btnPassiveSkills.Count;
+        for (int i = 0; i < len; ++i)
+        {
+            this._btnPassiveSkills[i].Hide();
+        }//end for
+
+        //设置普攻图标和技能图标，以及技能状态
+        int skillCount = player._SkillDatas.Count;
+        len = this._btnSkills.Count;
+        for (int i = 0; i < len; ++i)
+        {
+            this._btnSkills[i].SetData(0,0);
+            this._btnSkills[i].Hide();
+        }//end for
+
+
+
+        int index = 0;
+        int indexPass = 0;
+        foreach (BattleSkill data in player._SkillDatas.Values)
+        {
+            SkillConfig config = SkillConfig.Instance.GetData(data.ID);
+            if (config.MpCost > 0)
+            {
+                this._btnSkills[index].SetData(data.ID, data.Level);
+                this._btnSkills[index].Show();
+                index++;
+            }
+            else
+            {
+                this._btnPassiveSkills[indexPass].SetData(data.ID, data.Level);
+                this._btnPassiveSkills[indexPass].Show();
+                indexPass++;
+            }
+        }
+
+
+
         //我自己
         this._ActionCon.SetActive(player.TeamID > 0);
+        this._btnEndRound.IsEnable = player.TeamID > 0;
         if (player.TeamID > 0)
         {
-            //设置普攻图标和技能图标，以及技能状态
-            int skillCount = player._SkillDatas.Count;
-            int len = this._btnSkills.Count;
-            for (int i = 0; i < len; ++i)
-            {
-                this._btnSkills[i].SetData(0);
-            }//end for
-
-             len = this._btnPassiveSkills.Count;
-            for (int i = 0; i < len; ++i)
-            {
-                this._btnPassiveSkills[i].SetData(0);
-            }//end for
-
-            int index = 0;
-            int indexPass = 0;
-            foreach (BattleSkill data in player._SkillDatas.Values)
-            {
-                SkillConfig config = SkillConfig.Instance.GetData(data.ID);
-                if (config.MpCost > 0)
-                {
-                    this._btnSkills[index].SetData(data.ID, data.Level);
-                    index++;
-                }
-                else
-                {
-                    this._btnPassiveSkills[indexPass].SetData(data.ID, data.Level);
-                    indexPass++;
-                }
-            }
-
             //普攻图标
             this._btnFight.Icon.sprite = ResourcesManager.Instance.GetArmySprite(player.ArmyID);
-
             this.SetSKillBtnVisible(true);
-            this._btnEndRound.Show();
             this._btnSureFight.Hide();
             this._btnCancelFight.Hide();
-           
         }//end if
     
     }//end func
@@ -321,11 +371,11 @@ public class BattleView : MonoBehaviour
         {
             this._TeamCon.SetActive(false);
             this._ActionCon.SetActive(false);
-            this.PlayerDoAction(true);
+            this.SetPlayerMove(true);
         }
         if (state == BattleStatus.Action)
         {
-            this.PlayerDoAction(false);
+            this.SetPlayerMove(false);
             this.JudegeAction();
         }
     }

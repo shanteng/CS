@@ -67,7 +67,15 @@ public class UIButton : UIBase
                 else
                     this._btnImg.material = this._oriMaterial;
             }
-               
+
+            if (this._icon != null)
+            {
+                if (value == false)
+                    UIRoot.Intance.SetImageGray(this._btnImg, true);
+                else
+                    this._btnImg.material = this._oriMaterial;
+            }
+
 
             if (this._text != null)
             {

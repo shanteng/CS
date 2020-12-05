@@ -20,7 +20,7 @@ public class BattleControllMediator : BaseNoWindowMediator
     {
         m_lInterestNotifications.Add(NotiDefine.LoadSceneFinish);
         m_lInterestNotifications.Add(NotiDefine.EnterBattleSuccess);
-        m_lInterestNotifications.Add(NotiDefine.BattleStartNoti);
+        m_lInterestNotifications.Add(NotiDefine.PreBattleStartNoti);
         m_lInterestNotifications.Add(NotiDefine.BattleStateChangeNoti);
     }
 
@@ -46,7 +46,7 @@ public class BattleControllMediator : BaseNoWindowMediator
                     }
                     break;
                 }
-            case NotiDefine.BattleStartNoti:
+            case NotiDefine.PreBattleStartNoti:
                 {
                     if (_isLoaded)
                     {

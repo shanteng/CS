@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using System;
+using UnityEngine.Events;
 
 public class BattleController : MonoBehaviour
 {
@@ -148,6 +149,7 @@ public class BattleController : MonoBehaviour
         }
     }
 
+    
     private float _skillSecs = 2f;
     public void DoManualReleaseAction()
     {
@@ -170,17 +172,29 @@ public class BattleController : MonoBehaviour
         }
 
         this.EffectPlayerResponseToSkill(effectPlayers);
+        MediatorUtil.SendNotification(NotiDefine.BattleEffectChange);
+        //等待各种伤害数字以及被击中的人的被打击动画播放完毕
+        CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd);
     }
 
-    private void EffectPlayerResponseToSkill(List<PlayerEffectChangeData> effectPlayers)
+    public void EffectPlayerResponseToSkill(List<PlayerEffectChangeData> effectPlayers,UnityAction callBack = null)
     {
+        int count = effectPlayers.Count;
         foreach (PlayerEffectChangeData data in effectPlayers)
         {
             BattlePlayerUi plUi = this._PlayerDic[data.TeamID];
             plUi.ReponseToEffect(data);
         }
-        //等待各种伤害数字以及被击中的人的被打击动画播放完毕
-        CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd);
+
+        float totleNeedSecs = count * 0.15f;
+        CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnEffectEnd,callBack);
+    }
+
+    private void OnEffectEnd(object[] param)
+    {
+        UnityAction callBack = (UnityAction)param[0];
+        if (callBack != null)
+            callBack.Invoke();
     }
 
     public void BackToMoveState()
@@ -301,11 +315,6 @@ public class BattleController : MonoBehaviour
         BattleProxy._instance.OnPlayerActionFinishded(player.TeamID);
         //通知UI更新
         MediatorUtil.SendNotification(NotiDefine.AttackPlayerEndJudge);
-        if (player.TeamID < 0 && BattleProxy._instance.Data.IsGameOver == false)//玩家自己，等待点击结束回合
-        {
-            //自动进入下一轮
-            BattleProxy._instance.DoNextRound();
-        }
     }
 
     public void SetAttackRange(int skillid)
@@ -433,9 +442,10 @@ public class BattleController : MonoBehaviour
     private void OnAiEnd(object[] param)
     {
         this._cor = null;
+        MediatorUtil.SendNotification(NotiDefine.BattleAiEnd);
         //进入下一轮
-        if (BattleProxy._instance.Data.Status == BattleStatus.Action)
-            BattleProxy._instance.DoNextRound();
+ //       if (BattleProxy._instance.Data.Status == BattleStatus.Action)
+ //          BattleProxy._instance.DoNextRound();
     }
 
     private void OnClickMoveSpot(BattleSpot spot)

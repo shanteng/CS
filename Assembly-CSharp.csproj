@@ -176,6 +176,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SdkView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SingletonFactory.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Skill\BattleSkillItem.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Skill\BuffItemUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Skill\SkillDetailUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Skill\SkillItemUi.cs" />

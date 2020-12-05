@@ -49,7 +49,7 @@ public class SpeedPlayerUi : UIBase
         {
             this._DoMove = false;
             this.MoveSces = 0;
-            BattleProxy._instance.OnTeamBegin(this.ID);
+            BattleProxy._instance.OnPlayerStartAction(this.ID);
         }
     }
 

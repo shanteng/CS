@@ -31,67 +31,13 @@ public class BattleProxy : BaseRemoteProxy
         //this.BattleEnd(true);
     }
 
+
     public List<PlayerEffectChangeData> ManualReleaseAction()
     {
         BattlePlayer actionPlayer = this.GetActionPlayer();
         int attackerTeamID = actionPlayer.TeamID;
-
-        Dictionary<string, BattleEffectBuff> curEffects = new Dictionary<string, BattleEffectBuff>();
-        double EffectValue = 0;
         int skillID = actionPlayer._AttackSkillID;
-        if (skillID == 0)
-        {
-            //计算普通攻击伤害的人
-            BattleEffectBuff data = new BattleEffectBuff();
-            SkillEffectConfig normalEffectConfig = SkillEffectConfig.Instance.GetData(0);
-            data.ID = 0;//普攻特殊ID
-            data.Type = normalEffectConfig.Type;
-            data.Duration = normalEffectConfig.Duration;
-            data.Rate = SkillProxy._instance.CalculateExpresstionValue(normalEffectConfig.Rate, "$level", 1);
-            data.Active_Rate = SkillProxy._instance.CalculateExpresstionValue(normalEffectConfig.Active_Rate, "$level", 1);
-            data.EffectValue = SkillProxy._instance.CalculateExpresstionValue(normalEffectConfig.Value, "$level", 1); ;
-            curEffects[data.Type] = data;
-        }
-        else
-        {
-            //技能效果判断,扣除Mp
-            SkillConfig cfg = SkillConfig.Instance.GetData(skillID);
-            float curMp = actionPlayer.Attributes[AttributeDefine.Mp] - cfg.MpCost;
-            actionPlayer.Attributes[AttributeDefine.Mp] = curMp < 0 ? 0 : curMp;
-            //技能影响效果
-            BattleSkill skillData = actionPlayer._SkillDatas[skillID];
-            Dictionary<int, SKillEffectResult> effectResults = skillData.EffectResults;
-            foreach (SKillEffectResult effect in effectResults.Values)
-            {
-                EffectValue = 0;
-                if (!SkillProxy._instance.ComputeBattleSKillEffect(actionPlayer, effect, out EffectValue))
-                    continue;
-                BattleEffectBuff data = new BattleEffectBuff();
-                data.ID = effect.Config.ID;
-                data.Type = effect.Config.Type;
-                data.Duration = effect.Config.Duration;
-                data.Rate = effect.Rate;
-                data.Active_Rate = effect.ActiveRate;
-                data.EffectValue = EffectValue;
-                curEffects[data.Type] = data;
-            }//end for
-        }//end else
-
-        //判断效果接受效果的人
-        List<PlayerEffectChangeData> effectPlayers = new List<PlayerEffectChangeData>();
-        foreach (BattlePlayer pl in this._data.Players.Values)
-        {
-            bool isValid = pl.Status == PlayerStatus.Wait || pl.Status == PlayerStatus.Action || pl.Status == PlayerStatus.ActionFinished;
-            if (isValid == false)
-                continue;
-            Dictionary<string, BattleEffectShowData> changes = pl.TakeBuffs(curEffects, actionPlayer.TeamID, actionPlayer.SkillDemageCordinates);
-            if (changes.Count == 0)
-                continue;
-            PlayerEffectChangeData kv = new PlayerEffectChangeData();
-            kv.TeamID = pl.TeamID;
-            kv.ChangeShowDatas = changes;
-            effectPlayers.Add(kv);
-        }
+        List<PlayerEffectChangeData> effectPlayers = actionPlayer.ReleaseSkill(skillID, _data);
 
         //判断战斗结束
         bool hasAliveOpppTeamID = false;
@@ -146,7 +92,6 @@ public class BattleProxy : BaseRemoteProxy
     public void DoNextRound()
     {
         this._data.Status = BattleStatus.Judge;
-        
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.BattleMpRecoverForOneRound);
         int RecoverValue = cfgconst.IntValues[0];
 
@@ -154,7 +99,9 @@ public class BattleProxy : BaseRemoteProxy
         {
             if (pl.Status == PlayerStatus.Action || pl.Status == PlayerStatus.ActionFinished)
             {
+                //清除当前玩家身上Buff的Duration
                 pl.Status = PlayerStatus.Wait;
+                pl.EndOneRoundBuff();
             }
 
             //所有玩家恢复一次Mp
@@ -173,6 +120,53 @@ public class BattleProxy : BaseRemoteProxy
         this.SendNotification(NotiDefine.BattleStateChangeNoti, this._data.Status);
     }
 
+
+
+    public void OnPlayerStartAction(int teamid)
+    {
+        List<PlayerEffectChangeData> allPlayerEffect = new List<PlayerEffectChangeData>();
+        this._data.Status = BattleStatus.Action;
+        BattlePlayer actionPlayer = this._data.Players[teamid];
+
+        actionPlayer.Status = PlayerStatus.Action;
+        actionPlayer.HasDoRoundActionFinish = false;
+
+        //释放被动技能判断
+        List<PlayerEffectChangeData> players = actionPlayer.ReleaseSelfRoundSKill(this.Data);
+        allPlayerEffect.AddRange(players);
+
+        //执行自带buff当前回合效果
+        Dictionary<string, BattleEffectShowData> selfChanges = actionPlayer.DoSelfRoundBuffEffect(this.Data);
+        if (selfChanges.Count > 0)
+        {
+            PlayerEffectChangeData actionTeamEffect = null;
+            foreach (PlayerEffectChangeData effect in allPlayerEffect)
+            {
+                if (effect.TeamID == teamid)
+                {
+                    actionTeamEffect = effect;
+                    break;
+                }
+            }//end foreach
+
+            if (actionTeamEffect == null)
+            {
+                actionTeamEffect = new PlayerEffectChangeData();
+                actionTeamEffect.TeamID = teamid;
+                allPlayerEffect.Add(actionTeamEffect);
+            }
+
+            foreach (BattleEffectShowData cur in selfChanges.Values)
+            {
+                actionTeamEffect.ChangeShowDatas[cur.Type] = cur;
+            }
+        }
+
+        BattleController.Instance.EffectPlayerResponseToSkill(allPlayerEffect, null);
+        this._data.Round++;
+        this.SendNotification(NotiDefine.BattleStateChangeNoti,this._data.Status);
+    }
+
     public void OnPlayerActionFinishded(int teamid)
     {
         BattlePlayer pl = this._data.Players[teamid];
@@ -182,22 +176,6 @@ public class BattleProxy : BaseRemoteProxy
         pl.SkillFightRangeCordinatesStrList = null;
         pl.SkillDemageCordinates = null;
         pl._AttackSkillID = -1;
-    }
-
-    public void OnTeamBegin(int teamid)
-    {
-        this._data.Status = BattleStatus.Action;
-        foreach (BattlePlayer pl in this._data.Players.Values)
-        {
-            if (pl.TeamID == teamid)
-            {
-                pl.Status = PlayerStatus.Action;
-                pl.HasDoRoundActionFinish = false;
-                break;
-            }
-        }
-        this._data.Round++;
-        this.SendNotification(NotiDefine.BattleStateChangeNoti,this._data.Status);
     }
 
     public void StartFight()
@@ -218,11 +196,30 @@ public class BattleProxy : BaseRemoteProxy
             return;
         }
 
+        this.SendNotification(NotiDefine.PreBattleStartNoti);
+
+        //每个参战玩家战前被动技能判断和状态设置
         foreach (BattlePlayer pl in this.Data.Players.Values)
         {
+            if (pl.BornIndex == 0)
+                continue;
             pl.Status = PlayerStatus.Wait;
         }
 
+        List<PlayerEffectChangeData> allPlayerEffect = new List<PlayerEffectChangeData>();
+        foreach (BattlePlayer pl in this.Data.Players.Values)
+        {
+            if (pl.BornIndex == 0)
+                continue;
+            List<PlayerEffectChangeData> effects =  pl.ReleaseBeforeStartSKill(this.Data);
+            allPlayerEffect.AddRange(effects);
+        }
+        BattleController.Instance.EffectPlayerResponseToSkill(allPlayerEffect,this.OnPreStartSkillEnd);
+       
+    }
+
+    public void OnPreStartSkillEnd()
+    {
         this._data.Status = BattleStatus.Judge;
         this._data.Round = 1;
         this.SendNotification(NotiDefine.BattleStartNoti);

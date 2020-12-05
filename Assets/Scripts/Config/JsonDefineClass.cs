@@ -152,6 +152,8 @@ public class SkillEffectConfig : Config<SkillEffectConfig>
     public string Rate;
     public string Active_Rate;
     public string Active_Mode;
+    public int TriggerInSelf;
+
     public int Duration;
     public SkillEffectConfig() : base(JsonNameDefine.SkillEffect) { }
 }

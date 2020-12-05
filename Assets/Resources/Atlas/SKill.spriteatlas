@@ -80,9 +80,9 @@ SpriteAtlas:
   m_PackedSpriteNamesToIndex:
   - 6
   - 2001
-  - 4001
+  - 2003
   - 1002
   - 1001
-  - 3001
+  - 2002
   m_Tag: SKill
   m_IsVariant: 0

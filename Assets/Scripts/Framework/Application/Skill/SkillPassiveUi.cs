@@ -43,7 +43,7 @@ public class SkillPassiveUi : UIBase
         if (id == 0)
             return;
         SkillConfig config = SkillConfig.Instance.GetData(id);
-        this._TypeTxt.text = SkillProxy._instance.GetSkillTypeName(id);
+        this._TypeTxt.text = config.Name;// SkillProxy._instance.GetSkillTypeName(id);
         this._Icon.sprite = ResourcesManager.Instance.GetSkillSprite(id);
         int count = this._ranks.Count;
         for (int i = 0; i < count; ++i)

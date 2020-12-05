@@ -17,10 +17,13 @@ public class BattleMediator : BaseWindowMediator<BattleView>
     protected override void InitListNotificationInterestsInner()
     {
         m_HideNoHandleNotifations.Add(NotiDefine.BattleBornUpdate);
+        m_HideNoHandleNotifations.Add(NotiDefine.PreBattleStartNoti);
         m_HideNoHandleNotifations.Add(NotiDefine.BattleStartNoti);
         m_HideNoHandleNotifations.Add(NotiDefine.BattleStateChangeNoti);
         m_HideNoHandleNotifations.Add(NotiDefine.ShowSureFight);
         m_HideNoHandleNotifations.Add(NotiDefine.AttackPlayerEndJudge);
+        m_HideNoHandleNotifations.Add(NotiDefine.BattleAiEnd);
+        m_HideNoHandleNotifations.Add(NotiDefine.BattleEffectChange);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
@@ -31,6 +34,11 @@ public class BattleMediator : BaseWindowMediator<BattleView>
                 {
                     this.m_view._preUi.UpdateList();
                     this.m_view.SetUpPlayerList();
+                    break;
+                }
+            case NotiDefine.PreBattleStartNoti:
+                {
+                    this.m_view.OnPreFight();
                     break;
                 }
             case NotiDefine.BattleStartNoti:
@@ -51,6 +59,16 @@ public class BattleMediator : BaseWindowMediator<BattleView>
             case NotiDefine.AttackPlayerEndJudge:
                 {
                     this.m_view.OnAttackEnd();
+                    break;
+                }
+            case NotiDefine.BattleAiEnd:
+                {
+                    this.m_view.OnAiEnd();
+                    break;
+                }
+            case NotiDefine.BattleEffectChange:
+                {
+                    this.m_view.UpdateActionPlayerBuff();
                     break;
                 }
         }

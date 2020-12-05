@@ -1,1 +1,112 @@
-[{"ID":0,"Type":"Demage","Target":"Enemy","JudgeInDemageRange":1,"Value":"100","ComputeParams":["Attack","Multiplication"],"Rate":"100","Active_Rate":"100","Active_Mode":"Now","Duration":0},{"ID":1,"Type":"Demage","Target":"Enemy","JudgeInDemageRange":1,"Value":"125+2*($level-1)","ComputeParams":["Attack","Multiplication"],"Rate":"100","Active_Rate":"100","Active_Mode":"Now","Duration":0},{"ID":2,"Type":"Defense_Up","Target":"Self","JudgeInDemageRange":0,"Value":"2+0.5*($level-1)","ComputeParams":[],"Rate":"30+($level-1)","Active_Rate":"100","Active_Mode":"Now","Duration":3},{"ID":3,"Type":"Heal","Target":"Self_All","JudgeInDemageRange":1,"Value":"25","ComputeParams":["WoundedBlood","Multiplication"],"Rate":"100","Active_Rate":"100","Active_Mode":"Now","Duration":0},{"ID":4,"Type":"Attack_Up","Target":"Self","JudgeInDemageRange":0,"Value":"3+1*($level-1)","ComputeParams":[],"Rate":"60+($level-1)","Active_Rate":"100","Active_Mode":"Now","Duration":0},{"ID":5,"Type":"Speed_Up","Target":"Self_All","JudgeInDemageRange":0,"Value":"0.5+1*($level-1)","ComputeParams":[],"Rate":"90+($level-1)","Active_Rate":"100","Active_Mode":"Round","Duration":2},{"ID":6,"Type":"GoOnDemage","Target":"Self","JudgeInDemageRange":0,"Value":"15+1.5*($level-1)","ComputeParams":["Attack","Multiplication"],"Rate":"100","Active_Rate":"100","Active_Mode":"Now","Duration":9999}]
+[
+    {
+        "ID": 0,
+        "Type": "Demage",
+        "Name": "伤",
+        "Desc": "造成{Value}%伤害",
+        "Target": "Enemy",
+        "JudgeInDemageRange": 1,
+        "Value": "100",
+        "ComputeParams": [
+            "Attack",
+            "Multiplication"
+        ],
+        "Rate": "100",
+        "Active_Rate": "100",
+        "TriggerInSelf": "0",
+        "Duration": 0
+    },
+    {
+        "ID": 1,
+        "Type": "Demage",
+        "Name": "伤",
+        "Desc": "造成{Value}%伤害",
+        "Target": "Enemy",
+        "JudgeInDemageRange": 1,
+        "Value": "125+2*($level-1)",
+        "ComputeParams": [
+            "Attack",
+            "Multiplication"
+        ],
+        "Rate": "100",
+        "Active_Rate": "100",
+        "TriggerInSelf": "0",
+        "Duration": 1
+    },
+    {
+        "ID": 2,
+        "Type": "Defense_Up",
+        "Name": "防",
+        "Desc": "提升{Value}点防御力",
+        "Target": "Self",
+        "JudgeInDemageRange": 0,
+        "Value": "2+0.5*($level-1)",
+        "ComputeParams": [],
+        "Rate": "30+($level-1)",
+        "Active_Rate": "100",
+        "TriggerInSelf": "0",
+        "Duration": 3
+    },
+    {
+        "ID": 3,
+        "Type": "Heal",
+        "Name": "疗",
+        "Desc": "恢复{Value}%的伤兵",
+        "Target": "Self_All",
+        "JudgeInDemageRange": 1,
+        "Value": "25",
+        "ComputeParams": [
+            "WoundedBlood",
+            "Multiplication"
+        ],
+        "Rate": "100",
+        "Active_Rate": "100",
+        "TriggerInSelf": "0",
+        "Duration": 1
+    },
+    {
+        "ID": 4,
+        "Type": "Attack_Up",
+        "Name": "攻",
+        "Desc": "提升{Value}点攻击力",
+        "Target": "Self",
+        "JudgeInDemageRange": 0,
+        "Value": "3+1*($level-1)",
+        "ComputeParams": [],
+        "Rate": "60+($level-1)",
+        "Active_Rate": "100",
+        "TriggerInSelf": "0",
+        "Duration": 1
+    },
+    {
+        "ID": 5,
+        "Type": "Speed_Up",
+        "Name": "速",
+        "Desc": "每回合额外增加{Value}点速度",
+        "Target": "Self_All",
+        "JudgeInDemageRange": 0,
+        "Value": "0.5+1*($level-1)",
+        "ComputeParams": [],
+        "Rate": "90+($level-1)",
+        "Active_Rate": "100",
+        "TriggerInSelf": "1",
+        "Duration": 2
+    },
+    {
+        "ID": 6,
+        "Type": "GoOnDemage",
+        "Name": "连",
+        "Desc": "每次普通攻击有{Rate}%的概率再次攻击，造成{Value}%伤害",
+        "Target": "Enemy",
+        "JudgeInDemageRange": 0,
+        "Value": "15+1.5*($level-1)",
+        "ComputeParams": [
+            "Attack",
+            "Multiplication"
+        ],
+        "Rate": "100",
+        "Active_Rate": "100",
+        "TriggerInSelf": "0",
+        "Duration": 1
+    }
+]

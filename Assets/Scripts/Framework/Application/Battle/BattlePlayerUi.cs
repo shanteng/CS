@@ -115,7 +115,7 @@ public class BattlePlayerUi : UIBase
 
     IEnumerator PlayEffects(PlayerEffectChangeData data)
     {
-        WaitForSeconds waitYield = new WaitForSeconds(0.1f);
+        WaitForSeconds waitYield = new WaitForSeconds(0.5f);
         foreach (BattleEffectShowData effect in data.ChangeShowDatas.Values)
         {
             this.PlayOneEffect(effect);
@@ -129,6 +129,7 @@ public class BattlePlayerUi : UIBase
         GameObject obj = GameObject.Instantiate(this._ChangeTxt.gameObject, Vector3.zero, Quaternion.identity, this._EffectRoot);
         obj.transform.localScale = Vector3.one;
         obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.Euler(Vector3.zero);
         obj.SetActive(true);
         Text changeTxt = obj.GetComponent<Text>();
         GameObject.Destroy(obj, 2f);
@@ -147,10 +148,13 @@ public class BattlePlayerUi : UIBase
             effect.Type == SkillEffectType.Attack_Up ||
             effect.Type == SkillEffectType.Speed_Up;
 
-        if(isUpValue)
+        obj.transform.Find("Up").gameObject.SetActive(isUpValue);
+        obj.transform.Find("Down").gameObject.SetActive(!isUpValue);
+        if (isUpValue)
             text = LanguageConfig.GetLanguage(LanMainDefine.EffectAdd, text);
         else
             text = LanguageConfig.GetLanguage(LanMainDefine.EffectDesc, text);
+        changeTxt.text = text;
     }
 
 

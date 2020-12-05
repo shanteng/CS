@@ -76,15 +76,16 @@ public class SkillProxy : BaseRemoteProxy
 
     public bool IsRateSuccess(double rate)
     {
+        return true;//默认成功测试
         int RandomRate = UtilTools.RangeInt(0, 99);
-        return (RandomRate > rate);
+        return rate >= RandomRate;
     }
 
 
     public bool ComputeBattleSKillEffect(BattlePlayer actionPl, SKillEffectResult result,out double Value)
     {
         Value = 0;
-        if (IsRateSuccess(result.Rate))
+        if (IsRateSuccess(result.Rate) == false)
             return false;//失败了不触发
 
         if (result.Config.Type.Equals(SkillEffectType.Demage))
@@ -131,10 +132,10 @@ public class SkillProxy : BaseRemoteProxy
        
         if (RolePostion == null || (RolePostion.x == attackPos.x && RolePostion.y == attackPos.y))
         {
-            //写死向上
+            //写死向前
             for (int i = 0; i < Lenght; ++i)
             {
-                cordinates.Add(new VInt2(attackPos.x, attackPos.y + i));
+                cordinates.Add(new VInt2(attackPos.x+i, attackPos.y));
             }
             return;
         }
