@@ -948,6 +948,8 @@ public class Hero
     {
         HeroConfig config = HeroConfig.Instance.GetData(this.Id);
         this.Skills = new Dictionary<int, HeroSkillData>();
+        if (config.Skills == null || config.Skills.Length == 0)
+            return;
         foreach (int skid in config.Skills)
         {
             HeroSkillData data = new HeroSkillData();
@@ -1037,6 +1039,11 @@ public class Hero
             this.Attributes = new Dictionary<string, float>();
         else
             this.Attributes.Clear();
+
+        if (configStar.BaseDemage == null)
+        {
+            Debug.Log("");
+        }
         foreach (string str in configStar.BaseDemage)
         {
             string[] list = str.Split(':');

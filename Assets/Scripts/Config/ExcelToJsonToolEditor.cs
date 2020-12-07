@@ -115,6 +115,7 @@ public class ExcelToJsonToolEditor : Editor
         for (int i = 3; i < rows; i++)
         {
             JObject postedJObject = new JObject();
+            bool isEnd = false;
             for (int j = 0; j < Columns; j++)
             {
                 string memberName = jsonFileds[j];
@@ -210,7 +211,10 @@ public class ExcelToJsonToolEditor : Editor
                 if (memberName.Equals("ID") || memberName.Equals("IDs"))
                 {
                     if (str.Equals(""))
+                    {
+                        isEnd = true;
                         break;
+                    }
                 }
 
                 if (value == null)
@@ -221,8 +225,10 @@ public class ExcelToJsonToolEditor : Editor
                 postedJObject.Add(memberName, JToken.FromObject(value));
             }//end for j
 
+            if (isEnd)
+                break;
             objsToSave.Add(postedJObject);
-        }//end for
+        }//end for i
         // 保存为Json
         string content = Newtonsoft.Json.JsonConvert.SerializeObject(objsToSave);
         SaveFile(content, jsonPath);
