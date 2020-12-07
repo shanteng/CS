@@ -63,4 +63,15 @@ public class BattleInfoUi : MonoBehaviour
         }
     }
 
+    public void UpdateBuffs()
+    {
+        foreach (ItemRender rd in this._hGrid.ItemRenders)
+        {
+            BattlePlayerInfoItemRender item = (BattlePlayerInfoItemRender)rd;
+            if (item.gameObject.activeSelf == false)
+                continue;
+            item.UpdateBuffs();
+        }
+    }
+
 }

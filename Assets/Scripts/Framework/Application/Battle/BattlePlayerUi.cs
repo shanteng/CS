@@ -18,6 +18,11 @@ public class BattlePlayerUi : UIBase
 
     public Transform _EffectRoot;
     public Text _ChangeTxt;
+
+    public Transform _SkillCallRoot;
+    public UITexts _SkillCallTxt;
+
+
     private SpineUiPlayer _curModel;
 
     private int _teamid;
@@ -25,11 +30,15 @@ public class BattlePlayerUi : UIBase
 
     public List<Color> _bloodColors;
 
+    private Queue<BattleEffectShowData> _WaitEffects = new Queue<BattleEffectShowData>();
+    private Queue<int> _WaitSkills = new Queue<int>();
+
     public int ID => this._teamid;
 
     private void Awake()
     {
         this._ChangeTxt.gameObject.SetActive(false);
+        this._SkillCallTxt.gameObject.SetActive(false);
     }
 
     public void SetData(BattlePlayer player, BattlePlace myPlace)
@@ -100,11 +109,54 @@ public class BattlePlayerUi : UIBase
         }
     }
 
+    private Coroutine _corSkill;
+    public void SkillCall(int id)
+    {
+        _WaitSkills.Enqueue(id);
+        if (this._corSkill == null)
+        {
+            _corSkill = StartCoroutine(PlaySkillCalls());
+        }
+    }
 
+    IEnumerator PlaySkillCalls()
+    {
+        WaitForSeconds waitYield = new WaitForSeconds(1f);
+        while (this._WaitSkills.Count > 0)
+        {
+            int id = this._WaitSkills.Dequeue();
+            this.PlayOneSkillCall(id);
+            yield return waitYield;
+        }
+        this._corSkill = null;
+    }
+
+    private void PlayOneSkillCall(int id)
+    {
+        GameObject obj = GameObject.Instantiate(this._SkillCallTxt.gameObject, Vector3.zero, Quaternion.identity, this._SkillCallRoot);
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.Euler(Vector3.zero);
+        obj.SetActive(true);
+        UITexts changeTxt = obj.GetComponent<UITexts>();
+        GameObject.Destroy(obj, 2f);
+        SkillConfig config = SkillConfig.Instance.GetData(id);
+        changeTxt.FirstLabel.text = config.Name;
+    }
+
+    private Coroutine _cor;
     public void ReponseToEffect(PlayerEffectChangeData data)
     {
         //启动协程播放特效
-        StartCoroutine(PlayEffects(data));
+        foreach (BattleEffectShowData effect in data.ChangeShowDatas.Values)
+        {
+            this._WaitEffects.Enqueue(effect);
+        }
+
+        if (this._cor == null)
+        {
+            _cor = StartCoroutine(PlayEffects());
+        }
         this.UpdateBlood();
         //伤血
         this._curModel.transform.DOShakePosition(2f, new Vector3(30, 0, 0), 8).onComplete = () =>
@@ -113,14 +165,16 @@ public class BattlePlayerUi : UIBase
         };
     }
 
-    IEnumerator PlayEffects(PlayerEffectChangeData data)
+    IEnumerator PlayEffects()
     {
-        WaitForSeconds waitYield = new WaitForSeconds(0.5f);
-        foreach (BattleEffectShowData effect in data.ChangeShowDatas.Values)
+        WaitForSeconds waitYield = new WaitForSeconds(1f);
+        while (this._WaitEffects.Count > 0)
         {
+            BattleEffectShowData effect = this._WaitEffects.Dequeue();
             this.PlayOneEffect(effect);
             yield return waitYield;
         }
+        this._cor = null;
     }
 
 
@@ -133,14 +187,8 @@ public class BattlePlayerUi : UIBase
         obj.SetActive(true);
         Text changeTxt = obj.GetComponent<Text>();
         GameObject.Destroy(obj, 2f);
-        string text = "";
         string typeName = LanguageConfig.GetLanguage(UtilTools.combine("BuffName", effect.Type));
-        if (effect.ChangeValue < 0)
-            text = UtilTools.combine(typeName, effect.ChangeValue.ToString());
-        else if (effect.ChangeValue > 0)
-            text = UtilTools.combine(typeName, "+", effect.ChangeValue.ToString());
-        else
-            text = typeName;
+        string text = typeName;
 
         bool isUpValue = 
             effect.Type == SkillEffectType.Defense_Up ||
@@ -151,9 +199,17 @@ public class BattlePlayerUi : UIBase
         obj.transform.Find("Up").gameObject.SetActive(isUpValue);
         obj.transform.Find("Down").gameObject.SetActive(!isUpValue);
         if (isUpValue)
+        {
+            if (effect.ChangeValue != 0)
+                text = UtilTools.combine(typeName, "+", effect.ChangeValue.ToString());
             text = LanguageConfig.GetLanguage(LanMainDefine.EffectAdd, text);
+        }
         else
+        {
+            if (effect.ChangeValue != 0)
+                text = UtilTools.combine(typeName, "-", effect.ChangeValue.ToString());
             text = LanguageConfig.GetLanguage(LanMainDefine.EffectDesc, text);
+        }
         changeTxt.text = text;
     }
 

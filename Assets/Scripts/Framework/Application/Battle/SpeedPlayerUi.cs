@@ -23,9 +23,15 @@ public class SpeedPlayerUi : UIBase
         this._teamid = id;
         BattlePlayer player = BattleProxy._instance.GetPlayer(this._teamid);
         this._Head.sprite = ResourcesManager.Instance.GetHeroSmallSprite(player.HeroID);
-        this._needSecs = player.ActionCountDown;
+        this._needSecs = player.GetActionCountDown();
         this._rect.anchoredPosition = new Vector2(-MoveX, 0);
         this.SetMove(false);
+    }
+
+    public void UpdateSpeed()
+    {
+        BattlePlayer player = BattleProxy._instance.GetPlayer(this._teamid);
+        this._needSecs = player.GetActionCountDown();
     }
 
     public void StartWaitMove()

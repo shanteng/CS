@@ -28,9 +28,8 @@ public enum PopType
 public class PopupFactory : SingletonFactory<PopupFactory>
 {
     private Popup _curShowWin = null;
-    private Popup _curDestoryShowWin = null;
     private PopType _curShowType = PopType.NONE;
-
+    private Popup _ClickScreenHideWin;
     public void Hide()
     {
         if (this._curShowWin != null && this._curShowWin.gameObject != null)
@@ -40,6 +39,18 @@ public class PopupFactory : SingletonFactory<PopupFactory>
             _curShowType = PopType.NONE;
         }
     }//end func
+
+
+    public void HideSingle()
+    {
+        if (this._ClickScreenHideWin != null)
+        {
+            GameObject.Destroy(this._ClickScreenHideWin.gameObject);
+            this._ClickScreenHideWin = null;
+        }
+    }
+
+    public GameObject ClickHideWin => this._ClickScreenHideWin != null ? this._ClickScreenHideWin.gameObject : null;
 
 
     public void HandleNoti(INotification notification)
@@ -93,7 +104,7 @@ public class PopupFactory : SingletonFactory<PopupFactory>
 
     public void ShowText(string content)
     {
-        this.ShowPop(PopType.TEXT, content);
+        this.ShowSinglePop(PopType.TEXT, content);
     }
 
     public void ShowSkill(BattleSkill data)
@@ -176,23 +187,64 @@ public class PopupFactory : SingletonFactory<PopupFactory>
         MediatorUtil.SendNotification(NotiDefine.ErrorCode, errorCode);
     }
 
+    Coroutine _cor;
+    private void ShowSinglePop(PopType type, object content)
+    {
+        Popup ShowWin = null;
+        switch (type)
+        {
+            case PopType.TEXT:
+                {
+                    ShowWin = InitText();
+                    break;
+                }
+        }
+
+        this.HideSingle();
+        if (ShowWin != null)
+        {
+            ShowWin.setContent(content);
+            ShowWin.gameObject.SetActive(true);
+            ShowWin.GetComponent<CanvasGroup>().alpha = 0;
+            //等待下一帧
+            if (this._cor != null)
+            {
+                CoroutineUtil.GetInstance().Stop(this._cor);
+                this._cor = null;
+            }
+            _cor = CoroutineUtil.GetInstance().WaitTime(0, true, OnWaitEnd,ShowWin);
+        }
+    }
+
+    private void OnWaitEnd(object[] param)
+    {
+        Popup ShowWin = (Popup)param[0];
+        ShowWin.GetComponent<CanvasGroup>().alpha =1f;
+        UIRoot.Intance.AdjustUIInMouseInputPos(ShowWin.gameObject, ShowWin._layer);
+        this._ClickScreenHideWin = ShowWin;
+    }
+
     private void ShowDestoryPop(PopType type, object content)
     {
+        Popup ShowWin = null;
         switch (type)
         {
             case PopType.NOTICE:
                 {
-                    _curDestoryShowWin = InitNotice();
+                    ShowWin = InitNotice();
                     break;
                 }
             case PopType.ATTRADD:
                 {
-                    _curDestoryShowWin = InitAttrAdd();
+                    ShowWin = InitAttrAdd();
                     break;
                 }
         }
-        this._curDestoryShowWin.gameObject.SetActive(true);
-        this._curDestoryShowWin.setContent(content);
+        if (ShowWin != null)
+        {
+            ShowWin.gameObject.SetActive(true);
+            ShowWin.setContent(content);
+        }
     }
 
     private void ShowPop(PopType type, object content)
@@ -238,11 +290,6 @@ public class PopupFactory : SingletonFactory<PopupFactory>
             case PopType.QUEST_CITY:
                 {
                     _curShowWin = InitQuestCity();
-                    break;
-                }
-            case PopType.TEXT:
-                {
-                    _curShowWin = InitText();
                     break;
                 }
             case PopType.ATTACK_GROUP:

@@ -253,6 +253,7 @@ public class BattleView : MonoBehaviour
     {
         foreach (SpeedPlayerUi pl in this._AliveWaitPlayerDic.Values)
         {
+            pl.UpdateSpeed();
             pl.SetMove(isMove);
         }
     }
@@ -279,6 +280,14 @@ public class BattleView : MonoBehaviour
         this._btnEndRound.IsEnable = true;
     }
 
+    public void UpdatePlayerBuffs()
+    {
+        foreach (BattleInfoUi ui in this._InfoUiDic.Values)
+        {
+            ui.UpdateBuffs();
+        }
+    }
+
     public void UpdateActionPlayerBuff()
     {
         int len = this._buffs.Count;
@@ -303,7 +312,6 @@ public class BattleView : MonoBehaviour
         }
 
         this._buffCon.SetActive(index > 0);
-
     }
 
     private void JudegeAction()

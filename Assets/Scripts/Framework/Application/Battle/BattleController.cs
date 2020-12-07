@@ -172,9 +172,18 @@ public class BattleController : MonoBehaviour
         }
 
         this.EffectPlayerResponseToSkill(effectPlayers);
-        MediatorUtil.SendNotification(NotiDefine.BattleEffectChange);
+        
         //等待各种伤害数字以及被击中的人的被打击动画播放完毕
         CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd);
+    }
+
+    public void CallSkillAction(int teamid,int skillid)
+    {
+        BattlePlayerUi plUi;
+        if (this._PlayerDic.TryGetValue(teamid, out plUi))
+        {
+            plUi.SkillCall(skillid);
+        }
     }
 
     public void EffectPlayerResponseToSkill(List<PlayerEffectChangeData> effectPlayers,UnityAction callBack = null)
@@ -188,6 +197,7 @@ public class BattleController : MonoBehaviour
 
         float totleNeedSecs = count * 0.15f;
         CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnEffectEnd,callBack);
+        MediatorUtil.SendNotification(NotiDefine.BattleEffectChange);
     }
 
     private void OnEffectEnd(object[] param)

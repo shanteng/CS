@@ -25,7 +25,7 @@ public class SkillProxy : BaseRemoteProxy
         return LanguageConfig.GetLanguage(key);
     }
 
-    public string GetSkillReleasDesc(int id)
+    public string GetSkillReleaseDesc(int id)
     {
         SkillConfig config = SkillConfig.Instance.GetData(id);
         string key = UtilTools.combine("Release", config.ReleaseTerm);

@@ -68,6 +68,7 @@ public class BattleMediator : BaseWindowMediator<BattleView>
                 }
             case NotiDefine.BattleEffectChange:
                 {
+                    this.m_view.UpdatePlayerBuffs();
                     this.m_view.UpdateActionPlayerBuff();
                     break;
                 }

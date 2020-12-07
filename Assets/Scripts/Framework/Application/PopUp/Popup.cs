@@ -10,6 +10,7 @@ public class Popup : UIBase
     public bool _SetAnchor = true;
     public WindowLayer _layer = WindowLayer.Popup;
     public float _DestorySecs = 0;
+    public bool _BeSingle = false;
     private UIScreenHideHandler _ClickHide;
     void Awake()
     {

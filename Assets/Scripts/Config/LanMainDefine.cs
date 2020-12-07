@@ -110,6 +110,8 @@
     public const string EffectAdd = "EffectAdd";
     public const string EffectDesc = "EffectDesc";
 
+    public const string MpValue = "MpValue";
+
     public const string ArriveYet = "ArriveYet";
     public const string Moving = "Moving";
     public const string Backing = "Backing";

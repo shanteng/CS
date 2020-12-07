@@ -940,6 +940,13 @@ public class Hero
         this.MaxEnegry = ConstConfig.Instance.GetData(ConstDefine.HeroEnegry).IntValues[0];
         this.GetItems = new Dictionary<string, int>();
         this.Equips = new Dictionary<int, string>();
+        this.ReloadSkill();
+        this.ComputeAttributes();
+    }
+
+    public void ReloadSkill()
+    {
+        HeroConfig config = HeroConfig.Instance.GetData(this.Id);
         this.Skills = new Dictionary<int, HeroSkillData>();
         foreach (int skid in config.Skills)
         {
@@ -949,7 +956,6 @@ public class Hero
             data.Open = true;//默认先开启，后面用一些条件控制
             this.Skills.Add(data.ID, data);
         }
-        this.ComputeAttributes();
     }
 
     public int GetEnegry()
@@ -1217,7 +1223,6 @@ public class BattlePlayer
     public PlayerStatus Status;
    
     public Dictionary<string, float> Attributes;
-    public float ActionCountDown;//下次出手倒计时
     public int BornIndex;//>0表示上阵了
     public VInt2 Postion;//当前位置
     public List<VInt2> ActionMoveCordinates;
@@ -1325,15 +1330,17 @@ public class BattlePlayer
             if (isActive == false)
                 continue;
 
-            BattleEffectShowData showData = this.DoOneBuffEffect(curBuff,true);
+            BattleEffectShowData showData = this.DoOneBuffEffect(nowBuff, true, actionTeamID);
             changesDic[showData.Type] = showData;
         }//end for
 
         return changesDic;
     }
 
-    public BattleEffectShowData DoOneBuffEffect(BattleEffectBuff curBuff,bool JudgeSelfRound)
+    public BattleEffectShowData DoOneBuffEffect(BattleEffectBuff curBuff,bool JudgeSelfRound,int actionTeamID)
     {
+        BattlePlayer actionPlayer = BattleProxy._instance.GetPlayer(actionTeamID);
+
         SkillEffectConfig config = SkillEffectConfig.Instance.GetData(curBuff.ID);
         BattleEffectShowData showData = new BattleEffectShowData();
         showData.Type = curBuff.EffectType;
@@ -1344,14 +1351,14 @@ public class BattlePlayer
         curBuff.Duration -= 1;//执行了就减少一次回合数
         if (curBuff.EffectType.Equals(SkillEffectType.Demage))
         {
-            double realAttack = curBuff.EffectValue + this.Attributes[AttributeDefine.BuffAttack];
-            int demage = Mathf.RoundToInt((float)realAttack * this.Attributes[AttributeDefine.Blood]);
+            double realAttack = curBuff.EffectValue * 0.01f * (actionPlayer.Attributes[AttributeDefine.BuffAttack] + actionPlayer.Attributes[AttributeDefine.Attack]);
+            int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.Attributes[AttributeDefine.Blood]);
             showData.ChangeValue = this.TakeDemage(demage);
         }
         else if (curBuff.EffectType.Equals(SkillEffectType.GoOnDemage))
         {
-            double realAttack = (curBuff.EffectValue + this.Attributes[AttributeDefine.BuffAttack]) * (float)curBuff.EffectValue * 0.01f;
-            int demage = Mathf.RoundToInt((float)realAttack * this.Attributes[AttributeDefine.Blood]);
+            double realAttack = curBuff.EffectValue * 0.01f * (actionPlayer.Attributes[AttributeDefine.BuffAttack] + actionPlayer.Attributes[AttributeDefine.Attack]);
+            int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.Attributes[AttributeDefine.Blood]);
             showData.ChangeValue = this.TakeDemage(demage);
         }
         else if (curBuff.EffectType.Equals(SkillEffectType.Defense_Up))
@@ -1398,21 +1405,6 @@ public class BattlePlayer
         return allEffectPlayers;
     }
 
-    public Dictionary<string, BattleEffectShowData> DoSelfRoundBuffEffect(BattleData battleData)
-    {
-        Dictionary<string, BattleEffectShowData> changes = new Dictionary<string, BattleEffectShowData>();
-      
-        foreach (BattleEffectBuff buff in this._Buffs.Values)
-        {
-            SkillEffectConfig config = SkillEffectConfig.Instance.GetData(buff.ID);
-            if (buff.Duration <= 0 || config.TriggerInSelf == 0)
-                continue;
-            BattleEffectShowData showData = this.DoOneBuffEffect(buff,false);
-            changes[showData.Type] = showData;
-        }
-
-        return changes;
-    }
 
     public List<PlayerEffectChangeData> ReleaseSelfRoundSKill(BattleData battleData)
     {
@@ -1421,6 +1413,21 @@ public class BattlePlayer
         {
             SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
             if (config.ReleaseTerm.Equals(SkillReleaseTerm.SelfRound))
+            {
+                List<PlayerEffectChangeData> effectPlayers = this.ReleaseSkill(skill.ID, battleData);
+                allEffectPlayers.AddRange(effectPlayers);
+            }
+        }//end for
+        return allEffectPlayers;
+    }
+
+    public List<PlayerEffectChangeData> ReleaseAfterAttackSKill(BattleData battleData)
+    {
+        List<PlayerEffectChangeData> allEffectPlayers = new List<PlayerEffectChangeData>();
+        foreach (BattleSkill skill in this._SkillDatas.Values)
+        {
+            SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
+            if (config.ReleaseTerm.Equals(SkillReleaseTerm.AfterAttack))
             {
                 List<PlayerEffectChangeData> effectPlayers = this.ReleaseSkill(skill.ID, battleData);
                 allEffectPlayers.AddRange(effectPlayers);
@@ -1490,7 +1497,29 @@ public class BattlePlayer
             effectPlayers.Add(kv);
         }
 
+        if (effectPlayers.Count > 0)
+        {
+            //通知喊招
+            BattleController.Instance.CallSkillAction(this.TeamID, skillID);
+        }
+
         return effectPlayers;
+    }
+
+    public Dictionary<string, BattleEffectShowData> DoSelfRoundBuffEffect(BattleData battleData)
+    {
+        Dictionary<string, BattleEffectShowData> changes = new Dictionary<string, BattleEffectShowData>();
+
+        foreach (BattleEffectBuff buff in this._Buffs.Values)
+        {
+            SkillEffectConfig config = SkillEffectConfig.Instance.GetData(buff.ID);
+            if (buff.Duration <= 0 || config.TriggerInSelf == 0)
+                continue;
+            BattleEffectShowData showData = this.DoOneBuffEffect(buff, false,this.TeamID);
+            changes[showData.Type] = showData;
+        }
+
+        return changes;
     }
 
     public int TakeDemage(double demage)
@@ -1501,7 +1530,7 @@ public class BattlePlayer
         int descBlood = (int)(demage - defense);
         if (descBlood <= 0)
             descBlood = 1;//最少打一滴血 
-        descBlood = 20000;//测试用
+     //   descBlood = 20000;//测试用
         int leftBlood = (int)this.Attributes[AttributeDefine.Blood] - descBlood;
         if (leftBlood <= 0)
         {
@@ -1585,6 +1614,7 @@ public class BattlePlayer
             }
         }
 
+        HeroConfig configHe = HeroConfig.Instance.GetData(this.HeroID);
         this._SkillDatas = new Dictionary<int, BattleSkill>();
         foreach (HeroSkillData skill in he.Skills.Values)
         {
@@ -1602,13 +1632,17 @@ public class BattlePlayer
         {
             BattleSkill dat = new BattleSkill();
             dat.ID = config.ID;
-            dat.Level = UtilTools.RangeInt(1, 4);
+            dat.Level = UtilTools.RangeInt(2, 4);
             dat.EffectResults = SkillProxy._instance.GetBattleSkillAttackEffect(dat.ID, dat.Level);
             this._SkillDatas.Add(dat.ID, dat);
         }
 
         this.Postion = new VInt2();
-        this.ActionCountDown = 10f / this.Attributes[AttributeDefine.Speed];
+    }
+
+    public float GetActionCountDown()
+    {
+        return 10f / (this.Attributes[AttributeDefine.Speed] + this.Attributes[AttributeDefine.BuffSpeed]);
     }
 
     public void InitNpc(int npcTeam,int born, int index, int battleSceneID,BattlePlace place)
@@ -1645,7 +1679,6 @@ public class BattlePlayer
         this.Attributes[AttributeDefine.WoundedBlood] = 0;
 
         this.Postion = new VInt2();
-        this.ActionCountDown = 10f / this.Attributes[AttributeDefine.Speed];
     }
 }
 

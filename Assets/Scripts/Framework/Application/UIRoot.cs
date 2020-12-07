@@ -59,6 +59,35 @@ public class UIRoot : MonoBehaviour
         this.InstantiateUIInCenter(obj,WindowLayer.Sdk);
     }
 
+    void LateUpdate()
+    {
+        MouseState.instance.update();
+        if (MouseState.instance.isMouseUpRightNow())
+        {
+            //屏幕点击了
+            if (PopupFactory.Instance.ClickHideWin != null)
+            {
+                var isInRange = IsMouseInGameObjectRange(PopupFactory.Instance.ClickHideWin);
+                if(isInRange == false)
+                    PopupFactory.Instance.HideSingle();
+            }
+        }
+    }
+
+    public bool IsMouseInGameObjectRange(GameObject obj)
+    {
+        RectTransform rect = obj.GetComponent<RectTransform>();
+        Vector2 size = rect.sizeDelta;
+        Vector2 pos;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, Input.mousePosition, this.camera, out pos))
+        {
+            float xBorder = size.x / 2;
+            float yBorder = size.y / 2;
+            return pos.x >= -xBorder && pos.x <= xBorder && pos.y >= -yBorder && pos.y <= yBorder;
+        }
+        return false;
+    }
+
     public void SetHomeSceneEnable(bool isEnable)
     {
       //  Camera.main.enabled = isEnable;
@@ -74,6 +103,57 @@ public class UIRoot : MonoBehaviour
         GameObject view = GameObject.Instantiate(obj, parent, false);
         this.ShowUIInCenter(view, NeedAnchor, NeedZDepth);
         return view;
+    }
+
+    //pivot 0.5/0.5 
+    public void AdjustUIInMouseInputPos(GameObject ui,WindowLayer layer)
+    {
+        var rectForm = ui.GetComponent<RectTransform>();
+        Vector2 size = rectForm.sizeDelta;
+
+        Vector3 clickpos = Vector3.zero;
+#if UNITY_EDITOR
+        clickpos = Input.mousePosition;
+#else
+        if (Input.touchCount > 0)
+            clickpos = Input.GetTouch(0).position;
+#endif
+
+        RectTransform layerRect = this.GetLayer(layer).GetComponent<RectTransform>();
+
+        Vector2 uiPos;
+       RectTransformUtility.ScreenPointToLocalPointInRectangle(layerRect, clickpos, UIRoot.Intance.camera, out uiPos);
+
+        float borderX = Screen.width / 2;
+        float borderY = Screen.height / 2;
+
+        float halfSizeX = size.x / 2;
+        float halfSizeY = size.y / 2;
+
+        uiPos.x += halfSizeX;
+        uiPos.y += halfSizeY;
+
+        float borderOffset = 10;//多偏移10像素，边界的时候
+
+
+        if (uiPos.x + halfSizeX > borderX)
+        {
+            uiPos.x = borderX - halfSizeX- borderOffset;
+        }
+        else if (uiPos.x - halfSizeX < -borderX)
+        {
+            uiPos.x = borderX + halfSizeX+ borderOffset;
+        }
+
+        if (uiPos.y + halfSizeY > borderY)
+        {
+            uiPos.y = borderY - halfSizeY- borderOffset;
+        }
+        else if (uiPos.y - halfSizeY < -borderY)
+        {
+            uiPos.y = borderY + halfSizeY+ borderOffset;
+        }
+        rectForm.anchoredPosition = uiPos;
     }
 
     public void ShowUIInCenter(GameObject ui,bool setAnchorCenter,bool NeedZDepth = false)

@@ -150,6 +150,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\Main\MapUI.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Main\PathItem.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Main\PathUi.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\MouseState.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\DataCenterMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\NoWindow\MediatorUtil.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\AttackCityGroupPop.cs" />

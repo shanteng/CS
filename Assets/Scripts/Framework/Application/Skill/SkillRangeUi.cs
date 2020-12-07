@@ -71,19 +71,25 @@ public class SkillRangeUi : UIBase
             cellSize = Size / 3;
         }
 
+        List<VInt2> cordinates = SkillProxy._instance.GetRangeCordinate(rangeID, new VInt2(0, 0));
+
         if (config.Function.Equals(RangeTypeDefine.Line))
         {
             maxRange = config.ComputeParams[0];
             StartPos.x = 0;
             StartPos.y = -cellSize * (float)maxRange / 2f + (cellSize / 2);
+            int yoff = Mathf.CeilToInt(StartPos.y);
+            cordinates = SkillProxy._instance.GetRangeCordinate(rangeID,  new VInt2(0, yoff),new VInt2(0, yoff - 1));
         }
 
-        List<VInt2> cordinates = SkillProxy._instance.GetRangeCordinate(rangeID, new VInt2(0, 0));
+
+        int y = Mathf.CeilToInt(StartPos.y);
+
         count = cordinates.Count;
         for (int i = 0; i < count; ++i)
         {
-            float curX =  StartPos.x + cellSize * cordinates[i].x;
-            float curY =   StartPos.y + cellSize * cordinates[i].y;
+            float curX =  StartPos.x + cellSize * (cordinates[i].x);
+            float curY =   StartPos.y + cellSize * (cordinates[i].y-y) ;
 
             Image img = GameObject.Instantiate<Image>(this._Templete,this.transform);
             img.rectTransform.localScale = Vector3.one;

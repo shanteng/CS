@@ -39,6 +39,14 @@ public class BattleProxy : BaseRemoteProxy
         int skillID = actionPlayer._AttackSkillID;
         List<PlayerEffectChangeData> effectPlayers = actionPlayer.ReleaseSkill(skillID, _data);
 
+        if (skillID == 0)
+        {
+            //连携判断
+            //释放被动技能判断
+            List<PlayerEffectChangeData> players = actionPlayer.ReleaseAfterAttackSKill(this.Data);
+            effectPlayers.AddRange(players);
+        }
+
         //判断战斗结束
         bool hasAliveOpppTeamID = false;
         foreach (BattlePlayer pl in this.Data.Players.Values)
@@ -92,8 +100,7 @@ public class BattleProxy : BaseRemoteProxy
     public void DoNextRound()
     {
         this._data.Status = BattleStatus.Judge;
-        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.BattleMpRecoverForOneRound);
-        int RecoverValue = cfgconst.IntValues[0];
+    
 
         foreach (BattlePlayer pl in this._data.Players.Values)
         {
@@ -102,17 +109,7 @@ public class BattleProxy : BaseRemoteProxy
                 //清除当前玩家身上Buff的Duration
                 pl.Status = PlayerStatus.Wait;
                 pl.EndOneRoundBuff();
-            }
-
-            //所有玩家恢复一次Mp
-            if (pl.Status != PlayerStatus.Dead)
-            {
-                float curMp = pl.Attributes[AttributeDefine.Mp] + RecoverValue;
-                float OrMp = pl.Attributes[AttributeDefine.OrignalMp];
-                if (curMp <= OrMp)
-                    pl.Attributes[AttributeDefine.Mp] = curMp;
-                else
-                    pl.Attributes[AttributeDefine.Mp] = OrMp;
+                break;
             }
         }
 
@@ -128,13 +125,23 @@ public class BattleProxy : BaseRemoteProxy
         this._data.Status = BattleStatus.Action;
         BattlePlayer actionPlayer = this._data.Players[teamid];
 
+        //行动玩家恢复一次Mp
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.BattleMpRecoverForOneRound);
+        int RecoverValue = cfgconst.IntValues[0];
+        float curMp = actionPlayer.Attributes[AttributeDefine.Mp] + RecoverValue;
+        float OrMp = actionPlayer.Attributes[AttributeDefine.OrignalMp];
+        if (curMp <= OrMp)
+            actionPlayer.Attributes[AttributeDefine.Mp] = curMp;
+        else
+            actionPlayer.Attributes[AttributeDefine.Mp] = OrMp;
+
         actionPlayer.Status = PlayerStatus.Action;
         actionPlayer.HasDoRoundActionFinish = false;
 
         //释放被动技能判断
         List<PlayerEffectChangeData> players = actionPlayer.ReleaseSelfRoundSKill(this.Data);
         allPlayerEffect.AddRange(players);
-
+       
         //执行自带buff当前回合效果
         Dictionary<string, BattleEffectShowData> selfChanges = actionPlayer.DoSelfRoundBuffEffect(this.Data);
         if (selfChanges.Count > 0)

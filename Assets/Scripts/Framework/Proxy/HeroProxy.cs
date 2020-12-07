@@ -163,7 +163,7 @@ public class HeroProxy : BaseRemoteProxy
             this._refreshData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int,HeroRecruitRefreshData>>(json);
             foreach (HeroRecruitRefreshData data in this._refreshData.Values)
             {
-                if (data.ExpireTime >= GameIndex.ServerTime)
+                if (data.ExpireTime < GameIndex.ServerTime)
                     this.GenerateRefresh(data.City);
                 else
                     this.AddTimeCallBack(data.City);
@@ -303,6 +303,24 @@ public class HeroProxy : BaseRemoteProxy
         return false;
     }
 
+    public void ReloadAllHerosSkills()
+    {
+        string fileName = UtilTools.combine(SaveFileDefine.HeroDatas);
+        string json = CloudDataTool.LoadFile(fileName);
+        if (json.Equals(string.Empty) == false)
+        {
+            this._datas = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Hero>>(json);
+            var it = this._datas.Values.GetEnumerator();
+            while (it.MoveNext())
+            {
+                Hero hero = it.Current;
+                hero.ReloadSkill();
+            }
+            it.Dispose();
+            this.DoSaveHeros();
+        } 
+    }
+
     public void LoadAllHeros()
     {
         this._datas.Clear();
@@ -328,7 +346,7 @@ public class HeroProxy : BaseRemoteProxy
             it.Dispose();
         }
 
-        //LoadRefreshData();
+        LoadRefreshData();
         this.SendNotification(NotiDefine.LoadAllHeroResp);
     }
 

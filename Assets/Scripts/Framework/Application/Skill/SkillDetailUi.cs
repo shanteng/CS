@@ -33,7 +33,7 @@ public class SkillDetailUi : UIBase
         this._itemUi.SetData(id, level, isOpen);
        
         this._TypeTxt.text = SkillProxy._instance.GetSkillTypeName(id);
-        this._MpCostTxt.text = config.MpCost.ToString();
+        this._MpCostTxt.text = LanguageConfig.GetLanguage(LanMainDefine.MpValue, config.MpCost);
         this._MpCostTxt.gameObject.SetActive(config.MpCost > 0);
         List<string> descs = new List<string>();
         int count = config.EffectIDs.Length;
@@ -52,7 +52,7 @@ public class SkillDetailUi : UIBase
         string str = string.Join("，", descs);
         this._DescTxt.text = str;
 
-        this._ReleaseTxt.text = SkillProxy._instance.GetSkillReleasDesc(id);
+        this._ReleaseTxt.text = SkillProxy._instance.GetSkillReleaseDesc(id);
         SkillLevelConfig configLv = SkillProxy._instance.GetSkillLvConfig(id, level);
         bool NoRange = configLv.DemageRangeID.Equals("");
 

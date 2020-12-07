@@ -305,7 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _param:
     _key: 
-  LanKey: 
+  LanKey: MPDesc
 --- !u!1 &1580948492457973625
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,7 +561,6 @@ MonoBehaviour:
   _param:
     _key: 
   _itemUi: {fileID: 2488547986383204619}
-  _NameTxt: {fileID: 0}
   _TypeTxt: {fileID: 6035287809463671440}
   _MpCostTxt: {fileID: 311793807927514426}
   _DescTxt: {fileID: 6900340225428150003}
