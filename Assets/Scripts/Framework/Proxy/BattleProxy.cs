@@ -31,6 +31,130 @@ public class BattleProxy : BaseRemoteProxy
         //this.BattleEnd(true);
     }
 
+    public List<AiStep> DoAi(BattlePlayer player)
+    {
+        List<AiStep> AiSteps = new List<AiStep>();
+        //判断攻击范围内是否有可攻击的敌方
+        //先判断普通攻击范围
+
+        int myMp = (int)player.Attributes[AttributeDefine.Mp];
+        List<SkillAiStep> skillSteps = new List<SkillAiStep>();
+
+        SkillAiStep attackStep;
+        this.PlayerSkillAutoReleaseInPostion(player, 0,out attackStep);
+        if (attackStep._Postion != null)
+        {
+            skillSteps.Add(attackStep);
+        }
+
+        foreach (BattleSkill skill in player._SkillDatas.Values)
+        {
+            SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
+            if (config.ReleaseTerm.Equals(SkillReleaseTerm.Manual) == false)
+                continue;
+
+            if (myMp < config.MpCost)
+                continue;
+            SkillAiStep skillAttackStep;
+            this.PlayerSkillAutoReleaseInPostion(player,skill.ID,out skillAttackStep);
+            if (skillAttackStep._Postion != null)
+            {
+                skillSteps.Add(skillAttackStep);
+            }
+        }
+
+        //先测试自动释放范围内的Ai
+        if (skillSteps.Count > 0)
+        {
+            //临时用第0个先测试
+            AiStep step = new AiStep();
+            step._Step = AiStepType.ReleaseSkill;
+            step._Postion = new VInt2(skillSteps[0]._Postion.x, skillSteps[0]._Postion.y);
+            step._SkillID = skillSteps[0]._SkillID;
+            AiSteps.Add(step);
+        }
+
+        //攻击结束后，直接停止等待
+        AiStep stepEnd = new AiStep();
+        stepEnd._Step = AiStepType.End;
+        AiSteps.Add(stepEnd);
+
+        return AiSteps;
+    }
+
+    public void PlayerSkillAutoReleaseInPostion(BattlePlayer player,int skillid,out SkillAiStep attackStep)
+    {
+        int actionTeamID = player.TeamID;
+        attackStep = new SkillAiStep();
+        attackStep._SkillID = skillid;
+        if (skillid == 0)
+        {
+            attackStep.MainEffectTypeID = 0;
+        }
+        else
+        {
+            SkillConfig config = SkillConfig.Instance.GetData(skillid);
+            attackStep.MainEffectTypeID = config.EffectIDs[0];
+        }
+
+        SkillEffectConfig typeConfig = SkillEffectConfig.Instance.GetData(attackStep.MainEffectTypeID);
+
+        player.ComputeSkillFightRange(skillid);
+        foreach (VInt2 pos in player.SkillFightRangeCordinates)
+        {
+            //计算伤害范围内是否有可攻击的敌人
+            player.ComputeSkillDemageRange(pos, skillid);
+            VInt2 hasPlayerPos = null;
+            foreach (VInt2 attackPos in player.SkillDemageCordinates)
+            {
+                int validPlayerId = this.GetValidPlayerInPostion(attackPos.x, attackPos.y);
+                if (validPlayerId == 0)
+                    continue;
+                bool isSameTeam = actionTeamID * validPlayerId > 0;
+                bool isMySelf = validPlayerId == actionTeamID;
+                bool isSelfOther = isSameTeam && isMySelf == false;
+                bool isEnemy = isSameTeam == false;
+                if (typeConfig.Target.Equals(SkillEffectTarget.Enemy) && isEnemy == false)
+                    continue;
+
+                if (typeConfig.Target.Equals(SkillEffectTarget.Self) && isMySelf == false)
+                    continue;
+
+                if (typeConfig.Target.Equals(SkillEffectTarget.Self_All) && isSameTeam == false)
+                    continue;
+
+                if (typeConfig.Target.Equals(SkillEffectTarget.Self_Other) && (isSameTeam == false || isMySelf))
+                    continue;
+                //可以释放了
+                hasPlayerPos = attackPos;
+                break;
+            }//end foreach
+
+            if (hasPlayerPos != null)
+            {
+                attackStep._Postion = new VInt2(hasPlayerPos.x, hasPlayerPos.y);
+                break;
+            }
+        }//end foreach
+    }
+
+    public int GetValidPlayerInPostion(int x, int y)
+    {
+        foreach (BattlePlayer pl in this.Data.Players.Values)
+        {
+            bool isValid = this.IsValidPlayer(pl);
+            if (isValid == false)
+                continue;
+            if (pl.Postion.x == x && pl.Postion.y == y)
+                return pl.TeamID;
+        }
+        return 0;
+    }
+
+    public bool IsValidPlayer(BattlePlayer pl)
+    {
+        return pl.Status == PlayerStatus.Wait || pl.Status == PlayerStatus.Action || pl.Status == PlayerStatus.ActionFinished;
+    }
 
     public List<PlayerEffectChangeData> ManualReleaseAction()
     {

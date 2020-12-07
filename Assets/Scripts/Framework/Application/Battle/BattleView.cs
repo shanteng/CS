@@ -217,7 +217,7 @@ public class BattleView : MonoBehaviour
     {
         this._WaitLine.SetActive(true);
         this.InitWaitPlayer();
-        CoroutineUtil.GetInstance().WaitTime(2f, true, WaitInitEnd);
+        CoroutineUtil.GetInstance().WaitTime(0.5f, true, WaitInitEnd);
     }
 
     public void OnPreFight()

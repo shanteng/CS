@@ -122,8 +122,36 @@ public class BattleController : MonoBehaviour
             if (player.TeamID < 0)
                 this.DoAiAction(player);
             else
-                this.DoMyAction();
+                this.DoMyAction(player);
         }
+    }
+
+    private void DoMyAction(BattlePlayer pl)
+    {
+        this.DoAiAction(pl);
+    }
+
+    Coroutine _cor;
+    private void DoAiAction(BattlePlayer player)
+    {
+        List<AiStep> AiSteps = BattleProxy._instance.DoAi(player);
+        this._cor =    CoroutineUtil.GetInstance().WaitTime(2f, true, OnAiEnd);
+      
+    }
+
+    public void StopAi()
+    {
+        if (this._cor != null)
+        {
+            CoroutineUtil.GetInstance().Stop(this._cor);
+            this._cor = null;
+        }
+    }
+
+    private void OnAiEnd(object[] param)
+    {
+        this._cor = null;
+        MediatorUtil.SendNotification(NotiDefine.BattleAiEnd);
     }
 
     private void SetSpotAttackEffects()
@@ -373,7 +401,7 @@ public class BattleController : MonoBehaviour
         }
 
         //设置显示新的伤害范围
-        player.ComputeSkillDemageRange(spot.Pos);
+        player.ComputeSkillDemageRange(spot.Pos, player._AttackSkillID);
         foreach (VInt2 attackPos in player.SkillDemageCordinates)
         {
             string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
@@ -426,37 +454,9 @@ public class BattleController : MonoBehaviour
         
     }
 
-    private void DoMyAction()
-    {
-         
-    }
+  
 
-    public void StopAi()
-    {
-        if (this._cor != null)
-        {
-            CoroutineUtil.GetInstance().Stop(this._cor);
-            this._cor = null;
-        }
-    }
 
-    Coroutine _cor;
-    private void DoAiAction(BattlePlayer player)
-    {
-        //暂时随便移动一下
-        int randomIndex = UtilTools.RangeInt(0, player.ActionMoveCordinates.Count-1);
-        float moveSecs = this.PlayerDoMoveTo(player.ActionMoveCordinates[randomIndex]);
-        _cor =   CoroutineUtil.GetInstance().WaitTime(moveSecs, true, OnAiEnd);
-    }
-
-    private void OnAiEnd(object[] param)
-    {
-        this._cor = null;
-        MediatorUtil.SendNotification(NotiDefine.BattleAiEnd);
-        //进入下一轮
- //       if (BattleProxy._instance.Data.Status == BattleStatus.Action)
- //          BattleProxy._instance.DoNextRound();
-    }
 
     private void OnClickMoveSpot(BattleSpot spot)
     {

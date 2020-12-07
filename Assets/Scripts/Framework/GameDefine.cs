@@ -1237,7 +1237,13 @@ public class BattlePlayer
 
     public Dictionary<string, BattleEffectBuff> _Buffs = new Dictionary<string, BattleEffectBuff>();
 
-
+    public int GetLeftArmyCount()
+    {
+        float blood = this.Attributes[AttributeDefine.Blood];
+        ArmyConfig config = ArmyConfig.Instance.GetData(this.ArmyID);
+        int leftCount = Mathf.CeilToInt(blood / config.Blood);
+        return leftCount;
+    }
     public void EndOneRoundBuff()
     {
         List<string> rmBuffKeys = new List<string>();
@@ -1352,13 +1358,13 @@ public class BattlePlayer
         if (curBuff.EffectType.Equals(SkillEffectType.Demage))
         {
             double realAttack = curBuff.EffectValue * 0.01f * (actionPlayer.Attributes[AttributeDefine.BuffAttack] + actionPlayer.Attributes[AttributeDefine.Attack]);
-            int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.Attributes[AttributeDefine.Blood]);
+            int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.GetLeftArmyCount());
             showData.ChangeValue = this.TakeDemage(demage);
         }
         else if (curBuff.EffectType.Equals(SkillEffectType.GoOnDemage))
         {
             double realAttack = curBuff.EffectValue * 0.01f * (actionPlayer.Attributes[AttributeDefine.BuffAttack] + actionPlayer.Attributes[AttributeDefine.Attack]);
-            int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.Attributes[AttributeDefine.Blood]);
+            int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.GetLeftArmyCount());
             showData.ChangeValue = this.TakeDemage(demage);
         }
         else if (curBuff.EffectType.Equals(SkillEffectType.Defense_Up))
@@ -1485,7 +1491,7 @@ public class BattlePlayer
         List<PlayerEffectChangeData> effectPlayers = new List<PlayerEffectChangeData>();
         foreach (BattlePlayer pl in battleData.Players.Values)
         {
-            bool isValid = pl.Status == PlayerStatus.Wait || pl.Status == PlayerStatus.Action || pl.Status == PlayerStatus.ActionFinished;
+            bool isValid = BattleProxy._instance.IsValidPlayer(pl);
             if (isValid == false)
                 continue;
             Dictionary<string, BattleEffectShowData> changes = pl.TakeBuffs(curEffects, actionPlayer.TeamID, actionPlayer.SkillDemageCordinates);
@@ -1526,7 +1532,7 @@ public class BattlePlayer
     {
         //根据防御属性算出最终减少的血量，以及是否死亡
         float realDefense = this.Attributes[AttributeDefine.Defense] + this.Attributes[AttributeDefine.BuffDefense];
-        int defense = Mathf.RoundToInt(realDefense * this.Attributes[AttributeDefine.Blood]);
+        int defense = Mathf.RoundToInt(realDefense * this.GetLeftArmyCount());
         int descBlood = (int)(demage - defense);
         if (descBlood <= 0)
             descBlood = 1;//最少打一滴血 
@@ -1568,21 +1574,21 @@ public class BattlePlayer
         }
     }
 
-    public void ComputeSkillDemageRange(VInt2 attackPostion)
+    public void ComputeSkillDemageRange(VInt2 attackPostion,int skillID)
     {
         //根据选中的技能来确定伤害范围
         SkillDemageCordinates = new List<VInt2>();
         //临时返回一个十字架，之后根据技能模板和技能等级等来计算
         VInt2 centerPos = new VInt2(attackPostion.x, attackPostion.y);
-        if (this._AttackSkillID == 0)
+        if (skillID == 0)
         {
             HeroConfig config = HeroConfig.Instance.GetData(this.HeroID);
             SkillDemageCordinates = SkillProxy._instance.GetRangeCordinate(config.DemageRangeID, attackPostion, this.Postion);
         }
         else
         {
-            int skilllv = this._SkillDatas[_AttackSkillID].Level;
-            SkillLevelConfig configLv = SkillProxy._instance.GetSkillLvConfig(_AttackSkillID, skilllv);
+            int skilllv = this._SkillDatas[skillID].Level;
+            SkillLevelConfig configLv = SkillProxy._instance.GetSkillLvConfig(skillID, skilllv);
             SkillDemageCordinates = SkillProxy._instance.GetRangeCordinate(configLv.DemageRangeID, attackPostion, this.Postion);
         }
     }
@@ -1645,6 +1651,11 @@ public class BattlePlayer
         return 10f / (this.Attributes[AttributeDefine.Speed] + this.Attributes[AttributeDefine.BuffSpeed]);
     }
 
+    public float GetCurrentSpeed()
+    {
+        return this.Attributes[AttributeDefine.Speed] + this.Attributes[AttributeDefine.BuffSpeed];
+    }
+
     public void InitNpc(int npcTeam,int born, int index, int battleSceneID,BattlePlace place)
     {
         NpcTeamConfig configNpc = NpcTeamConfig.Instance.GetData(npcTeam);
@@ -1680,6 +1691,26 @@ public class BattlePlayer
 
         this.Postion = new VInt2();
     }
+}
+
+public enum AiStepType
+{
+    Move = 1,
+    ReleaseSkill = 2,
+    End,
+};
+public class AiStep
+{
+    public AiStepType _Step;
+    public VInt2 _Postion;
+    public int _SkillID;
+}
+
+public class SkillAiStep
+{
+    public int MainEffectTypeID;
+    public VInt2 _Postion;
+    public int _SkillID;
 }
 
 

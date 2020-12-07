@@ -9,6 +9,7 @@ public class SpeedPlayerUi : UIBase
 {
     private RectTransform _rect;
     public Image _Head;
+    public TextMeshProUGUI _SpeedTxt;
     private int _teamid;
 
     public int ID => this._teamid;
@@ -23,7 +24,7 @@ public class SpeedPlayerUi : UIBase
         this._teamid = id;
         BattlePlayer player = BattleProxy._instance.GetPlayer(this._teamid);
         this._Head.sprite = ResourcesManager.Instance.GetHeroSmallSprite(player.HeroID);
-        this._needSecs = player.GetActionCountDown();
+        this.UpdateSpeed();
         this._rect.anchoredPosition = new Vector2(-MoveX, 0);
         this.SetMove(false);
     }
@@ -32,6 +33,7 @@ public class SpeedPlayerUi : UIBase
     {
         BattlePlayer player = BattleProxy._instance.GetPlayer(this._teamid);
         this._needSecs = player.GetActionCountDown();
+        this._SpeedTxt.text = player.GetCurrentSpeed().ToString();
     }
 
     public void StartWaitMove()
