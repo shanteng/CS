@@ -132,11 +132,61 @@ public class BattleController : MonoBehaviour
     }
 
     Coroutine _cor;
+    private Queue<AiStep> _AiSteps;
+    private bool _isPlayAi = false;
     private void DoAiAction(BattlePlayer player)
     {
-        List<AiStep> AiSteps = BattleProxy._instance.DoAi(player);
-        this._cor =    CoroutineUtil.GetInstance().WaitTime(2f, true, OnAiEnd);
-      
+        _AiSteps = BattleProxy._instance.DoAi(player);
+        this._isPlayAi = false;
+        _cor = StartCoroutine(PlayAiSteps());
+    }
+
+    IEnumerator PlayAiSteps()
+    {
+        while (this._AiSteps.Count > 0)
+        {
+            if (this._isPlayAi)
+                yield return 0;
+            else
+            {
+                AiStep effect = this._AiSteps.Dequeue();
+                this.PlayCurrentAiStep(effect);
+                yield return 0;
+            }
+        }
+
+        while (_isPlayAi)
+        {
+            yield return 0;
+        }
+        //全部执行完毕了
+        this.OnAiEnd();
+    }
+
+
+    private void PlayCurrentAiStep(AiStep step)
+    {
+        this._isPlayAi = step._Step != AiStepType.End;
+        if (step._Step == AiStepType.Move)
+        {
+            this.PlayerDoMoveTo(step._Postion, OnAiCurrentStepEnd);
+        }
+        else if (step._Step == AiStepType.ReleaseSkill)
+        {
+            this.SetAttackRange(step._SkillID, step._Postion);
+        }
+    }
+
+    private void OnAiCurrentStepEnd()
+    {
+        this._isPlayAi = false;
+    }
+
+
+    private void OnAiEnd()
+    {
+        this._cor = null;
+        MediatorUtil.SendNotification(NotiDefine.BattleAiEnd);
     }
 
     public void StopAi()
@@ -146,12 +196,6 @@ public class BattleController : MonoBehaviour
             CoroutineUtil.GetInstance().Stop(this._cor);
             this._cor = null;
         }
-    }
-
-    private void OnAiEnd(object[] param)
-    {
-        this._cor = null;
-        MediatorUtil.SendNotification(NotiDefine.BattleAiEnd);
     }
 
     private void SetSpotAttackEffects()
@@ -179,7 +223,7 @@ public class BattleController : MonoBehaviour
 
     
     private float _skillSecs = 2f;
-    public void DoManualReleaseAction()
+    public void DoManualReleaseAction(UnityAction callBack = null)
     {
         List<PlayerEffectChangeData> effectPlayers =  BattleProxy._instance.ManualReleaseAction();
         BattlePlayer actionPl = BattleProxy._instance.GetActionPlayer();
@@ -202,7 +246,7 @@ public class BattleController : MonoBehaviour
         this.EffectPlayerResponseToSkill(effectPlayers);
         
         //等待各种伤害数字以及被击中的人的被打击动画播放完毕
-        CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd);
+        CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd, callBack);
     }
 
     public void CallSkillAction(int teamid,int skillid)
@@ -353,9 +397,13 @@ public class BattleController : MonoBehaviour
         BattleProxy._instance.OnPlayerActionFinishded(player.TeamID);
         //通知UI更新
         MediatorUtil.SendNotification(NotiDefine.AttackPlayerEndJudge);
+
+        UnityAction callBack = (UnityAction)param[0];
+        if (callBack != null)
+            callBack.Invoke();
     }
 
-    public void SetAttackRange(int skillid)
+    public void SetAttackRange(int skillid,VInt2 autoAttackPos=null)
     {
         //skillid 0-代表普通攻击
         BattlePlayer player = BattleProxy._instance.GetActionPlayer();
@@ -369,7 +417,7 @@ public class BattleController : MonoBehaviour
         }
 
         //设置攻击范围
-        player.ComputeSkillFightRange(skillid);
+        player.ComputeSkillFightRange(skillid,player.Postion);
         foreach (VInt2 attackPos in player.SkillFightRangeCordinates)
         {
             string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
@@ -377,12 +425,20 @@ public class BattleController : MonoBehaviour
                 continue;//不在范围内
            
             this._SpotDic[key].ChangeColor(BattleSpotStatus.CanAttack);
-            this._SpotDic[key].AddEvent(OnClickAttackSpot);
+            if (autoAttackPos == null)
+                this._SpotDic[key].AddEvent(OnClickAttackSpot);
         }
         //等待玩家选择要攻击的地块坐标
+        if (autoAttackPos != null)
+        {
+            string key = UtilTools.combine(autoAttackPos.x, "|", autoAttackPos.y);
+            BattleSpot spot;
+            if (this._SpotDic.TryGetValue(key, out spot))
+                this.AttackSpot(spot, true, this.OnAiCurrentStepEnd);
+        }
     }
 
-    private void OnClickAttackSpot(BattleSpot spot)
+    private void AttackSpot(BattleSpot spot,bool isAuto,UnityAction callBack)
     {
         BattlePlayer player = BattleProxy._instance.GetActionPlayer();
         //清除旧的伤害范围
@@ -393,7 +449,7 @@ public class BattleController : MonoBehaviour
                 string key = UtilTools.combine(oldPos.x, "|", oldPos.y);
                 if (this._SpotDic.ContainsKey(key) == false)
                     continue;//不在范围内
-                if(player.SkillFightRangeCordinatesStrList.Contains(key))//说明是攻击范围
+                if (player.SkillFightRangeCordinatesStrList.Contains(key))//说明是攻击范围
                     this._SpotDic[key].ChangeColor(BattleSpotStatus.CanAttack);
                 else
                     this._SpotDic[key].ChangeColor(BattleSpotStatus.Normal);
@@ -401,7 +457,7 @@ public class BattleController : MonoBehaviour
         }
 
         //设置显示新的伤害范围
-        player.ComputeSkillDemageRange(spot.Pos, player._AttackSkillID);
+        player.ComputeSkillDemageRange(spot.Pos, player._AttackSkillID, player.Postion);
         foreach (VInt2 attackPos in player.SkillDemageCordinates)
         {
             string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
@@ -410,8 +466,20 @@ public class BattleController : MonoBehaviour
             this._SpotDic[key].ChangeColor(BattleSpotStatus.AttackDemageRange);
         }
 
+        if (isAuto == false)
+        {
+            MediatorUtil.SendNotification(NotiDefine.ShowSureFight);
+        }
+        else
+        {
+            //直接攻击
+            this.DoManualReleaseAction(callBack);
+        }
+    }
 
-        MediatorUtil.SendNotification(NotiDefine.ShowSureFight);
+    private void OnClickAttackSpot(BattleSpot spot)
+    {
+        this.AttackSpot(spot,false,null);
     }
 
     private void SetCurrentPlayerMoveRange()
@@ -451,10 +519,12 @@ public class BattleController : MonoBehaviour
             }//end for col
         }//end for row
 
-        
+        //由近及远的排序
+        player.SortMoveCordinate();
     }
 
   
+
 
 
 
@@ -465,7 +535,7 @@ public class BattleController : MonoBehaviour
 
     private bool _isMoving = false;
     private float _moveDelta = 0.3f;
-    private float PlayerDoMoveTo(VInt2 pos)
+    private float PlayerDoMoveTo(VInt2 pos,UnityAction callBack = null)
     {
         float needSecs = 0f;
         BattlePlayer player = BattleProxy._instance.GetActionPlayer();
@@ -496,11 +566,15 @@ public class BattleController : MonoBehaviour
                     pl.transform.DOMoveZ(pos.y, _moveDelta).onComplete = () =>
                     {
                         this._isMoving = false;
+                        if (callBack != null)
+                            callBack.Invoke();
                     };
                 }
                 else
                 {
                     this._isMoving = false;
+                    if (callBack != null)
+                        callBack.Invoke();
                 }
             };
         }
@@ -509,6 +583,8 @@ public class BattleController : MonoBehaviour
             pl.transform.DOMoveZ(pos.y, _moveDelta).onComplete = () =>
             {
                 this._isMoving = false;
+                if (callBack != null)
+                    callBack.Invoke();
             };
         }
 

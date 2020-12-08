@@ -887,7 +887,7 @@ public class Team
 
         HeroLevelConfig configLevel = HeroLevelConfig.Instance.GetData(level);
         HeroStarConfig configStar = HeroStarConfig.Instance.GetData(config.Star);
-        Attribute[AttributeDefine.MoveRange] = Mathf.RoundToInt(configStar.RangeBase * configLevel.RangeRate);
+        Attribute[AttributeDefine.MoveRange] = Mathf.RoundToInt(configStar.RangeBase * configLevel.RangeRate*2);//临时扩大4倍
     }
 }
 
@@ -1244,6 +1244,19 @@ public class BattlePlayer
 
     public Dictionary<string, BattleEffectBuff> _Buffs = new Dictionary<string, BattleEffectBuff>();
 
+
+    public void SortMoveCordinate()
+    {
+        this.ActionMoveCordinates.Sort(this.ComparePos);
+    }
+
+    private int ComparePos(VInt2 aPos, VInt2 bPos)
+    {
+        float aDis = Mathf.Pow((aPos.x - this.Postion.x), 2) + Mathf.Pow((aPos.y - this.Postion.y), 2);
+        float bDis = Mathf.Pow((bPos.x - this.Postion.x), 2) + Mathf.Pow((bPos.y - this.Postion.y), 2);
+        return UtilTools.compareFloat(aDis, bDis);
+    }
+
     public int GetLeftArmyCount()
     {
         float blood = this.Attributes[AttributeDefine.Blood];
@@ -1555,7 +1568,7 @@ public class BattlePlayer
         return descBlood;
     }
 
-    public void ComputeSkillFightRange(int skillid = 0)
+    public void ComputeSkillFightRange(int skillid ,VInt2 rolePostion)
     {
         //skillid 0-代表普通攻击
         SkillFightRangeCordinates = new List<VInt2>();
@@ -1565,13 +1578,13 @@ public class BattlePlayer
         if (skillid == 0)
         {
             HeroConfig config = HeroConfig.Instance.GetData(this.HeroID);
-            SkillFightRangeCordinates = SkillProxy._instance.GetRangeCordinate(config.AttackRangeID, this.Postion, this.Postion);
+            SkillFightRangeCordinates = SkillProxy._instance.GetRangeCordinate(config.AttackRangeID, rolePostion, rolePostion);
         }
         else
         {
             int skilllv = this._SkillDatas[skillid].Level;
             SkillLevelConfig configLv = SkillProxy._instance.GetSkillLvConfig(skillid, skilllv);
-            SkillFightRangeCordinates = SkillProxy._instance.GetRangeCordinate(configLv.AttackRangeID, this.Postion, this.Postion);
+            SkillFightRangeCordinates = SkillProxy._instance.GetRangeCordinate(configLv.AttackRangeID, rolePostion, rolePostion);
         }
 
         foreach(VInt2 pos in SkillFightRangeCordinates)
@@ -1581,7 +1594,7 @@ public class BattlePlayer
         }
     }
 
-    public void ComputeSkillDemageRange(VInt2 attackPostion,int skillID)
+    public void ComputeSkillDemageRange(VInt2 attackPostion,int skillID,VInt2 RolePostion)
     {
         //根据选中的技能来确定伤害范围
         SkillDemageCordinates = new List<VInt2>();
@@ -1590,13 +1603,13 @@ public class BattlePlayer
         if (skillID == 0)
         {
             HeroConfig config = HeroConfig.Instance.GetData(this.HeroID);
-            SkillDemageCordinates = SkillProxy._instance.GetRangeCordinate(config.DemageRangeID, attackPostion, this.Postion);
+            SkillDemageCordinates = SkillProxy._instance.GetRangeCordinate(config.DemageRangeID, attackPostion, RolePostion);
         }
         else
         {
             int skilllv = this._SkillDatas[skillID].Level;
             SkillLevelConfig configLv = SkillProxy._instance.GetSkillLvConfig(skillID, skilllv);
-            SkillDemageCordinates = SkillProxy._instance.GetRangeCordinate(configLv.DemageRangeID, attackPostion, this.Postion);
+            SkillDemageCordinates = SkillProxy._instance.GetRangeCordinate(configLv.DemageRangeID, attackPostion, RolePostion);
         }
     }
 
@@ -1716,8 +1729,10 @@ public class AiStep
 public class SkillAiStep
 {
     public int MainEffectTypeID;
-    public VInt2 _Postion;
+    public VInt2 _ReleaseSkillPostion;//
+    public VInt2 _MoveToPos;
     public int _SkillID;
+    public VInt2 _ActionPlayerPostion;
 }
 
 

@@ -31,58 +31,211 @@ public class BattleProxy : BaseRemoteProxy
         //this.BattleEnd(true);
     }
 
-    public List<AiStep> DoAi(BattlePlayer player)
+
+
+    public Queue<AiStep> DoAi(BattlePlayer player)
     {
-        List<AiStep> AiSteps = new List<AiStep>();
-        //判断攻击范围内是否有可攻击的敌方
-        //先判断普通攻击范围
-
+        Queue<AiStep> AiSteps = new Queue<AiStep>();
+        //再所有可移动范围内计算是否有可以向敌方释放的技能
+        Dictionary<int, SkillAiStep> skillSteps = new Dictionary<int, SkillAiStep>();
         int myMp = (int)player.Attributes[AttributeDefine.Mp];
-        List<SkillAiStep> skillSteps = new List<SkillAiStep>();
-
         SkillAiStep attackStep;
-        this.PlayerSkillAutoReleaseInPostion(player, 0,out attackStep);
-        if (attackStep._Postion != null)
+        
+        foreach (VInt2 movePos in player.ActionMoveCordinates)
         {
-            skillSteps.Add(attackStep);
+            //普通攻击
+            this.PlayerSkillAutoReleaseInPostion(player, 0, movePos, out attackStep);
+            if (attackStep._ReleaseSkillPostion != null && skillSteps.ContainsKey(attackStep.MainEffectTypeID) == false)
+            {
+                attackStep._ActionPlayerPostion = player.Postion;
+                skillSteps[attackStep.MainEffectTypeID] = (attackStep);
+            }
+            //技能释放
+            foreach (BattleSkill skill in player._SkillDatas.Values)
+            {
+                SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
+                if (config.ReleaseTerm.Equals(SkillReleaseTerm.Manual) == false)
+                    continue;
+                if (myMp < config.MpCost)
+                    continue;
+                this.PlayerSkillAutoReleaseInPostion(player, skill.ID, movePos, out attackStep);
+                if (attackStep._ReleaseSkillPostion != null &&  skillSteps.ContainsKey(attackStep.MainEffectTypeID) == false)
+                {
+                    attackStep._ActionPlayerPostion = player.Postion;
+                    skillSteps[attackStep.MainEffectTypeID] = (attackStep);
+                }
+            }
+        }//end for
+
+        List<SkillAiStep> DoEnemySteps = new List<SkillAiStep>();
+        List<SkillAiStep> DoSelfSteps = new List<SkillAiStep>();
+
+        foreach (SkillAiStep step in skillSteps.Values)
+        {
+            SkillEffectConfig config = SkillEffectConfig.Instance.GetData(step.MainEffectTypeID);
+            if (config.Target.Equals(SkillEffectTarget.Enemy))
+                DoEnemySteps.Add(step);
+            else
+                DoSelfSteps.Add(step);
         }
 
-        foreach (BattleSkill skill in player._SkillDatas.Values)
-        {
-            SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
-            if (config.ReleaseTerm.Equals(SkillReleaseTerm.Manual) == false)
-                continue;
+        //按照和当前玩家的距离进行排序
+        DoSelfSteps.Sort(this.CompareWithActionPlayerDistance);
+        DoEnemySteps.Sort(this.CompareWithActionPlayerDistance);
 
-            if (myMp < config.MpCost)
-                continue;
-            SkillAiStep skillAttackStep;
-            this.PlayerSkillAutoReleaseInPostion(player,skill.ID,out skillAttackStep);
-            if (skillAttackStep._Postion != null)
+
+        SkillAiStep actionSkillStep = null;
+        if (DoEnemySteps.Count > 0)
+        {
+            int randomIndex = UtilTools.RangeInt(0, DoEnemySteps.Count);
+            actionSkillStep = DoEnemySteps[randomIndex];
+        }
+        else if (DoSelfSteps.Count > 0)
+        {
+            //判断一下是否需要释放给己方
+            int ramdomRate = UtilTools.RangeInt(0, 100);
+            if (ramdomRate > 0)
             {
-                skillSteps.Add(skillAttackStep);
+                int randomIndex = UtilTools.RangeInt(0, DoSelfSteps.Count);
+                actionSkillStep = DoSelfSteps[randomIndex];
             }
         }
 
-        //先测试自动释放范围内的Ai
-        if (skillSteps.Count > 0)
+        AiStep aiStep;
+        if (actionSkillStep != null)
         {
-            //临时用第0个先测试
-            AiStep step = new AiStep();
-            step._Step = AiStepType.ReleaseSkill;
-            step._Postion = new VInt2(skillSteps[0]._Postion.x, skillSteps[0]._Postion.y);
-            step._SkillID = skillSteps[0]._SkillID;
-            AiSteps.Add(step);
+            //是否可以直接释放技能
+            bool canNoMoveRelease = actionSkillStep._MoveToPos.x == actionSkillStep._ActionPlayerPostion.x &&
+                actionSkillStep._MoveToPos.y == actionSkillStep._ActionPlayerPostion.y;
+            if (canNoMoveRelease == false)
+            {
+                //需要移动一下
+                aiStep = new AiStep();
+                aiStep._Step = AiStepType.Move;
+                aiStep._Postion = new VInt2(actionSkillStep._MoveToPos.x, actionSkillStep._MoveToPos.y);
+                AiSteps.Enqueue(aiStep);
+            }
+
+            //释放技能
+            aiStep = new AiStep();
+            aiStep._Step = AiStepType.ReleaseSkill;
+            aiStep._Postion = new VInt2(actionSkillStep._ReleaseSkillPostion.x, actionSkillStep._ReleaseSkillPostion.y);
+            aiStep._SkillID = actionSkillStep._SkillID;
+            AiSteps.Enqueue(aiStep);
+        }
+        else
+        {
+            //找出距离最近的敌方位置
+            VInt2 MoveToPos = this.FindNearestEnemyMoveToPostion(player.TeamID);
+            bool isSamePos = MoveToPos.x == player.Postion.x && MoveToPos.y == player.Postion.y;
+            if (MoveToPos != null && isSamePos == false)
+            {
+                aiStep = new AiStep();
+                aiStep._Step = AiStepType.Move;
+                aiStep._Postion = new VInt2(MoveToPos.x, MoveToPos.y);
+                AiSteps.Enqueue(aiStep);
+            }
         }
 
         //攻击结束后，直接停止等待
         AiStep stepEnd = new AiStep();
         stepEnd._Step = AiStepType.End;
-        AiSteps.Add(stepEnd);
+        AiSteps.Enqueue(stepEnd);
 
         return AiSteps;
     }
 
-    public void PlayerSkillAutoReleaseInPostion(BattlePlayer player,int skillid,out SkillAiStep attackStep)
+    private VInt2 FindNearestEnemyMoveToPostion(int aiTeamId)
+    {
+        BattlePlayer aiPlayer = this.GetPlayer(aiTeamId);
+        float minDistance = 0;
+        VInt2 minPlPos = null;
+        foreach (BattlePlayer pl in this.Data.Players.Values)
+        {
+            bool isValid = this.IsValidPlayer(pl);
+            bool isSameTeam = pl.TeamID * aiTeamId > 0;
+            if (isValid == false || isSameTeam)
+                continue;
+            float disX = Mathf.Pow((aiPlayer.Postion.x - pl.Postion.x), 2) + Mathf.Pow((aiPlayer.Postion.y - pl.Postion.y), 2);
+            if (minDistance == 0 || disX < minDistance)
+            {
+                minDistance = disX;
+                minPlPos = pl.Postion;
+            }
+        }//end for
+
+        if (minPlPos == null)
+            return null;
+
+        int offsetX = minPlPos.x - aiPlayer.Postion.x;
+        int offsetY = minPlPos.y - aiPlayer.Postion.y;
+
+        int addXIndex = 0;
+        if (offsetX > 1)
+            addXIndex = 1;
+        else if (offsetX < -1)
+            addXIndex = -1;
+
+        int addYIndex = 0;
+        if (offsetY > 1)
+            addYIndex = 1;
+        else if (offsetY < -1)
+            addYIndex = -1;
+
+        int absX = Mathf.Abs(offsetX);
+        int absY = Mathf.Abs(offsetY);
+        int moveToX = aiPlayer.Postion.x;
+        int moveToY = aiPlayer.Postion.y;
+        for (int i = 0; i <= absX; ++i)
+        {
+            int curX = aiPlayer.Postion.x + i * addXIndex;
+            bool isMinPlayerPostion = moveToY == minPlPos.y && curX == minPlPos.x;
+            if (isMinPlayerPostion)
+                continue;
+            BattlePlayer plInPos = this.GetPlayerBy(new VInt2(curX, moveToY));
+            if (plInPos != null)
+                continue;
+            bool canMove = this.CanMoveToPostion(aiPlayer,curX, moveToY);
+            if (canMove)
+                moveToX = curX;//可以移动就一直前进
+            else
+                break;//无法移动了就跳出循环
+        }
+
+        for (int i = 0; i <= absY; ++i)
+        {
+            int curY = aiPlayer.Postion.y + i * addYIndex;
+            bool isMinPlayerPostion = curY == minPlPos.y && moveToX == minPlPos.x;
+            if (isMinPlayerPostion)
+                continue;
+            bool canMove = this.CanMoveToPostion(aiPlayer, moveToX, curY);
+            if (canMove)
+                moveToY = curY;//可以移动就一直前进
+            else
+                break;//无法移动了就跳出循环
+        }
+
+        return new VInt2(moveToX,moveToY);
+    }
+
+    private bool CanMoveToPostion(BattlePlayer pl, int x, int y)
+    {
+        foreach (VInt2 canMovePos in pl.ActionMoveCordinates)
+        {
+            if (canMovePos.x == x && canMovePos.y == y)
+                return true;
+        }
+        return false;
+    }
+
+    private int CompareWithActionPlayerDistance(SkillAiStep x, SkillAiStep y)
+    {
+        float disX = Mathf.Pow((x._MoveToPos.x - x._ActionPlayerPostion.x), 2) + Mathf.Pow((x._MoveToPos.y - x._ActionPlayerPostion.y), 2);
+        float disY = Mathf.Pow((y._MoveToPos.x - y._ActionPlayerPostion.x), 2) + Mathf.Pow((y._MoveToPos.y - y._ActionPlayerPostion.y), 2);
+        return UtilTools.compareFloat(disY, disY);
+    }
+
+    public void PlayerSkillAutoReleaseInPostion(BattlePlayer player,int skillid, VInt2 RolePostion, out SkillAiStep attackStep)
     {
         int actionTeamID = player.TeamID;
         attackStep = new SkillAiStep();
@@ -99,11 +252,11 @@ public class BattleProxy : BaseRemoteProxy
 
         SkillEffectConfig typeConfig = SkillEffectConfig.Instance.GetData(attackStep.MainEffectTypeID);
 
-        player.ComputeSkillFightRange(skillid);
-        foreach (VInt2 pos in player.SkillFightRangeCordinates)
+        player.ComputeSkillFightRange(skillid, RolePostion);
+        foreach (VInt2 releasePostion in player.SkillFightRangeCordinates)
         {
             //计算伤害范围内是否有可攻击的敌人
-            player.ComputeSkillDemageRange(pos, skillid);
+            player.ComputeSkillDemageRange(releasePostion, skillid, RolePostion);
             VInt2 hasPlayerPos = null;
             foreach (VInt2 attackPos in player.SkillDemageCordinates)
             {
@@ -132,7 +285,8 @@ public class BattleProxy : BaseRemoteProxy
 
             if (hasPlayerPos != null)
             {
-                attackStep._Postion = new VInt2(hasPlayerPos.x, hasPlayerPos.y);
+                attackStep._MoveToPos = new VInt2(RolePostion.x, RolePostion.y);
+                attackStep._ReleaseSkillPostion = new VInt2(releasePostion.x, releasePostion.y);
                 break;
             }
         }//end foreach
