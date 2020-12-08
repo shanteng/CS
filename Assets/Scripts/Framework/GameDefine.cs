@@ -881,13 +881,13 @@ public class Team
         Attribute[AttributeDefine.Attack] = (heroAttri[AttributeDefine.Attack] * armyConfig.Attack * RateValue * (float)cfgconst.IntValues[0] * 0.01f);
         Attribute[AttributeDefine.Defense] = (heroAttri[AttributeDefine.Defense] * armyConfig.Defense * RateValue * (float)cfgconstDef.IntValues[0] * 0.01f);
         Attribute[AttributeDefine.Speed] = config.Speed * (1f + (float)armyConfig.SpeedRate / 100f);
-        Attribute[AttributeDefine.Blood] = Mathf.RoundToInt(count * armyConfig.Blood);
+        Attribute[AttributeDefine.Blood] = 100000;// Mathf.RoundToInt(count * armyConfig.Blood);
         Attribute[AttributeDefine.OrignalBlood] = Attribute[AttributeDefine.Blood];
         
 
         HeroLevelConfig configLevel = HeroLevelConfig.Instance.GetData(level);
         HeroStarConfig configStar = HeroStarConfig.Instance.GetData(config.Star);
-        Attribute[AttributeDefine.MoveRange] = Mathf.RoundToInt(configStar.RangeBase * configLevel.RangeRate*2);//临时扩大4倍
+        Attribute[AttributeDefine.MoveRange] = Mathf.RoundToInt(configStar.RangeBase * configLevel.RangeRate);//临时扩大4倍
     }
 }
 
@@ -1378,14 +1378,14 @@ public class BattlePlayer
         if (curBuff.EffectType.Equals(SkillEffectType.Demage))
         {
             double realAttack = curBuff.EffectValue * 0.01f * (actionPlayer.Attributes[AttributeDefine.BuffAttack] + actionPlayer.Attributes[AttributeDefine.Attack]);
-            int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.GetLeftArmyCount());
-            showData.ChangeValue = this.TakeDemage(demage);
+          //  int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.GetLeftArmyCount());
+            showData.ChangeValue = this.TakeDemage(realAttack,actionPlayer.GetLeftArmyCount());
         }
         else if (curBuff.EffectType.Equals(SkillEffectType.GoOnDemage))
         {
             double realAttack = curBuff.EffectValue * 0.01f * (actionPlayer.Attributes[AttributeDefine.BuffAttack] + actionPlayer.Attributes[AttributeDefine.Attack]);
             int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.GetLeftArmyCount());
-            showData.ChangeValue = this.TakeDemage(demage);
+            showData.ChangeValue = this.TakeDemage(realAttack,actionPlayer.GetLeftArmyCount());
         }
         else if (curBuff.EffectType.Equals(SkillEffectType.Defense_Up))
         {
@@ -1548,14 +1548,18 @@ public class BattlePlayer
         return changes;
     }
 
-    public int TakeDemage(double demage)
+    public int TakeDemage(double attack,int attackArmyCount)
     {
         //根据防御属性算出最终减少的血量，以及是否死亡
         float realDefense = this.Attributes[AttributeDefine.Defense] + this.Attributes[AttributeDefine.BuffDefense];
-        int defense = Mathf.RoundToInt(realDefense * this.GetLeftArmyCount());
-        int descBlood = (int)(demage - defense);
-        if (descBlood <= 0)
-            descBlood = 1;//最少打一滴血 
+        float descValue = (float)attack - realDefense;
+        if (descValue < 0)
+            descValue = 1;
+        float demage = descValue * attackArmyCount;
+        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.BloodLostRate);
+        float loseRate = UtilTools.ParseFloat(cfgconst.StringValues[0]);
+        int descBlood = Mathf.CeilToInt(demage * loseRate);
+ 
      //   descBlood = 20000;//测试用
         int leftBlood = (int)this.Attributes[AttributeDefine.Blood] - descBlood;
         if (leftBlood <= 0)
@@ -1733,6 +1737,7 @@ public class SkillAiStep
     public VInt2 _MoveToPos;
     public int _SkillID;
     public VInt2 _ActionPlayerPostion;
+    public List<int> _ResponseTeamID;//所有对此次释放有反应的人
 }
 
 

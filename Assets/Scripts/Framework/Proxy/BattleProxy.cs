@@ -68,19 +68,18 @@ public class BattleProxy : BaseRemoteProxy
         }//end for
 
         List<SkillAiStep> DoEnemySteps = new List<SkillAiStep>();
-        List<SkillAiStep> DoSelfSteps = new List<SkillAiStep>();
-
+        List<SkillAiStep> DoSelfHealSteps = new List<SkillAiStep>();
         foreach (SkillAiStep step in skillSteps.Values)
         {
             SkillEffectConfig config = SkillEffectConfig.Instance.GetData(step.MainEffectTypeID);
             if (config.Target.Equals(SkillEffectTarget.Enemy))
                 DoEnemySteps.Add(step);
-            else
-                DoSelfSteps.Add(step);
+            else if(config.Type.Equals(SkillEffectType.Heal))
+                DoSelfHealSteps.Add(step);
         }
 
         //按照和当前玩家的距离进行排序
-        DoSelfSteps.Sort(this.CompareWithActionPlayerDistance);
+        DoSelfHealSteps.Sort(this.CompareWithActionPlayerDistance);
         DoEnemySteps.Sort(this.CompareWithActionPlayerDistance);
 
 
@@ -90,14 +89,26 @@ public class BattleProxy : BaseRemoteProxy
             int randomIndex = UtilTools.RangeInt(0, DoEnemySteps.Count);
             actionSkillStep = DoEnemySteps[randomIndex];
         }
-        else if (DoSelfSteps.Count > 0)
+        else if (DoSelfHealSteps.Count > 0)
         {
-            //判断一下是否需要释放给己方
-            int ramdomRate = UtilTools.RangeInt(0, 100);
-            if (ramdomRate > 0)
+            //判断一下是否需要释放给己方治疗
+            foreach (SkillAiStep stepself in DoSelfHealSteps)
             {
-                int randomIndex = UtilTools.RangeInt(0, DoSelfSteps.Count);
-                actionSkillStep = DoSelfSteps[randomIndex];
+                bool needHeal = false;
+                foreach (int teamid in stepself._ResponseTeamID)
+                {
+                    BattlePlayer healPl = this.GetPlayer(teamid);
+                    if (healPl.Attributes[AttributeDefine.WoundedBlood] > 0)
+                    {
+                        needHeal = true;
+                        break;
+                    }
+                }//end foreach
+                if (needHeal)
+                {
+                    actionSkillStep = stepself;
+                    break;
+                }
             }
         }
 
@@ -257,7 +268,7 @@ public class BattleProxy : BaseRemoteProxy
         {
             //计算伤害范围内是否有可攻击的敌人
             player.ComputeSkillDemageRange(releasePostion, skillid, RolePostion);
-            VInt2 hasPlayerPos = null;
+            List<int> responseTeams = new List<int>();
             foreach (VInt2 attackPos in player.SkillDemageCordinates)
             {
                 int validPlayerId = this.GetValidPlayerInPostion(attackPos.x, attackPos.y);
@@ -279,14 +290,14 @@ public class BattleProxy : BaseRemoteProxy
                 if (typeConfig.Target.Equals(SkillEffectTarget.Self_Other) && (isSameTeam == false || isMySelf))
                     continue;
                 //可以释放了
-                hasPlayerPos = attackPos;
-                break;
+                responseTeams.Add(validPlayerId);
             }//end foreach
 
-            if (hasPlayerPos != null)
+            if (responseTeams.Count > 0)
             {
                 attackStep._MoveToPos = new VInt2(RolePostion.x, RolePostion.y);
                 attackStep._ReleaseSkillPostion = new VInt2(releasePostion.x, releasePostion.y);
+                attackStep._ResponseTeamID = responseTeams;
                 break;
             }
         }//end foreach

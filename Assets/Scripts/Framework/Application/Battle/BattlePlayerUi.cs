@@ -140,8 +140,14 @@ public class BattlePlayerUi : UIBase
         obj.SetActive(true);
         UITexts changeTxt = obj.GetComponent<UITexts>();
         GameObject.Destroy(obj, 2f);
-        SkillConfig config = SkillConfig.Instance.GetData(id);
-        changeTxt.FirstLabel.text = config.Name;
+
+        if (id == 0)
+            changeTxt.FirstLabel.text = LanguageConfig.GetLanguage(LanMainDefine.NormalAttack);
+        else
+        {
+            SkillConfig config = SkillConfig.Instance.GetData(id);
+            changeTxt.FirstLabel.text = config.Name;
+        }
     }
 
     private Coroutine _cor;

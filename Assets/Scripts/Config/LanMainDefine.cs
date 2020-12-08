@@ -95,6 +95,7 @@
     public const string CityGroupName = "CityGroupName";
     public const string BuffEffectTips = "BuffEffectTips";
     public const string Forever = "Forever";
+    public const string NormalAttack = "NormalAttack";
 
     public const string AfterTimeTalk = "AfterTimeTalk";
     public const string HeroFavorLevelChanged = "HeroFavorLevelChanged";
@@ -205,6 +206,7 @@ public class ConstDefine
 
     public const string AttackRate = "AttackRate";
     public const string DefenseRate = "DefenseRate";
+    public const string BloodLostRate = "BloodLostRate";
 
     public const string HeroEnegry = "HeroEnegry";
     public const string HeroCostEnegry = "HeroCostEnegry";
