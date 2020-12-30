@@ -67,7 +67,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 513933
+    totalSpriteSurfaceArea: 566741
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -145,6 +145,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5b0ba147d6d19784a80f2d10dbee22c0, type: 3}
   - {fileID: 21300000, guid: e380d747dacb86444bd19792b2294412, type: 3}
   - {fileID: 21300000, guid: aac48657c8af1e648aea489a158ca4bc, type: 3}
+  - {fileID: 21300000, guid: 288efa575bec38c4abf971e5bf6a33e1, type: 3}
   - {fileID: 21300000, guid: 195d55878ab71ed43b15b0b68478319e, type: 3}
   - {fileID: 21300000, guid: 7a7772977471e4f4c99391ab1b3a2117, type: 3}
   - {fileID: 21300000, guid: 72d160a71e26ebd479d602b0072fde56, type: 3}
@@ -166,6 +167,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c61cc4d80edd78848972b7d228978cdb, type: 3}
   - {fileID: 21300000, guid: 182a93e8cc283d04998859e35914838c, type: 3}
   - {fileID: 21300000, guid: 28350ce8dbbcba6469c711632325a771, type: 3}
+  - {fileID: 21300000, guid: 9f0637795ca633c46a8b2a60b94d9249, type: 3}
   - {fileID: 21300000, guid: b4e317a9ce179fe4d87a52b3c94e4167, type: 3}
   - {fileID: 21300000, guid: 95ccbaa9d037d71418343d0b91a6b36e, type: 3}
   - {fileID: 21300000, guid: c07f11c945002574eb2a4775479d6e95, type: 3}
@@ -190,6 +192,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c94b9c5b97af1914e8a090ac23d6a8ef, type: 3}
   - {fileID: 21300000, guid: 7658f57bb0a260544838026eb0658157, type: 3}
   - {fileID: 21300000, guid: e7d2287b42c28a64d8ef7fd8991bebb6, type: 3}
+  - {fileID: 21300000, guid: f38334cbfcf1fad488211b113739aa72, type: 3}
   - {fileID: 21300000, guid: f9fc57eb747a5a349bb878a27652ec41, type: 3}
   - {fileID: 21300000, guid: ecf6dfeb5ff273c48aa6d52fd353412a, type: 3}
   - {fileID: 21300000, guid: 4e07d3fb3ac02e7469aaf1037aa87d6a, type: 3}
@@ -302,6 +305,7 @@ SpriteAtlas:
   - t3
   - exp
   - ItemFrame1
+  - bg_dialogbox_name
   - back
   - Op_cancel
   - bg_frame
@@ -323,6 +327,7 @@ SpriteAtlas:
   - OP_GET_EXP
   - slider
   - h_water
+  - bg_jiugong_dialogbox
   - h_normal
   - flag
   - share2
@@ -347,6 +352,7 @@ SpriteAtlas:
   - WhiteArrow
   - ca2
   - titlenamebar
+  - img_dialogbox_line
   - Wind
   - OpClientCityTroop
   - btn_startgame

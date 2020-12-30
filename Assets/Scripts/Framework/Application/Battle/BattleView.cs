@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class BattleView : MonoBehaviour
 {
+   
     public UIButton _btnQuit;
+    public UIButton _btnWin;
     public GameObject _FightAni;
     public PreBattleUi _preUi;
     public GameObject _WaitLine;
@@ -21,7 +23,7 @@ public class BattleView : MonoBehaviour
     public GameObject _buffCon;
     public List<BuffItemUi> _buffs;
 
-    public UIButton _btnEndRound;
+    
     public UIButton _btnCancelFight;
     public UIButton _btnSureFight;
 
@@ -30,7 +32,7 @@ public class BattleView : MonoBehaviour
     public Text _HpTxt;
     public Slider _MpSlider;
     public Text _MpTxt;
-
+    public UIButton _btnEndRound;
 
     public ResultUi _resultUi;
     private Dictionary<int, SpeedPlayerUi> _AliveWaitPlayerDic;
@@ -40,6 +42,7 @@ public class BattleView : MonoBehaviour
     {
         this._FightAni.SetActive(false);
         this._btnQuit.AddEvent(OnQuit);
+        this._btnWin.AddEvent(OnTestWin);
 
         this._btnFight.AddEvent(OnFight);
         this._btnEndRound.AddEvent(OnEndRound);
@@ -57,6 +60,12 @@ public class BattleView : MonoBehaviour
         }
 
         this._waitPlayerTemplete.gameObject.SetActive(false);
+    }
+
+    private void OnTestWin(UIButton btn)
+    {
+        BattleProxy._instance.DoEndBattleResult(true);
+        this.ShowGameOver();
     }
 
     private void OnFight(UIButton btn)
@@ -110,7 +119,7 @@ public class BattleView : MonoBehaviour
         this._btnSureFight.Hide();
         this._btnCancelFight.Hide();
         this._btnEndRound.IsEnable = false;
-        this.SetHpAndMp();
+ 
     }
 
     public void ShowAttackSure()
@@ -164,6 +173,35 @@ public class BattleView : MonoBehaviour
     {
         BattleProxy._instance.DoEndBattleResult(false);
         this.ShowGameOver();
+    }
+
+    public void ShowCallSkill(VInt2 kv)
+    {
+        int teamid = kv.x;
+        BattleData data = BattleProxy._instance.Data;
+
+        if (data.MyPlace == BattlePlace.Attack && teamid > 0)//我方是攻击方
+        {
+            this._InfoUiDic[BattlePlace.Attack]._callSkillUi.SetDetalis(kv);
+        }
+        else if (data.MyPlace == BattlePlace.Defense && teamid > 0)//我方是攻击方
+        {
+            this._InfoUiDic[BattlePlace.Defense]._callSkillUi.SetDetalis(kv);
+        }
+        else if (data.MyPlace == BattlePlace.Attack && teamid < 0)//敌方是防守方
+        {
+            this._InfoUiDic[BattlePlace.Defense]._callSkillUi.SetDetalis(kv);
+        }
+        else//敌方是进攻方
+        {
+            this._InfoUiDic[BattlePlace.Attack]._callSkillUi.SetDetalis(kv);
+        }
+    }
+
+    public void HideCallSkill()
+    {
+        this._InfoUiDic[BattlePlace.Attack].HideCallSkill();
+        this._InfoUiDic[BattlePlace.Defense].HideCallSkill();
     }
 
     public void Init()
@@ -381,10 +419,14 @@ public class BattleView : MonoBehaviour
             this._ActionCon.SetActive(false);
             this.SetPlayerMove(true);
         }
-        if (state == BattleStatus.Action)
+        else if (state == BattleStatus.Action)
         {
             this.SetPlayerMove(false);
-            this.JudegeAction();
         }
+    }
+
+    public void PlayerDoAction()
+    {
+        this.JudegeAction();
     }
 }

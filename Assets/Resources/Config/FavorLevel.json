@@ -1,1 +1,65 @@
-[{"ID":-1,"Name":"<color=#00ff00>誓不两立</color>","FavorRange":[-999999,-1],"TalkAdd":20},{"ID":0,"Name":"<color=#ffffff>形同陌路</color>","FavorRange":[0,10],"TalkAdd":30},{"ID":1,"Name":"<color=#8D8D8D>一见如故</color>","FavorRange":[11,30],"TalkAdd":40},{"ID":2,"Name":"<color=#907965>腹心之友</color>","FavorRange":[31,80],"TalkAdd":50},{"ID":3,"Name":"<color=#96AEBA>情同手足</color>","FavorRange":[81,200],"TalkAdd":60},{"ID":4,"Name":"<color=#F9DE79>肝胆相照</color>","FavorRange":[201,400],"TalkAdd":70},{"ID":5,"Name":"<color=#EAC128>八拜之交</color>","FavorRange":[401,999999999],"TalkAdd":80}]
+[
+  {
+    "ID": -1,
+    "Name": "<color=#00ff00>誓不两立</color>",
+    "FavorRange": [
+      -999999,
+      -1
+    ],
+    "TalkAdd": 20
+  },
+  {
+    "ID": 0,
+    "Name": "<color=#ffffff>形同陌路</color>",
+    "FavorRange": [
+      0,
+      10
+    ],
+    "TalkAdd": 30
+  },
+  {
+    "ID": 1,
+    "Name": "<color=#8D8D8D>一见如故</color>",
+    "FavorRange": [
+      11,
+      30
+    ],
+    "TalkAdd": 40
+  },
+  {
+    "ID": 2,
+    "Name": "<color=#907965>腹心之友</color>",
+    "FavorRange": [
+      31,
+      80
+    ],
+    "TalkAdd": 50
+  },
+  {
+    "ID": 3,
+    "Name": "<color=#96AEBA>情同手足</color>",
+    "FavorRange": [
+      81,
+      200
+    ],
+    "TalkAdd": 60
+  },
+  {
+    "ID": 4,
+    "Name": "<color=#F9DE79>肝胆相照</color>",
+    "FavorRange": [
+      201,
+      400
+    ],
+    "TalkAdd": 70
+  },
+  {
+    "ID": 5,
+    "Name": "<color=#EAC128>八拜之交</color>",
+    "FavorRange": [
+      401,
+      999999999
+    ],
+    "TalkAdd": 80
+  }
+]

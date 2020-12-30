@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using Excel;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -230,7 +231,7 @@ public class ExcelToJsonToolEditor : Editor
             objsToSave.Add(postedJObject);
         }//end for i
         // 保存为Json
-        string content = Newtonsoft.Json.JsonConvert.SerializeObject(objsToSave);
+        string content = Newtonsoft.Json.JsonConvert.SerializeObject(objsToSave, Formatting.Indented);
         SaveFile(content, jsonPath);
 
     }//end func

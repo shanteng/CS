@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BattleViewController.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\BornSpot.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Battle\CallSkillUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\PreBattleUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\ResultUi.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\Battle\SpeedPlayerUi.cs" />
@@ -172,6 +173,8 @@
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\SkillDetalisPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\TalentPop.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\PopUp\TextPop.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Question\QuestionMediator.cs" />
+    <Compile Include="Assets\Scripts\Framework\Application\Question\QuestionView.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\ResourcesManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderMediator.cs" />
     <Compile Include="Assets\Scripts\Framework\Application\SceneLoader\SceneLoaderView.cs" />

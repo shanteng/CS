@@ -20,10 +20,14 @@ public class BattleMediator : BaseWindowMediator<BattleView>
         m_HideNoHandleNotifations.Add(NotiDefine.PreBattleStartNoti);
         m_HideNoHandleNotifations.Add(NotiDefine.BattleStartNoti);
         m_HideNoHandleNotifations.Add(NotiDefine.BattleStateChangeNoti);
+        m_HideNoHandleNotifations.Add(NotiDefine.StartPlayerRoundNoti);
         m_HideNoHandleNotifations.Add(NotiDefine.ShowSureFight);
         m_HideNoHandleNotifations.Add(NotiDefine.AttackPlayerEndJudge);
         m_HideNoHandleNotifations.Add(NotiDefine.BattleAiEnd);
         m_HideNoHandleNotifations.Add(NotiDefine.BattleEffectChange);
+
+        m_HideNoHandleNotifations.Add(NotiDefine.CallSkillUIShow);
+        m_HideNoHandleNotifations.Add(NotiDefine.CallSkillUIHide);
     }
 
     protected override void HandheldNotificationInner(INotification notification)
@@ -51,6 +55,11 @@ public class BattleMediator : BaseWindowMediator<BattleView>
                     this.m_view.OnStateChange((BattleStatus)notification.Body);
                     break;
                 }
+            case NotiDefine.StartPlayerRoundNoti:
+                {
+                    this.m_view.PlayerDoAction();
+                    break;
+                }
             case NotiDefine.ShowSureFight:
                 {
                     this.m_view.ShowAttackSure();
@@ -70,6 +79,16 @@ public class BattleMediator : BaseWindowMediator<BattleView>
                 {
                     this.m_view.UpdatePlayerBuffs();
                     this.m_view.UpdateActionPlayerBuff();
+                    break;
+                }
+            case NotiDefine.CallSkillUIShow:
+                {
+                    this.m_view.ShowCallSkill((VInt2)notification.Body);
+                    break;
+                }
+            case NotiDefine.CallSkillUIHide:
+                {
+                    this.m_view.HideCallSkill();
                     break;
                 }
         }

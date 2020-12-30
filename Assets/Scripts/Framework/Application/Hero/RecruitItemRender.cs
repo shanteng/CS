@@ -56,7 +56,16 @@ public class RecruitItemRender : ItemRender
 
     private void OnClickTalk(UIButton btn)
     {
-        MediatorUtil.SendNotification(NotiDefine.TalkToHeroDo, this._id);
+        Hero hero = HeroProxy._instance.GetHero(_id);
+        if (hero.TalkExpire > 0 && hero.TalkExpire > GameIndex.ServerTime)
+        {
+            string cdStr = UtilTools.GetCdStringExpire(hero.TalkExpire);
+            HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
+            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.AfterTimeTalk, config.Name, cdStr));
+            return;
+        }
+
+        MediatorUtil.ShowMediator(MediatorDefine.QUESTION, this._id);
     }
 
     private void OnClickGive(UIButton btn)

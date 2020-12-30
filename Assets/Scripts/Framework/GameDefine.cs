@@ -106,7 +106,6 @@ public class NotiDefine
     public const string RecruitHeroResp = "RecruitHeroResp";
 
 
-   
 
     public const string HeroTavernRefreshReachedNoti = "HeroTavernRefreshReachedNoti";
 
@@ -157,6 +156,12 @@ public class NotiDefine
     public const string SetTeamHeroDo = "SetTeamHeroDo";
     public const string SetTeamHeroResp = "SetTeamHeroResp";
 
+
+    public const string CallSkillUIShow = "CallSkillUIShow";
+    public const string CallSkillUIHide = "CallSkillUIHide";
+
+
+
     public const string MoveToAttackCityDo = "MoveToAttackCityDo";
     public const string MoveToAttackCityResp = "MoveToAttackCityResp";
 
@@ -180,6 +185,9 @@ public class NotiDefine
     public const string BattleStateChangeNoti = "BattleStateChangeNoti";
     public const string BattleStartNoti = "BattleStartNoti";
     public const string PreBattleStartNoti = "PreBattleStartNoti";
+
+    public const string StartPlayerRoundNoti = "StartPlayerRoundNoti";
+
 
     public const string BattleAiEnd = "BattleAiEnd";
     public const string BattleEffectChange = "BattleEffectChange";
@@ -216,10 +224,14 @@ public class ErrorCode
     public const string NoOwnNoQuest = "NoOwnNoQuest";
     public const string NoVisibleNoAttack = "NoVisibleNoAttack";
     public const string NoHeroFreeToQuest = "NoHeroFreeToQuest";
+    public const string UpTeamNeedCount = "UpTeamNeedCount";
+
 
     public const string NoArmyNoTeam = "NoArmyNoTeam";
     public const string NoUpPlayer = "NoUpPlayer";
     public const string NoTeamCanFight = "NoTeamCanFight";
+    public const string BornHasOccupy = "BornHasOccupy";
+    public const string NoBornPlace = "NoBornPlace";
 
     public const string GroupBacking = "GroupBacking";
     public const string GroupFighting = "GroupFighting";
@@ -347,6 +359,7 @@ public enum LogType
     AttackCity,
     AttackCityWaitFight,
     AttackCityBack,
+    Hero,
 }
 
 public enum HeroBelong
@@ -422,6 +435,7 @@ public enum MediatorDefine
     BATTLE_CONTROL,
     BATTLE,
     ATTACK_CITY_GROUP,
+    QUESTION,
 }
 
 public class StringKeyValue
@@ -841,6 +855,7 @@ public class Team
     public int HeroID;//上阵英雄
     public int ArmyTypeID;//当前兵种
     public int ArmyCount;//当前兵力
+    public int WoundCount;//伤病返回主城会自动进入医院进行治疗，如果没有医院，那么就损失掉
     public int Status;//0-空闲 1-行军 2-返回 3-战斗
     public int CityID;//0-主城，>0 Npc城市ID
     public Dictionary<string, float> Attributes;
@@ -881,13 +896,13 @@ public class Team
         Attribute[AttributeDefine.Attack] = (heroAttri[AttributeDefine.Attack] * armyConfig.Attack * RateValue * (float)cfgconst.IntValues[0] * 0.01f);
         Attribute[AttributeDefine.Defense] = (heroAttri[AttributeDefine.Defense] * armyConfig.Defense * RateValue * (float)cfgconstDef.IntValues[0] * 0.01f);
         Attribute[AttributeDefine.Speed] = config.Speed * (1f + (float)armyConfig.SpeedRate / 100f);
-        Attribute[AttributeDefine.Blood] = 100000;// Mathf.RoundToInt(count * armyConfig.Blood);
+        Attribute[AttributeDefine.Blood] =  Mathf.RoundToInt(count * armyConfig.Blood);
         Attribute[AttributeDefine.OrignalBlood] = Attribute[AttributeDefine.Blood];
         
 
         HeroLevelConfig configLevel = HeroLevelConfig.Instance.GetData(level);
         HeroStarConfig configStar = HeroStarConfig.Instance.GetData(config.Star);
-        Attribute[AttributeDefine.MoveRange] = Mathf.RoundToInt(configStar.RangeBase * configLevel.RangeRate);//临时扩大4倍
+        Attribute[AttributeDefine.MoveRange] = Mathf.RoundToInt(configStar.RangeBase * configLevel.RangeRate);
     }
 }
 
@@ -1147,7 +1162,6 @@ public enum BattleSpotStatus
 public enum BattleStatus
 {
     PreStart = 0,
-    Start,
     Judge,
     Action,
     End,
@@ -1158,8 +1172,7 @@ public enum PlayerStatus
     Formation = 0,
     Wait = 1,
     Action = 2,
-    ActionFinished = 3,
-    Dead = 4,
+    Dead = 3,
 };
 
 public enum BattlePlace
@@ -1221,6 +1234,17 @@ public class BattleEffectShowData
     public double ChangeValue;
 }
 
+public class ReleaseSkillActionData
+{
+    public BattlePlayer player;
+    public int skillID;
+    public ReleaseSkillActionData(BattlePlayer p, int id)
+    {
+        this.player = p;
+        this.skillID = id;
+    }
+}
+
 public class BattlePlayer
 {
     public int TeamID;//我方>0,敌方<0
@@ -1244,6 +1268,13 @@ public class BattlePlayer
 
     public Dictionary<string, BattleEffectBuff> _Buffs = new Dictionary<string, BattleEffectBuff>();
 
+
+    public static int CompareBySpeed(BattlePlayer x, BattlePlayer y)
+    {
+        float xSpd = x.Attributes[AttributeDefine.Speed];
+        float ySpd = y.Attributes[AttributeDefine.Speed];
+        return UtilTools.compareFloat(ySpd, xSpd);
+    }
 
     public void SortMoveCordinate()
     {
@@ -1378,13 +1409,11 @@ public class BattlePlayer
         if (curBuff.EffectType.Equals(SkillEffectType.Demage))
         {
             double realAttack = curBuff.EffectValue * 0.01f * (actionPlayer.Attributes[AttributeDefine.BuffAttack] + actionPlayer.Attributes[AttributeDefine.Attack]);
-          //  int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.GetLeftArmyCount());
             showData.ChangeValue = this.TakeDemage(realAttack,actionPlayer.GetLeftArmyCount());
         }
         else if (curBuff.EffectType.Equals(SkillEffectType.GoOnDemage))
         {
             double realAttack = curBuff.EffectValue * 0.01f * (actionPlayer.Attributes[AttributeDefine.BuffAttack] + actionPlayer.Attributes[AttributeDefine.Attack]);
-            int demage = Mathf.RoundToInt((float)realAttack * actionPlayer.GetLeftArmyCount());
             showData.ChangeValue = this.TakeDemage(realAttack,actionPlayer.GetLeftArmyCount());
         }
         else if (curBuff.EffectType.Equals(SkillEffectType.Defense_Up))
@@ -1396,6 +1425,9 @@ public class BattlePlayer
         {
             float wouned = this.Attributes[AttributeDefine.WoundedBlood];
             int recoverBlood = Mathf.RoundToInt(wouned * (float)curBuff.EffectValue * 0.01f);
+            float leftWound = this.Attributes[AttributeDefine.WoundedBlood] - recoverBlood;
+            this.Attributes[AttributeDefine.WoundedBlood] = leftWound > 0 ? leftWound : 0;
+
             int afterBlood = (int)this.Attributes[AttributeDefine.Blood] + recoverBlood;
             if (afterBlood > (int)this.Attributes[AttributeDefine.OrignalBlood])
                 afterBlood = (int)this.Attributes[AttributeDefine.OrignalBlood];
@@ -1416,54 +1448,11 @@ public class BattlePlayer
         return showData;
     }
 
-    public List<PlayerEffectChangeData> ReleaseBeforeStartSKill(BattleData battleData)
-    {
-        List<PlayerEffectChangeData> allEffectPlayers = new List<PlayerEffectChangeData>();
-        foreach (BattleSkill skill in this._SkillDatas.Values)
-        {
-            SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
-            if (config.ReleaseTerm.Equals(SkillReleaseTerm.BeforeStart))
-            {
-                List<PlayerEffectChangeData> effectPlayers = this.ReleaseSkill(skill.ID, battleData);
-                allEffectPlayers.AddRange(effectPlayers);
-            }
-        }//end for
-        return allEffectPlayers;
-    }
+  
 
-
-    public List<PlayerEffectChangeData> ReleaseSelfRoundSKill(BattleData battleData)
+    public List<PlayerEffectChangeData> ReleaseSkill(int skillID)
     {
-        List<PlayerEffectChangeData> allEffectPlayers = new List<PlayerEffectChangeData>();
-        foreach (BattleSkill skill in this._SkillDatas.Values)
-        {
-            SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
-            if (config.ReleaseTerm.Equals(SkillReleaseTerm.SelfRound))
-            {
-                List<PlayerEffectChangeData> effectPlayers = this.ReleaseSkill(skill.ID, battleData);
-                allEffectPlayers.AddRange(effectPlayers);
-            }
-        }//end for
-        return allEffectPlayers;
-    }
-
-    public List<PlayerEffectChangeData> ReleaseAfterAttackSKill(BattleData battleData)
-    {
-        List<PlayerEffectChangeData> allEffectPlayers = new List<PlayerEffectChangeData>();
-        foreach (BattleSkill skill in this._SkillDatas.Values)
-        {
-            SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
-            if (config.ReleaseTerm.Equals(SkillReleaseTerm.AfterAttack))
-            {
-                List<PlayerEffectChangeData> effectPlayers = this.ReleaseSkill(skill.ID, battleData);
-                allEffectPlayers.AddRange(effectPlayers);
-            }
-        }//end for
-        return allEffectPlayers;
-    }
-
-    public List<PlayerEffectChangeData> ReleaseSkill(int skillID,BattleData battleData)
-    {
+        BattleData battleData = BattleProxy._instance.Data;
         BattlePlayer actionPlayer = this;
         int attackerTeamID = actionPlayer.TeamID;
         Dictionary<string, BattleEffectBuff> curEffects = new Dictionary<string, BattleEffectBuff>();
@@ -1523,11 +1512,7 @@ public class BattlePlayer
             effectPlayers.Add(kv);
         }
 
-        if (effectPlayers.Count > 0)
-        {
-            //通知喊招
-            BattleController.Instance.CallSkillAction(this.TeamID, skillID);
-        }
+   
 
         return effectPlayers;
     }
@@ -1535,7 +1520,6 @@ public class BattlePlayer
     public Dictionary<string, BattleEffectShowData> DoSelfRoundBuffEffect(BattleData battleData)
     {
         Dictionary<string, BattleEffectShowData> changes = new Dictionary<string, BattleEffectShowData>();
-
         foreach (BattleEffectBuff buff in this._Buffs.Values)
         {
             SkillEffectConfig config = SkillEffectConfig.Instance.GetData(buff.ID);
@@ -1551,16 +1535,17 @@ public class BattlePlayer
     public int TakeDemage(double attack,int attackArmyCount)
     {
         //根据防御属性算出最终减少的血量，以及是否死亡
-        float realDefense = this.Attributes[AttributeDefine.Defense] + this.Attributes[AttributeDefine.BuffDefense];
-        float descValue = (float)attack - realDefense;
-        if (descValue < 0)
-            descValue = 1;
-        float demage = descValue * attackArmyCount;
+        float realDefense = (this.Attributes[AttributeDefine.Defense] + this.Attributes[AttributeDefine.BuffDefense]) * this.GetLeftArmyCount();
+        float realAttack = (float)attack * attackArmyCount;
+        //伤害计算公式
+        float demage = Mathf.Pow((float)realAttack, 2) / (float)(realAttack + realDefense);
+
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.BloodLostRate);
         float loseRate = UtilTools.ParseFloat(cfgconst.StringValues[0]);
         int descBlood = Mathf.CeilToInt(demage * loseRate);
- 
-     //   descBlood = 20000;//测试用
+        int woundBlood = Mathf.RoundToInt(descBlood * 0.5f);
+        this.Attributes[AttributeDefine.WoundedBlood] += woundBlood;
+
         int leftBlood = (int)this.Attributes[AttributeDefine.Blood] - descBlood;
         if (leftBlood <= 0)
         {
@@ -1662,7 +1647,7 @@ public class BattlePlayer
         {
             BattleSkill dat = new BattleSkill();
             dat.ID = config.ID;
-            dat.Level = UtilTools.RangeInt(2, 4);
+            dat.Level = UtilTools.RangeInt(3, 4);
             dat.EffectResults = SkillProxy._instance.GetBattleSkillAttackEffect(dat.ID, dat.Level);
             this._SkillDatas.Add(dat.ID, dat);
         }

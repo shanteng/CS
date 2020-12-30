@@ -104,6 +104,60 @@ public class HeroProxy : BaseRemoteProxy
         return null;
     }
 
+    public void AddExpToHero(int id, int addExp,bool needSave = true)
+    {
+        Hero hero = this.GetHero(id);
+        if (hero == null) return;
+
+        int realAddExp = 0;
+        int totleExp = addExp + hero.Exp;
+        hero.Exp = 0;
+        int oldLevel = hero.Level;
+        int nextLevel = hero.Level + 1;
+        HeroLevelConfig configNext = HeroLevelConfig.Instance.GetData(nextLevel);
+        while (configNext != null && totleExp > 0)
+        {
+            bool isLevelUp = totleExp >= configNext.Exp;
+            int curLevelAddExp = isLevelUp ? configNext.Exp : totleExp;
+            if (isLevelUp)
+            {
+                nextLevel += 1;
+                hero.Level += 1;
+                hero.Exp = 0;
+                configNext = HeroLevelConfig.Instance.GetData(nextLevel);
+                totleExp -= curLevelAddExp;
+            }
+            else
+            {
+                hero.Exp = curLevelAddExp;
+                totleExp = 0;
+            }
+
+            realAddExp += curLevelAddExp;
+        }//end while
+
+
+        if (realAddExp > 0)
+        {
+            //升级了
+            HeroConfig config = HeroConfig.Instance.GetData(id);
+            string notice = "";
+            if (oldLevel < hero.Level)
+            {
+                notice = LanguageConfig.GetLanguage(LanMainDefine.HeroAddExpLevelUp, config.Name, realAddExp, hero.Level);
+                hero.ComputeAttributes();
+            }
+            else
+            {
+                notice = LanguageConfig.GetLanguage(LanMainDefine.HeroAddExp, config.Name, realAddExp);
+            }
+            RoleProxy._instance.AddLog(LogType.Hero, notice);
+        }
+
+        if (needSave)
+            this.DoSaveHeros();
+    }
+
     public Dictionary<int, Hero> GetAllHeros()
     {
         return this._datas;
@@ -417,21 +471,20 @@ public class HeroProxy : BaseRemoteProxy
         }
     }
 
-    public void TalkToHero(int id)
+    public void TalkToHero(int id,bool isCorrect)
     {
         Hero hero = this.GetHero(id);
-        if (hero.TalkExpire > 0 && hero.TalkExpire > GameIndex.ServerTime)
-        {
-            string cdStr = UtilTools.GetCdStringExpire(hero.TalkExpire);
-            HeroConfig config = HeroConfig.Instance.GetData(hero.Id);
-            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.AfterTimeTalk, config.Name, cdStr));
-            return;
-        }
-
         ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.HeroTalkGap);
         hero.TalkExpire = GameIndex.ServerTime + cfgconst.IntValues[0];
-        FavorLevelConfig configLv = this.GetFaovrConfig(hero.Favor);
-        this.ChangeHeroFavor(id, configLv.TalkAdd);
+        if (isCorrect)
+        {
+            FavorLevelConfig configLv = this.GetFaovrConfig(hero.Favor);
+            this.ChangeHeroFavor(id, configLv.TalkAdd);
+        }
+        else
+        {
+            this.DoSaveHeros();
+        }
         this.SendNotification(NotiDefine.TalkToHeroResp);
     }
 

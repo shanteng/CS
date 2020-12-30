@@ -63,7 +63,13 @@ public class SetTeamHeroView : MonoBehaviour
         vo["teamid"] = this._teamId;
         vo["heroid"] = this._selectHeroId;
         vo["army"] = this._selectArmyId;
-        vo["count"] = (int)this._recruitSlider.value;
+        int count = (int)this._recruitSlider.value;
+        vo["count"] = count;
+        if (count == 0)
+        {
+            PopupFactory.Instance.ShowErrorNotice(ErrorCode.TeamNotIdle);
+            return;
+        }
         MediatorUtil.SendNotification(NotiDefine.SetTeamHeroDo, vo);
     }
 
@@ -227,7 +233,7 @@ public class SetTeamHeroView : MonoBehaviour
 
         //血量
         this._teamOriginalBlood = team.ArmyCount;
-        if (this._selectArmyId != team.ArmyTypeID)
+        if (this._selectArmyId != team.ArmyTypeID || this._selectHeroId != team.HeroID)
             this._teamOriginalBlood = 0;
 
         this._heroMaxBlood = hero.MaxBlood;

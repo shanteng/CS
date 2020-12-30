@@ -54,15 +54,28 @@ public class BattleController : MonoBehaviour
         }
     }
 
+    public int GetEmptyBornIndex()
+    {
+        for (int i = 0; i < this._MyBorns.Count; ++i)
+        {
+            bool isEmpty = BattleProxy._instance.IsEmptyBornIndex(this._MyBorns[i]);
+            if (isEmpty)
+                return this._MyBorns[i];
+        }
+
+        return 0;
+    }
+
     public void SetSelctBornTeam(int teamid)
     {
         if (this._curSelectBornIndex == 0)
         {
-            PopupFactory.Instance.ShowNotice(LanguageConfig.GetLanguage(LanMainDefine.SelectUpPostion));
-            return;
+            this._curSelectBornIndex = this.GetEmptyBornIndex();
         }
+
         BattleProxy._instance.SetMyPlayerBorn(teamid, this._curSelectBornIndex);
         this.UpdateMyPlayerBorn();
+        this._curSelectBornIndex = 0;
     }
 
     public void UnSetSelctBornTeam(int teamid)
@@ -101,13 +114,9 @@ public class BattleController : MonoBehaviour
                 spot.ChangeColor(BattleSpotStatus.Normal);
             }
         }
-        else if (state == BattleStatus.Action)
-        {
-            this.PlayerDoAction();
-        }
     }
 
-    private void PlayerDoAction()
+    public void PlayerDoAction()
     {
         foreach (BattlePlayerUi pl in this._PlayerDic.Values)
         {
@@ -128,7 +137,7 @@ public class BattleController : MonoBehaviour
 
     private void DoMyAction(BattlePlayer pl)
     {
-        this.DoAiAction(pl);
+      //  this.DoAiAction(pl);
     }
 
     Coroutine _cor;
@@ -182,7 +191,6 @@ public class BattleController : MonoBehaviour
         this._isPlayAi = false;
     }
 
-
     private void OnAiEnd()
     {
         this._cor = null;
@@ -198,43 +206,94 @@ public class BattleController : MonoBehaviour
         }
     }
 
-    private void SetSpotAttackEffects()
+    private void SetSpotAttackEffects(BattlePlayer player)
     {
-        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
         string effectRes = BattleEffect.Attack;
         SkillConfig configSkill = SkillConfig.Instance.GetData(player._AttackSkillID);
         if (configSkill != null)
             effectRes = configSkill.EffectRes;
 
-        BattleSpot spot;
-        foreach (VInt2 attackPos in player.SkillDemageCordinates)
+        if (player.SkillDemageCordinates != null)
         {
-            string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
-            if (this._SpotDic.TryGetValue(key, out spot))
+            BattleSpot spot;
+            foreach (VInt2 attackPos in player.SkillDemageCordinates)
             {
-                spot.AddEvent(null);
-                BattleEffect effect = this.CreateBattleEffect(effectRes, new Vector3(attackPos.x, 0, attackPos.y));
-                effect.gameObject.SetActive(true);
-                GameObject.Destroy(effect.gameObject, effect.Sces);
-                _skillSecs = effect.Sces;
+                string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
+                if (this._SpotDic.TryGetValue(key, out spot))
+                {
+                    spot.AddEvent(null);
+                    BattleEffect effect = this.CreateBattleEffect(effectRes, new Vector3(attackPos.x, 0, attackPos.y));
+                    effect.gameObject.SetActive(true);
+                    GameObject.Destroy(effect.gameObject, effect.Sces);
+                }
             }
         }
     }
 
+    private void OnAttackEnd()
+    {
+        //删除已经死亡的模型
+        List<int> rms = new List<int>();
+        foreach (BattlePlayerUi pl in this._PlayerDic.Values)
+        {
+            BattlePlayer data = BattleProxy._instance.GetPlayer(pl.ID);
+            if (data.Status == PlayerStatus.Dead)
+            {
+                rms.Add(data.TeamID);
+            }
+        }
+
+        foreach (int rmindex in rms)
+        {
+            Destroy(this._PlayerDic[rmindex].gameObject);
+            _PlayerDic.Remove(rmindex);
+        }
+
+        //清除所有地块状态，等待玩家点击结束回合进入下一轮
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        player._AttackSkillID = -1;
+
+        //通知UI更新
+        MediatorUtil.SendNotification(NotiDefine.AttackPlayerEndJudge);
     
-    private float _skillSecs = 2f;
+        if (_maunalCallBack != null)
+        {
+            _maunalCallBack.Invoke();
+            _maunalCallBack = null;
+        }
+    }
+
+
+
+
+    private UnityAction _maunalCallBack;
     public void DoManualReleaseAction(UnityAction callBack = null)
     {
-        List<PlayerEffectChangeData> effectPlayers =  BattleProxy._instance.ManualReleaseAction();
-        BattlePlayer actionPl = BattleProxy._instance.GetActionPlayer();
-        actionPl.HasDoRoundActionFinish = true;
+        this._maunalCallBack = callBack;
+        BattlePlayer actionPlayer = BattleProxy._instance.GetActionPlayer();
+        int attackerTeamID = actionPlayer.TeamID;
+        int skillID = actionPlayer._AttackSkillID;
+        this.DoReleaseSkillCallAction(actionPlayer, skillID);
 
-        BattlePlayerUi plUi = this._PlayerDic[actionPl.TeamID];
-        plUi.PlayAnimation(SpineUiPlayer.STATE_ATTACK, 0.3f,this.SetSpotAttackEffects);//播完攻击动作，设置地块释放特效
+        if (skillID == 0)
+        {
+            //连携判断
+            foreach (BattleSkill skill in actionPlayer._SkillDatas.Values)
+            {
+                SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
+                if (config.ReleaseTerm.Equals(SkillReleaseTerm.AfterAttack))
+                {
+                    this.DoReleaseSkillCallAction(actionPlayer, skill.ID);
+                    break;
+                }
+            }//end for
+        }
+
+        actionPlayer.HasDoRoundActionFinish = true;
 
         //去掉地块点击事件
         BattleSpot spot;
-        foreach (VInt2 attackPos in actionPl.SkillFightRangeCordinates)
+        foreach (VInt2 attackPos in actionPlayer.SkillFightRangeCordinates)
         {
             string key = UtilTools.combine(attackPos.x, "|", attackPos.y);
             if (this._SpotDic.TryGetValue(key, out spot))
@@ -243,41 +302,180 @@ public class BattleController : MonoBehaviour
             }
         }
 
-        this.EffectPlayerResponseToSkill(effectPlayers);
-        
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+      //  this.SetSpotAttackEffects(player);
+        //移除可移动状态
+        if (player.ActionMoveCordinates != null)
+        {
+            foreach (VInt2 Pos in player.ActionMoveCordinates)
+            {
+                string key = UtilTools.combine(Pos.x, "|", Pos.y);
+                if (this._SpotDic.TryGetValue(key, out spot))
+                {
+                    spot.ChangeColor(BattleSpotStatus.Normal);
+                    spot.AddEvent(null);
+                }
+            }
+        }
+
+        if (player.SkillFightRangeCordinates != null)
+        {
+            foreach (VInt2 Pos in player.SkillFightRangeCordinates)
+            {
+                string key = UtilTools.combine(Pos.x, "|", Pos.y);
+                if (this._SpotDic.TryGetValue(key, out spot))
+                {
+                    spot.ChangeColor(BattleSpotStatus.Normal);
+                    spot.AddEvent(null);
+                }
+            }
+        }
+
+        if (player.SkillDemageCordinates != null)
+        {
+            foreach (VInt2 Pos in player.SkillDemageCordinates)
+            {
+                string key = UtilTools.combine(Pos.x, "|", Pos.y);
+                if (this._SpotDic.TryGetValue(key, out spot))
+                {
+                    spot.ChangeColor(BattleSpotStatus.Normal);
+                    spot.AddEvent(null);
+                }
+            }
+        }
+
         //等待各种伤害数字以及被击中的人的被打击动画播放完毕
-        CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd, callBack);
+        //CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnAttackEnd, callBack);
     }
 
-    public void CallSkillAction(int teamid,int skillid)
+
+
+    Queue<ReleaseSkillActionData> _releaseSkillPlayers = new Queue<ReleaseSkillActionData>();
+    private Coroutine _corRelease;
+    public void DoReleaseSkillCallAction(BattlePlayer pl, int skillID)
     {
-        BattlePlayerUi plUi;
-        if (this._PlayerDic.TryGetValue(teamid, out plUi))
+        //先喊招
+        _releaseSkillPlayers.Enqueue(new ReleaseSkillActionData(pl, skillID));
+        if (_corRelease == null)
         {
-            plUi.SkillCall(skillid);
+            this._isDoingCallAction = false;
+            _corRelease = StartCoroutine(ReleaseSkillCallAction());
         }
     }
 
-    public void EffectPlayerResponseToSkill(List<PlayerEffectChangeData> effectPlayers,UnityAction callBack = null)
+    private bool _isDoingCallAction = false;
+    private ReleaseSkillActionData _curRelaseData;
+    IEnumerator ReleaseSkillCallAction()
     {
-        int count = effectPlayers.Count;
-        foreach (PlayerEffectChangeData data in effectPlayers)
+        while (_releaseSkillPlayers.Count > 0)
         {
-            BattlePlayerUi plUi = this._PlayerDic[data.TeamID];
-            plUi.ReponseToEffect(data);
+            if (this._isDoingCallAction)
+            {
+                yield return 0;
+            }
+            else
+            {
+                _curRelaseData = this._releaseSkillPlayers.Dequeue();
+                this.PlayCallAction();
+                yield return 0;
+            }
         }
 
-        float totleNeedSecs = count * 0.15f;
-        CoroutineUtil.GetInstance().WaitTime(_skillSecs, true, OnEffectEnd,callBack);
+        while (_isDoingCallAction)
+        {
+            yield return 0;
+        }
+        _corRelease = null;//全部释放完毕了，判断一下战斗是否结束
+
+        BattleData bd = BattleProxy._instance.Data;
+        if (bd.Status == BattleStatus.Action)
+        {
+            this.OnAttackEnd();
+        }
+        BattleProxy._instance.OnAllSkillReleased();
+    }
+
+    private void PlayCallAction()
+    {
+        this._isDoingCallAction = true;
+        BattlePlayerUi plUi = this._PlayerDic[_curRelaseData.player.TeamID];
+        plUi.SkillCall(_curRelaseData.skillID, OnAttackCallAnimationEnd); //通知喊招
+    }
+
+
+    private void OnAttackCallAnimationEnd()
+    {
+        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
+        if (player != null && player._AttackSkillID >= 0)
+            this.SetSpotAttackEffects(player);
+
+        //真正释放技能
+        BattlePlayerUi plUi = this._PlayerDic[_curRelaseData.player.TeamID];
+        plUi.PlayAnimation(SpineUiPlayer.STATE_ATTACK);//播放攻击动
+        List<PlayerEffectChangeData> effectPlayers =  _curRelaseData.player.ReleaseSkill(_curRelaseData.skillID);
+        if (effectPlayers.Count > 0)
+            this.EffectPlayerResponseToSkill(effectPlayers, OnOneSkillReleaseEnd);
+        else
+            OnOneSkillReleaseEnd();
+        //通知UI隐藏喊招
+        MediatorUtil.SendNotification(NotiDefine.CallSkillUIHide);
+    }
+
+    private void OnOneSkillReleaseEnd()
+    {
+        this._isDoingCallAction = false;
+        BattlePlayerUi plUi = this._PlayerDic[_curRelaseData.player.TeamID];
+        plUi.PlayAnimation(SpineUiPlayer.STATE_IDLE);//播放攻击动
+    }
+
+    public void OrderlyReleaseBeforeStartSkill(List<BattlePlayer> upList)
+    {
+        int count = upList.Count;
+        for (int i = 0; i < count; ++i)
+        {
+            foreach (BattleSkill skill in upList[i]._SkillDatas.Values)
+            {
+                SkillConfig config = SkillConfig.Instance.GetData(skill.ID);
+                if (config.ReleaseTerm.Equals(SkillReleaseTerm.BeforeStart))
+                {
+                    this.DoReleaseSkillCallAction(upList[i], skill.ID);
+                }
+            }
+        }//end for
+    }
+
+
+    private Queue<PlayerEffectChangeData> _PlayerEffectsResp = new Queue<PlayerEffectChangeData>();
+    private Coroutine _corEffect;
+    public void EffectPlayerResponseToSkill(List<PlayerEffectChangeData> effectPlayers,UnityAction callBack)
+    {
+        foreach (PlayerEffectChangeData effect in effectPlayers)
+        {
+            _PlayerEffectsResp.Enqueue(effect);
+        }
+
+        if(this._corEffect == null)
+            this._corEffect = StartCoroutine(PlayEffects(callBack));
         MediatorUtil.SendNotification(NotiDefine.BattleEffectChange);
     }
 
-    private void OnEffectEnd(object[] param)
+    IEnumerator PlayEffects(UnityAction callBack)
     {
-        UnityAction callBack = (UnityAction)param[0];
+        yield return new WaitForSeconds(0.2f);
+        WaitForSeconds waitYield = new WaitForSeconds(0.2f);
+        while (this._PlayerEffectsResp.Count > 0)
+        {
+            PlayerEffectChangeData data = (this._PlayerEffectsResp.Dequeue()); ;
+            BattlePlayerUi plUi = this._PlayerDic[data.TeamID];
+            plUi.ReponseToEffect(data);
+            yield return waitYield;
+        }
+        this._corEffect = null;
         if (callBack != null)
             callBack.Invoke();
     }
+
+   
 
     public void BackToMoveState()
     {
@@ -332,76 +530,7 @@ public class BattleController : MonoBehaviour
         player._AttackSkillID = -1;
     }
 
-    private void OnAttackEnd(object[] param)
-    {
-        //删除已经死亡的模型
-        List<int> rms = new List<int>();
-        foreach (BattlePlayerUi pl in this._PlayerDic.Values)
-        {
-            BattlePlayer data = BattleProxy._instance.GetPlayer(pl.ID);
-            if (data.Status == PlayerStatus.Dead)
-            {
-                rms.Add(data.TeamID);
-            }
-        }
-
-        foreach (int rmindex in rms)
-        {
-            Destroy(this._PlayerDic[rmindex].gameObject);
-            _PlayerDic.Remove(rmindex);
-        }
-
-        //清除所有地块状态，等待玩家点击结束回合进入下一轮
-        BattlePlayer player = BattleProxy._instance.GetActionPlayer();
-        //移除可移动状态
-        BattleSpot spot;
-        if (player.ActionMoveCordinates != null)
-        {
-            foreach (VInt2 Pos in player.ActionMoveCordinates)
-            {
-                string key = UtilTools.combine(Pos.x, "|", Pos.y);
-                if (this._SpotDic.TryGetValue(key, out spot))
-                {
-                    spot.ChangeColor(BattleSpotStatus.Normal);
-                    spot.AddEvent(null);
-                }
-            }
-        }
-
-        if (player.SkillFightRangeCordinates != null)
-        {
-            foreach (VInt2 Pos in player.SkillFightRangeCordinates)
-            {
-                string key = UtilTools.combine(Pos.x, "|", Pos.y);
-                if (this._SpotDic.TryGetValue(key, out spot))
-                {
-                    spot.ChangeColor(BattleSpotStatus.Normal);
-                    spot.AddEvent(null);
-                }
-            }
-        }
-
-        if (player.SkillDemageCordinates != null)
-        {
-            foreach (VInt2 Pos in player.SkillDemageCordinates)
-            {
-                string key = UtilTools.combine(Pos.x, "|", Pos.y);
-                if (this._SpotDic.TryGetValue(key, out spot))
-                {
-                    spot.ChangeColor(BattleSpotStatus.Normal);
-                    spot.AddEvent(null);
-                }
-            }
-        }
-
-        BattleProxy._instance.OnPlayerActionFinishded(player.TeamID);
-        //通知UI更新
-        MediatorUtil.SendNotification(NotiDefine.AttackPlayerEndJudge);
-
-        UnityAction callBack = (UnityAction)param[0];
-        if (callBack != null)
-            callBack.Invoke();
-    }
+  
 
     public void SetAttackRange(int skillid,VInt2 autoAttackPos=null)
     {
@@ -465,6 +594,7 @@ public class BattleController : MonoBehaviour
                 continue;//不在范围内
             this._SpotDic[key].ChangeColor(BattleSpotStatus.AttackDemageRange);
         }
+
 
         if (isAuto == false)
         {
@@ -616,6 +746,7 @@ public class BattleController : MonoBehaviour
         }
     }
 
+    List<int> _MyBorns;
     public void InitPreBattle()
     {
         this.Init();
@@ -647,6 +778,14 @@ public class BattleController : MonoBehaviour
         }
 
         this._isMyAttack = data.MyPlace == BattlePlace.Attack;
+        _MyBorns = new List<int>();
+
+        if (this._isMyAttack)
+            _MyBorns.AddRange(this._config.AttackBorn);
+        else
+            _MyBorns.AddRange(this._config.DefenseBorn);
+
+
         //设置出生点
         this._AttackBorns = new Dictionary<int, BornSpot>();
         int len = this._config.AttackBorn.Length;

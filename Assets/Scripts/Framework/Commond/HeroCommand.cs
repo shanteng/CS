@@ -25,11 +25,7 @@ public class HeroCommand : SimpleCommand
                     proxy.OnRefreshTimeReachedNoti((int)notification.Body);
                     break;
                 }
-            case NotiDefine.TalkToHeroDo:
-                {
-                    proxy.TalkToHero((int)notification.Body);
-                    break;
-                }
+         
             case NotiDefine.RecruitHeroDo:
                 {
                     proxy.RecruitHero((int)notification.Body);

@@ -41,7 +41,7 @@ public class BattleTeamRender : ItemRender
         NpcTeamConfig configTeam = NpcTeamConfig.Instance.GetData(id);
         Hero hero = HeroProxy._instance.GetHero(configTeam.Hero);
         ArmyConfig config = ArmyConfig.Instance.GetData(configTeam.Army);
-        this._countTxt.text = configTeam.Count.ToString();
+        this._countTxt.text = LanguageConfig.GetLanguage(LanMainDefine.TeamArmyCount, configTeam.Count, configTeam.Count);
         int rate = HeroProxy._instance.GetHeroCareerRate(configTeam.Hero, config.Career);
         this._rateTxt.text = Hero.GetCareerEvaluateName(rate);
         this._careerSp.sprite = ResourcesManager.Instance.GetArmySprite(configTeam.Army);
@@ -56,6 +56,12 @@ public class BattleTeamRender : ItemRender
         Hero hero = HeroProxy._instance.GetHero(team.HeroID);
         ArmyConfig config = ArmyConfig.Instance.GetData(team.ArmyTypeID);
         this._countTxt.text = team.ArmyCount.ToString();
+
+        if(team.WoundCount > 0)
+            this._countTxt.text = LanguageConfig.GetLanguage(LanMainDefine.TeamArmyCountWounded, team.ArmyCount, hero.MaxBlood, team.WoundCount);
+        else
+            this._countTxt.text = LanguageConfig.GetLanguage(LanMainDefine.TeamArmyCount, team.ArmyCount, hero.MaxBlood);
+
         int rate = HeroProxy._instance.GetHeroCareerRate(team.HeroID, config.Career);
         this._rateTxt.text = Hero.GetCareerEvaluateName(rate);
         this._careerSp.sprite = ResourcesManager.Instance.GetArmySprite(team.ArmyTypeID);

@@ -1,1 +1,2329 @@
-[{"ID":101,"BuildingID":1,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["1","1"],"Parts":[1]},{"ID":102,"BuildingID":1,"Level":2,"Condition":[23,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["1","2"],"Parts":[1,2]},{"ID":103,"BuildingID":1,"Level":3,"Condition":[23,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["2","3"],"Parts":[1,2,3]},{"ID":104,"BuildingID":1,"Level":4,"Condition":[23,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["2","4"],"Parts":[1,2,3,4]},{"ID":105,"BuildingID":1,"Level":5,"Condition":[23,5],"NeedTime":50,"Durability":500,"Cost":["gold:3200","stone:40000","wood:40000","metal:40000"],"Power":5,"AddValues":["3","5"],"Parts":[1,2,3,4,5]},{"ID":201,"BuildingID":2,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["1"],"Parts":[1]},{"ID":202,"BuildingID":2,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["2"],"Parts":[1,2]},{"ID":203,"BuildingID":2,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["3"],"Parts":[1,2,3]},{"ID":204,"BuildingID":2,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["4"],"Parts":[1,2,3,4]},{"ID":301,"BuildingID":3,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["gold:2000","100"],"Parts":[1]},{"ID":302,"BuildingID":3,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["gold:4000","200"],"Parts":[1,2]},{"ID":303,"BuildingID":3,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["gold:6000","300"],"Parts":[1,2,3]},{"ID":304,"BuildingID":3,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["gold:8000","40000"],"Parts":[1,2,3,4]},{"ID":401,"BuildingID":4,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["stone:1000","10000"],"Parts":[1]},{"ID":402,"BuildingID":4,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["stone:5000","30000"],"Parts":[1,2]},{"ID":403,"BuildingID":4,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["stone:10000","50000"],"Parts":[1,2,3]},{"ID":404,"BuildingID":4,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["stone:20000","60000"],"Parts":[1,2,3,4]},{"ID":501,"BuildingID":5,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["metal:1000","10000"],"Parts":[1]},{"ID":502,"BuildingID":5,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["metal:5000","30000"],"Parts":[1,2]},{"ID":503,"BuildingID":5,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["metal:10000","50000"],"Parts":[1,2,3]},{"ID":504,"BuildingID":5,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["metal:20000","70000"],"Parts":[1,2,3,4]},{"ID":601,"BuildingID":6,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["wood:1000","10000"],"Parts":[1]},{"ID":602,"BuildingID":6,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["wood:5000","30000"],"Parts":[1,2]},{"ID":603,"BuildingID":6,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["wood:10000","50000"],"Parts":[1,2,3]},{"ID":604,"BuildingID":6,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["wood:20000","70000"],"Parts":[1,2,3,4]},{"ID":701,"BuildingID":7,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["food:1000","10000"],"Parts":[1]},{"ID":702,"BuildingID":7,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["food:5000","30000"],"Parts":[1,2]},{"ID":703,"BuildingID":7,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["food:10000","50000"],"Parts":[1,2,3]},{"ID":704,"BuildingID":7,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["food:20000","70000"],"Parts":[1,2,3,4]},{"ID":801,"BuildingID":8,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["1000"],"Parts":[1]},{"ID":802,"BuildingID":8,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["5000"],"Parts":[1,2]},{"ID":803,"BuildingID":8,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["10000"],"Parts":[1,2,3]},{"ID":804,"BuildingID":8,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["20000"],"Parts":[1,2,3,4]},{"ID":901,"BuildingID":9,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["1"],"Parts":[1]},{"ID":902,"BuildingID":9,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["2"],"Parts":[1,2]},{"ID":903,"BuildingID":9,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["3"],"Parts":[1,2,3]},{"ID":904,"BuildingID":9,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["4"],"Parts":[1,2,3,4]},{"ID":1001,"BuildingID":10,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["1"],"Parts":[1]},{"ID":1002,"BuildingID":10,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["2.5"],"Parts":[1,2]},{"ID":1003,"BuildingID":10,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["5"],"Parts":[1,2,3]},{"ID":1004,"BuildingID":10,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["7.5"],"Parts":[1,2,3,4]},{"ID":1101,"BuildingID":11,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["5"],"Parts":[1]},{"ID":1102,"BuildingID":11,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["10"],"Parts":[1,2]},{"ID":1103,"BuildingID":11,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["15"],"Parts":[1,2,3]},{"ID":1104,"BuildingID":11,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["20"],"Parts":[1,2,3,4]},{"ID":1201,"BuildingID":12,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["Fire:5"],"Parts":[1]},{"ID":1202,"BuildingID":12,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["Fire:6"],"Parts":[1,2]},{"ID":1203,"BuildingID":12,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["Fire:7"],"Parts":[1,2,3]},{"ID":1204,"BuildingID":12,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["Fire:8"],"Parts":[1,2,3,4]},{"ID":1301,"BuildingID":13,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["Wind:5"],"Parts":[1]},{"ID":1302,"BuildingID":13,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["Wind:6"],"Parts":[1,2]},{"ID":1303,"BuildingID":13,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["Wind:7"],"Parts":[1,2,3]},{"ID":1304,"BuildingID":13,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["Wind:8"],"Parts":[1,2,3,4]},{"ID":1401,"BuildingID":14,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["Water:5"],"Parts":[1]},{"ID":1402,"BuildingID":14,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["Water:6"],"Parts":[1,2]},{"ID":1403,"BuildingID":14,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["Water:7"],"Parts":[1,2,3]},{"ID":1404,"BuildingID":14,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["Water:8"],"Parts":[1,2,3,4]},{"ID":1501,"BuildingID":15,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["1","20"],"Parts":[1]},{"ID":1502,"BuildingID":15,"Level":2,"Condition":[1,2],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["1","50"],"Parts":[1,2]},{"ID":1503,"BuildingID":15,"Level":3,"Condition":[1,3],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["1","100"],"Parts":[1,2,3]},{"ID":1504,"BuildingID":15,"Level":4,"Condition":[1,4],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["1","200"],"Parts":[1,2,3,4]},{"ID":1601,"BuildingID":16,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["2","20"],"Parts":[1]},{"ID":1602,"BuildingID":16,"Level":2,"Condition":[],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["2","50"],"Parts":[1,2]},{"ID":1603,"BuildingID":16,"Level":3,"Condition":[],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["2","100"],"Parts":[1,2,3]},{"ID":1604,"BuildingID":16,"Level":4,"Condition":[],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["2","200"],"Parts":[1,2,3,4]},{"ID":1701,"BuildingID":17,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["3","20"],"Parts":[1]},{"ID":1702,"BuildingID":17,"Level":2,"Condition":[],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["3","50"],"Parts":[1,2]},{"ID":1703,"BuildingID":17,"Level":3,"Condition":[],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["3","100"],"Parts":[1,2,3]},{"ID":1704,"BuildingID":17,"Level":4,"Condition":[],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["3","200"],"Parts":[1,2,3,4]},{"ID":1801,"BuildingID":18,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["5000"],"Parts":[1]},{"ID":1802,"BuildingID":18,"Level":2,"Condition":[],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["10000"],"Parts":[1,2]},{"ID":1803,"BuildingID":18,"Level":3,"Condition":[],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["15000"],"Parts":[1,2,3]},{"ID":1804,"BuildingID":18,"Level":4,"Condition":[],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["20000"],"Parts":[1,2,3,4]},{"ID":1901,"BuildingID":19,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":[],"Parts":[1]},{"ID":2001,"BuildingID":20,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["1"],"Parts":[1]},{"ID":2002,"BuildingID":20,"Level":2,"Condition":[],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["2"],"Parts":[1,2]},{"ID":2003,"BuildingID":20,"Level":3,"Condition":[],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["3"],"Parts":[1,2,3]},{"ID":2101,"BuildingID":21,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["1"],"Parts":[1]},{"ID":2102,"BuildingID":21,"Level":2,"Condition":[],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["2"],"Parts":[1,2]},{"ID":2103,"BuildingID":21,"Level":3,"Condition":[],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["3"],"Parts":[1,2,3]},{"ID":2104,"BuildingID":21,"Level":4,"Condition":[],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["4"],"Parts":[1,2,3,4]},{"ID":2201,"BuildingID":22,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["5"],"Parts":[1]},{"ID":2202,"BuildingID":22,"Level":2,"Condition":[],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["8"],"Parts":[1,2]},{"ID":2203,"BuildingID":22,"Level":3,"Condition":[],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["10"],"Parts":[1,2,3]},{"ID":2204,"BuildingID":22,"Level":4,"Condition":[],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["15"],"Parts":[1,2,3,4]},{"ID":2301,"BuildingID":23,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:100","stone:100","wood:100","metal:100"],"Power":1,"AddValues":["11","7"],"Parts":[1]},{"ID":2302,"BuildingID":23,"Level":2,"Condition":[],"NeedTime":20,"Durability":200,"Cost":["gold:100","stone:100","wood:100","metal:100"],"Power":2,"AddValues":["13","10"],"Parts":[1,2,3]},{"ID":2303,"BuildingID":23,"Level":3,"Condition":[],"NeedTime":30,"Durability":300,"Cost":["gold:100","stone:100","wood:100","metal:100"],"Power":3,"AddValues":["15","13"],"Parts":[1,2,3,4,5]},{"ID":2304,"BuildingID":23,"Level":4,"Condition":[],"NeedTime":40,"Durability":400,"Cost":["gold:100","stone:100","wood:100","metal:100"],"Power":4,"AddValues":["19","16"],"Parts":[1,2,3,4,5,6,7]},{"ID":2305,"BuildingID":23,"Level":5,"Condition":[],"NeedTime":50,"Durability":500,"Cost":["gold:100","stone:100","wood:100","metal:100"],"Power":5,"AddValues":["23","20"],"Parts":[1,2,3,4,5,6,7,8]},{"ID":2401,"BuildingID":24,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["wood:100"],"Power":1,"AddValues":[],"Parts":[1,2,3,4,5,6,7,8]},{"ID":2501,"BuildingID":25,"Level":1,"Condition":[],"NeedTime":10,"Durability":100,"Cost":["gold:200","stone:1000","wood:1000","metal:1000"],"Power":1,"AddValues":["5"],"Parts":[1]},{"ID":2502,"BuildingID":25,"Level":2,"Condition":[],"NeedTime":20,"Durability":200,"Cost":["gold:400","stone:5000","wood:5000","metal:5000"],"Power":2,"AddValues":["8"],"Parts":[1,2]},{"ID":2503,"BuildingID":25,"Level":3,"Condition":[],"NeedTime":30,"Durability":300,"Cost":["gold:800","stone:10000","wood:10000","metal:10000"],"Power":3,"AddValues":["10"],"Parts":[1,2,3]},{"ID":2504,"BuildingID":25,"Level":4,"Condition":[],"NeedTime":40,"Durability":400,"Cost":["gold:1600","stone:20000","wood:20000","metal:20000"],"Power":4,"AddValues":["15"],"Parts":[1,2,3,4]}]
+[
+  {
+    "ID": 101,
+    "BuildingID": 1,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "1",
+      "1"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 102,
+    "BuildingID": 1,
+    "Level": 2,
+    "Condition": [
+      23,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "1",
+      "2"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 103,
+    "BuildingID": 1,
+    "Level": 3,
+    "Condition": [
+      23,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "2",
+      "3"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 104,
+    "BuildingID": 1,
+    "Level": 4,
+    "Condition": [
+      23,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "2",
+      "4"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 105,
+    "BuildingID": 1,
+    "Level": 5,
+    "Condition": [
+      23,
+      5
+    ],
+    "NeedTime": 50,
+    "Durability": 500,
+    "Cost": [
+      "gold:3200",
+      "stone:40000",
+      "wood:40000",
+      "metal:40000"
+    ],
+    "Power": 5,
+    "AddValues": [
+      "3",
+      "5"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  {
+    "ID": 201,
+    "BuildingID": 2,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "1"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 202,
+    "BuildingID": 2,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "2"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 203,
+    "BuildingID": 2,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "3"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 204,
+    "BuildingID": 2,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "4"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 301,
+    "BuildingID": 3,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "gold:2000",
+      "100"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 302,
+    "BuildingID": 3,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "gold:4000",
+      "200"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 303,
+    "BuildingID": 3,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "gold:6000",
+      "300"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 304,
+    "BuildingID": 3,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "gold:8000",
+      "40000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 401,
+    "BuildingID": 4,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "stone:1000",
+      "10000"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 402,
+    "BuildingID": 4,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "stone:5000",
+      "30000"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 403,
+    "BuildingID": 4,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "stone:10000",
+      "50000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 404,
+    "BuildingID": 4,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "stone:20000",
+      "60000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 501,
+    "BuildingID": 5,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "metal:1000",
+      "10000"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 502,
+    "BuildingID": 5,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "metal:5000",
+      "30000"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 503,
+    "BuildingID": 5,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "metal:10000",
+      "50000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 504,
+    "BuildingID": 5,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "metal:20000",
+      "70000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 601,
+    "BuildingID": 6,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "wood:1000",
+      "10000"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 602,
+    "BuildingID": 6,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "wood:5000",
+      "30000"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 603,
+    "BuildingID": 6,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "wood:10000",
+      "50000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 604,
+    "BuildingID": 6,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "wood:20000",
+      "70000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 701,
+    "BuildingID": 7,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "food:1000",
+      "10000"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 702,
+    "BuildingID": 7,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "food:5000",
+      "30000"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 703,
+    "BuildingID": 7,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "food:10000",
+      "50000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 704,
+    "BuildingID": 7,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "food:20000",
+      "70000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 801,
+    "BuildingID": 8,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "1000"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 802,
+    "BuildingID": 8,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "5000"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 803,
+    "BuildingID": 8,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "10000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 804,
+    "BuildingID": 8,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "20000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 901,
+    "BuildingID": 9,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "1"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 902,
+    "BuildingID": 9,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "2"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 903,
+    "BuildingID": 9,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "3"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 904,
+    "BuildingID": 9,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "4"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1001,
+    "BuildingID": 10,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "1"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 1002,
+    "BuildingID": 10,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "2.5"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 1003,
+    "BuildingID": 10,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "5"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 1004,
+    "BuildingID": 10,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "7.5"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1101,
+    "BuildingID": 11,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "5"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 1102,
+    "BuildingID": 11,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "10"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 1103,
+    "BuildingID": 11,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "15"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 1104,
+    "BuildingID": 11,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "20"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1201,
+    "BuildingID": 12,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "Fire:5"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 1202,
+    "BuildingID": 12,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "Fire:6"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 1203,
+    "BuildingID": 12,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "Fire:7"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 1204,
+    "BuildingID": 12,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "Fire:8"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1301,
+    "BuildingID": 13,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "Wind:5"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 1302,
+    "BuildingID": 13,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "Wind:6"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 1303,
+    "BuildingID": 13,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "Wind:7"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 1304,
+    "BuildingID": 13,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "Wind:8"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1401,
+    "BuildingID": 14,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "Water:5"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 1402,
+    "BuildingID": 14,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "Water:6"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 1403,
+    "BuildingID": 14,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "Water:7"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 1404,
+    "BuildingID": 14,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "Water:8"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1501,
+    "BuildingID": 15,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "1",
+      "20"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 1502,
+    "BuildingID": 15,
+    "Level": 2,
+    "Condition": [
+      1,
+      2
+    ],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "1",
+      "50"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 1503,
+    "BuildingID": 15,
+    "Level": 3,
+    "Condition": [
+      1,
+      3
+    ],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "1",
+      "100"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 1504,
+    "BuildingID": 15,
+    "Level": 4,
+    "Condition": [
+      1,
+      4
+    ],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "1",
+      "200"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1601,
+    "BuildingID": 16,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "2",
+      "20"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 1602,
+    "BuildingID": 16,
+    "Level": 2,
+    "Condition": [],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "2",
+      "50"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 1603,
+    "BuildingID": 16,
+    "Level": 3,
+    "Condition": [],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "2",
+      "100"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 1604,
+    "BuildingID": 16,
+    "Level": 4,
+    "Condition": [],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "2",
+      "200"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1701,
+    "BuildingID": 17,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "3",
+      "20"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 1702,
+    "BuildingID": 17,
+    "Level": 2,
+    "Condition": [],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "3",
+      "50"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 1703,
+    "BuildingID": 17,
+    "Level": 3,
+    "Condition": [],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "3",
+      "100"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 1704,
+    "BuildingID": 17,
+    "Level": 4,
+    "Condition": [],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "3",
+      "200"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1801,
+    "BuildingID": 18,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "5000"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 1802,
+    "BuildingID": 18,
+    "Level": 2,
+    "Condition": [],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "10000"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 1803,
+    "BuildingID": 18,
+    "Level": 3,
+    "Condition": [],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "15000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 1804,
+    "BuildingID": 18,
+    "Level": 4,
+    "Condition": [],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "20000"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 1901,
+    "BuildingID": 19,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 2001,
+    "BuildingID": 20,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "1"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 2002,
+    "BuildingID": 20,
+    "Level": 2,
+    "Condition": [],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "2"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 2003,
+    "BuildingID": 20,
+    "Level": 3,
+    "Condition": [],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "3"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 2101,
+    "BuildingID": 21,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "1"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 2102,
+    "BuildingID": 21,
+    "Level": 2,
+    "Condition": [],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "2"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 2103,
+    "BuildingID": 21,
+    "Level": 3,
+    "Condition": [],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "3"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 2104,
+    "BuildingID": 21,
+    "Level": 4,
+    "Condition": [],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "4"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 2201,
+    "BuildingID": 22,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "5"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 2202,
+    "BuildingID": 22,
+    "Level": 2,
+    "Condition": [],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "8"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 2203,
+    "BuildingID": 22,
+    "Level": 3,
+    "Condition": [],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "10"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 2204,
+    "BuildingID": 22,
+    "Level": 4,
+    "Condition": [],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "15"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "ID": 2301,
+    "BuildingID": 23,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:100",
+      "stone:100",
+      "wood:100",
+      "metal:100"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "11",
+      "7"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 2302,
+    "BuildingID": 23,
+    "Level": 2,
+    "Condition": [],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:100",
+      "stone:100",
+      "wood:100",
+      "metal:100"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "13",
+      "10"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 2303,
+    "BuildingID": 23,
+    "Level": 3,
+    "Condition": [],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:100",
+      "stone:100",
+      "wood:100",
+      "metal:100"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "15",
+      "13"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  {
+    "ID": 2304,
+    "BuildingID": 23,
+    "Level": 4,
+    "Condition": [],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:100",
+      "stone:100",
+      "wood:100",
+      "metal:100"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "19",
+      "16"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "ID": 2305,
+    "BuildingID": 23,
+    "Level": 5,
+    "Condition": [],
+    "NeedTime": 50,
+    "Durability": 500,
+    "Cost": [
+      "gold:100",
+      "stone:100",
+      "wood:100",
+      "metal:100"
+    ],
+    "Power": 5,
+    "AddValues": [
+      "23",
+      "20"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  {
+    "ID": 2401,
+    "BuildingID": 24,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "wood:100"
+    ],
+    "Power": 1,
+    "AddValues": [],
+    "Parts": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  {
+    "ID": 2501,
+    "BuildingID": 25,
+    "Level": 1,
+    "Condition": [],
+    "NeedTime": 10,
+    "Durability": 100,
+    "Cost": [
+      "gold:200",
+      "stone:1000",
+      "wood:1000",
+      "metal:1000"
+    ],
+    "Power": 1,
+    "AddValues": [
+      "5"
+    ],
+    "Parts": [
+      1
+    ]
+  },
+  {
+    "ID": 2502,
+    "BuildingID": 25,
+    "Level": 2,
+    "Condition": [],
+    "NeedTime": 20,
+    "Durability": 200,
+    "Cost": [
+      "gold:400",
+      "stone:5000",
+      "wood:5000",
+      "metal:5000"
+    ],
+    "Power": 2,
+    "AddValues": [
+      "8"
+    ],
+    "Parts": [
+      1,
+      2
+    ]
+  },
+  {
+    "ID": 2503,
+    "BuildingID": 25,
+    "Level": 3,
+    "Condition": [],
+    "NeedTime": 30,
+    "Durability": 300,
+    "Cost": [
+      "gold:800",
+      "stone:10000",
+      "wood:10000",
+      "metal:10000"
+    ],
+    "Power": 3,
+    "AddValues": [
+      "10"
+    ],
+    "Parts": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "ID": 2504,
+    "BuildingID": 25,
+    "Level": 4,
+    "Condition": [],
+    "NeedTime": 40,
+    "Durability": 400,
+    "Cost": [
+      "gold:1600",
+      "stone:20000",
+      "wood:20000",
+      "metal:20000"
+    ],
+    "Power": 4,
+    "AddValues": [
+      "15"
+    ],
+    "Parts": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+]

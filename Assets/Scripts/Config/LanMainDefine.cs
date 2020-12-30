@@ -75,6 +75,9 @@
     public const string NeedBuildingLevel = "NeedBuildingLevel";
     public const string GoToBuild = "GoToBuild";
 
+    public const string HeroAddExpLevelUp = "HeroAddExpLevelUp";
+    public const string HeroAddExp = "HeroAddExp";
+
     public const string ArmyOverFlowHarvest = "ArmyOverFlowHarvest";
     public const string ArmyHarvest = "ArmyHarvest";
     public const string CancelArmyNotice = "CancelArmyNotice";
@@ -97,6 +100,11 @@
     public const string Forever = "Forever";
     public const string NormalAttack = "NormalAttack";
 
+
+    public const string GoodAnswer = "GoodAnswer";
+    public const string BadAnswer = "BadAnswer";
+
+
     public const string AfterTimeTalk = "AfterTimeTalk";
     public const string HeroFavorLevelChanged = "HeroFavorLevelChanged";
     public const string CareerEvaluateDesc = "CareerEvaluateDesc";
@@ -107,6 +115,9 @@
     public const string GetHourTax = "GetHourTax";
     public const string ArmyRecruitFinish = "ArmyRecruitFinish";
     public const string SelectUpPostion = "SelectUpPostion";
+
+    public const string TeamArmyCount = "TeamArmyCount";
+    public const string TeamArmyCountWounded = "TeamArmyCountWounded";
 
     public const string EffectAdd = "EffectAdd";
     public const string EffectDesc = "EffectDesc";
@@ -207,6 +218,7 @@ public class ConstDefine
     public const string AttackRate = "AttackRate";
     public const string DefenseRate = "DefenseRate";
     public const string BloodLostRate = "BloodLostRate";
+    public const string WoundRecoverRate = "WoundRecoverRate";
 
     public const string HeroEnegry = "HeroEnegry";
     public const string HeroCostEnegry = "HeroCostEnegry";

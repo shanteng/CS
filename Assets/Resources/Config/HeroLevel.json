@@ -1,1 +1,302 @@
-[{"ID":1,"Exp":80,"BloodMax":100,"RangeRate":1.0},{"ID":2,"Exp":400,"BloodMax":500,"RangeRate":1.2},{"ID":3,"Exp":1500,"BloodMax":1900,"RangeRate":1.2},{"ID":4,"Exp":1900,"BloodMax":2400,"RangeRate":1.2},{"ID":5,"Exp":2800,"BloodMax":3600,"RangeRate":1.3},{"ID":6,"Exp":6800,"BloodMax":8500,"RangeRate":1.3},{"ID":7,"Exp":8800,"BloodMax":11000,"RangeRate":1.5},{"ID":8,"Exp":9600,"BloodMax":12000,"RangeRate":1.5},{"ID":9,"Exp":11200,"BloodMax":14000,"RangeRate":1.5},{"ID":10,"Exp":13600,"BloodMax":17000,"RangeRate":1.5},{"ID":11,"Exp":16000,"BloodMax":20000,"RangeRate":1.5},{"ID":12,"Exp":19600,"BloodMax":24500,"RangeRate":1.5},{"ID":13,"Exp":22000,"BloodMax":27500,"RangeRate":1.5},{"ID":14,"Exp":24000,"BloodMax":30000,"RangeRate":1.5},{"ID":15,"Exp":24800,"BloodMax":31000,"RangeRate":1.5},{"ID":16,"Exp":25200,"BloodMax":31500,"RangeRate":1.5},{"ID":17,"Exp":25600,"BloodMax":32000,"RangeRate":1.5},{"ID":18,"Exp":26400,"BloodMax":33000,"RangeRate":1.5},{"ID":19,"Exp":30600,"BloodMax":38350,"RangeRate":1.5},{"ID":20,"Exp":34600,"BloodMax":43350,"RangeRate":2.0},{"ID":21,"Exp":40000,"BloodMax":50000,"RangeRate":2.0},{"ID":22,"Exp":51200,"BloodMax":64000,"RangeRate":2.0},{"ID":23,"Exp":60000,"BloodMax":75000,"RangeRate":2.0},{"ID":24,"Exp":72000,"BloodMax":90000,"RangeRate":2.0},{"ID":25,"Exp":79900,"BloodMax":99900,"RangeRate":2.0},{"ID":26,"Exp":88000,"BloodMax":110000,"RangeRate":2.0},{"ID":27,"Exp":96000,"BloodMax":120000,"RangeRate":2.0},{"ID":28,"Exp":112000,"BloodMax":140000,"RangeRate":2.0},{"ID":29,"Exp":128000,"BloodMax":160000,"RangeRate":2.0},{"ID":30,"Exp":152000,"BloodMax":190000,"RangeRate":2.0},{"ID":31,"Exp":184000,"BloodMax":230000,"RangeRate":3.0},{"ID":32,"Exp":220000,"BloodMax":275000,"RangeRate":3.0},{"ID":33,"Exp":248000,"BloodMax":310000,"RangeRate":3.0},{"ID":34,"Exp":280000,"BloodMax":350000,"RangeRate":3.0},{"ID":35,"Exp":312000,"BloodMax":390000,"RangeRate":3.0},{"ID":36,"Exp":336000,"BloodMax":420000,"RangeRate":3.0},{"ID":37,"Exp":360000,"BloodMax":450000,"RangeRate":3.0},{"ID":38,"Exp":432000,"BloodMax":540000,"RangeRate":3.2},{"ID":39,"Exp":560000,"BloodMax":700000,"RangeRate":3.2},{"ID":40,"Exp":720000,"BloodMax":900000,"RangeRate":3.2},{"ID":41,"Exp":920000,"BloodMax":1150000,"RangeRate":4.0},{"ID":42,"Exp":1120000,"BloodMax":1400000,"RangeRate":4.0},{"ID":43,"Exp":1520000,"BloodMax":1900000,"RangeRate":4.0},{"ID":44,"Exp":1800000,"BloodMax":2250000,"RangeRate":4.0},{"ID":45,"Exp":2080000,"BloodMax":2600000,"RangeRate":4.0},{"ID":46,"Exp":2400000,"BloodMax":3000000,"RangeRate":4.5},{"ID":47,"Exp":2800000,"BloodMax":3500000,"RangeRate":4.5},{"ID":48,"Exp":3680000,"BloodMax":4600000,"RangeRate":4.5},{"ID":49,"Exp":4000000,"BloodMax":5000000,"RangeRate":4.5},{"ID":50,"Exp":5200000,"BloodMax":6500000,"RangeRate":4.5}]
+[
+  {
+    "ID": 1,
+    "Exp": 80,
+    "BloodMax": 100,
+    "RangeRate": 1.0
+  },
+  {
+    "ID": 2,
+    "Exp": 400,
+    "BloodMax": 500,
+    "RangeRate": 1.2
+  },
+  {
+    "ID": 3,
+    "Exp": 1500,
+    "BloodMax": 1900,
+    "RangeRate": 1.2
+  },
+  {
+    "ID": 4,
+    "Exp": 1900,
+    "BloodMax": 2400,
+    "RangeRate": 1.2
+  },
+  {
+    "ID": 5,
+    "Exp": 2800,
+    "BloodMax": 3600,
+    "RangeRate": 1.3
+  },
+  {
+    "ID": 6,
+    "Exp": 6800,
+    "BloodMax": 8500,
+    "RangeRate": 1.3
+  },
+  {
+    "ID": 7,
+    "Exp": 8800,
+    "BloodMax": 11000,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 8,
+    "Exp": 9600,
+    "BloodMax": 12000,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 9,
+    "Exp": 11200,
+    "BloodMax": 14000,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 10,
+    "Exp": 13600,
+    "BloodMax": 17000,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 11,
+    "Exp": 16000,
+    "BloodMax": 20000,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 12,
+    "Exp": 19600,
+    "BloodMax": 24500,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 13,
+    "Exp": 22000,
+    "BloodMax": 27500,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 14,
+    "Exp": 24000,
+    "BloodMax": 30000,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 15,
+    "Exp": 24800,
+    "BloodMax": 31000,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 16,
+    "Exp": 25200,
+    "BloodMax": 31500,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 17,
+    "Exp": 25600,
+    "BloodMax": 32000,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 18,
+    "Exp": 26400,
+    "BloodMax": 33000,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 19,
+    "Exp": 30600,
+    "BloodMax": 38350,
+    "RangeRate": 1.5
+  },
+  {
+    "ID": 20,
+    "Exp": 34600,
+    "BloodMax": 43350,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 21,
+    "Exp": 40000,
+    "BloodMax": 50000,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 22,
+    "Exp": 51200,
+    "BloodMax": 64000,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 23,
+    "Exp": 60000,
+    "BloodMax": 75000,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 24,
+    "Exp": 72000,
+    "BloodMax": 90000,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 25,
+    "Exp": 79900,
+    "BloodMax": 99900,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 26,
+    "Exp": 88000,
+    "BloodMax": 110000,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 27,
+    "Exp": 96000,
+    "BloodMax": 120000,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 28,
+    "Exp": 112000,
+    "BloodMax": 140000,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 29,
+    "Exp": 128000,
+    "BloodMax": 160000,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 30,
+    "Exp": 152000,
+    "BloodMax": 190000,
+    "RangeRate": 2.0
+  },
+  {
+    "ID": 31,
+    "Exp": 184000,
+    "BloodMax": 230000,
+    "RangeRate": 3.0
+  },
+  {
+    "ID": 32,
+    "Exp": 220000,
+    "BloodMax": 275000,
+    "RangeRate": 3.0
+  },
+  {
+    "ID": 33,
+    "Exp": 248000,
+    "BloodMax": 310000,
+    "RangeRate": 3.0
+  },
+  {
+    "ID": 34,
+    "Exp": 280000,
+    "BloodMax": 350000,
+    "RangeRate": 3.0
+  },
+  {
+    "ID": 35,
+    "Exp": 312000,
+    "BloodMax": 390000,
+    "RangeRate": 3.0
+  },
+  {
+    "ID": 36,
+    "Exp": 336000,
+    "BloodMax": 420000,
+    "RangeRate": 3.0
+  },
+  {
+    "ID": 37,
+    "Exp": 360000,
+    "BloodMax": 450000,
+    "RangeRate": 3.0
+  },
+  {
+    "ID": 38,
+    "Exp": 432000,
+    "BloodMax": 540000,
+    "RangeRate": 3.2
+  },
+  {
+    "ID": 39,
+    "Exp": 560000,
+    "BloodMax": 700000,
+    "RangeRate": 3.2
+  },
+  {
+    "ID": 40,
+    "Exp": 720000,
+    "BloodMax": 900000,
+    "RangeRate": 3.2
+  },
+  {
+    "ID": 41,
+    "Exp": 920000,
+    "BloodMax": 1150000,
+    "RangeRate": 4.0
+  },
+  {
+    "ID": 42,
+    "Exp": 1120000,
+    "BloodMax": 1400000,
+    "RangeRate": 4.0
+  },
+  {
+    "ID": 43,
+    "Exp": 1520000,
+    "BloodMax": 1900000,
+    "RangeRate": 4.0
+  },
+  {
+    "ID": 44,
+    "Exp": 1800000,
+    "BloodMax": 2250000,
+    "RangeRate": 4.0
+  },
+  {
+    "ID": 45,
+    "Exp": 2080000,
+    "BloodMax": 2600000,
+    "RangeRate": 4.0
+  },
+  {
+    "ID": 46,
+    "Exp": 2400000,
+    "BloodMax": 3000000,
+    "RangeRate": 4.5
+  },
+  {
+    "ID": 47,
+    "Exp": 2800000,
+    "BloodMax": 3500000,
+    "RangeRate": 4.5
+  },
+  {
+    "ID": 48,
+    "Exp": 3680000,
+    "BloodMax": 4600000,
+    "RangeRate": 4.5
+  },
+  {
+    "ID": 49,
+    "Exp": 4000000,
+    "BloodMax": 5000000,
+    "RangeRate": 4.5
+  },
+  {
+    "ID": 50,
+    "Exp": 5200000,
+    "BloodMax": 6500000,
+    "RangeRate": 4.5
+  }
+]

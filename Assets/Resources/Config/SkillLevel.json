@@ -1,1 +1,142 @@
-[{"ID":100101,"Skill":1001,"Level":1,"AttackRangeID":"Matrix3x3","DemageRangeID":"Point1"},{"ID":100102,"Skill":1001,"Level":2,"AttackRangeID":"Matrix3x3","DemageRangeID":"Cross1x3"},{"ID":100103,"Skill":1001,"Level":3,"AttackRangeID":"Matrix3x5","DemageRangeID":"Cross1x3"},{"ID":100104,"Skill":1001,"Level":4,"AttackRangeID":"Matrix7x5","DemageRangeID":"Cross3x3"},{"ID":100201,"Skill":1002,"Level":1,"AttackRangeID":"Cross1x3","DemageRangeID":"Point1"},{"ID":100202,"Skill":1002,"Level":2,"AttackRangeID":"Matrix3x3","DemageRangeID":"Line2"},{"ID":100203,"Skill":1002,"Level":3,"AttackRangeID":"Matrix3x5","DemageRangeID":"Line4"},{"ID":100204,"Skill":1002,"Level":4,"AttackRangeID":"Matrix7x5","DemageRangeID":"Line7"},{"ID":200101,"Skill":2001,"Level":1,"AttackRangeID":"","DemageRangeID":""},{"ID":200102,"Skill":2001,"Level":2,"AttackRangeID":"","DemageRangeID":""},{"ID":200103,"Skill":2001,"Level":3,"AttackRangeID":"","DemageRangeID":""},{"ID":200104,"Skill":2001,"Level":4,"AttackRangeID":"","DemageRangeID":""},{"ID":200201,"Skill":2002,"Level":1,"AttackRangeID":"","DemageRangeID":""},{"ID":200202,"Skill":2002,"Level":2,"AttackRangeID":"","DemageRangeID":""},{"ID":200203,"Skill":2002,"Level":3,"AttackRangeID":"","DemageRangeID":""},{"ID":200204,"Skill":2002,"Level":4,"AttackRangeID":"","DemageRangeID":""},{"ID":200301,"Skill":2003,"Level":1,"AttackRangeID":"","DemageRangeID":""},{"ID":200302,"Skill":2003,"Level":2,"AttackRangeID":"","DemageRangeID":""},{"ID":200303,"Skill":2003,"Level":3,"AttackRangeID":"","DemageRangeID":""},{"ID":200304,"Skill":2003,"Level":4,"AttackRangeID":"","DemageRangeID":""}]
+[
+  {
+    "ID": 100101,
+    "Skill": 1001,
+    "Level": 1,
+    "AttackRangeID": "Matrix3x3",
+    "DemageRangeID": "Point1"
+  },
+  {
+    "ID": 100102,
+    "Skill": 1001,
+    "Level": 2,
+    "AttackRangeID": "Matrix3x3",
+    "DemageRangeID": "Cross1x3"
+  },
+  {
+    "ID": 100103,
+    "Skill": 1001,
+    "Level": 3,
+    "AttackRangeID": "Matrix3x5",
+    "DemageRangeID": "Cross1x3"
+  },
+  {
+    "ID": 100104,
+    "Skill": 1001,
+    "Level": 4,
+    "AttackRangeID": "Matrix7x5",
+    "DemageRangeID": "Cross3x3"
+  },
+  {
+    "ID": 100201,
+    "Skill": 1002,
+    "Level": 1,
+    "AttackRangeID": "Cross1x3",
+    "DemageRangeID": "Point1"
+  },
+  {
+    "ID": 100202,
+    "Skill": 1002,
+    "Level": 2,
+    "AttackRangeID": "Matrix3x3",
+    "DemageRangeID": "Line2"
+  },
+  {
+    "ID": 100203,
+    "Skill": 1002,
+    "Level": 3,
+    "AttackRangeID": "Matrix3x5",
+    "DemageRangeID": "Line4"
+  },
+  {
+    "ID": 100204,
+    "Skill": 1002,
+    "Level": 4,
+    "AttackRangeID": "Matrix7x5",
+    "DemageRangeID": "Line7"
+  },
+  {
+    "ID": 200101,
+    "Skill": 2001,
+    "Level": 1,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200102,
+    "Skill": 2001,
+    "Level": 2,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200103,
+    "Skill": 2001,
+    "Level": 3,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200104,
+    "Skill": 2001,
+    "Level": 4,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200201,
+    "Skill": 2002,
+    "Level": 1,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200202,
+    "Skill": 2002,
+    "Level": 2,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200203,
+    "Skill": 2002,
+    "Level": 3,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200204,
+    "Skill": 2002,
+    "Level": 4,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200301,
+    "Skill": 2003,
+    "Level": 1,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200302,
+    "Skill": 2003,
+    "Level": 2,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200303,
+    "Skill": 2003,
+    "Level": 3,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  },
+  {
+    "ID": 200304,
+    "Skill": 2003,
+    "Level": 4,
+    "AttackRangeID": "",
+    "DemageRangeID": ""
+  }
+]

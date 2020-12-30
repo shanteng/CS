@@ -9,14 +9,23 @@ public class BattleInfoUi : MonoBehaviour
     public DataGrid _hGrid;
     public Slider _bloodSlider;
     public TextMeshProUGUI _bloodTxt;
+
+    public CallSkillUi _callSkillUi;
+
     private List<int> _players;
     void Awake()
     {
-       
+
+    }
+
+    public void HideCallSkill()
+    {
+        this._callSkillUi.HideAnimation();
     }
 
     public void SetList(List<int> players)
     {
+        this.HideCallSkill();
         this._players = new List<int>();
         _hGrid.Data.Clear();
         foreach (int pl in players)

@@ -24,5 +24,6 @@ public class ViewsInitializeCommand : SimpleCommand
         Facade.RegisterMediator(new BattleControllMediator());
         Facade.RegisterMediator(new BattleMediator());
         Facade.RegisterMediator(new CityAttackGroupMediator());
+        Facade.RegisterMediator(new QuestionMediator());
     }
 }

@@ -39,6 +39,7 @@ public class JsonNameDefine
     public static string SkillLevel = "SkillLevel";
 
     public static string RangeFunction = "RangeFunction";
+    public static string Question = "Question";
     public static JArray JsonRead(string name)
     {
         string json = "";
@@ -123,6 +124,7 @@ public class ArmyConfig : Config<ArmyConfig>
     public string[] Cost;
     public int UnlockTech;//招募所需科技ID
 
+    public float FightOneExpAdd;
     public ArmyConfig() : base(JsonNameDefine.Army) { }
 }
 
@@ -227,6 +229,16 @@ public class CityConfig : Config<CityConfig>
         int levelid = id * 100 + level;
         return BuildingUpgradeConfig.Instance.GetData(levelid);
     }
+}
+
+
+public class QuestionConfig : Config<QuestionConfig>
+{
+    public string Question;
+    public string Selection;
+    public string Answer;
+
+    public QuestionConfig() : base(JsonNameDefine.Question) { }
 }
 
 public class HeroLevelConfig : Config<HeroLevelConfig>

@@ -1,0 +1,272 @@
+[
+  {
+    "ID": 1,
+    "Question": "谜语：凿壁偷光、嘴里进蚊子、相貌堂堂",
+    "Selection": "A、孔明、张飞、颜良\nB、赵云、颜良、孔明\nC、孔明、文丑、张飞\nD、关羽、颜良、黄忠",
+    "Answer": "A"
+  },
+  {
+    "ID": 2,
+    "Question": "唐朝诗人杜牧诗“东风不与周郎便，铜雀春深锁二乔”，写的是哪一场战役？",
+    "Selection": "A、巨鹿之战 B、官渡之战\nC、赤壁之战 D、潼关之战",
+    "Answer": "C"
+  },
+  {
+    "ID": 3,
+    "Question": "赤壁遗雄烈，青年有俊声。弦歌知雅意，杯酒谢良朋。曾渴三千斛，常驱十万兵，巴丘终命处，凭吊欲伤情。”这首诗写的是谁？",
+    "Selection": "A、周瑜 B、诸葛亮 \nC、曹操 D、刘备",
+    "Answer": "A"
+  },
+  {
+    "ID": 4,
+    "Question": "大丈夫死于乱世，当带三尺剑立于不世之功，与所世未遂夸何死乎，言讫而之！”请问这句话是谁说的？",
+    "Selection": "A、周瑜 B、曹真 \nC、典韦 D、太史慈",
+    "Answer": "D"
+  },
+  {
+    "ID": 5,
+    "Question": "王允利用貂禅除掉董卓的过程中用了下列选项中的哪些计策？\n①美人计②连环计③反间计④苦肉计⑤声东击西计",
+    "Selection": "A、①②③④⑤ B、②③⑤\nC、①②③ D、②④⑤",
+    "Answer": "C"
+  },
+  {
+    "ID": 6,
+    "Question": "关于《三国演义》，正确的一项是 ",
+    "Selection": "A、刘备字玄德，曹操字孟德，张飞字翼德。\nB、“三英战吕布”，“三英”指的是关羽、张飞、赵云。\nC、“桃园三结义”指的是关羽、张飞、赵云。\nD、杨修是孙权手下的谋士。",
+    "Answer": "A"
+  },
+  {
+    "ID": 7,
+    "Question": "刘备身边的五虎上将都是谁？\n①魏延 ②关羽 ③马超 ④黄忠 ⑤张飞 ⑥赵云",
+    "Selection": "A、①②③④⑤ B、①②③⑤⑥\nC、②③④⑤⑥ D、①②④⑤⑥",
+    "Answer": "C"
+  },
+  {
+    "ID": 8,
+    "Question": "哪父子三人被诸葛亮困于上方谷?",
+    "Selection": "A、司马懿 B、司马师 \nC、司马昭 D、司马炎",
+    "Answer": "A"
+  },
+  {
+    "ID": 9,
+    "Question": "“千里草，何青青！十日卜，不得生！”指何人？",
+    "Selection": "A、皇甫嵩 B、董卓 C、王允",
+    "Answer": "B"
+  },
+  {
+    "ID": 10,
+    "Question": "长坂坡一战中，被魏将程昱称为“万人敌”的是谁？",
+    "Selection": "A、关羽 B、张飞 C、赵云",
+    "Answer": "B"
+  },
+  {
+    "ID": 11,
+    "Question": "诸葛亮初出茅庐第一次“运筹帷幄之中，决胜千里之外”的战役是",
+    "Selection": "A、火烧新野 B、火烧博望坡\nC、安居平五路 D、火烧赤壁",
+    "Answer": "B"
+  },
+  {
+    "ID": 12,
+    "Question": "刘备除了糜、孙两位夫人，还有一位是？",
+    "Selection": "A、钱 B、阚 \nC、韩 D、甘",
+    "Answer": "D"
+  },
+  {
+    "ID": 13,
+    "Question": "关羽在离开曹操时唯一带走的曹操的赠物是？",
+    "Selection": "A、美女 B、金银 \nC、奴役 D、赤兔马",
+    "Answer": "D"
+  },
+  {
+    "ID": 14,
+    "Question": "“垂手过膝，目能顾其耳。”描写的是谁？",
+    "Selection": "A、庞统 B、刘备\nC、伊籍 D、诸葛亮",
+    "Answer": "B"
+  },
+  {
+    "ID": 15,
+    "Question": "孙坚葬于何处？",
+    "Selection": "A、江都 B、曲阿 \nC、丹阳 D、松江",
+    "Answer": "C"
+  },
+  {
+    "ID": 16,
+    "Question": "曹操为何放弃了第一次攻打徐州？",
+    "Selection": "A、由于孔融、刘备相继救援\nB、东阿青州军叛乱\nC、吕布袭破衮州，使曹操腹背受敌\nD、袁术攻破濮阳，威胁曹操",
+    "Answer": "C"
+  },
+  {
+    "ID": 17,
+    "Question": "孙策过世的年龄？",
+    "Selection": "A、16 B、21\nC、26 D、41",
+    "Answer": "C"
+  },
+  {
+    "ID": 18,
+    "Question": "煮酒论英雄后，刘备以截击谁为借口逃离？",
+    "Selection": "A、刘表 B、袁绍 \nC、王允 D、袁术",
+    "Answer": "D"
+  },
+  {
+    "ID": 19,
+    "Question": "“水镜先生”是谁？",
+    "Selection": "A、徐庶 B、庞德公 C、诸葛亮 D、司马徽",
+    "Answer": "D"
+  },
+  {
+    "ID": 20,
+    "Question": "“方颐大口，碧眼紫鬓”描写的是谁？",
+    "Selection": "A、虞翻 B、鲁肃 \nC、张昭 D、孙权",
+    "Answer": "D"
+  },
+  {
+    "ID": 21,
+    "Question": "董卓废帝的理由是什么？",
+    "Selection": "A.刘辩之bai母何du后乃乱党的妹zhi妹 B.刘辩懦弱，刘协聪明dao\nC.刘辩重用宦官败坏朝政 D.刘协乃长子",
+    "Answer": "B"
+  },
+  {
+    "ID": 22,
+    "Question": "董卓所立的刘协史称?",
+    "Selection": "A.汗献帝 B.汗文帝 \nC.汉武帝 D.汗灵帝",
+    "Answer": "A"
+  },
+  {
+    "ID": 23,
+    "Question": "由于谁的里应外合曹操袭取了徐州?",
+    "Selection": "A.侯成 B.魏绪\nC.陈登 D.陈宫",
+    "Answer": "C"
+  },
+  {
+    "ID": 24,
+    "Question": "曹操为什么要诛杀献帝的董妃?",
+    "Selection": "A.董妃鼓惑献帝降诏罢除曹操 B.董妃为董卓之女\nC.董妃为董承之女 D.曹操要在献帝面前树立形象",
+    "Answer": "C"
+  },
+  {
+    "ID": 25,
+    "Question": "关羽是从谁的口中得知刘备的下落?",
+    "Selection": "A.于禁 B.刘辟 \nC.孙乾 D.陈震",
+    "Answer": "C"
+  },
+  {
+    "ID": 26,
+    "Question": "其中是三国“三杰”之一的是?",
+    "Selection": "A.刘备 B.关羽 \nC.曹操 D.诸葛亮",
+    "Answer": "C"
+  },
+  {
+    "ID": 27,
+    "Question": "合肥之战中，谁放箭射中乐进面门而救了凌统?",
+    "Selection": "A.黄盖 B.丁奉 \nC.甘宁 D.吕蒙",
+    "Answer": "C"
+  },
+  {
+    "ID": 28,
+    "Question": "东吴的谁率军智取荆州",
+    "Selection": "A.周瑜 B.鲁肃 \nC.陆逊 D.吕蒙",
+    "Answer": "C"
+  },
+  {
+    "ID": 29,
+    "Question": "诸葛亮初出茅庐第一次“运筹帷幄之中，决胜千里之外”的战役是?",
+    "Selection": "A.火烧新野\nB.火烧博望坡\nC.安居平五路\nD.火烧赤壁",
+    "Answer": "A"
+  },
+  {
+    "ID": 30,
+    "Question": "黄巾之乱时由谁发起?",
+    "Selection": "A 张梁 B 张飞 \nC 张角 D 张无忌",
+    "Answer": "C"
+  },
+  {
+    "ID": 31,
+    "Question": "下列人物中是讨伐黄巾军的主要统帅的是?",
+    "Selection": "A 何进 B 刘备 \nC 曹操 D 皇甫嵩",
+    "Answer": "D"
+  },
+  {
+    "ID": 32,
+    "Question": "曹操在讨伐黄巾之乱时的官位?",
+    "Selection": "A 太尉 B 大司马 \nC 黄门侍郎 D 骑都尉",
+    "Answer": "D"
+  },
+  {
+    "ID": 33,
+    "Question": "是谁在曹操被徐荣埋伏时保护曹操渡过大河?",
+    "Selection": "A 曹休 B 夏侯惇 \nC 曹洪 D 曹丕",
+    "Answer": "C"
+  },
+  {
+    "ID": 34,
+    "Question": "夏侯惇祖上是哪一位汉代名将?",
+    "Selection": "A 夏侯楙 B 段煨 \nC 陈平 D 夏侯婴",
+    "Answer": "D"
+  },
+  {
+    "ID": 35,
+    "Question": "刘备自称为谁的后人?",
+    "Selection": "A 中山靖王 B 山东齐王 \nC 汉武刘彻 D 河北赵王",
+    "Answer": "A"
+  },
+  {
+    "ID": 36,
+    "Question": "在“捉放曹”情节中是谁放了曹操并随曹操一并离去?",
+    "Selection": "A 陈登 B 陈宫 \nC 吕虔 D 曹仁",
+    "Answer": "B"
+  },
+  {
+    "ID": 37,
+    "Question": "关羽的武器除了称为“万人敌”、“青龙偃月刀”还被称为什么?",
+    "Selection": "A 方天画戟 B 冷艳锯 \nC 丈八蛇矛 D 双股剑",
+    "Answer": "B"
+  },
+  {
+    "ID": 38,
+    "Question": "从刘备起兵时就跟随刘备一直到打下西蜀的是哪位同乡?",
+    "Selection": "A 糜竺 B 孙乾 \nC 简雍 D 马良",
+    "Answer": "C"
+  },
+  {
+    "ID": 39,
+    "Question": "下列人物哪位是孙坚骑兵时的四大将之一?",
+    "Selection": "A 程咨 B 孙策 \nC 韩逞 D 祖茂",
+    "Answer": "D"
+  },
+  {
+    "ID": 40,
+    "Question": "公孙瓒手下有支名震天下的骑兵，这支骑兵的名称?",
+    "Selection": "A 并州铁骑 B 西凉铁骑 \nC 白马义从 D 先登死士",
+    "Answer": "C"
+  },
+  {
+    "ID": 41,
+    "Question": "吕布手下有八健将，其中是谁在白门楼一声不吭而被斩杀?",
+    "Selection": "A 张辽 B 魏续 \nC 高顺 D 宋宪",
+    "Answer": "C"
+  },
+  {
+    "ID": 42,
+    "Question": "袁绍手下有河北四庭柱，其中哪位被赵云刺死?",
+    "Selection": "A 文丑 B 淳于琼 \nC 张颌 D 高览",
+    "Answer": "D"
+  },
+  {
+    "ID": 43,
+    "Question": "袁术帐下有一猛将，能与关羽大战三十回合不败，他是谁?",
+    "Selection": "A 张勋 B 袁耀 \nC 陈兰 D 纪灵",
+    "Answer": "D"
+  },
+  {
+    "ID": 44,
+    "Question": "五子良将中谁善使大斧?",
+    "Selection": "A 张辽 B 乐进 \nC 李典 D 徐晃",
+    "Answer": "D"
+  },
+  {
+    "ID": 45,
+    "Question": "治世之能臣，乱世之奸雄是谁评价曹操的?",
+    "Selection": "A 许昭 B 许劭 \nC 许攸 D 许靖",
+    "Answer": "B"
+  }
+]

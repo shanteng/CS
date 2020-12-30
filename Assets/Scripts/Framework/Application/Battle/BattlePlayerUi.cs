@@ -41,6 +41,8 @@ public class BattlePlayerUi : UIBase
         this._SkillCallTxt.gameObject.SetActive(false);
     }
 
+
+
     public void SetData(BattlePlayer player, BattlePlace myPlace)
     {
         this._bloodSlider.wholeNumbers = false;
@@ -110,8 +112,10 @@ public class BattlePlayerUi : UIBase
     }
 
     private Coroutine _corSkill;
-    public void SkillCall(int id)
+    private UnityAction _skillActionCallBack;
+    public void SkillCall(int id,UnityAction callBack)
     {
+        this._skillActionCallBack = callBack;
         _WaitSkills.Enqueue(id);
         if (this._corSkill == null)
         {
@@ -121,19 +125,25 @@ public class BattlePlayerUi : UIBase
 
     IEnumerator PlaySkillCalls()
     {
-        WaitForSeconds waitYield = new WaitForSeconds(1f);
+        WaitForSeconds waitYield = new WaitForSeconds(2f);
         while (this._WaitSkills.Count > 0)
         {
             int id = this._WaitSkills.Dequeue();
             this.PlayOneSkillCall(id);
             yield return waitYield;
         }
+
         this._corSkill = null;
+        if (_skillActionCallBack != null)
+        {
+            _skillActionCallBack.Invoke();
+            this._skillActionCallBack = null;
+        }
     }
 
     private void PlayOneSkillCall(int id)
     {
-        GameObject obj = GameObject.Instantiate(this._SkillCallTxt.gameObject, Vector3.zero, Quaternion.identity, this._SkillCallRoot);
+      /*  GameObject obj = GameObject.Instantiate(this._SkillCallTxt.gameObject, Vector3.zero, Quaternion.identity, this._SkillCallRoot);
         obj.transform.localScale = Vector3.one;
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.Euler(Vector3.zero);
@@ -148,6 +158,11 @@ public class BattlePlayerUi : UIBase
             SkillConfig config = SkillConfig.Instance.GetData(id);
             changeTxt.FirstLabel.text = config.Name;
         }
+        //发送给UI，显示喊招特效
+      */
+
+        VInt2 kv = new VInt2(this.ID, id);
+        MediatorUtil.SendNotification(NotiDefine.CallSkillUIShow, kv);
     }
 
     private Coroutine _cor;

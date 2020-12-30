@@ -57,24 +57,26 @@ public class TeamProxy : BaseRemoteProxy
         return list;
     }
 
+    public int GetFightArmyExpAdd(int armyID, int deadCount)
+    {
+        ArmyConfig configArmy = ArmyConfig.Instance.GetData(armyID);
+        return Mathf.CeilToInt(configArmy.FightOneExpAdd * (float)deadCount);
+    }
+
     public void GetFightAwardTotleExp(int npcCity, out int count, out int addExp)
     {
         count = 0;
         addExp = 0;
-        float totleBlood = 0;
         CityConfig config = CityConfig.Instance.GetData(npcCity);
         int[] npcs = config.NpcTeams;
         for (int i = 0; i < npcs.Length; ++i)
         {
             NpcTeamConfig configNpc = NpcTeamConfig.Instance.GetData(npcs[i]);
             count += configNpc.Count;
-            ArmyConfig configArmy = ArmyConfig.Instance.GetData(configNpc.Army);
-            totleBlood += count * configArmy.Blood;
-        }
 
-        ConstConfig cfgconst = ConstConfig.Instance.GetData(ConstDefine.CancelArmyReturnRate);
-        float rate = (float)cfgconst.IntValues[0] / 100f;
-        addExp = Mathf.RoundToInt(rate * totleBlood);
+            int exp = this.GetFightArmyExpAdd(configNpc.Army, configNpc.Count);
+            addExp += exp;
+        }
     }
 
 
@@ -239,20 +241,55 @@ public class TeamProxy : BaseRemoteProxy
         this.DoSaveGroup();
     }
 
-    private void SetResultGroupTeamArmyCount(BattleData result)
+    private void SetGroupTeamResult(BattleData result)
     {
+        float woundRecoverRate = (float)ConstConfig.Instance.GetData(ConstDefine.WoundRecoverRate).IntValues[0] * 0.01f;
+        bool isWin = result.IsWin;
+        //经验获取机制为上阵的英雄平分总击杀数量
+        int exp = 0;
+        List<int> UpHeroID = new List<int>();
         foreach (BattlePlayer pl in result.Players.Values)
         {
-            if (pl.TeamID < 0)
-                continue;
-            Team myTeam = this.GetTeam(pl.TeamID);
-            if (myTeam == null)
-                continue;
             ArmyConfig config = ArmyConfig.Instance.GetData(pl.ArmyID);
-            myTeam.ArmyCount = Mathf.RoundToInt(pl.Attributes[AttributeDefine.Blood] / config.Blood);
-            //后期最好计算一下伤病机制，给恢复一定的伤病
-            myTeam.ComputeAttribute();
+            if (pl.TeamID < 0)
+            {
+                float loseBlood = pl.Attributes[AttributeDefine.OrignalBlood] - pl.Attributes[AttributeDefine.Blood];
+                if (isWin)//胜利的话，认为全部击杀
+                    loseBlood = pl.Attributes[AttributeDefine.OrignalBlood];
+                int deadCount = Mathf.RoundToInt(loseBlood / config.Blood);
+                exp += this.GetFightArmyExpAdd(pl.ArmyID, deadCount);
+            }
+            else
+            {
+                Team myTeam = this.GetTeam(pl.TeamID);
+                if (myTeam == null || pl.BornIndex == 0)//未上阵的不计算
+                    continue;
+                UpHeroID.Add(myTeam.HeroID);
+
+                Hero hero = HeroProxy._instance.GetHero(myTeam.HeroID);
+                int armyCount = Mathf.RoundToInt(pl.Attributes[AttributeDefine.Blood] / config.Blood);
+                if (armyCount > hero.MaxBlood)
+                    armyCount = hero.MaxBlood;
+
+                myTeam.ArmyCount = armyCount;
+                //50%的伤病可以被医院治疗
+                myTeam.WoundCount += Mathf.RoundToInt(pl.Attributes[AttributeDefine.WoundedBlood] * woundRecoverRate / config.Blood);
+                myTeam.ComputeAttribute();
+            }
         }
+
+        //平分经验
+        int heroCount = UpHeroID.Count;
+        if (heroCount > 0)
+        {
+            int eachExp = exp / heroCount;
+            for (int i = 0; i < heroCount; ++i)
+            {
+                HeroProxy._instance.AddExpToHero(UpHeroID[i], eachExp,false);
+            }
+            HeroProxy._instance.DoSaveHeros();
+        }
+
         this.DoSaveTeams();
     }
 
@@ -270,8 +307,8 @@ public class TeamProxy : BaseRemoteProxy
 
     public void AttackCityEnd(int TargetCityID, BattleData battleResult)
     {
-        //更新队伍血量
-        this.SetResultGroupTeamArmyCount(battleResult);
+        //更新队伍血量\获得经验\伤病数量
+        this.SetGroupTeamResult(battleResult);
 
         List<string> waitAndFightList = this.GetAttackCityGroups(TargetCityID);
         foreach (string gpid in waitAndFightList)
@@ -506,6 +543,7 @@ public class TeamProxy : BaseRemoteProxy
         {
             Team team = this.GetTeam(t);
             team.Status = (int)TeamStatus.Idle;
+            team.WoundCount = 0;//之后给到医院去治疗
         }
         this.DoSaveTeams();
 
