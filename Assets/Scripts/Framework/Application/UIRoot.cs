@@ -55,8 +55,9 @@ public class UIRoot : MonoBehaviour
 
     void Start()
     {
-        GameObject obj = ResourcesManager.Instance.LoadUIRes("SdkView");
-        this.InstantiateUIInCenter(obj,WindowLayer.Sdk);
+        MediatorUtil.ShowMediator(MediatorDefine.LOTTERY);
+       // GameObject obj = ResourcesManager.Instance.LoadUIRes("SdkView");
+       // this.InstantiateUIInCenter(obj,WindowLayer.Sdk);
     }
 
     void LateUpdate()

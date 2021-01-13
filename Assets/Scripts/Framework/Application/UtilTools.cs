@@ -10,6 +10,16 @@ using System;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+
+[System.Serializable]
+public class LotteryResultPlayer
+{
+    public int Id;
+    public int AwardId;
+    public string Name;
+}
 
 public class UtilTools
 {
@@ -19,6 +29,44 @@ public class UtilTools
 
     private static object m_builderLock = new object();
     private static StringBuilder m_builder = new StringBuilder();
+
+    public static void SaveLotterResult(string resultStrJson)
+    {
+    //    PlayerPrefs.SetString("RoundResult", resultStrJson);
+        string path = Application.streamingAssetsPath + "/Result.json";
+using (StreamWriter sw = new StreamWriter(path))
+        {
+            sw.Write(resultStrJson);
+            sw.Close();
+            sw.Dispose();
+        }
+    }
+
+    public static List<LotteryResultPlayer> LoadLotteryResultList()
+    {
+        string path = Application.streamingAssetsPath + "/Result.json";
+        string json = File.ReadAllText(path);
+
+    //    string json = PlayerPrefs.GetString("RoundResult");
+        if (json.Equals(string.Empty))
+        {
+            return new List<LotteryResultPlayer>();
+        }
+        List<LotteryResultPlayer> list = JsonConvert.DeserializeObject<List<LotteryResultPlayer>>(json);
+        return list;
+    }
+
+    public static Dictionary<int,int> LoadLotteryResult()
+    {
+        Dictionary<int, int> players = new Dictionary<int, int>();
+  
+        List<LotteryResultPlayer> list = LoadLotteryResultList();
+        foreach (var oneJson in list)
+        {
+            players[oneJson.Id] = oneJson.AwardId;
+        }
+        return players;
+    }
 
     public static string combine(params object[] texts)
     {

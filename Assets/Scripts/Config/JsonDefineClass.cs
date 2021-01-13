@@ -40,11 +40,17 @@ public class JsonNameDefine
 
     public static string RangeFunction = "RangeFunction";
     public static string Question = "Question";
+
+    public static string Name = "Name";
+    public static string Round = "Round";
+
     public static JArray JsonRead(string name)
     {
         string json = "";
         string path = "Config/" + name ;
         TextAsset text = Resources.Load<TextAsset>(path);
+        if (text == null)
+            return null;
         json = text.text;
         JArray jArray = JArray.Parse(json);
         return jArray;
@@ -231,6 +237,23 @@ public class CityConfig : Config<CityConfig>
     }
 }
 
+public class LotteryNameConfig : Config<LotteryNameConfig>
+{
+    public string Name;
+    public string Group;
+
+    public LotteryNameConfig() : base(JsonNameDefine.Name) { }
+}
+
+public class LotteryRoundConfig : Config<LotteryRoundConfig>
+{
+    public string Title;
+    public string Name;
+    public int Count;
+    public int PageCount;
+
+    public LotteryRoundConfig() : base(JsonNameDefine.Round) { }
+}
 
 public class QuestionConfig : Config<QuestionConfig>
 {
@@ -240,6 +263,8 @@ public class QuestionConfig : Config<QuestionConfig>
 
     public QuestionConfig() : base(JsonNameDefine.Question) { }
 }
+
+
 
 public class HeroLevelConfig : Config<HeroLevelConfig>
 {

@@ -206,3 +206,7 @@ MonoBehaviour:
     - SkillEffect
     - SkillLevel
     - RangeFunction
+  - name: Lottery
+    sheets:
+    - Round
+    - Name

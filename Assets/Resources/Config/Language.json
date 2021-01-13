@@ -766,5 +766,25 @@
   {
     "IDs": "GoodAnswer",
     "Value": "<color=#064B00>再下被你的渊博学识而折服~</color>"
+  },
+  {
+    "IDs": "RoundName",
+    "Value": "第{0}轮抽奖"
+  },
+  {
+    "IDs": "RoundNumber",
+    "Value": "人数{0}"
+  },
+  {
+    "IDs": "LotteryNumber",
+    "Value": "当前抽奖参与人数:{0}/{1}({2}人已中奖)"
+  },
+  {
+    "IDs": "LotteryResult",
+    "Value": "{0}-<color=#F3D48B>{1}</color>：获得{2}"
+  },
+  {
+    "IDs": "LotteryAward",
+    "Value": "{0}({1}人)"
   }
 ]

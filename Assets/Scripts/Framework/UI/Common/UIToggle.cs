@@ -10,6 +10,7 @@ public class UIToggle : UIBase
 {
     public Toggle _toggle;
     public Text _text;
+    public Text _text2;
     private UIToggleDelegate _listener;
 
     void Awake()
@@ -58,5 +59,5 @@ public class UIToggle : UIBase
     }
 
     public Text Label => this._text;
-
+    public Text Label2 => this._text2;
 }

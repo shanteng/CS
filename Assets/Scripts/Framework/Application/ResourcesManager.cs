@@ -32,6 +32,7 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
     private string Land = "Land/";
     private string Role = "Role/";
     private string City = "City/";
+   
 
     private Dictionary<string, SpriteAtlas> _atlasDic = new Dictionary<string, SpriteAtlas>();
     public GameObject LoadUIRes(string resName)
@@ -81,6 +82,16 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
         string path = UtilTools.combine(Popup_Path, resName);
         return Resources.Load<GameObject>(path);
     }
+
+
+    public static Sprite GetPlayerPicture(string name)
+    {
+       // name = "crcheng";
+        string path = UtilTools.combine("Players/", name);
+        Sprite sp = Resources.Load<Sprite>(path);
+        return sp;
+    }
+
 
     public Sprite getAtlasSprite(string sourceType, int id)
     {

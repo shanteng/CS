@@ -67,7 +67,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 148f1227c3543e44991b6ecd9d092d51, type: 3}
-    totalSpriteSurfaceArea: 566741
+    totalSpriteSurfaceArea: 646773
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -96,6 +96,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 814ec5a1b5b37214692a3fdd2cc6c2e1, type: 3}
   - {fileID: 21300000, guid: 615655c13b66a9e47abe2b940ca31759, type: 3}
   - {fileID: 21300000, guid: bc30fec15da20e347aad6305d85a3d44, type: 3}
+  - {fileID: 21300000, guid: d22dd5d1d0b73b747b6cf6d2e3a5bb77, type: 3}
+  - {fileID: 21300000, guid: 8c4d5bd1d959fda498b6865cdcd465df, type: 3}
+  - {fileID: 21300000, guid: c23996e12dec8a945829b51a7a6cff14, type: 3}
   - {fileID: 21300000, guid: 592e97f1299ab7d49956b97f683b28cf, type: 3}
   - {fileID: 21300000, guid: 641edc32121d4f4458d79e86fba3a51f, type: 3}
   - {fileID: 21300000, guid: 988f3e329abd5234e96b105ce46c0fae, type: 3}
@@ -147,6 +150,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: aac48657c8af1e648aea489a158ca4bc, type: 3}
   - {fileID: 21300000, guid: 288efa575bec38c4abf971e5bf6a33e1, type: 3}
   - {fileID: 21300000, guid: 195d55878ab71ed43b15b0b68478319e, type: 3}
+  - {fileID: 21300000, guid: c5c68f87efe2c1b45a3cc7b6f4a2dc8f, type: 3}
   - {fileID: 21300000, guid: 7a7772977471e4f4c99391ab1b3a2117, type: 3}
   - {fileID: 21300000, guid: 72d160a71e26ebd479d602b0072fde56, type: 3}
   - {fileID: 21300000, guid: d19860a7c8998b44686967944cdf2b17, type: 3}
@@ -173,6 +177,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c07f11c945002574eb2a4775479d6e95, type: 3}
   - {fileID: 21300000, guid: 5a2c5fd9d57c7404d8c134681cd80a9a, type: 3}
   - {fileID: 21300000, guid: 94db0cf97014c5944adfb2e985717dd5, type: 3}
+  - {fileID: 21300000, guid: 327bb40ad5d49e64ca1bc4e9bd5fa3a0, type: 3}
   - {fileID: 21300000, guid: d41f513a8458b5646a70c8083c37ec17, type: 3}
   - {fileID: 21300000, guid: bb69ab3a2d42c654bbbb5c93e5cd1645, type: 3}
   - {fileID: 21300000, guid: 7586d75acc369cf4ea38579e7e123032, type: 3}
@@ -192,10 +197,12 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c94b9c5b97af1914e8a090ac23d6a8ef, type: 3}
   - {fileID: 21300000, guid: 7658f57bb0a260544838026eb0658157, type: 3}
   - {fileID: 21300000, guid: e7d2287b42c28a64d8ef7fd8991bebb6, type: 3}
+  - {fileID: 21300000, guid: 4afc84bb40ce2424a9e054eed3c18a75, type: 3}
   - {fileID: 21300000, guid: f38334cbfcf1fad488211b113739aa72, type: 3}
   - {fileID: 21300000, guid: f9fc57eb747a5a349bb878a27652ec41, type: 3}
   - {fileID: 21300000, guid: ecf6dfeb5ff273c48aa6d52fd353412a, type: 3}
   - {fileID: 21300000, guid: 4e07d3fb3ac02e7469aaf1037aa87d6a, type: 3}
+  - {fileID: 21300000, guid: c98c8e1ccec86b144b4bbe9470071e66, type: 3}
   - {fileID: 21300000, guid: 09da766c09d02a04b956143112d484f1, type: 3}
   - {fileID: 21300000, guid: 90a0957c177b4544d9207712688217f1, type: 3}
   - {fileID: 21300000, guid: c492a57cf3c9fac49b3be9259188d4ff, type: 3}
@@ -215,6 +222,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3efd5a6e3edbb13469508eaffb00fe31, type: 3}
   - {fileID: 21300000, guid: 61fc900fdf56db342906c98347abed4b, type: 3}
   - {fileID: 21300000, guid: 7ea8a42f6a3d98242b47f52bf029a140, type: 3}
+  - {fileID: 21300000, guid: da97272fb4f0c77498cd0c93e0441a6d, type: 3}
   - {fileID: 21300000, guid: 27e9d93f675b22d4aa2042f042a88be6, type: 3}
   - {fileID: 21300000, guid: a149ca3f74f2d6d47b40a14bc7a1e7fc, type: 3}
   - {fileID: 21300000, guid: e427994f63fe36443b559dbe87d00d05, type: 3}
@@ -230,6 +238,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 19a3c1dfa78abd54cb6aeecf668303c5, type: 3}
   - {fileID: 21300000, guid: de2d28eff3049184b8fa0542d46be064, type: 3}
   - {fileID: 21300000, guid: 115eafef4222cd5499cf8552da7882ae, type: 3}
+  - {fileID: 21300000, guid: 5db546ff4d5b4f349878163cddd8c56f, type: 3}
   m_PackedSpriteNamesToIndex:
   - Progressbar-yellow
   - OP_SWEEP
@@ -256,6 +265,9 @@ SpriteAtlas:
   - OP_GROW
   - Fire
   - new
+  - Shelves
+  - titleBOX
+  - btn_tap_n
   - BUTTON-normal
   - 6-STAR
   - OpCheckRole
@@ -307,6 +319,7 @@ SpriteAtlas:
   - ItemFrame1
   - bg_dialogbox_name
   - back
+  - btn_tap_h
   - Op_cancel
   - bg_frame
   - autograph
@@ -333,6 +346,7 @@ SpriteAtlas:
   - share2
   - building
   - Speed
+  - informationBG
   - ItemFrame2
   - Fetters
   - t4
@@ -352,10 +366,12 @@ SpriteAtlas:
   - WhiteArrow
   - ca2
   - titlenamebar
+  - namebar
   - img_dialogbox_line
   - Wind
   - OpClientCityTroop
   - btn_startgame
+  - hunqiBG_jiugong
   - fangshou
   - position-arrow
   - Name5
@@ -375,6 +391,7 @@ SpriteAtlas:
   - Name3
   - message
   - bg_input
+  - arrowbig
   - h_fire
   - t1
   - battle_btn
@@ -390,5 +407,6 @@ SpriteAtlas:
   - title_chendi
   - circularSelected
   - Head
+  - BGBOX
   m_Tag: Common
   m_IsVariant: 0

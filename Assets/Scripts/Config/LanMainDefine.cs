@@ -104,6 +104,12 @@
     public const string GoodAnswer = "GoodAnswer";
     public const string BadAnswer = "BadAnswer";
 
+    public const string RoundName = "RoundName";
+    public const string RoundNumber = "RoundNumber";
+    public const string LotteryNumber = "LotteryNumber";
+    public const string LotteryResult = "LotteryResult";
+    public const string LotteryAward = "LotteryAward";
+
 
     public const string AfterTimeTalk = "AfterTimeTalk";
     public const string HeroFavorLevelChanged = "HeroFavorLevelChanged";

@@ -80,9 +80,7 @@ public class SdkView : MonoBehaviour
     public void OnLogin()
     {
         this.HideSdk();
-        MediatorUtil.ShowMediator(MediatorDefine.LOGIN);
         GameIndex.UID = PlayerIdentityManager.Current.userId;
-
         CloudSaveInitializer.AttachToGameObject(this.gameObject);
         characterInfo = CloudSave.OpenOrCreateDataset("CharacterInfo");
         characterInfo.SynchronizeOnConnectivityAsync(this);

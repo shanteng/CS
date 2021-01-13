@@ -85,6 +85,8 @@ public class NotiDefine
     public const string AcceptHourAwardDo = "AcceptHourAwardDo";
     public const string AcceptHourAwardResp = "AcceptHourAwardResp";
 
+    public const string SaveAwardPlayers = "SaveAwardPlayers";
+
     public const string JudgeIncome = "JudgeIncome";
 
     public const string IncomeHasUpdated = "IncomeHasUpdated";
@@ -104,6 +106,10 @@ public class NotiDefine
 
     public const string RecruitHeroDo = "RecruitHeroDo";
     public const string RecruitHeroResp = "RecruitHeroResp";
+
+
+    public const string OpenStartLotteryView = "OpenStartLotteryView";
+    public const string OpenLotteryResultView = "OpenLotteryResultView";
 
 
 
@@ -436,6 +442,7 @@ public enum MediatorDefine
     BATTLE,
     ATTACK_CITY_GROUP,
     QUESTION,
+    LOTTERY,
 }
 
 public class StringKeyValue

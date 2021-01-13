@@ -8,15 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameIndex.unity
     guid: b7ee47889aea1c44ba3804aa5c53f714
-  - enabled: 1
-    path: Assets/Scenes/Home.unity
-    guid: d16718f445052d84e95a9bfb1a77ef5a
-  - enabled: 1
-    path: Assets/Scenes/Hero.unity
-    guid: 5e7af4bd95ac53a4cb784a9eedf8f6f9
-  - enabled: 1
-    path: Assets/Scenes/Battle1.unity
-    guid: 9ccbc7810d1240648bf5dae44a6d4fb9
   m_configObjects:
     com.unity.playerid.apple_loader: {fileID: 11400000, guid: 2f38897a78a12ed41a074872e3941bf6,
       type: 2}
