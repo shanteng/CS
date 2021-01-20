@@ -51,7 +51,7 @@ public class LotteryResultItemRender : ItemRender
           
             string nameStr = data.players[i].Name;
             int index = nameStr.IndexOf('(');
-            string english = nameStr.Substring(0, index);
+            string english = nameStr;// .Substring(0, index);
             Sprite sp = ResourcesManager.GetPlayerPicture(english);
             this._PlayerUIs[i]._icon.sprite = sp;
 

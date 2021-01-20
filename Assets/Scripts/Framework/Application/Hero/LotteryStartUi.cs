@@ -120,7 +120,7 @@ public class LotteryStartUi : UIBase
             int currentId = this._randomPageIds[i];
             LotteryNameConfig config = _NameConfigDic[currentId];
             int index = config.Name.IndexOf('(');
-            string english = config.Name.Substring(0, index);
+            string english = config.Name;//.Substring(0, index);
             this._ShowUis[i]._texts[0].gameObject.SetActive(true);
            
             this._ShowUis[i]._icon.gameObject.SetActive(true);

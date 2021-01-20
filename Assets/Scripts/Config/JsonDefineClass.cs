@@ -251,7 +251,7 @@ public class LotteryRoundConfig : Config<LotteryRoundConfig>
     public string Name;
     public int Count;
     public int PageCount;
-
+    public int Image;
     public LotteryRoundConfig() : base(JsonNameDefine.Round) { }
 }
 

@@ -10,6 +10,9 @@ public class LotteryView : MonoBehaviour, IConfirmListener
 {
     public GameObject _mainUi;
     public Text _NameText;
+    public Text _AwardTxt;
+    public Image _picture;
+
     public UIButton _BtnStart;
     public UIButton _BtnResult;
     public UIButton _BtnClear;
@@ -60,11 +63,15 @@ public class LotteryView : MonoBehaviour, IConfirmListener
         LotteryRoundConfig config;
         if (this._RoundConfigDic.TryGetValue(id, out config) == false)
         {
-            this._NameText.text = "";
             return;
         }
+        this._BtnStart.Show();
         this._id = config.ID;
         this._NameText.text = config.Title;
+        this._AwardTxt.text = config.Name;
+        this._picture.gameObject.SetActive(true);
+        this._picture.sprite  = ResourcesManager.GetLotteryPicture(config.Image.ToString());
+        this._picture.SetNativeSize();
         this._RoundInput.SetTextWithoutNotify(value);
     }
 

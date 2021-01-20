@@ -92,6 +92,14 @@ public class ResourcesManager : SingletonFactory<ResourcesManager>
         return sp;
     }
 
+    public static Sprite GetLotteryPicture(string name)
+    {
+        // name = "crcheng";
+        string path = UtilTools.combine("Lottery/", name);
+        Sprite sp = Resources.Load<Sprite>(path);
+        return sp;
+    }
+
 
     public Sprite getAtlasSprite(string sourceType, int id)
     {
